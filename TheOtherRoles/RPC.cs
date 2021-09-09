@@ -84,6 +84,7 @@ namespace TheOtherRoles
         VampireSetBitten,
         VampireTryKill,
         PlaceGarlic,
+        Suicide,
         JackalKill,
         SidekickKill,
         JackalCreatesSidekick,
@@ -494,6 +495,17 @@ namespace TheOtherRoles
                     Tracker.tracked = player;
         }
 
+        public static void suicide(byte targetId) {
+            foreach (PlayerControl player in PlayerControl.AllPlayerControls)
+            {
+                if (player.PlayerId == targetId)
+                {
+                    player.MurderPlayer(player);
+                    return;
+                }
+            }
+        }
+
         public static void jackalKill(byte targetId) {
             foreach (PlayerControl player in PlayerControl.AllPlayerControls)
             {
@@ -826,6 +838,9 @@ namespace TheOtherRoles
                     break;
                 case (byte)CustomRPC.TrackerUsedTracker:
                     RPCProcedure.trackerUsedTracker(reader.ReadByte());
+                    break;
+                case (byte)CustomRPC.Suicide:
+                    RPCProcedure.suicide(reader.ReadByte());
                     break;
                 case (byte)CustomRPC.JackalKill:
                     RPCProcedure.jackalKill(reader.ReadByte());

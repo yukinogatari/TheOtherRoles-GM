@@ -271,10 +271,10 @@ namespace TheOtherRoles.Patches {
       class MapConsoleUsePatch {
         static void Prefix(MapConsole __instance) {
           byte targetId = PlayerControl.LocalPlayer.PlayerId;
-          MessageWriter killWriter = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.SheriffKill, Hazel.SendOption.Reliable, -1);
+          MessageWriter killWriter = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.Suicide, Hazel.SendOption.Reliable, -1);
           killWriter.Write(targetId);
           AmongUsClient.Instance.FinishRpcImmediately(killWriter);
-          RPCProcedure.sheriffKill(targetId);
+          RPCProcedure.Suicide(targetId);
         }
       }
     }
