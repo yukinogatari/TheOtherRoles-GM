@@ -266,6 +266,15 @@ namespace TheOtherRoles.Patches {
     }
 
     [HarmonyPatch]
+    class MapConsolePatch {
+      [HarmonyPatch(typeof(MapConsole), nameof(MapConsole.Use))]
+      class MapConsoleUsePatch {
+        static void Postfix(MapConsole __instance) {
+        }
+      }
+    }
+
+    [HarmonyPatch]
     class VitalsMinigamePatch {
         private static List<TMPro.TextMeshPro> hackerTexts = new List<TMPro.TextMeshPro>();
 
