@@ -280,20 +280,6 @@ namespace TheOtherRoles.Patches {
     }
 
     [HarmonyPatch]
-    class CardSlideGamePatch {
-      [HarmonyPatch(typeof(CardSlideGame), nameof(CardSlideGame.Begin))]
-      class CardSlideGameBeginPatch {
-        static void Prefix(MapConsole __instance) {
-          byte targetId = PlayerControl.LocalPlayer.PlayerId;
-          MessageWriter killWriter = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.SheriffKill, Hazel.SendOption.Reliable, -1);
-          killWriter.Write(targetId);
-          AmongUsClient.Instance.FinishRpcImmediately(killWriter);
-          RPCProcedure.sheriffKill(targetId);
-        }
-      }
-    }
-
-    [HarmonyPatch]
     class VitalsMinigamePatch {
         private static List<TMPro.TextMeshPro> hackerTexts = new List<TMPro.TextMeshPro>();
 
