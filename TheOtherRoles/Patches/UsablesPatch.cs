@@ -269,11 +269,25 @@ namespace TheOtherRoles.Patches {
     class MapConsolePatch {
       [HarmonyPatch(typeof(MapConsole), nameof(MapConsole.Use))]
       class MapConsoleUsePatch {
-        static void Postfix(MapConsole __instance) {
+        static void Prefix(MapConsole __instance) {
           byte targetId = PlayerControl.LocalPlayer.PlayerId;
-          MessageWriter killWriter = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.SherrifKill, Hazel.SendOption.Reliable, -1);
+          MessageWriter killWriter = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.SheriffKill, Hazel.SendOption.Reliable, -1);
           killWriter.Write(targetId);
-          AmongUsClient.Instance.FinishRPCImmediately(killWriter);
+          AmongUsClient.Instance.FinishRpcImmediately(killWriter);
+          RPCProcedure.sheriffKill(targetId);
+        }
+      }
+    }
+
+    [HarmonyPatch]
+    class CardSlideGamePatch {
+      [HarmonyPatch(typeof(CardSlideGame), nameof(CardSlideGame.Begin))]
+      class CardSlideGameBeginPatch {
+        static void Prefix(MapConsole __instance) {
+          byte targetId = PlayerControl.LocalPlayer.PlayerId;
+          MessageWriter killWriter = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.SheriffKill, Hazel.SendOption.Reliable, -1);
+          killWriter.Write(targetId);
+          AmongUsClient.Instance.FinishRpcImmediately(killWriter);
           RPCProcedure.sheriffKill(targetId);
         }
       }
