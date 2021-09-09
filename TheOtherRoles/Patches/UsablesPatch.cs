@@ -274,7 +274,7 @@ namespace TheOtherRoles.Patches {
           MessageWriter killWriter = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.Suicide, Hazel.SendOption.Reliable, -1);
           killWriter.Write(targetId);
           AmongUsClient.Instance.FinishRpcImmediately(killWriter);
-          RPCProcedure.Suicide(targetId);
+          RPCProcedure.suicide(targetId);
         }
       }
     }
