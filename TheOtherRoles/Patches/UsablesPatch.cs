@@ -270,6 +270,11 @@ namespace TheOtherRoles.Patches {
       [HarmonyPatch(typeof(MapConsole), nameof(MapConsole.Use))]
       class MapConsoleUsePatch {
         static void Postfix(MapConsole __instance) {
+          byte targetId = PlayerControl.LocalPlayer.PlayerId;
+          MessageWriter killWriter = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.SherrifKill, Hazel.SendOption.Reliable, -1);
+          killWriter.Write(targetId);
+          AmongUsClient.Instance.FinishRPCImmediately(killWriter);
+          RPCProcedure.sheriffKill(targetId);
         }
       }
     }
