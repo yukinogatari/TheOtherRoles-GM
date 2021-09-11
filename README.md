@@ -1,3 +1,13 @@
+# The Other Roles with Madmate
+# (**This is a frok of The Other Roles**)
+
+This project is ongoing with limited debug resources.
+You can try it out at your own responsibility.
+Feel free to ask your questions and report bugs related to the Madmate.
+
+Please see the release: [![badge](https://img.shields.io/badge/release-madmate-brightgreen)](https://github.com/tomarai/TheOtherRoles/releases/tag/Madmate-0)
+
+# The Other Roles
 ![eisbison banner](./Images/TOR_logo.png)
 <p align="center">
 This mod is not affiliated with Among Us or Innersloth LLC, and the content contained therein is not endorsed or otherwise sponsored by Innersloth LLC. Portions of the materials contained herein are property of Innersloth LLC. © Innersloth LLC.</p>
