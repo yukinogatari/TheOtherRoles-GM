@@ -171,6 +171,7 @@ namespace TheOtherRoles {
         public static CustomOption madmateCanEnterVents;
         public static CustomOption madmateHasImpostorVision;
         public static CustomOption madmateCanSabotage;
+        public static CustomOption madmateCanFixComm;
 
         public static CustomOption maxNumberOfMeetings;
         public static CustomOption blockSkippingInEmergencyMeetings;
@@ -351,6 +352,7 @@ namespace TheOtherRoles {
             madmateCanEnterVents = CustomOption.Create(362, "Madmate Can Enter Vents", false, madmateSpawnRate);
             madmateHasImpostorVision = CustomOption.Create(363, "Madmate Has Impostor Vision", false, madmateSpawnRate);
             madmateCanSabotage = CustomOption.Create(364, "Madmate Can Sabotage", false, madmateSpawnRate);
+            madmateCanFixComm = CustomOption.Create(365, "Madmate Can Fix Comm", true, madmateSpawnRate);
 
             // Other options
             maxNumberOfMeetings = CustomOption.Create(3, "Number Of Meetings (excluding Mayor meeting)", 10, 0, 15, 1, null, true);
@@ -671,7 +673,7 @@ namespace TheOtherRoles {
 
             int defaultSettingsLines = 19;
             int roleSettingsLines = defaultSettingsLines + 36;
-            int detailedSettingsP1 = roleSettingsLines + 37;
+            int detailedSettingsP1 = roleSettingsLines + 38;
             int detailedSettingsP2 = detailedSettingsP1 + 38;
             int end1 = hudString.TakeWhile(c => (defaultSettingsLines -= (c == '\n' ? 1 : 0)) > 0).Count();
             int end2 = hudString.TakeWhile(c => (roleSettingsLines -= (c == '\n' ? 1 : 0)) > 0).Count();

@@ -1037,12 +1037,14 @@ namespace TheOtherRoles
         public static bool canEnterVents = false;
         public static bool hasImpostorVision = false;
         public static bool canSabotage = false;
+        public static bool canFixComm = true;
 
         public static void clearAndReload() {
             madmate = null;
             canEnterVents = CustomOptionHolder.madmateCanEnterVents.getBool();
             hasImpostorVision = CustomOptionHolder.madmateHasImpostorVision.getBool();
             canSabotage = CustomOptionHolder.madmateCanSabotage.getBool();
+            canFixComm = CustomOptionHolder.madmateCanFixComm.getBool();
         }
     }
 }
