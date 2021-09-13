@@ -248,7 +248,8 @@ namespace TheOtherRoles.Patches {
         static void Postfix(TuneRadioMinigame __instance) {
             // Block Swapper or Madmate from fixing comms. Still looking for a better way to do this, but deleting the task doesn't seem like a viable option since then the camera, admin table, ... work while comms are out
             if ((Swapper.swapper != null && Swapper.swapper == PlayerControl.LocalPlayer) ||
-                (Madmate.madmate != null && Madmate.madmate == PlayerControl.LocalPlayer)) {
+                (!Madmate.canFixComm && Madmate.madmate != null &&
+                 Madmate.madmate == PlayerControl.LocalPlayer)) {
                 __instance.Close();
             }
         }
