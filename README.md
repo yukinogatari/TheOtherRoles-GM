@@ -1,5 +1,5 @@
 # The Other Roles with Madmate
-# (**This is a frok of The Other Roles**)
+# (**This is a fork of The Other Roles**)
 
 First, this document introduces the new role, Madmate.
 The rest of parts is the same as the original The Other Roles MOD.
