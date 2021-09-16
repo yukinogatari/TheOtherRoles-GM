@@ -1,5 +1,5 @@
 # The Other Roles with Madmate
-# (**This is a frok of The Other Roles**)
+# (**This is a fork of The Other Roles**)
 
 This project is ongoing with limited debug resources.
 You can try it out at your own responsibility.
