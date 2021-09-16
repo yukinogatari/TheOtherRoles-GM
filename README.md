@@ -1,11 +1,41 @@
 # The Other Roles with Madmate
 # (**This is a frok of The Other Roles**)
 
+First, this document introduces the new role, Madmate.
+The rest of parts is the same as the original The Other Roles MOD.
+
 This project is ongoing with limited debug resources.
 You can try it out at your own responsibility.
 Feel free to ask your questions and report bugs related to the Madmate.
 
-Usage and detail description of Madmate is avalable on the release: [![badge](https://img.shields.io/badge/release-madmate-brightgreen)](https://github.com/tomarai/TheOtherRoles/releases/tag/Madmate-0)
+# Madmate
+
+The Madmate is the new role for the mod of Among Us, TheOtherRoles.
+The idea is originally from Are You a Werewolf? and the name origin is [the other mod](https://au.libhalt.net/#madmate) (Japanese only)
+
+## **Team: Impostor**
+
+1. Except for the win condition, the Madmate is a Crewmate.
+2. The Madmate wins if the team Impostors wins.
+3. The Madmate/Impostors does/do not know who are/is the Impostors/Madmate.
+4. The Madmate has fake tasks instead of real one.
+5. The Madmate cannot fix light out sabotage.
+
+### Game Options
+| Name | Description
+|----------|:-------------:|
+| Madmate Spawn Chance |
+| Madmate Can Die To Sheriff |
+| Madmate Can Enter Vents | Allow the Madmate to enter/exit vents (but not actually move to connected vents)
+| Madmate Has Impostor Vision | Give the Madmate the same vision as the Impostors have
+| Madmate Can sabotage | Option to allow the Madmate to sabotage
+| Madmate Can fix comm | Option to allow the Madmate to fix comm sabotage
+-----------------------
+
+## Configuration
+
+The Madmate is a Crewmate role.
+Please increment the minimum and maximum number of crewmate roles to see the Madmate in a play.
 
 # The Other Roles
 ![eisbison banner](./Images/TOR_logo.png)
