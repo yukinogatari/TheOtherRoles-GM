@@ -14,6 +14,8 @@ Feel free to ask your questions and report bugs related to the Madmate.
 Madmate を追加したソースコードの方は公開されていますので、ご自身の visual studio を使って Build していただくのが最もセキュリティ上安全な方法だと存じます。
 コミュニティの皆様で協力しあってのご活用、よろしくお願いいたします。
 
+The Other Roles などの情報を共有しているコミュニティを非営利（広告・ほしいものリストなどを貼らない）で運営している方でこちらのMODに興味がある方がいらっしゃいましたら、こちらの[アカウント](https://twitter.com/4th_1out)まで連絡ください。
+
 # Madmate
 
 The Madmate is the new role for the mod of Among Us, TheOtherRoles.
