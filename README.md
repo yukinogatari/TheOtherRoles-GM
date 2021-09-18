@@ -10,7 +10,7 @@ Feel free to ask your questions and report bugs related to the Madmate.
 
 # 日本人向け
 
-[リンク](https://tomarai.github.io/)
+[リンク](https://discord.com/invite/UmZHCE4xsC) (管理者は私ではありません)
 
 # Madmate
 
