@@ -8,14 +8,9 @@ This project is ongoing with limited debug resources.
 You can try it out at your own responsibility.
 Feel free to ask your questions and report bugs related to the Madmate.
 
-# なにかしらを見てここにたどりついた日本語ユーザの皆様へ
+# 日本人向け
 
-現在 Madmate 入りの DLL はこのページには追加しておりません。
-Madmate を追加したソースコードの方は公開されていますので、ご自身の visual studio を使って Build していただくのが最もセキュリティ上安全な方法だと存じます。
-コミュニティの皆様で協力しあってのご活用、よろしくお願いいたします。
-
-また、こちらの[コミュニティ(discord server)](https://discord.com/invite/UmZHCE4xsC)で相談できるかと思います。（私は管理に携わっておりません。）
-
+[リンク](https://tomarai.github.io/)
 
 # Madmate
 
