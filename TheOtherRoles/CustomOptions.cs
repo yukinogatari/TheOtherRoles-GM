@@ -90,6 +90,7 @@ namespace TheOtherRoles {
 
         public static CustomOption sheriffSpawnRate;
         public static CustomOption sheriffCooldown;
+        public static CustomOption sheriffNumberOfShots;
         public static CustomOption sheriffCanKillNeutrals;
 
         public static CustomOption lighterSpawnRate;
@@ -283,7 +284,8 @@ namespace TheOtherRoles {
 
             sheriffSpawnRate = CustomOption.Create(100, cs(Sheriff.color, "Sheriff"), rates, null, true);
             sheriffCooldown = CustomOption.Create(101, "Sheriff Cooldown", 30f, 10f, 60f, 2.5f, sheriffSpawnRate);
-            sheriffCanKillNeutrals = CustomOption.Create(102, "Sheriff Can Kill Neutrals", false, sheriffSpawnRate);
+            sheriffNumberOfShots = CustomOption.Create(102, "Sheriff Number Of Shots", 1f, 1f, 15f, 1f, sheriffSpawnRate);
+            sheriffCanKillNeutrals = CustomOption.Create(103, "Sheriff Can Kill Neutrals", false, sheriffSpawnRate);
 
 
             lighterSpawnRate = CustomOption.Create(110, cs(Lighter.color, "Lighter"), rates, null, true);
@@ -673,7 +675,7 @@ namespace TheOtherRoles {
 
             int defaultSettingsLines = 19;
             int roleSettingsLines = defaultSettingsLines + 36;
-            int detailedSettingsP1 = roleSettingsLines + 38;
+            int detailedSettingsP1 = roleSettingsLines + 39;
             int detailedSettingsP2 = detailedSettingsP1 + 38;
             int end1 = hudString.TakeWhile(c => (defaultSettingsLines -= (c == '\n' ? 1 : 0)) > 0).Count();
             int end2 = hudString.TakeWhile(c => (roleSettingsLines -= (c == '\n' ? 1 : 0)) > 0).Count();
