@@ -179,8 +179,14 @@ namespace TheOtherRoles
                         (Sheriff.canKillNeutrals && (Arsonist.arsonist == Sheriff.currentTarget || Jester.jester == Sheriff.currentTarget)) ||
                         (Jackal.jackal == Sheriff.currentTarget || Sidekick.sidekick == Sheriff.currentTarget)) {
                         targetId = Sheriff.currentTarget.PlayerId;
-                    }
-                    else {
+                    } else {
+                        if (Sheriff.canKillNeutrals) {
+                            targetId = Sheriff.currentTarget.PlayerId;
+                            MessageWriter firstKillWriter = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.SheriffKill, Hazel.SendOption.Reliable, -1);
+                            firstKillWriter.Write(targetId);
+                            AmongUsClient.Instance.FinishRpcImmediately(killWriter);
+                            RPCProcedure.sheriffKill(targetId);
+                        }
                         targetId = PlayerControl.LocalPlayer.PlayerId;
                     }
                     MessageWriter killWriter = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.SheriffKill, Hazel.SendOption.Reliable, -1);
