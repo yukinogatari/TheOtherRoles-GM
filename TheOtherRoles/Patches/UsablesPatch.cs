@@ -236,9 +236,11 @@ namespace TheOtherRoles.Patches {
             canUse = couldUse = false;
             if (Swapper.swapper != null && Swapper.swapper == PlayerControl.LocalPlayer)
                 return !__instance.TaskTypes.Any(x => x == TaskTypes.FixLights || x == TaskTypes.FixComms);
-            if (Madmate.madmate != null && Madmate.madmate == PlayerControl.LocalPlayer)
-                return !__instance.TaskTypes.Any(x => x == TaskTypes.FixLights || (!Madmate.canFixComm && x == TaskTypes.FixComms));
-            if (__instance.AllowImpostor) return true;
+            if (__instance.AllowImpostor) {
+                if (Madmate.madmate != null && Madmate.madmate == PlayerControl.LocalPlayer)
+                    return !__instance.TaskTypes.Any(x => x == TaskTypes.FixLights || (!Madmate.canFixComm && x == TaskTypes.FixComms));
+                return true;
+            }
             if (!Helpers.hasFakeTasks(pc.Object)) return true;
             __result = float.MaxValue;
             return false;
