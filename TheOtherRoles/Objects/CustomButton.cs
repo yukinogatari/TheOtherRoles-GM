@@ -11,6 +11,7 @@ namespace TheOtherRoles.Objects {
         public static List<CustomButton> buttons = new List<CustomButton>();
         public KillButtonManager killButtonManager;
         public Vector3 PositionOffset;
+        public Vector3 LocalScale = Vector3.one;
         public float MaxTimer = float.MaxValue;
         public float Timer = 0f;
         private Action OnClick;
@@ -20,12 +21,14 @@ namespace TheOtherRoles.Objects {
         private Action OnEffectEnds;
         public bool HasEffect;
         public bool isEffectActive = false;
-        private bool showButtonText = false;
+        public bool showButtonText = false;
         public float EffectDuration;
         public Sprite Sprite;
+        public Func<Sprite> SpriteFunc;
         private HudManager hudManager;
         private bool mirror;
         private KeyCode? hotkey;
+        public int Data;
 
         public CustomButton(Action OnClick, Func<bool> HasButton, Func<bool> CouldUse, Action OnMeetingEnds, Sprite Sprite, Vector3 PositionOffset, HudManager hudManager, KeyCode? hotkey, bool HasEffect, float EffectDuration, Action OnEffectEnds, bool mirror = false)
         {
@@ -41,6 +44,7 @@ namespace TheOtherRoles.Objects {
             this.Sprite = Sprite;
             this.mirror = mirror;
             this.hotkey = hotkey;
+            this.SpriteFunc = null;
             Timer = 16.2f;
             buttons.Add(this);
             killButtonManager = UnityEngine.Object.Instantiate(hudManager.KillButton, hudManager.transform);
@@ -136,12 +140,20 @@ namespace TheOtherRoles.Objects {
             }
             setActive(hudManager.UseButton.isActiveAndEnabled);
 
-            killButtonManager.renderer.sprite = Sprite;
+            if (SpriteFunc != null)
+            {
+                killButtonManager.renderer.sprite = SpriteFunc();
+            } else
+            {
+                killButtonManager.renderer.sprite = Sprite;
+            }
+            
             killButtonManager.killText.enabled = showButtonText; // Only show the text if it's a kill button
             if (hudManager.UseButton != null) {
                 Vector3 pos = hudManager.UseButton.transform.localPosition;
                 if (mirror) pos = new Vector3(-pos.x, pos.y, pos.z);
                 killButtonManager.transform.localPosition = pos + PositionOffset;
+                killButtonManager.transform.localScale = LocalScale;
                 if (hudManager.KillButton != null) hudManager.KillButton.transform.localPosition = hudManager.UseButton.transform.localPosition - new Vector3(1.3f, 0, 0); // Align the kill button (because it's on another position depending on the screen resolution)
             }
             if (CouldUse()) {

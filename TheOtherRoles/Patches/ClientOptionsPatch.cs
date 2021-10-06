@@ -20,12 +20,21 @@ namespace TheOtherRoles.Patches {
         public static float xOffset = 1.75f;
         public static float yOffset = -0.5f;
 
+        public static void updateButtons()
+        {
+            updateToggle(streamerModeButton, $"{ModTranslation.getString("streamerModeButton")}: ", TheOtherRolesPlugin.StreamerMode.Value);
+            updateToggle(ghostsSeeTasksButton, $"{ModTranslation.getString("ghostsSeeTasksButton")}: ", TheOtherRolesPlugin.GhostsSeeTasks.Value);
+            updateToggle(ghostsSeeRolesButton, $"{ModTranslation.getString("ghostsSeeRolesButton")}: ", TheOtherRolesPlugin.GhostsSeeRoles.Value);
+            updateToggle(ghostsSeeVotesButton, $"{ModTranslation.getString("ghostsSeeVotesButton")}: ", TheOtherRolesPlugin.GhostsSeeVotes.Value);
+            updateToggle(showRoleSummaryButton, $"{ModTranslation.getString("showRoleSummaryButton")}: ", TheOtherRolesPlugin.ShowRoleSummary.Value);
+        }
+
         private static void updateToggle(ToggleButtonBehaviour button, string text, bool on) {
             if (button == null || button.gameObject == null) return;
 
             Color color = on ? new Color(0f, 1f, 0.16470589f, 1f) : Color.white;
             button.Background.color = color;
-            button.Text.text = $"{text}{(on ? "On" : "Off")}";
+            button.Text.text = $"{text}{(on ? ModTranslation.getString("optionOn") : ModTranslation.getString("optionOff"))}";
             if (button.Rollover) button.Rollover.ChangeOutColor(color);
         }
 
@@ -51,53 +60,55 @@ namespace TheOtherRoles.Patches {
             }
 
             if ((streamerModeButton == null || streamerModeButton.gameObject == null)) {
-                streamerModeButton = createCustomToggle("Streamer Mode: ", TheOtherRolesPlugin.StreamerMode.Value, Vector3.zero, (UnityEngine.Events.UnityAction)streamerModeToggle, __instance);
+                streamerModeButton = createCustomToggle($"", TheOtherRolesPlugin.StreamerMode.Value, Vector3.zero, (UnityEngine.Events.UnityAction)streamerModeToggle, __instance);
 
                 void streamerModeToggle() {
                     TheOtherRolesPlugin.StreamerMode.Value = !TheOtherRolesPlugin.StreamerMode.Value;
-                    updateToggle(streamerModeButton, "Streamer Mode: ", TheOtherRolesPlugin.StreamerMode.Value);
+                    updateButtons();
                 }
             }
 
             if ((ghostsSeeTasksButton == null || ghostsSeeTasksButton.gameObject == null)) {
-                ghostsSeeTasksButton = createCustomToggle("Ghosts See Remaining Tasks: ", TheOtherRolesPlugin.GhostsSeeTasks.Value, Vector3.right * xOffset, (UnityEngine.Events.UnityAction)ghostsSeeTaskToggle, __instance);
+                ghostsSeeTasksButton = createCustomToggle($"", TheOtherRolesPlugin.GhostsSeeTasks.Value, Vector3.right * xOffset, (UnityEngine.Events.UnityAction)ghostsSeeTaskToggle, __instance);
 
                 void ghostsSeeTaskToggle() {
                     TheOtherRolesPlugin.GhostsSeeTasks.Value = !TheOtherRolesPlugin.GhostsSeeTasks.Value;
-                    MapOptions.ghostsSeeTasks = TheOtherRolesPlugin.GhostsSeeTasks.Value; 
-                    updateToggle(ghostsSeeTasksButton, "Ghosts See Remaining Tasks: ", TheOtherRolesPlugin.GhostsSeeTasks.Value);
+                    MapOptions.ghostsSeeTasks = TheOtherRolesPlugin.GhostsSeeTasks.Value;
+                    updateButtons();
                 }
             }
 
             if ((ghostsSeeRolesButton == null || ghostsSeeRolesButton.gameObject == null)) {
-                ghostsSeeRolesButton = createCustomToggle("Ghosts See Roles: ", TheOtherRolesPlugin.GhostsSeeRoles.Value, new Vector2(-xOffset, yOffset), (UnityEngine.Events.UnityAction)ghostsSeeRolesToggle, __instance);
+                ghostsSeeRolesButton = createCustomToggle($"", TheOtherRolesPlugin.GhostsSeeRoles.Value, new Vector2(-xOffset, yOffset), (UnityEngine.Events.UnityAction)ghostsSeeRolesToggle, __instance);
 
                 void ghostsSeeRolesToggle() {
                     TheOtherRolesPlugin.GhostsSeeRoles.Value = !TheOtherRolesPlugin.GhostsSeeRoles.Value;
-                    MapOptions.ghostsSeeRoles = TheOtherRolesPlugin.GhostsSeeRoles.Value; 
-                    updateToggle(ghostsSeeRolesButton, "Ghosts See Roles: ", TheOtherRolesPlugin.GhostsSeeRoles.Value);
+                    MapOptions.ghostsSeeRoles = TheOtherRolesPlugin.GhostsSeeRoles.Value;
+                    updateButtons();
                 }
             }
 
             if ((ghostsSeeVotesButton == null || ghostsSeeVotesButton.gameObject == null)) {
-                ghostsSeeVotesButton = createCustomToggle("Ghosts See Votes: ", TheOtherRolesPlugin.GhostsSeeVotes.Value, new Vector2(0, yOffset), (UnityEngine.Events.UnityAction)ghostsSeeVotesToggle, __instance);
+                ghostsSeeVotesButton = createCustomToggle($"", TheOtherRolesPlugin.GhostsSeeVotes.Value, new Vector2(0, yOffset), (UnityEngine.Events.UnityAction)ghostsSeeVotesToggle, __instance);
 
                 void ghostsSeeVotesToggle() {
                     TheOtherRolesPlugin.GhostsSeeVotes.Value = !TheOtherRolesPlugin.GhostsSeeVotes.Value;
-                    MapOptions.ghostsSeeVotes = TheOtherRolesPlugin.GhostsSeeVotes.Value; 
-                    updateToggle(ghostsSeeVotesButton, "Ghosts See Votes: ", TheOtherRolesPlugin.GhostsSeeVotes.Value);
+                    MapOptions.ghostsSeeVotes = TheOtherRolesPlugin.GhostsSeeVotes.Value;
+                    updateButtons();
                 }
             }
             
             if ((showRoleSummaryButton == null || showRoleSummaryButton.gameObject == null)) {
-                showRoleSummaryButton = createCustomToggle("Role Summary: ", TheOtherRolesPlugin.ShowRoleSummary.Value, new Vector2(xOffset, yOffset), (UnityEngine.Events.UnityAction)showRoleSummaryToggle, __instance);
+                showRoleSummaryButton = createCustomToggle($"", TheOtherRolesPlugin.ShowRoleSummary.Value, new Vector2(xOffset, yOffset), (UnityEngine.Events.UnityAction)showRoleSummaryToggle, __instance);
 
                 void showRoleSummaryToggle() {
                     TheOtherRolesPlugin.ShowRoleSummary.Value = !TheOtherRolesPlugin.ShowRoleSummary.Value;
-                    MapOptions.showRoleSummary = TheOtherRolesPlugin.ShowRoleSummary.Value; 
-                    updateToggle(showRoleSummaryButton, "Role Summary: ", TheOtherRolesPlugin.ShowRoleSummary.Value);
+                    MapOptions.showRoleSummary = TheOtherRolesPlugin.ShowRoleSummary.Value;
+                    updateButtons();
                 }
             }
+
+            updateButtons();
         }
     }
 

@@ -19,9 +19,10 @@ namespace TheOtherRoles.Patches {
             float num = float.MaxValue;
             PlayerControl @object = pc.Object;
 
-
             bool roleCouldUse = false;
             if (Engineer.engineer != null && Engineer.engineer == @object)
+                roleCouldUse = true;
+            else if (GM.gm != null && GM.gm == @object)
                 roleCouldUse = true;
             else if (Jackal.canUseVents && Jackal.jackal != null && Jackal.jackal == @object)
                 roleCouldUse = true;
@@ -31,7 +32,8 @@ namespace TheOtherRoles.Patches {
                 roleCouldUse = true;
             else if (Madmate.canEnterVents && Madmate.madmate != null && Madmate.madmate == @object)
                 roleCouldUse = true;
-            else if (pc.IsImpostor) {
+            else if (pc.IsImpostor)
+            {
                 if (Janitor.janitor != null && Janitor.janitor == PlayerControl.LocalPlayer)
                     roleCouldUse = false;
                 else if (Mafioso.mafioso != null && Mafioso.mafioso == PlayerControl.LocalPlayer && Godfather.godfather != null && !Godfather.godfather.Data.IsDead)
@@ -42,7 +44,7 @@ namespace TheOtherRoles.Patches {
 
             var usableDistance = __instance.UsableDistance;
             if (__instance.name.StartsWith("JackInTheBoxVent_")) {
-                if(Trickster.trickster != PlayerControl.LocalPlayer) {
+                if(Trickster.trickster != PlayerControl.LocalPlayer && !PlayerControl.LocalPlayer.isGM()) {
                     // Only the Trickster can use the Jack-In-The-Boxes!
                     canUse = false;
                     couldUse = false;
@@ -195,15 +197,22 @@ namespace TheOtherRoles.Patches {
             var roleCanCallEmergency = true;
             var statusText = "";
 
+            // Deactivate emergency button for GM
+            if (PlayerControl.LocalPlayer.isGM())
+            {
+                roleCanCallEmergency = false;
+                statusText = ModTranslation.getString("gmMeetingButton");
+            }
+
             // Deactivate emergency button for Swapper
             if (Swapper.swapper != null && Swapper.swapper == PlayerControl.LocalPlayer && !Swapper.canCallEmergency) {
                 roleCanCallEmergency = false;
-                statusText = "The Swapper can't start an emergency meeting";
+                statusText = ModTranslation.getString("swapperMeetingButton");
             }
             // Potentially deactivate emergency button for Jester
             if (Jester.jester != null && Jester.jester == PlayerControl.LocalPlayer && !Jester.canCallEmergency) {
                 roleCanCallEmergency = false;
-                statusText = "The Jester can't start an emergency meeting";
+                statusText = ModTranslation.getString("jesterMeetingButton");
             }
 
             if (!roleCanCallEmergency) {
@@ -214,13 +223,16 @@ namespace TheOtherRoles.Patches {
                 __instance.ButtonActive = false;
                 return;
             }
-
             // Handle max number of meetings
             if (__instance.state == 1) {
                 int localRemaining = PlayerControl.LocalPlayer.RemainingEmergencies;
                 int teamRemaining = Mathf.Max(0, maxNumberOfMeetings - meetingsCount);
                 int remaining = Mathf.Min(localRemaining, (Mayor.mayor != null && Mayor.mayor == PlayerControl.LocalPlayer) ? 1 : teamRemaining);
-                __instance.NumberText.text = $"{localRemaining.ToString()} and the ship has {teamRemaining.ToString()}";
+
+                //__instance.StatusText.text = $"<size=75%>船員{PlayerControl.LocalPlayer.name}がボタン\n\n\n残っている</size>";
+                //__instance.NumberText.text = $"{localRemaining.ToString()}個　とお船全体が　{teamRemaining.ToString()}個";
+                __instance.StatusText.text = "<size=100%>" + String.Format(ModTranslation.getString("meetingStatus"), PlayerControl.LocalPlayer.name) + "</size>";
+                __instance.NumberText.text = String.Format(ModTranslation.getString("meetingCount"), localRemaining.ToString(), teamRemaining.ToString());
                 __instance.ButtonActive = remaining > 0;
                 __instance.ClosedLid.gameObject.SetActive(!__instance.ButtonActive);
                 __instance.OpenLid.gameObject.SetActive(__instance.ButtonActive);
@@ -237,31 +249,73 @@ namespace TheOtherRoles.Patches {
             if (Swapper.swapper != null && Swapper.swapper == PlayerControl.LocalPlayer)
                 return !__instance.TaskTypes.Any(x => x == TaskTypes.FixLights || x == TaskTypes.FixComms);
             if (__instance.AllowImpostor) return true;
-            if (!Helpers.hasFakeTasks(pc.Object)) return true;
+            if (!pc.Object.hasFakeTasks()) return true;
             __result = float.MaxValue;
             return false;
         }
     }
 
     [HarmonyPatch(typeof(TuneRadioMinigame), nameof(TuneRadioMinigame.Begin))]
-    class CommsMinigameBeginPatch {
+    class CommsMinigameBeginPatch
+    {
         static void Postfix(TuneRadioMinigame __instance) {
             // Block Swapper or Madmate from fixing comms. Still looking for a better way to do this, but deleting the task doesn't seem like a viable option since then the camera, admin table, ... work while comms are out
             if ((Swapper.swapper != null && Swapper.swapper == PlayerControl.LocalPlayer) ||
-                (!Madmate.canFixComm && Madmate.madmate != null &&
-                 Madmate.madmate == PlayerControl.LocalPlayer)) {
-                __instance.Close();
+                (!Madmate.canFixComm && Madmate.madmate != null && Madmate.madmate == PlayerControl.LocalPlayer) ||
+                (PlayerControl.LocalPlayer.isGM())) {
+                __instance.ForceClose();
             }
         }
     }
 
     [HarmonyPatch(typeof(SwitchMinigame), nameof(SwitchMinigame.Begin))]
     class LightsMinigameBeginPatch {
+
         static void Postfix(SwitchMinigame __instance) {
             // Block Swapper or Madmate from fixing lights. One could also just delete the PlayerTask, but I wanted to do it the same way as with coms for now.
             if ((Swapper.swapper != null && Swapper.swapper == PlayerControl.LocalPlayer) ||
-                (Madmate.madmate != null && Madmate.madmate == PlayerControl.LocalPlayer)) {
-                __instance.Close();
+                (Madmate.madmate != null && Madmate.madmate == PlayerControl.LocalPlayer) ||
+                (PlayerControl.LocalPlayer.isGM())) {
+                __instance.ForceClose();
+            }
+        }
+    }
+
+    [HarmonyPatch(typeof(ReactorMinigame), nameof(ReactorMinigame.Begin))]
+    class ReactorMinigameBeginPatch
+    {
+        static void Postfix(ReactorMinigame __instance)
+        {
+            TheOtherRolesPlugin.Instance.Log.LogInfo($"ReactorMinigame.Begin");
+            if (PlayerControl.LocalPlayer.isGM())
+            {
+                __instance.ForceClose();
+            }
+        }
+    }
+
+    [HarmonyPatch(typeof(MonitorOxyMinigame), nameof(MonitorOxyMinigame.Begin))]
+    class MonitorOxyMinigameBeginPatch
+    {
+        static void Postfix(MonitorOxyMinigame __instance)
+        {
+            TheOtherRolesPlugin.Instance.Log.LogInfo($"MonitorOxyMinigame.Begin");
+            if (PlayerControl.LocalPlayer.isGM())
+            {
+                __instance.ForceClose();
+            }
+        }
+    }
+
+    [HarmonyPatch(typeof(AirshipAuthGame), nameof(AirshipAuthGame.Begin))]
+    class AirshipAuthGameBeginPatch
+    {
+        static void Postfix(AirshipAuthGame __instance)
+        {
+            TheOtherRolesPlugin.Instance.Log.LogInfo($"AirshipAuthGame.Begin");
+            if (PlayerControl.LocalPlayer.isGM())
+            {
+                __instance.ForceClose();
             }
         }
     }

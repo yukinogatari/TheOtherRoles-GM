@@ -1,4 +1,4 @@
-using HarmonyLib;
+﻿using HarmonyLib;
 using Hazel;
 using System;
 using System.Collections.Generic;
@@ -22,6 +22,17 @@ namespace TheOtherRoles.Patches {
             if (!ShipStatus.Instance) return result;
             if (targetingPlayer == null) targetingPlayer = PlayerControl.LocalPlayer;
             if (targetingPlayer.Data.IsDead) return result;
+            if (targetingPlayer.isGM()) return result;
+
+            // GM is untargetable by anything
+            if (GM.gm != null)
+            {
+                if (untargetablePlayers == null)
+                {
+                    untargetablePlayers = new List<PlayerControl>();
+                }
+                untargetablePlayers.Add(GM.gm);
+            }
 		
             Vector2 truePosition = targetingPlayer.GetTruePosition();
             Il2CppSystem.Collections.Generic.List<GameData.PlayerInfo> allPlayers = GameData.Instance.AllPlayers;
@@ -138,7 +149,7 @@ namespace TheOtherRoles.Patches {
         }
         
         static void sheriffSetTarget() {
-            if (Sheriff.sheriff == null || Sheriff.sheriff != PlayerControl.LocalPlayer) return;
+            if (Sheriff.sheriff == null || Sheriff.sheriff != PlayerControl.LocalPlayer || Sheriff.numShots <= 0) return;
             Sheriff.currentTarget = setTarget();
             setPlayerOutline(Sheriff.currentTarget, Sheriff.color);
         }
@@ -156,7 +167,7 @@ namespace TheOtherRoles.Patches {
             if (Detective.timer <= 0f) {
                 Detective.timer = Detective.footprintIntervall;
                 foreach (PlayerControl player in PlayerControl.AllPlayerControls) {
-                    if (player != null && player != PlayerControl.LocalPlayer && !player.Data.IsDead && !player.inVent) {
+                    if (player != null && player != PlayerControl.LocalPlayer && !player.Data.IsDead && !player.inVent && !player.isGM()) {
                         new Footprint(Detective.footprintDuration, Detective.anonymousFootprints, player);
                     }
                 }
@@ -341,7 +352,7 @@ namespace TheOtherRoles.Patches {
 
         public static void updatePlayerInfo() {
             foreach (PlayerControl p in PlayerControl.AllPlayerControls) {
-                if (p != PlayerControl.LocalPlayer && !PlayerControl.LocalPlayer.Data.IsDead) continue;
+                if (p != PlayerControl.LocalPlayer && !PlayerControl.LocalPlayer.Data.IsDead && !p.isGM() && !PlayerControl.LocalPlayer.isGM()) continue;
 
                 Transform playerInfoTransform = p.nameText.transform.parent.FindChild("Info");
                 TMPro.TextMeshPro playerInfo = playerInfoTransform != null ? playerInfoTransform.GetComponent<TMPro.TextMeshPro>() : null;
@@ -358,7 +369,8 @@ namespace TheOtherRoles.Patches {
                 if (meetingInfo == null && playerVoteArea != null) {
                     meetingInfo = UnityEngine.Object.Instantiate(playerVoteArea.NameText, playerVoteArea.NameText.transform.parent);
                     meetingInfo.transform.localPosition += Vector3.down * 0.20f;
-                    meetingInfo.fontSize *= 0.75f;
+                    meetingInfo.fontSize *= 0.63f;
+                    meetingInfo.autoSizeTextContainer = true;
                     meetingInfo.gameObject.name = "Info";
                 }
                 
@@ -375,7 +387,7 @@ namespace TheOtherRoles.Patches {
                         tabText.SetText($"Tasks {taskInfo}");
                     }
                     meetingInfoText = $"{roleNames} {taskInfo}".Trim();
-                } 
+                }
                 else if (MapOptions.ghostsSeeRoles && MapOptions.ghostsSeeTasks) {
                     playerInfoText = $"{roleNames} {taskInfo}".Trim();
                     meetingInfoText = playerInfoText;
@@ -387,8 +399,13 @@ namespace TheOtherRoles.Patches {
                 else if (MapOptions.ghostsSeeRoles) {
                     playerInfoText = $"{roleNames}";
                     meetingInfoText = playerInfoText;
+                } else if (p.isGM() || PlayerControl.LocalPlayer.isGM())
+                {
+                    playerInfoText = $"{roleNames} {taskInfo}".Trim();
+                    meetingInfoText = playerInfoText;
                 }
 
+                meetingInfoText = meetingInfoText.Replace("ラバーズ", "♥");
                 playerInfo.text = playerInfoText;
                 playerInfo.gameObject.SetActive(p.Visible);
                 if (meetingInfo != null) meetingInfo.text = MeetingHud.Instance.state == MeetingHud.VoteStates.Results ? "" : meetingInfoText;
@@ -488,7 +505,7 @@ namespace TheOtherRoles.Patches {
                 BountyHunter.bountyUpdateTimer = BountyHunter.bountyDuration;
                 var possibleTargets = new List<PlayerControl>();
                 foreach (PlayerControl p in PlayerControl.AllPlayerControls) {
-                    if (!p.Data.IsDead && !p.Data.Disconnected && p != p.Data.IsImpostor && p != Spy.spy && (p != Mini.mini || Mini.isGrownUp())) possibleTargets.Add(p);
+                    if (!p.Data.IsDead && !p.Data.Disconnected && !p.Data.IsImpostor && p != Spy.spy && (p != Mini.mini || Mini.isGrownUp()) && !p.isGM()) possibleTargets.Add(p);
                 }
                 BountyHunter.bounty = possibleTargets[TheOtherRoles.rnd.Next(0, possibleTargets.Count)];
                 if (BountyHunter.bounty == null) return;
@@ -559,6 +576,38 @@ namespace TheOtherRoles.Patches {
             }
         }
 
+        static void gmUpdate()
+        {
+            if (GM.gm == null || GM.gm != PlayerControl.LocalPlayer) return;
+
+            bool showIcon = (GM.canWarp || GM.canKill) && MeetingHud.Instance == null;
+
+            foreach (byte playerID in MapOptions.playerIcons.Keys)
+            {
+                PlayerControl pc = Helpers.playerById(playerID);
+                PoolablePlayer pp = MapOptions.playerIcons[playerID];
+                pp.gameObject.SetActive(showIcon);
+                if (pc.Data.IsDead)
+                {
+                    pp.setSemiTransparent(true);
+                } else
+                {
+                    pp.setSemiTransparent(false);
+                }
+            }
+
+            if (TaskPanelBehaviour.InstanceExists)
+            {
+                TaskPanelBehaviour.Instance.enabled = false;
+                TaskPanelBehaviour.Instance.background.enabled = false;
+                TaskPanelBehaviour.Instance.tab.enabled = false;
+                TaskPanelBehaviour.Instance.TaskText.enabled = false;
+                TaskPanelBehaviour.Instance.tab.transform.FindChild("TabText_TMP").GetComponent<TMPro.TextMeshPro>().SetText("");
+                //TaskPanelBehaviour.Instance.transform.localPosition = Vector3.negativeInfinityVector;
+            }
+
+        }
+
         public static void Postfix(PlayerControl __instance) {
             if (AmongUsClient.Instance.GameState != InnerNet.InnerNetClient.GameStates.Started) return;
 
@@ -618,6 +667,8 @@ namespace TheOtherRoles.Patches {
                 bountyHunterUpdate();
                 // Bait
                 baitUpdate();
+                // GM
+                gmUpdate();
             } 
         }
     }
@@ -636,8 +687,14 @@ namespace TheOtherRoles.Patches {
 
     [HarmonyPatch(typeof(PlayerControl), nameof(PlayerControl.CmdReportDeadBody))]
     class PlayerControlCmdReportDeadBodyPatch {
-        public static void Prefix(PlayerControl __instance) {
+        public static bool Prefix(PlayerControl __instance) {
             Helpers.handleVampireBiteOnBodyReport();
+
+            if (__instance.isGM())
+            {
+                return false;
+            }
+            return true;
         }
     }
     [HarmonyPatch(typeof(PlayerControl), nameof(PlayerControl.RpcMurderPlayer))]

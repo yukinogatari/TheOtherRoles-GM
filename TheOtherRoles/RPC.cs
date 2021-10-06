@@ -49,6 +49,7 @@ namespace TheOtherRoles
         BountyHunter,
         Bait,
         Madmate,
+        GM,
         Crewmate,
         Impostor
     }
@@ -98,7 +99,9 @@ namespace TheOtherRoles
         PlaceCamera,
         SealVent,
         ArsonistWin,
-        GuesserShoot
+        GuesserShoot,
+        GMKill,
+        GMRevive
     }
 
     public static class RPCProcedure {
@@ -241,6 +244,9 @@ namespace TheOtherRoles
                     case RoleId.Madmate:
                         Madmate.madmate = player;
                         break;
+                    case RoleId.GM:
+                        GM.gm = player;
+                        break;
                     }
                 }
         }
@@ -325,6 +331,7 @@ namespace TheOtherRoles
             })));
 
             if (TimeMaster.timeMaster == null || PlayerControl.LocalPlayer == TimeMaster.timeMaster) return; // Time Master himself does not rewind
+            if (PlayerControl.LocalPlayer.isGM()) return; // GM does not rewind
 
             TimeMaster.isRewinding = true;
 
@@ -373,6 +380,11 @@ namespace TheOtherRoles
 
             Shifter.futureShift = null;
             Shifter.clearAndReload();
+
+            if (player == GM.gm)
+            {
+                return;
+            }
 
             // Suicide (exile) when impostor or impostor variants
             if (player.Data.IsImpostor || player == Jackal.jackal || player == Sidekick.sidekick || Jackal.formerJackals.Contains(player) || player == Jester.jester || player == Arsonist.arsonist) {
@@ -448,15 +460,12 @@ namespace TheOtherRoles
         public static void morphlingMorph(byte playerId) {  
             PlayerControl target = Helpers.playerById(playerId);
             if (Morphling.morphling == null || target == null) return;
-
-            Morphling.morphTimer = Morphling.duration;
-            Morphling.morphTarget = target;
+            Morphling.startMorph(target);
         }
 
         public static void camouflagerCamouflage() {
             if (Camouflager.camouflager == null) return;
-
-            Camouflager.camouflageTimer = Camouflager.duration;
+            Camouflager.startCamouflage();
         }
 
         public static void vampireSetBitten(byte targetId, byte reset) {
@@ -710,6 +719,30 @@ namespace TheOtherRoles
                 else if (partner != null && PlayerControl.LocalPlayer == partner) 
                     HudManager.Instance.KillOverlay.ShowKillAnimation(partner.Data, partner.Data);
         }
+
+        public static void GMKill(byte targetId)
+        {
+            PlayerControl target = Helpers.playerById(targetId);
+            if (target == null) return;
+            target.Exiled();
+            PlayerControl partner = target.getPartner(); // Lover check
+
+            if (HudManager.Instance != null && GM.gm != null)
+            {
+                if (PlayerControl.LocalPlayer == target)
+                    HudManager.Instance.KillOverlay.ShowKillAnimation(GM.gm.Data, target.Data);
+                else if (partner != null && PlayerControl.LocalPlayer == partner)
+                    HudManager.Instance.KillOverlay.ShowKillAnimation(GM.gm.Data, partner.Data);
+            }
+        }
+
+        public static void GMRevive(byte targetId)
+        {
+            PlayerControl target = Helpers.playerById(targetId);
+            if (target == null) return;
+            target.Revive();
+            target.getPartner()?.Revive(); // Lover check
+        }
     }   
 
     [HarmonyPatch(typeof(PlayerControl), nameof(PlayerControl.HandleRpc))]
@@ -871,6 +904,12 @@ namespace TheOtherRoles
                     break;
                 case (byte)CustomRPC.GuesserShoot:
                     RPCProcedure.guesserShoot(reader.ReadByte());
+                    break;
+                case (byte)CustomRPC.GMKill:
+                    RPCProcedure.GMKill(reader.ReadByte());
+                    break;
+                case (byte)CustomRPC.GMRevive:
+                    RPCProcedure.GMRevive(reader.ReadByte());
                     break;
             }
         }

@@ -21,7 +21,7 @@ namespace TheOtherRoles
     public class TheOtherRolesPlugin : BasePlugin
     {
         public const string Id = "me.eisbison.theotherroles";
-        public const string VersionString = "2.8.1.1";
+        public const string VersionString = "2.9.0";
         public static System.Version Version = System.Version.Parse(VersionString);
 
         public Harmony Harmony { get; } = new Harmony(Id);
@@ -53,7 +53,9 @@ namespace TheOtherRoles
             serverManager.AvailableRegions = regions;
         }
 
-        public override void Load() {
+        public override void Load()
+        {
+            ModTranslation.Load();
 
             DebugMode = Config.Bind("Custom", "Enable Debug Mode", false);
             StreamerMode = Config.Bind("Custom", "Enable Streamer Mode", false);
@@ -78,6 +80,7 @@ namespace TheOtherRoles
             Instance = this;
             CustomOptionHolder.Load();
             CustomColors.Load();
+            RoleInfo.Load();
 
             Harmony.PatchAll();
         }

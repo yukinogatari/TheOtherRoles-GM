@@ -3,6 +3,7 @@ using static TheOtherRoles.TheOtherRoles;
 using System.Collections;
 using System.Collections.Generic;
 using System;
+using UnhollowerBaseLib;
 
 namespace TheOtherRoles {
     [HarmonyPatch]
@@ -15,6 +16,8 @@ namespace TheOtherRoles {
                 playerInfo.Object &&
                 (PlayerControl.GameOptions.GhostsDoTasks || !playerInfo.IsDead) &&
                 !playerInfo.IsImpostor &&
+                !(playerInfo.Object.isGM() && !GM.hasTasks) &&
+                !(playerInfo.Object.isLovers() && !Lovers.tasksCount) &&
                 !playerInfo.Object.hasFakeTasks()
                 ) {
 
@@ -35,7 +38,7 @@ namespace TheOtherRoles {
                 __instance.CompletedTasks = 0;
                 for (int i = 0; i < __instance.AllPlayers.Count; i++) {
                     GameData.PlayerInfo playerInfo = __instance.AllPlayers[i];
-                    if (playerInfo.Object && playerInfo.Object.hasAliveKillingLover())
+                    if (playerInfo.Object?.isLovers() == true && !Lovers.tasksCount)
                         continue;
                     var (playerCompleted, playerTotal) = taskInfo(playerInfo);
                     __instance.TotalTasks += playerTotal;
@@ -44,6 +47,7 @@ namespace TheOtherRoles {
                 return false;
             }
         }
-        
+
+
     }
 }

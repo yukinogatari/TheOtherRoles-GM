@@ -21,6 +21,7 @@ namespace TheOtherRoles{
         public static List<SurvCamera> camerasToAdd = new List<SurvCamera>();
         public static List<Vent> ventsToSeal = new List<Vent>();
         public static Dictionary<byte, PoolablePlayer> playerIcons = new Dictionary<byte, PoolablePlayer>();
+        public static Dictionary<byte, MorphData> morphData = new Dictionary<byte, MorphData>();
 
 public static void clearAndReloadMapOptions() {
             meetingsCount = 0;

@@ -1,72 +1,30 @@
-# The Other Roles with Madmate
+
+# The Other Roles: GM Edition
 # (**This is a fork of The Other Roles**)
 
-First, this document introduces the new role, Madmate.
-The rest of parts is the same as the original The Other Roles MOD.
+This fork introduces a number of changes to [The Other Roles v2.8.1](https://github.com/Eisbison/TheOtherRoles). The most significant of which is the [GM](#gm) and [Madmate](#madmate) roles. It also adds support for [translating](#translation) the mod into any language currently supported by Among Us.
 
-This project is ongoing with limited debug resources.
-You can try it out at your own responsibility.
-Feel free to ask your questions and report bugs related to the Madmate.
-
-# なにかしらを見てここにたどりついた日本語ユーザの皆様へ
-
-現在 Madmate 入りの DLL はこのページには追加しておりません。
-Madmate を追加したソースコードの方は公開されていますので、ご自身の visual studio を使って Build していただくのが最もセキュリティ上安全な方法だと存じます。
-コミュニティの皆様で協力しあってのご活用、よろしくお願いいたします。
-
-また、こちらの[コミュニティ(discord server)](https://discord.com/invite/UmZHCE4xsC)で相談できるかと思います。（私は管理に携わっておりません。）
-
-
-# Madmate
-
-The Madmate is the new role for the mod of Among Us, TheOtherRoles.
-The idea is originally from Are You a Werewolf? and the name origin is [the other mod](https://au.libhalt.net/#madmate) (Japanese only)
-
-## **Team: Impostor**
-
-1. Except for the win condition, the Madmate is a Crewmate.
-2. The Madmate wins if the team Impostors wins.
-3. The Madmate/Impostors does/do not know who are/is the Impostors/Madmate.
-4. The Madmate has fake tasks instead of real one.
-5. The Madmate cannot fix light out sabotage.
-
-### Game Options
-| Name | Description
-|----------|:-------------:|
-| Madmate Spawn Chance |
-| Madmate Can Die To Sheriff |
-| Madmate Can Enter Vents | Allow the Madmate to enter/exit vents (but not actually move to connected vents)
-| Madmate Has Impostor Vision | Give the Madmate the same vision as the Impostors have
-| Madmate Can sabotage | Option to allow the Madmate to sabotage
-| Madmate Can fix comm | Option to allow the Madmate to fix comm sabotage
------------------------
-
-## Configuration
-
-The Madmate is a Crewmate role.
-Please increment the minimum and maximum number of crewmate roles to see the Madmate in a play.
 
 # The Other Roles
 ![eisbison banner](./Images/TOR_logo.png)
 <p align="center">
 This mod is not affiliated with Among Us or Innersloth LLC, and the content contained therein is not endorsed or otherwise sponsored by Innersloth LLC. Portions of the materials contained herein are property of Innersloth LLC. © Innersloth LLC.</p>
 
-[![Discord](./Images/TOR_server.png)](https://discord.gg/77RkMJHWsM)
 ![eisbison infographic](./Images/TOR_roles.jpg)
 
 
 # The Other Roles
 
-The **The Other Roles**, is a mod for [Among Us](https://store.steampowered.com/app/945360/Among_Us) which adds many new roles, new [Settings](#settings), new [Custom Hats](#custom-hats) and support for [10+ Player Lobbies](#Custom-Servers-and-10+-Players) to the game.
+The **The Other Roles**, is a mod for [Among Us](https://store.steampowered.com/app/945360/Among_Us) which adds many new roles, new [Settings](#settings), and new [Custom Hats](#custom-hats) to the game.
 Even more roles are coming soon :)
 
-| Impostors | Crewmates | Neutral | Secondary |
+| Impostors | Crewmates | Neutral | Observer | 
 |----------|-------------|-----------------|----------------|
-| [Evil Mini](#mini) | [Nice Mini](#mini) | [Arsonist](#arsonist) | [Lover](#lovers) |
-| [Evil Guesser](#guesser) | [Nice Guesser](#guesser) | [Jester](#jester) |  |
+| [Evil Mini](#mini) | [Nice Mini](#mini) | [Arsonist](#arsonist) | [GM](#gm) |
+| [Evil Guesser](#guesser) | [Nice Guesser](#guesser) | [Jester](#jester) |  
 | [Bounty Hunter](#bounty-hunter) | [Detective](#detective) | [Jackal](#jackal) |  |
 | [Camouflager](#camouflager) | [Engineer](#engineer) | [Sidekick](#sidekick) |  |
-| [Cleaner](#cleaner) | [Hacker](#hacker) |  |  |
+| [Cleaner](#cleaner) | [Hacker](#hacker) | [Lover](#lovers) |  |
 | [Eraser](#eraser) | [Lighter](#lighter) |  |  |
 | [Godfather (Mafia)](#mafia) | [Mayor](#mayor) |  |  |
 | [Mafioso (Mafia)](#mafia) | [Medic](#medic) |  |  |
@@ -79,13 +37,15 @@ Even more roles are coming soon :)
 |  | [Swapper](#swapper) |  |  |
 |  | [Time Master](#time-master) |  |  |
 |  |  [Tracker](#tracker) |  |  |
-|  |  [Bait](#bait) |  |
+|  |  [Bait](#bait) |  |  |
+|  |  [Madmate](#madmate)  |  |  |
 
 The [Role Assignment](#role-assignment) sections explains how the roles are being distributed among the players.
 
 # Releases
 | Among Us - Version| Mod Version | Link |
 |----------|-------------|-----------------|
+| 2021.6.30s| v2.9.0| TBD
 | 2021.6.30s| v2.8.1| [Download](https://github.com/Eisbison/TheOtherRoles/releases/download/v2.8.1/TheOtherRoles.zip)
 | 2021.6.30s| v2.8.0| [Download](https://github.com/Eisbison/TheOtherRoles/releases/download/v2.8.0/TheOtherRoles.zip)
 | 2021.6.30s| v2.7.3| [Download](https://github.com/Eisbison/TheOtherRoles/releases/download/v2.7.3/TheOtherRoles.zip)
@@ -123,6 +83,15 @@ The [Role Assignment](#role-assignment) sections explains how the roles are bein
 # Changelog
 <details>
   <summary>Click to show the Changelog</summary>
+
+**Version 2.9.0**
+- **New Role:** [Madmate](#madmate) (created by [tomarai](https://github.com/tomarai))
+- **New Role:** [GM](#gm) (created by [yukinogatari](https://github.com/yukinogatari))
+- Added Lovers Options: "Lovers Can Win With Crew", "Lovers Tasks Are Counted"
+- Added Sheriff Options: "Number of Shots"
+- Improved performance of Morphling/Camouflager abilities.
+- Added Japanese translation (by [yukinogatari](https://github.com/yukinogatari)) and support for adding [other languages](#translation).
+- Miscellaneous changes and bugfixes
 
 **Hotfix 2.8.1**
 - Fixed a game breaking bug where killing the Bait resulted in a ban of the Bait
@@ -378,7 +347,7 @@ syncs your game options automatically.
 If you have problems with the AmongUsModUpdater, make sure to [contact us](https://discord.gg/csa3pHYdPU).
 
 ## Windows Manual Installation
-1. Download and unzip the newest [release](https://github.com/Eisbison/TheOtherRoles/releases/latest)
+1. Download and unzip the newest [release](https://github.com/yukinogatari/TheOtherRoles-GM/releases/latest)
 2. Find the folder of your game, for Steam players you can right click in Steam, on the game, a menu will appear proposing you to go to the folders.
 3. Make a copy of your game, it's not obligatory but advised, put it where you want.
 4. Drag or extract the files from the zip into your game, at the `.exe` level.
@@ -639,7 +608,7 @@ ex Lover surviving as the partnership was erased before. Also a Jester win would
 | Name | Description |
 |----------|:-------------:|
 | Eraser Spawn Chance | -
-| Eraser Cooldown | The Erasers cooldown will increase by 10 seconds after every erase.
+| Eraser Cooldown | The Eraser's cooldown will increase by 10 seconds after every erase.
 | Eraser Can Erase Anyone | If set to false, he can't erase the Spy and other Impostors
 -----------------------
 
@@ -724,7 +693,33 @@ Depending on the options, there'll be an arrow pointing towards the current targ
 | Cooldown After Killing Bounty | -
 | Additional Cooldown After Killing Others | Time will be added to the normal impostor cooldown if the Bounty Hunter kills a not-bounty player
 | Show Arrow Pointing Towards The Bounty | If set to true an arrow will appear (only visiable for the Bounty Hunter)
-| Bounty Hunter Arrow Update Intervall | Sets how often the position is being updated
+| Bounty Hunter Arrow Update Interval | Sets how often the position is being updated
+
+-----------------------
+
+
+## Madmate
+### **Team: Impostor**
+
+The Madmate is a crewmate that works to support the impostors.
+The concepted originally comes from Are You a Werewolf?, and the name for this role is taken from [au.libhalt.net's mod](https://au.libhalt.net/#madmate) (Japanese only).
+TheOtherRoles implementation by [tomarai](https://github.com/tomarai)
+
+1. Functionally, the Madmate is a crewmate role.
+2. If the Impostors win, the Madmate wins as well.
+3. The Madmate doesn't know who the Impostors are, and vice versa.
+4. The Madmate doesn't have tasks.
+5. The Madmate cannot fix lights.
+
+### Game Options
+| Name | Description
+|----------|:-------------:|
+| Madmate Spawn Chance | - |
+| Madmate Can Die To Sheriff | Allows the Sheriff to kill the Madmate
+| Madmate Can Enter Vents | Allow the Madmate to enter/exit vents
+| Madmate Has Impostor Vision | Give the Madmate the same vision as the Impostors have
+| Madmate Can Sabotage | Allow the Madmate to sabotage
+| Madmate Can Fix Comm | Allow the Madmate to fix comms
 -----------------------
 
 
@@ -750,7 +745,6 @@ You can only shoot during the voting time.
 | Chance That The Guesser Is An Impostor | -
 | Guesser Number Of Shots Per Game| -
 | Guesser Number Of Shots Per Meeting| -
-
 -----------------------
 
 ## Lovers
@@ -761,10 +755,8 @@ If one Lover dies (and the option is activated), the other Lover suicides.\
 You can select if Lovers are able to have a second role (could be a Neutral, Crewmate or Impostor Role)\
 You can specify the chance of one Lover being an Impostor.\
 The Lovers never know the role of their partner, they only see who their partner is.\
-The Lovers win, if they are both alive when the game ends. They can also win with their original team (e.g. a dead Impostor Lover can win with the Impostors, an Arsonist Lover can still achieve an Arsonist win)\
-If one of the Lovers is a killer (i.e. Jackal/Sidekick/Impostor), they can achieve a "Lovers solo win" where only the Lovers win.\
-If there is no killer among the Lovers (e.g. an Arsonist Lover + Crewmate Lover) and they are both alive when the game ends, they win together with the Crewmates.\
-If there's an team Impostor/Jackal Lover in the game, the tasks of a Crewmate Lover won't be counted (for a task win) as long as he's alive. If the Lover dies, his tasks will also be counted.\
+The Lovers win if they are both alive when the game ends. \
+If there is no killer among the Lovers (e.g. an Arsonist Lover + Crewmate Lover) and they are both alive when the game ends, they can win together with the Crewmates.\
 \
 **NOTE:**
 - In a 2 Cremates vs 2 Impostors (or 2 members of team Jackal) and the Lovers are not in the same team, the game is not automatically over since the Lovers can still achieve a solo win. E.g. if there are the following roles Impostor + ImpLover + Lover + Crewmate left, the game will not end and the next kill will decide if the Impostors or Lovers win.
@@ -775,8 +767,10 @@ If there's an team Impostor/Jackal Lover in the game, the tasks of a Crewmate Lo
 |----------|:-------------:|
 | Lovers Spawn Chance | -
 | Chance That One Lover Is Impostor | -
-| Both Lovers Die | Whether the second Lover suicides, if the first one dies
+| Both Lovers Die | Whether the second Lover suicides when the first one dies
 | Lovers Can Have Another Role | If set to true, the Lovers can have a second role
+| Lovers Can Win With Crew | When false, the Lovers are treated as a separate team. (True: original TheOtherRoles behavior.)
+| Lovers Tasks Are Counted | Whether the Lovers' tasks count toward overall task completion.
 -----------------------
 
 
@@ -793,6 +787,7 @@ If they try to kill a Crewmate, they die instead.
 | Name | Description |
 |----------|:-------------:|
 | Sheriff Spawn Chance | -
+| Sheriff Number of Shots | The number of times the Sheriff is able to kill
 | Sheriff Cooldown | -
 | Neutrals Can Die To Sheriff | -
 -----------------------
@@ -871,7 +866,7 @@ The Detective's other feature shows when they report a corpse: they recieve clue
 |----------|:-------------:|
 | Detective Spawn Chance | -
 | Anonymous Footprints | If set to true, all footprints will have the same color. Otherwise they will have the color of the respective player.
-| Footprint Intervall | The intervall between two footprints
+| Footprint Interval | The interval between two footprints
 | Footprint Duration | Sets how long the footprints remain visible.
 | Time Where Detective Reports Will Have Name | The amount of time that the Detective will have to report the body since death to get the killer's name.  |
 | Time Where Detective Reports Will Have Color Type| The amount of time that the Detective will have to report the body since death to get the killer's color type. |
@@ -879,7 +874,7 @@ The Detective's other feature shows when they report a corpse: they recieve clue
 
 ## Lighter
 ### **Team: Crewmates**
-The Lighter can turn on his Lighter every now and then, which increases his vision by a costumizable amount.
+The Lighter can turn on his Lighter every now and then, which increases his vision by a customizable amount.
 
 ### Game Options
 | Name | Description |
@@ -1045,7 +1040,7 @@ The arrow updates it's position every few seconds (configurable).
 | Name | Description
 |----------|:-------------:|
 | Tracker Spawn Chance | -
-| Tracker Update Intervall | Sets how often the position is being updated
+| Tracker Update Interval | Sets how often the position is being updated
 | Tracker Reset Target After Meeting | -
 -----------------------
 
@@ -1085,7 +1080,7 @@ The priority of the win conditions is the following:
 6. Lovers among the last three players win
 7. Team Jackal wins by outnumbering (When the team Jackal contains an equal or greater amount of players than the Crew and there are 0 Impostors left and team Jackal contains no Lover)
 8. Team Impostor wins by outnumbering (When the team Impostors contains an equal or greater amount of players than the Crew and there are 0 players of the team Jackal left and team Impostors contains no Lover)
-9. Team Crew wins by outnumbering (When there is no player of the team Jackal and the team Impostrs left)
+9. Team Crew wins by outnumbering (When there is no player of the team Jackal and the team Impostors left)
 
 **NOTE:**
 - The Jackal (and his Sidekick) may be killed by a Sheriff.
@@ -1186,9 +1181,27 @@ an outline or all vents do).
 | Bait Highlight All Vents | If set to true, all vents will be highlighted if a player is inside of one of them. If set to false, only the vents where players are siting in will be highlighted.
 | Bait Report Delay | -
 
+## GM
+### **Team: N/A**
+\
+Created by  [yukinogatari](https://github.com/yukinogatari)\
+\
+The GM (Game Master) is an observer role. Their presence has no effect on the game itself, and all players know who the GM is at all times. The GM cannot be targeted by other players, cannot fix sabotages, and cannot vote or be voted for. They are a completely external presence, provided with a range of tools at their disposal to efficiently observe the flow of the game.
+
+The GM role is intended to allow groups to play with a wide variety of rules not supported by Among Us natively. 
+
+### Game Options
+| Name | Description
+|----------|:-------------:|
+| GM is always the host | Always assign the GM role to the lobby's host
+| GM can warp to other players | Allow the GM to teleport to other players
+| GM can kill/revive players | Allow the GM to indiscriminately murder or revive players
+| Hide settings from other players | Hides mod-related settings from everyone except the lobby host
+| GM dies at start of game | The GM begins the game dead
+
 # Source code
 It's bad I know, this is a side project and my second week of modding. So there are no best practices around here.
 You can use parts of the code but don't copy paste the whole thing. Make sure you give credits to the other developers, because some parts of the code are based on theirs.
 
-# Bugs, suggestions and requests
-If you found any bugs, have an idea for a new role or any other request, join our [Discord server](https://discord.gg/77RkMJHWsM)
+# Translation
+As of v2.9.0, The Other Roles now supports translation into other languages. To add a new language, add translations to [Strings.xlsx](/Strings.xlsx) and submit a pull request.

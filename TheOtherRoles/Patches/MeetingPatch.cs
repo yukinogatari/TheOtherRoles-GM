@@ -25,16 +25,20 @@ namespace TheOtherRoles.Patches {
                 Dictionary<byte, int> dictionary = new Dictionary<byte, int>();
                 for (int i = 0; i < __instance.playerStates.Length; i++) {
                     PlayerVoteArea playerVoteArea = __instance.playerStates[i];
-                    if (playerVoteArea.VotedFor != 252 && playerVoteArea.VotedFor != 255 && playerVoteArea.VotedFor != 254) {
+                    byte votedFor = playerVoteArea.VotedFor;
+                    if (votedFor != 252 && votedFor != 255 && votedFor != 254) {
                         PlayerControl player = Helpers.playerById((byte)playerVoteArea.TargetPlayerId);
-                        if (player == null || player.Data == null || player.Data.IsDead || player.Data.Disconnected) continue;
+                        if (player == null || player.Data == null || player.Data.IsDead || player.Data.Disconnected || player.isGM()) continue;
+                        
+                        // don't try to vote for the GM
+                        if (GM.gm != null && votedFor == GM.gm.PlayerId) continue;
 
                         int currentVotes;
                         int additionalVotes = (Mayor.mayor != null && Mayor.mayor.PlayerId == playerVoteArea.TargetPlayerId) ? 2 : 1; // Mayor vote
-                        if (dictionary.TryGetValue(playerVoteArea.VotedFor, out currentVotes))
-                            dictionary[playerVoteArea.VotedFor] = currentVotes + additionalVotes;
+                        if (dictionary.TryGetValue(votedFor, out currentVotes))
+                            dictionary[votedFor] = currentVotes + additionalVotes;
                         else
-                            dictionary[playerVoteArea.VotedFor] = additionalVotes;
+                            dictionary[votedFor] = additionalVotes;
                     }
                 }
                 // Swapper swap votes
@@ -140,8 +144,12 @@ namespace TheOtherRoles.Patches {
                     for (int j = 0; j < states.Length; j++) {
                         MeetingHud.VoterState voterState = states[j];
                         GameData.PlayerInfo playerById = GameData.Instance.GetPlayerById(voterState.VoterId);
-                        if (playerById == null) {
+                        if (playerById == null)
+                        {
                             Debug.LogError(string.Format("Couldn't find player info for voter: {0}", voterState.VoterId));
+                        } else if (GM.gm != null && (voterState.VoterId == GM.gm.PlayerId || voterState.VotedForId == GM.gm.PlayerId))
+                        {
+                            continue;
                         } else if (i == 0 && voterState.SkippedVote && !playerById.IsDead) {
                             __instance.BloopAVoteIcon(playerById, num, __instance.SkippedVoting.transform);
                             num++;
@@ -254,7 +262,7 @@ namespace TheOtherRoles.Patches {
             Transform selectedButton = null;
 
             foreach (RoleInfo roleInfo in RoleInfo.allRoleInfos) {
-                if (roleInfo.roleId == RoleId.Lover || roleInfo.roleId == RoleId.Guesser || roleInfo == RoleInfo.niceMini) continue; // Not guessable roles
+                if (roleInfo.roleId == RoleId.Lover || roleInfo.roleId == RoleId.Guesser || roleInfo == RoleInfo.niceMini || roleInfo == RoleInfo.gm) continue; // Not guessable roles
                 Transform buttonParent = (new GameObject()).transform;
                 buttonParent.SetParent(container);
                 Transform button = UnityEngine.Object.Instantiate(buttonTemplate, buttonParent);
@@ -316,7 +324,7 @@ namespace TheOtherRoles.Patches {
 
                 for (int i = 0; i < __instance.playerStates.Length; i++) {
                     PlayerVoteArea playerVoteArea = __instance.playerStates[i];
-                    if (playerVoteArea.AmDead || (playerVoteArea.TargetPlayerId == Swapper.swapper.PlayerId && Swapper.canOnlySwapOthers)) continue;
+                    if (playerVoteArea.AmDead || (playerVoteArea.TargetPlayerId == Swapper.swapper.PlayerId && Swapper.canOnlySwapOthers) || (playerVoteArea.TargetPlayerId == GM.gm?.PlayerId)) continue;
 
                     GameObject template = playerVoteArea.Buttons.transform.Find("CancelButton").gameObject;
                     GameObject checkbox = UnityEngine.Object.Instantiate(template);
@@ -341,7 +349,7 @@ namespace TheOtherRoles.Patches {
             if (Guesser.guesser != null && PlayerControl.LocalPlayer == Guesser.guesser && !Guesser.guesser.Data.IsDead && Guesser.remainingShots >= 0) {
                 for (int i = 0; i < __instance.playerStates.Length; i++) {
                     PlayerVoteArea playerVoteArea = __instance.playerStates[i];
-                    if (playerVoteArea.AmDead || playerVoteArea.TargetPlayerId == Guesser.guesser.PlayerId) continue;
+                    if (playerVoteArea.AmDead || playerVoteArea.TargetPlayerId == Guesser.guesser.PlayerId || playerVoteArea.TargetPlayerId == GM.gm?.PlayerId) continue;
 
                     GameObject template = playerVoteArea.Buttons.transform.Find("CancelButton").gameObject;
                     GameObject targetBox = UnityEngine.Object.Instantiate(template, playerVoteArea.transform);

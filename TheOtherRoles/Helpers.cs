@@ -170,8 +170,14 @@ namespace TheOtherRoles {
                 task.transform.SetParent(player.transform, false);
 
                 if (roleInfo.name == "Jackal") {
-                    var getSidekickText = Jackal.canCreateSidekick ? " and recruit a Sidekick" : "";
-                    task.Text = cs(roleInfo.color, $"{roleInfo.name}: Kill everyone{getSidekickText}");  
+                    if (Jackal.canCreateSidekick)
+                    {
+                        task.Text = cs(roleInfo.color, $"{roleInfo.name}: " + ModTranslation.getString("jackalWithSidekick"));
+                    } 
+                    else
+                    {
+                        task.Text = cs(roleInfo.color, $"{roleInfo.name}: " + ModTranslation.getString("jackalShortDesc"));
+                    }
                 } else {
                     task.Text = cs(roleInfo.color, $"{roleInfo.name}: {roleInfo.shortDescription}");  
                 }
@@ -192,6 +198,18 @@ namespace TheOtherRoles {
 
         public static bool hasFakeTasks(this PlayerControl player) {
             return (player == Madmate.madmate || player == Jester.jester || player == Jackal.jackal || player == Sidekick.sidekick || player == Arsonist.arsonist || Jackal.formerJackals.Contains(player));
+        }
+
+        public static bool isGM(this PlayerControl player)
+        {
+            return GM.gm != null && player == GM.gm;
+        }
+
+        public static bool isLovers(this PlayerControl player)
+        {
+            return player != null &&
+                ((Lovers.lover1 != null && player == Lovers.lover1) ||
+                (Lovers.lover2 != null && player == Lovers.lover2));
         }
 
         public static bool canBeErased(this PlayerControl player) {

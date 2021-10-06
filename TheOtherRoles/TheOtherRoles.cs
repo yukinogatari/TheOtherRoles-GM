@@ -55,6 +55,7 @@ namespace TheOtherRoles
             BountyHunter.clearAndReload();
             Bait.clearAndReload();
             Madmate.clearAndReload();
+            GM.clearAndReload();
         }
 
         public static class Jester {
@@ -143,6 +144,8 @@ namespace TheOtherRoles
             public static Color color = new Color32(248, 205, 70, byte.MaxValue);
 
             public static float cooldown = 30f;
+            public static int numShots = 2;
+            public static int maxShots = 2;
             public static bool canKillNeutrals = false;
             public static bool spyCanDieToSheriff = false;
             public static bool madmateCanDieToSheriff = false;
@@ -153,6 +156,7 @@ namespace TheOtherRoles
                 sheriff = null;
                 currentTarget = null;
                 cooldown = CustomOptionHolder.sheriffCooldown.getFloat();
+                maxShots = numShots = (int)CustomOptionHolder.sheriffNumShots.getFloat();
                 canKillNeutrals = CustomOptionHolder.sheriffCanKillNeutrals.getBool();
                 spyCanDieToSheriff = CustomOptionHolder.spyCanDieToSheriff.getBool();
                 madmateCanDieToSheriff = CustomOptionHolder.madmateCanDieToSheriff.getBool();
@@ -331,6 +335,10 @@ namespace TheOtherRoles
         // Lovers save if next to be exiled is a lover, because RPC of ending game comes before RPC of exiled
         public static bool notAckedExiledIsLover = false;
 
+        // Making this closer to the au.libhalt.net version of Lovers
+        public static bool canWinWithCrew = false;
+        public static bool tasksCount = false;
+
         public static bool existing() {
             return lover1 != null && lover2 != null && !lover1.Data.Disconnected && !lover2.Data.Disconnected;
         }
@@ -356,6 +364,8 @@ namespace TheOtherRoles
             lover2 = null;
             notAckedExiledIsLover = false;
             bothDie = CustomOptionHolder.loversBothDie.getBool();
+            canWinWithCrew = CustomOptionHolder.loversWinWithCrew.getBool();
+            tasksCount = CustomOptionHolder.loversTasksCount.getBool();
         }
 
         public static PlayerControl getPartner(this PlayerControl player) {
@@ -408,19 +418,39 @@ namespace TheOtherRoles
         public static PlayerControl morphTarget;
         public static float morphTimer = 0f;
 
+        public static void handleMorphing()
+        {
+            if (morphling == null) return;
+
+            // first, if camo is active, don't do anything
+            if (Camouflager.camouflager != null && Camouflager.camouflageTimer > 0f) return;
+
+            // next, if we're currently morphed, set our skin to the target
+            if (morphTimer > 0f && morphTarget != null && MapOptions.morphData.ContainsKey(morphTarget.PlayerId))
+            {
+                MapOptions.morphData[morphTarget.PlayerId]?.applyToPlayer(morphling);
+            }
+            else if (MapOptions.morphData.ContainsKey(morphling.PlayerId))
+            {
+                MapOptions.morphData[morphling.PlayerId]?.applyToPlayer(morphling);
+            }
+        }
+
+        public static void startMorph(PlayerControl target)
+        {
+            morphTarget = target;
+            morphTimer = duration;
+            handleMorphing();
+        }
+
         public static void resetMorph() {
             morphTarget = null;
             morphTimer = 0f;
-            if (morphling == null) return;
-            morphling.SetName(morphling.Data.PlayerName);
-            morphling.SetHat(morphling.Data.HatId, (int)morphling.Data.ColorId);
-            Helpers.setSkinWithAnim(morphling.MyPhysics, morphling.Data.SkinId);
-            morphling.SetPet(morphling.Data.PetId);
-            morphling.CurrentPet.Visible = morphling.Visible;
-            morphling.SetColor(morphling.Data.ColorId);
+            handleMorphing();
         }
 
-        public static void clearAndReload() {
+        public static void clearAndReload()
+        {
             resetMorph();
             morphling = null;
             currentTarget = null;
@@ -452,6 +482,8 @@ namespace TheOtherRoles
         public static float duration = 10f;
         public static float camouflageTimer = 0f;
 
+        public static MorphData camoData;
+
         private static Sprite buttonSprite;
         public static Sprite getButtonSprite() {
             if (buttonSprite) return buttonSprite;
@@ -459,28 +491,51 @@ namespace TheOtherRoles
             return buttonSprite;
         }
 
+        public static void startCamouflage()
+        {
+            camouflageTimer = duration;
+
+            foreach (PlayerControl p in PlayerControl.AllPlayerControls)
+            {
+                if (p == null) continue;
+                camoData.applyToPlayer(p);
+            }
+        }
+
         public static void resetCamouflage() {
             camouflageTimer = 0f;
-            foreach (PlayerControl p in PlayerControl.AllPlayerControls) {
+            foreach (PlayerControl p in PlayerControl.AllPlayerControls)
+            {
                 if (p == null) continue;
-                if (Morphling.morphling == null || Morphling.morphling != p) {
-                    p.SetName(p.Data.PlayerName);
-                    p.SetHat(p.Data.HatId, (int)p.Data.ColorId);
-                    Helpers.setSkinWithAnim(p.MyPhysics, p.Data.SkinId);
-                    p.SetPet(p.Data.PetId);
-                    p.CurrentPet.Visible = p.Visible;
-                    p.SetColor(p.Data.ColorId);
+                if (!MapOptions.morphData.ContainsKey(p.PlayerId)) continue;
+
+                // special case for morphling
+                if (Morphling.morphling?.PlayerId == p.PlayerId)
+                {
+                    Morphling.handleMorphing();
+                }
+                else
+                {
+                    MapOptions.morphData[p.PlayerId].applyToPlayer(p);
                 }
             }
         }
 
-        public static void clearAndReload() {
+        public static void clearAndReload()
+        {
             resetCamouflage();
             camouflager = null;
             camouflageTimer = 0f;
             cooldown = CustomOptionHolder.camouflagerCooldown.getFloat();
             duration = CustomOptionHolder.camouflagerDuration.getFloat();
-        }
+
+            camoData = new MorphData();
+            camoData.name = "";
+            camoData.color = 6;
+            camoData.pet = 0;
+            camoData.skin = 0;
+            camoData.pet = 0;
+    }
     }
 
     public static class Hacker {
@@ -937,7 +992,7 @@ namespace TheOtherRoles
         }
 
         public static bool dousedEveryoneAlive() {
-            return PlayerControl.AllPlayerControls.ToArray().All(x => { return x == Arsonist.arsonist || x.Data.IsDead || x.Data.Disconnected || Arsonist.dousedPlayers.Any(y => y.PlayerId == x.PlayerId); });
+            return PlayerControl.AllPlayerControls.ToArray().All(x => { return x == Arsonist.arsonist || x.Data.IsDead || x.Data.Disconnected || x.isGM() || Arsonist.dousedPlayers.Any(y => y.PlayerId == x.PlayerId); });
         }
 
         public static void clearAndReload() {
@@ -1045,6 +1100,37 @@ namespace TheOtherRoles
             hasImpostorVision = CustomOptionHolder.madmateHasImpostorVision.getBool();
             canSabotage = CustomOptionHolder.madmateCanSabotage.getBool();
             canFixComm = CustomOptionHolder.madmateCanFixComm.getBool();
+        }
+    }
+
+    public static class GM
+    {
+        public static PlayerControl gm;
+        public static Color color = new Color32(255, 91, 112, byte.MaxValue);
+
+        public static bool gmIsHost = true;
+        public static bool diesAtStart = true;
+        public static bool hideSettings = true;
+        public static bool hasTasks = false;
+        public static bool canSabotage = false;
+        public static bool canWarp = true;
+        public static bool canKill = false;
+
+        public static void clearAndReload()
+        {
+            gm = null;
+            gmIsHost = CustomOptionHolder.gmIsHost.getBool();
+            diesAtStart = CustomOptionHolder.gmDiesAtStart.getBool();
+            hideSettings = CustomOptionHolder.gmHideSettings.getBool();
+            hasTasks = true;
+            canSabotage = true;
+            canWarp = CustomOptionHolder.gmCanWarp.getBool();
+            canKill = CustomOptionHolder.gmCanKill.getBool();
+
+            foreach (PoolablePlayer p in MapOptions.playerIcons.Values)
+            {
+                if (p != null && p.gameObject != null) p.gameObject.SetActive(false);
+            }
         }
     }
 }

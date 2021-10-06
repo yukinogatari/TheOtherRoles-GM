@@ -3,7 +3,9 @@ using Hazel;
 using System;
 using UnityEngine;
 using static TheOtherRoles.TheOtherRoles;
+using TheOtherRoles.Modules;
 using TheOtherRoles.Objects;
+using System.Collections.Generic;
 
 namespace TheOtherRoles
 {
@@ -29,11 +31,16 @@ namespace TheOtherRoles
         private static CustomButton eraserButton;
         private static CustomButton placeJackInTheBoxButton;        
         private static CustomButton lightsOutButton;
+        private static List<CustomButton> gmButtons;
+        private static List<CustomButton> gmKillButtons;
+        private static CustomButton gmZoomOut;
+        private static CustomButton gmZoomIn;
         public static CustomButton cleanerCleanButton;
         public static CustomButton warlockCurseButton;
         public static CustomButton securityGuardButton;
         public static CustomButton arsonistButton;
         public static TMPro.TMP_Text securityGuardButtonScrewsText;
+        public static TMPro.TMP_Text sheriffNumShotsText;
 
         public static void setCustomButtonCooldowns() {
             engineerRepairButton.MaxTimer = 0f;
@@ -71,6 +78,15 @@ namespace TheOtherRoles
 
             // Already set the timer to the max, as the button is enabled during the game and not available at the start
             lightsOutButton.Timer = lightsOutButton.MaxTimer;
+
+            foreach (CustomButton gmButton in gmButtons)
+            {
+                gmButton.MaxTimer = 0.0f;
+            }
+            foreach (CustomButton gmButton in gmKillButtons)
+            {
+                gmButton.MaxTimer = 0.0f;
+            }
         }
 
         public static void resetTimeMasterButton() {
@@ -165,15 +181,20 @@ namespace TheOtherRoles
             // Sheriff Kill
             sheriffKillButton = new CustomButton(
                 () => {
+                    if (Sheriff.numShots <= 0)
+                    {
+                        return;
+                    }
+
                     if (Medic.shielded != null && Medic.shielded == Sheriff.currentTarget) {
                         MessageWriter attemptWriter = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.ShieldedMurderAttempt, Hazel.SendOption.Reliable, -1);
                         AmongUsClient.Instance.FinishRpcImmediately(attemptWriter);
                         RPCProcedure.shieldedMurderAttempt();
-                        return;    
+                        return;
                     }
 
                     byte targetId = 0;
-                    if ((Sheriff.currentTarget.Data.IsImpostor && (Sheriff.currentTarget != Mini.mini || Mini.isGrownUp())) || 
+                    if ((Sheriff.currentTarget.Data.IsImpostor && (Sheriff.currentTarget != Mini.mini || Mini.isGrownUp())) ||
                         (Sheriff.spyCanDieToSheriff && Spy.spy == Sheriff.currentTarget) ||
                         (Sheriff.madmateCanDieToSheriff && Madmate.madmate == Sheriff.currentTarget) ||
                         (Sheriff.canKillNeutrals && (Arsonist.arsonist == Sheriff.currentTarget || Jester.jester == Sheriff.currentTarget)) ||
@@ -188,17 +209,33 @@ namespace TheOtherRoles
                     AmongUsClient.Instance.FinishRpcImmediately(killWriter);
                     RPCProcedure.sheriffKill(targetId);
 
-                    sheriffKillButton.Timer = sheriffKillButton.MaxTimer; 
+                    sheriffKillButton.Timer = sheriffKillButton.MaxTimer;
                     Sheriff.currentTarget = null;
+                    Sheriff.numShots--;
                 },
-                () => { return Sheriff.sheriff != null && Sheriff.sheriff == PlayerControl.LocalPlayer && !PlayerControl.LocalPlayer.Data.IsDead; },
-                () => { return Sheriff.currentTarget && PlayerControl.LocalPlayer.CanMove; },
+                () => { return Sheriff.sheriff != null && Sheriff.sheriff == PlayerControl.LocalPlayer && Sheriff.numShots > 0 && !PlayerControl.LocalPlayer.Data.IsDead; },
+                () => {
+                    if (sheriffNumShotsText != null)
+                    {
+                        if (Sheriff.numShots > 0)
+                            sheriffNumShotsText.text = String.Format(ModTranslation.getString("sheriffShots"), Sheriff.numShots);
+                        else
+                            sheriffNumShotsText.text = "";
+                    }
+                    return Sheriff.currentTarget && PlayerControl.LocalPlayer.CanMove;
+                },
                 () => { sheriffKillButton.Timer = sheriffKillButton.MaxTimer;},
                 __instance.KillButton.renderer.sprite,
                 new Vector3(-1.3f, 0, 0),
                 __instance,
                 KeyCode.Q
             );
+
+            sheriffNumShotsText = GameObject.Instantiate(sheriffKillButton.killButtonManager.TimerText, sheriffKillButton.killButtonManager.TimerText.transform.parent);
+            sheriffNumShotsText.text = "";
+            sheriffNumShotsText.enableWordWrapping = false;
+            sheriffNumShotsText.transform.localScale = Vector3.one * 0.5f;
+            sheriffNumShotsText.transform.localPosition += new Vector3(-0.05f, 0.7f, 0);
 
             // Time Master Rewind Time
             timeMasterShieldButton = new CustomButton(
@@ -447,7 +484,7 @@ namespace TheOtherRoles
                     writer.EndMessage();
                     RPCProcedure.placeGarlic(buff); 
                 },
-                () => { return !Vampire.localPlacedGarlic && !PlayerControl.LocalPlayer.Data.IsDead && Vampire.garlicsActive; },
+                () => { return !Vampire.localPlacedGarlic && !PlayerControl.LocalPlayer.Data.IsDead && Vampire.garlicsActive && !PlayerControl.LocalPlayer.isGM(); },
                 () => { return PlayerControl.LocalPlayer.CanMove && !Vampire.localPlacedGarlic; },
                 () => { },
                 Vampire.getGarlicButtonSprite(),
@@ -781,6 +818,268 @@ namespace TheOtherRoles
                     }
                 }
             );
+
+            gmButtons = new List<CustomButton>();
+            gmKillButtons = new List<CustomButton>();
+
+            Vector3 gmCalcPos(byte index)
+            {
+                int offset = index;
+                //if (offset >= GM.gm.PlayerId) offset--;
+                return new Vector3(-0.25f, -0.25f, 0) + Vector3.right * offset * 0.55f;
+            }
+
+            Action gmButtonOnClick(byte index)
+            {
+                return () =>
+                {
+                    if (!MapOptions.playerIcons.ContainsKey(index))
+                    {
+                        return;
+                    }
+
+                    PlayerControl target = Helpers.playerById(index);
+                    //TheOtherRolesPlugin.Instance.Log.LogInfo($"Clicked {index}: {target.transform.position.x}, {target.transform.position.y}");
+                    //TheOtherRolesPlugin.Instance.Log.LogInfo($"GM pos: {GM.gm.transform.position.x}, {GM.gm.transform.position.y}");
+
+                    if (GM.gm.transform.position != target.transform.position)
+                    {
+                        GM.gm.transform.position = target.transform.position;
+                    }
+                };
+            };
+
+            Action gmKillButtonOnClick(byte index)
+            {
+                return () =>
+                {
+                    if (!MapOptions.playerIcons.ContainsKey(index))
+                    {
+                        return;
+                    }
+
+                    PlayerControl target = Helpers.playerById(index);
+                    if (!target.Data.IsDead)
+                    {
+                        //TheOtherRolesPlugin.Instance.Log.LogInfo($"Murdered {index}");
+
+                        MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.GMKill, Hazel.SendOption.Reliable, -1);
+                        writer.Write(index);
+                        AmongUsClient.Instance.FinishRpcImmediately(writer);
+                        RPCProcedure.GMKill(index);
+                    } else
+                    {
+                        //TheOtherRolesPlugin.Instance.Log.LogInfo($"Revived {index}");
+
+                        MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.GMRevive, Hazel.SendOption.Reliable, -1);
+                        writer.Write(index);
+                        AmongUsClient.Instance.FinishRpcImmediately(writer);
+                        RPCProcedure.GMRevive(index);
+                    }
+                };
+            };
+
+            Func<bool> gmHasButton(byte index)
+            {
+                return () =>
+                {
+                    if ((GM.gm == null || PlayerControl.LocalPlayer != GM.gm) ||
+                        (!MapOptions.playerIcons.ContainsKey(index)) ||
+                        (!GM.canWarp))
+                    {
+                        return false;
+                    }
+
+                    return true;
+                };
+            }
+
+            Func<bool> gmHasKillButton(byte index)
+            {
+                return () =>
+                {
+                    if ((GM.gm == null || PlayerControl.LocalPlayer != GM.gm) ||
+                        (!MapOptions.playerIcons.ContainsKey(index)) ||
+                        (!GM.canKill))
+                    {
+                        return false;
+                    }
+
+                    return true;
+                };
+            }
+
+            Func<bool> gmCouldUse(byte index)
+            {
+                return () =>
+                {
+                    if (!MapOptions.playerIcons.ContainsKey(index) || !GM.canWarp)
+                    {
+                        return false;
+                    }
+
+                    Vector3 pos = gmCalcPos(index);
+                    Vector3 scale = new Vector3(0.4f, 0.8f, 1.0f);
+
+                    Vector3 iconBase = __instance.UseButton.transform.localPosition;
+                    iconBase.x *= -1;
+                    if (gmButtons[index].PositionOffset != pos)
+                    {
+                        gmButtons[index].PositionOffset = pos;
+                        gmButtons[index].LocalScale = scale;
+                        MapOptions.playerIcons[index].transform.localPosition = iconBase + pos;
+                        //TheOtherRolesPlugin.Instance.Log.LogInfo($"Updated {index}: {pos.x}, {pos.y}, {pos.z}");
+                    }
+
+                    //MapOptions.playerIcons[index].gameObject.SetActive(PlayerControl.LocalPlayer.CanMove);
+                    return PlayerControl.LocalPlayer.CanMove;
+                };
+            }
+
+            Func<bool> gmCouldKill(byte index)
+            {
+                return () =>
+                {
+                    if (!MapOptions.playerIcons.ContainsKey(index) || !GM.canKill)
+                    {
+                        return false;
+                    }
+
+                    Vector3 pos = gmCalcPos(index) + Vector3.up * 0.55f;
+                    Vector3 scale = new Vector3(0.4f, 0.25f, 1.0f);
+                    if (gmKillButtons[index].PositionOffset != pos)
+                    {
+                        gmKillButtons[index].PositionOffset = pos;
+                        gmKillButtons[index].LocalScale = scale;
+                    }
+
+                    PlayerControl target = Helpers.playerById(index);
+                    if (target.Data.IsDead)
+                    {
+                        gmKillButtons[index].killButtonManager.killText.SetText(ModTranslation.getString("gmRevive"));
+                    } else
+                    {
+                        gmKillButtons[index].killButtonManager.killText.SetText(ModTranslation.getString("gmKill"));
+                    }
+
+                    //MapOptions.playerIcons[index].gameObject.SetActive(PlayerControl.LocalPlayer.CanMove);
+                    return true;
+                };
+            }
+
+            for (byte i = 0; i < 15; i++)
+            {
+                //TheOtherRolesPlugin.Instance.Log.LogInfo($"Added {i}");
+
+                CustomButton gmButton = new CustomButton(
+                    // Action OnClick
+                    gmButtonOnClick(i),
+                    // bool HasButton
+                    gmHasButton(i),
+                    // bool CouldUse
+                    gmCouldUse(i),
+                    // Action OnMeetingEnds
+                    () => { },
+                    // sprite
+                    null,
+                    // position
+                    Vector3.zero,
+                    // hudmanager
+                    __instance,
+                    // keyboard shortcut
+                    null,
+                    true
+                );
+                gmButton.Timer = 0.0f;
+                gmButton.MaxTimer = 0.0f;
+                gmButtons.Add(gmButton);
+
+                CustomButton gmKillButton = new CustomButton(
+                    // Action OnClick
+                    gmKillButtonOnClick(i),
+                    // bool HasButton
+                    gmHasKillButton(i),
+                    // bool CouldUse
+                    gmCouldKill(i),
+                    // Action OnMeetingEnds
+                    () => { },
+                    // sprite
+                    null,
+                    // position
+                    Vector3.zero,
+                    // hudmanager
+                    __instance,
+                    // keyboard shortcut
+                    null,
+                    true
+                );
+                gmKillButton.Timer = 0.0f;
+                gmKillButton.MaxTimer = 0.0f;
+                gmKillButton.showButtonText = true;
+                gmKillButtons.Add(gmKillButton);
+            }
+
+            gmZoomOut = new CustomButton(
+                () => {
+
+                    if (Camera.main.orthographicSize < 18.0f)
+                    {
+                        Camera.main.orthographicSize *= 1.5f;
+                        __instance.UICamera.orthographicSize *= 1.5f;
+                    }
+
+                    if (__instance.transform.localScale.x < 6.0f)
+                    {
+                        __instance.transform.localScale *= 1.5f;
+                    }
+
+                    /*TheOtherRolesPlugin.Instance.Log.LogInfo($"Camera zoom {Camera.main.orthographicSize} / {TaskPanelBehaviour.Instance.transform.localPosition.x}");*/
+                },
+                () => { return !(GM.gm == null || PlayerControl.LocalPlayer != GM.gm); },
+                () => { return true; },
+                () => { },
+                null,
+                // position
+                Vector3.zero,
+                // hudmanager
+                __instance,
+                // keyboard shortcut
+                KeyCode.PageDown,
+                false
+            );
+            gmZoomOut.Timer = 0.0f;
+            gmZoomOut.MaxTimer = 0.0f;
+
+            gmZoomIn = new CustomButton(
+                () => {
+
+                    if (Camera.main.orthographicSize > 3.0f)
+                    {
+                        Camera.main.orthographicSize /= 1.5f;
+                        __instance.UICamera.orthographicSize /= 1.5f;
+                    }
+
+                    if (__instance.transform.localScale.x > 1.0f)
+                    {
+                        __instance.transform.localScale /= 1.5f;
+                    }
+
+                    /*TheOtherRolesPlugin.Instance.Log.LogInfo($"Camera zoom {Camera.main.orthographicSize} / {TaskPanelBehaviour.Instance.transform.localPosition.x}");*/
+                },
+                () => { return !(GM.gm == null || PlayerControl.LocalPlayer != GM.gm); },
+                () => { return true; },
+                () => { },
+                null,
+                // position
+                Vector3.zero,
+                // hudmanager
+                __instance,
+                // keyboard shortcut
+                KeyCode.PageUp,
+                false
+            );
+            gmZoomIn.Timer = 0.0f;
+            gmZoomIn.MaxTimer = 0.0f;
 
             // Set the default (or settings from the previous game) timers/durations when spawning the buttons
             setCustomButtonCooldowns();

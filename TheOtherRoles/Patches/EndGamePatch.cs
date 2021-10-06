@@ -34,10 +34,12 @@ namespace TheOtherRoles.Patches {
         // Should be implemented using a proper GameOverReason in the future
         public static WinCondition winCondition = WinCondition.Default;
         public static List<PlayerRoleInfo> playerRoles = new List<PlayerRoleInfo>();
+        public static bool isGM = false;
 
         public static void clear() {
             playerRoles.Clear();
             winCondition = WinCondition.Default;
+            isGM = false;
         }
 
         internal class PlayerRoleInfo {
@@ -45,6 +47,9 @@ namespace TheOtherRoles.Patches {
             public List<RoleInfo> Roles {get;set;}
             public int TasksCompleted  {get;set;}
             public int TasksTotal  {get;set;}
+            public bool IsDead { get; set; }
+            public bool IsExiled { get; set; }
+            public bool IsDisconnected { get; set; }
         }
     }
 
@@ -63,8 +68,18 @@ namespace TheOtherRoles.Patches {
             foreach(var playerControl in PlayerControl.AllPlayerControls) {
                 var roles = RoleInfo.getRoleInfoForPlayer(playerControl);
                 var (tasksCompleted, tasksTotal) = TasksHandler.taskInfo(playerControl.Data);
-                AdditionalTempData.playerRoles.Add(new AdditionalTempData.PlayerRoleInfo() { PlayerName = playerControl.Data.PlayerName, Roles = roles, TasksTotal = tasksTotal, TasksCompleted = tasksCompleted });
+                var isDead = playerControl.Data.IsDead;
+                var isDisconnected = playerControl.Data.Disconnected;
+                AdditionalTempData.playerRoles.Add(new AdditionalTempData.PlayerRoleInfo() { 
+                    PlayerName = playerControl.Data.PlayerName,
+                    Roles = roles,
+                    TasksTotal = tasksTotal,
+                    TasksCompleted = tasksCompleted,
+                    IsDead = isDead,
+                    IsDisconnected = isDisconnected});
             }
+
+            AdditionalTempData.isGM = CustomOptionHolder.gmEnabled.getBool() && PlayerControl.LocalPlayer.isGM();
 
             // Remove Jester, Arsonist, Jackal, former Jackals and Sidekick from winners (if they win, they'll be readded)
             List<PlayerControl> notWinners = new List<PlayerControl>();
@@ -75,6 +90,11 @@ namespace TheOtherRoles.Patches {
             if (Madmate.madmate != null) notWinners.Add(Madmate.madmate);
             notWinners.AddRange(Jackal.formerJackals);
 
+            // GM can't win at all, and we're treating lovers as a separate class
+            if (GM.gm != null) notWinners.Add(GM.gm);
+            if (Lovers.lover1 != null) notWinners.Add(Lovers.lover1);
+            if (Lovers.lover2 != null) notWinners.Add(Lovers.lover2);
+
             List<WinningPlayerData> winnersToRemove = new List<WinningPlayerData>();
             foreach (WinningPlayerData winner in TempData.winners) {
                 if (notWinners.Any(x => x.Data.PlayerName == winner.Name)) winnersToRemove.Add(winner);
@@ -84,7 +104,10 @@ namespace TheOtherRoles.Patches {
             bool jesterWin = Jester.jester != null && gameOverReason == (GameOverReason)CustomGameOverReason.JesterWin;
             bool arsonistWin = Arsonist.arsonist != null && gameOverReason == (GameOverReason)CustomGameOverReason.ArsonistWin;
             bool miniLose = Mini.mini != null && gameOverReason == (GameOverReason)CustomGameOverReason.MiniLose;
-            bool loversWin = Lovers.existingAndAlive() && (gameOverReason == (GameOverReason)CustomGameOverReason.LoversWin || (TempData.DidHumansWin(gameOverReason) && !Lovers.existingWithKiller())); // Either they win if they are among the last 3 players, or they win if they are both Crewmates and both alive and the Crew wins (Team Imp/Jackal Lovers can only win solo wins)
+            bool loversWin = Lovers.existingAndAlive() && 
+                (gameOverReason == (GameOverReason)CustomGameOverReason.LoversWin || 
+                    (TempData.DidHumansWin(gameOverReason) && !Lovers.existingWithKiller() && Lovers.canWinWithCrew)
+                ); // Either they win if they are among the last 3 players, or they win if they are both Crewmates and both alive and the Crew wins (Team Imp/Jackal Lovers can only win solo wins)
             bool teamJackalWin = gameOverReason == (GameOverReason)CustomGameOverReason.TeamJackalWin && ((Jackal.jackal != null && !Jackal.jackal.Data.IsDead) || (Sidekick.sidekick != null && !Sidekick.sidekick.Data.IsDead));
 
             // Mini lose
@@ -115,16 +138,10 @@ namespace TheOtherRoles.Patches {
             // Lovers win conditions
             else if (loversWin) {
                 // Double win for lovers, crewmates also win
-                if (!Lovers.existingWithKiller()) {
+                if (!Lovers.existingWithKiller() && Lovers.canWinWithCrew) {
                     AdditionalTempData.winCondition = WinCondition.LoversTeamWin;
-                    TempData.winners = new Il2CppSystem.Collections.Generic.List<WinningPlayerData>();
-                    foreach (PlayerControl p in PlayerControl.AllPlayerControls) {
-                        if (p == null) continue;
-                        if (p == Lovers.lover1 || p == Lovers.lover2)
-                            TempData.winners.Add(new WinningPlayerData(p.Data));
-                        else if (p != Jester.jester && p != Jackal.jackal && p != Sidekick.sidekick && p != Arsonist.arsonist && !Jackal.formerJackals.Contains(p) && !p.Data.IsImpostor)
-                            TempData.winners.Add(new WinningPlayerData(p.Data));
-                    }
+                    TempData.winners.Add(new WinningPlayerData(Lovers.lover1.Data));
+                    TempData.winners.Add(new WinningPlayerData(Lovers.lover2.Data));
                 }
                 // Lovers solo win
                 else {
@@ -179,30 +196,36 @@ namespace TheOtherRoles.Patches {
             TMPro.TMP_Text textRenderer = bonusText.GetComponent<TMPro.TMP_Text>();
             textRenderer.text = "";
 
+            if (AdditionalTempData.isGM)
+            {
+                __instance.WinText.text = ModTranslation.getString("gmGameOver");
+                __instance.WinText.color = GM.color;
+            }
+
             if (AdditionalTempData.winCondition == WinCondition.JesterWin) {
-                textRenderer.text = "Jester Wins";
+                textRenderer.text = ModTranslation.getString("jesterWin");
                 textRenderer.color = Jester.color;
             }
             else if (AdditionalTempData.winCondition == WinCondition.ArsonistWin) {
-                textRenderer.text = "Arsonist Wins";
+                textRenderer.text = ModTranslation.getString("arsonistWin");
                 textRenderer.color = Arsonist.color;
             }
             else if (AdditionalTempData.winCondition == WinCondition.LoversTeamWin) {
-                textRenderer.text = "Lovers And Crewmates Win";
+                textRenderer.text = ModTranslation.getString("loversTeamWin");
                 textRenderer.color = Lovers.color;
                 __instance.BackgroundBar.material.SetColor("_Color", Lovers.color);
             } 
             else if (AdditionalTempData.winCondition == WinCondition.LoversSoloWin) {
-                textRenderer.text = "Lovers Win";
+                textRenderer.text = ModTranslation.getString("loversWin");
                 textRenderer.color = Lovers.color;
                 __instance.BackgroundBar.material.SetColor("_Color", Lovers.color);
             }
             else if (AdditionalTempData.winCondition == WinCondition.JackalWin) {
-                textRenderer.text = "Team Jackal Wins";
+                textRenderer.text = ModTranslation.getString("jackalWin");
                 textRenderer.color = Jackal.color;
             }
             else if (AdditionalTempData.winCondition == WinCondition.MiniLose) {
-                textRenderer.text = "Mini died";
+                textRenderer.text = ModTranslation.getString("miniDied");
                 textRenderer.color = Mini.color;
             }
 
@@ -213,11 +236,24 @@ namespace TheOtherRoles.Patches {
                 roleSummary.transform.localScale = new Vector3(1f, 1f, 1f);
 
                 var roleSummaryText = new StringBuilder();
-                roleSummaryText.AppendLine("Players and roles at the end of the game:");
+                roleSummaryText.AppendLine(ModTranslation.getString("roleSummaryText"));
+                AdditionalTempData.playerRoles.Sort((x, y) => {
+                    if (x.IsDead == y.IsDead)
+                        return (x.Roles.FirstOrDefault().roleId.CompareTo(y.Roles.FirstOrDefault().roleId));
+                    if (x.IsDead && !y.IsDead)
+                        return 1;
+                    return -1;
+                });
                 foreach(var data in AdditionalTempData.playerRoles) {
                     var roles = string.Join(" ", data.Roles.Select(x => Helpers.cs(x.color, x.name)));
-                    var taskInfo = data.TasksTotal > 0 ? $" - <color=#FAD934FF>({data.TasksCompleted}/{data.TasksTotal})</color>" : "";
-                    roleSummaryText.AppendLine($"{data.PlayerName} - {roles}{taskInfo}");
+                    var taskInfo = data.TasksTotal > 0 ? $" <color=#FAD934FF>({data.TasksCompleted}/{data.TasksTotal})</color>" : "";
+                    var aliveDead = data.IsDead ?
+                        $" ({ModTranslation.getString("roleSummaryDead")})" :
+                        data.IsDisconnected ?
+                        $" ({ModTranslation.getString("roleSummaryDC")})" :
+                        $" ({ModTranslation.getString("roleSummaryAlive")})";
+
+                    roleSummaryText.AppendLine($"{data.PlayerName} - {roles}{taskInfo}{aliveDead}");
                 }
                 TMPro.TMP_Text roleSummaryTextMesh = roleSummary.GetComponent<TMPro.TMP_Text>();
                 roleSummaryTextMesh.alignment = TMPro.TextAlignmentOptions.TopLeft;
@@ -400,7 +436,7 @@ namespace TheOtherRoles.Patches {
                 GameData.PlayerInfo playerInfo = GameData.Instance.AllPlayers[i];
                 if (!playerInfo.Disconnected)
                 {
-                    if (!playerInfo.IsDead)
+                    if (!playerInfo.IsDead && !playerInfo.Object.isGM())
                     {
                         numTotalAlive++;
 

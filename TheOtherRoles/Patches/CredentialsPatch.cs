@@ -10,14 +10,15 @@ namespace TheOtherRoles.Patches {
     [HarmonyPatch]
     public static class CredentialsPatch {
         public static string fullCredentials = 
-$@"<size=130%><color=#ff351f>TheOtherRoles</color></size> v{TheOtherRolesPlugin.Version.ToString()}
+$@"<size=130%><color=#ff351f>TheOtherRoles GM</color></size> v{TheOtherRolesPlugin.Version.ToString()}
 <size=80%>Modded by <color=#FCCE03FF>Eisbison</color>,
 <color=#FCCE03FF>Thunderstorm584</color> & <color=#FCCE03FF>EndOfFile</color>
-Button design by <color=#FCCE03FF>Bavari</color></size>";
+Button design by <color=#FCCE03FF>Bavari</color>
+カスタマイズ・日本語訳 <color=#c1a9ff>Virtual_Dusk</color></size>";
 
     public static string mainMenuCredentials = 
 $@"Modded by <color=#FCCE03FF>Eisbison</color>, <color=#FCCE03FF>Thunderstorm584</color> & <color=#FCCE03FF>EndOfFile</color>
-Design by <color=#FCCE03FF>Bavari</color>";
+Design by <color=#FCCE03FF>Bavari</color>, カスタマイズ・日本語訳 <color=#c1a9ff>Virtual_Dusk</color>";
 
         [HarmonyPatch(typeof(VersionShower), nameof(VersionShower.Start))]
         private static class VersionShowerPatch
@@ -34,7 +35,7 @@ Design by <color=#FCCE03FF>Bavari</color>";
 
                 var version = UnityEngine.Object.Instantiate<TMPro.TextMeshPro>(credentials);
                 version.transform.position = new Vector3(0, -0.25f, 0);
-                version.SetText($"v{TheOtherRolesPlugin.Version.ToString()}");
+                version.SetText($"GMエディション v{TheOtherRolesPlugin.Version.ToString()}");
 
                 credentials.transform.SetParent(amongUsLogo.transform);
                 version.transform.SetParent(amongUsLogo.transform);
@@ -61,7 +62,7 @@ Design by <color=#FCCE03FF>Bavari</color>";
             static void Postfix(PingTracker __instance){
                 __instance.text.alignment = TMPro.TextAlignmentOptions.TopRight;
                 if (AmongUsClient.Instance.GameState == InnerNet.InnerNetClient.GameStates.Started) {
-                    __instance.text.text = $"<size=130%><color=#ff351f>TheOtherRoles</color></size> v{TheOtherRolesPlugin.Version.ToString()}\n" + __instance.text.text;
+                    __instance.text.text = $"<size=130%><color=#ff351f>TheOtherRoles GM</color></size> v{TheOtherRolesPlugin.Version.ToString()}\n" + __instance.text.text;
                     if (PlayerControl.LocalPlayer.Data.IsDead) {
                         __instance.transform.localPosition = new Vector3(3.45f, __instance.transform.localPosition.y, __instance.transform.localPosition.z);
                     } else {

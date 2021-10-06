@@ -39,6 +39,7 @@ namespace TheOtherRoles.Patches {
         public static void Postfix(RegionMenu __instance)
         {
             var template = DestroyableSingleton<JoinGameButton>.Instance;
+            if (template?.GameIdText == null) return;
 
             if (ipField == null || ipField.gameObject == null) {
                 ipField = UnityEngine.Object.Instantiate(template.GameIdText, __instance.transform);

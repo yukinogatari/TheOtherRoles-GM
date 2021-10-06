@@ -11,6 +11,43 @@ namespace TheOtherRoles.Patches {
     [HarmonyPatch(typeof(PlayerControl), nameof(PlayerControl.RpcSetInfected))]
     class SetInfectedPatch
     {
+        public static void Prefix([HarmonyArgument(0)] Il2CppReferenceArray<GameData.PlayerInfo> infected)
+        {
+            //PlayerControl.AllPlayerControls.Remove(host);
+            PlayerControl host = AmongUsClient.Instance?.GetHost().Character;
+            if (CustomOptionHolder.gmEnabled.getBool() && CustomOptionHolder.gmIsHost.getBool())
+            {
+                bool hostIsImpostor = false;
+                foreach (GameData.PlayerInfo x in infected)
+                {
+                    if (host.PlayerId == x.PlayerId)
+                    {
+                        //TheOtherRolesPlugin.Instance.Log.LogInfo($"Host rolled impostor.");
+                        hostIsImpostor = true;
+                    } else
+                    {
+                        //TheOtherRolesPlugin.Instance.Log.LogInfo($"Original impostor: {x.PlayerId}");
+                    }
+                }
+
+                if (hostIsImpostor)
+                {
+                    int hostIndex = infected.ToList().FindIndex(x => x.PlayerId == host.PlayerId);
+                    int newImp = 0;
+                    while (true)
+                    {
+                        newImp = rnd.Next(0, PlayerControl.AllPlayerControls.Count);
+                        if (newImp == host.PlayerId || infected.ToList().FindIndex(x => x.PlayerId == newImp) >= 0)
+                        {
+                            continue;
+                        }
+                        break;
+                    }
+                    infected[hostIndex] = GameData.Instance.GetPlayerById((byte)newImp);
+                    //TheOtherRolesPlugin.Instance.Log.LogInfo($"New impostor: {newImp}");
+                }
+            }
+        }
 
         public static void Postfix([HarmonyArgument(0)]Il2CppReferenceArray<GameData.PlayerInfo> infected)
         {
@@ -111,6 +148,34 @@ namespace TheOtherRoles.Patches {
         }
 
         private static void assignSpecialRoles(RoleAssignmentData data) {
+
+            // Assign GM
+            if (CustomOptionHolder.gmEnabled.getBool() == true)
+            {
+                byte gmID = 0;
+
+                if (CustomOptionHolder.gmIsHost.getBool() == true)
+                {
+                    PlayerControl host = AmongUsClient.Instance?.GetHost().Character;
+                    gmID = setRoleToHost((byte)RoleId.GM, host);
+
+                    // First, remove the GM from role selection.
+                    data.crewmates.RemoveAll(x => x.PlayerId == host.PlayerId);
+                    data.impostors.RemoveAll(x => x.PlayerId == host.PlayerId);
+
+                } else
+                {
+                    gmID = setRoleToRandomPlayer((byte)RoleId.GM, data.crewmates);
+                }
+
+                PlayerControl p = PlayerControl.AllPlayerControls.ToArray().ToList().Find(x => x.PlayerId == gmID);
+
+                if (CustomOptionHolder.gmDiesAtStart.getBool())
+                {
+                    p.Exiled();
+                }
+            }
+
             // Assign Lovers
             if (rnd.Next(1, 101) <= CustomOptionHolder.loversSpawnRate.getSelection() * 10) {
                 bool isOnlyRole = !CustomOptionHolder.loversCanHaveAnotherRole.getBool();
@@ -258,6 +323,20 @@ namespace TheOtherRoles.Patches {
             }
         }
 
+        private static byte setRoleToHost(byte roleId, PlayerControl host, byte flag = 0)
+        {
+
+            byte playerId = host.PlayerId;
+
+            MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.SetRole, Hazel.SendOption.Reliable, -1);
+            writer.Write(roleId);
+            writer.Write(playerId);
+            writer.Write(flag);
+            AmongUsClient.Instance.FinishRpcImmediately(writer);
+            RPCProcedure.setRole(roleId, playerId, flag);
+            return playerId;
+        }
+
         private static byte setRoleToRandomPlayer(byte roleId, List<PlayerControl> playerList, byte flag = 0, bool removePlayer = true) {
             var index = rnd.Next(0, playerList.Count);
             byte playerId = playerList[index].PlayerId;
@@ -283,6 +362,7 @@ namespace TheOtherRoles.Patches {
             public int maxCrewmateRoles {get;set;}
             public int maxNeutralRoles {get;set;}
             public int maxImpostorRoles {get;set;}
+            public PlayerControl host { get; set; }
         }
         
         private enum RoleType {
