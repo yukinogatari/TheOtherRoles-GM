@@ -1167,9 +1167,8 @@ The vents will be sealed after the next meeting, players can't enter or exit sea
 
 ## Bait
 ### **Team: Crewmates**
-\
-Created by  [Mallöris](https://github.com/Mallaris)\
-\
+Created by  [Mallöris](https://github.com/Mallaris)
+
 The Bait is a Crewmate that if killed, forces the killer to self report the body (you can configure a delay in the options).
 Additionally, the Bait can see if someone is inside a vent (depending on the options the exact vent gets
 an outline or all vents do).
@@ -1183,9 +1182,8 @@ an outline or all vents do).
 
 ## GM
 ### **Team: N/A**
-\
-Created by  [Virtual_Dusk](https://twitter.com/Virtual_Dusk)\
-\
+Created by  [Virtual_Dusk](https://twitter.com/Virtual_Dusk)
+
 The GM (Game Master) is an observer role. Their presence has no effect on the game itself, and all players know who the GM is at all times. The GM cannot be targeted by other players, cannot fix sabotages, and cannot vote or be voted for. They are a completely external presence, provided with a range of tools at their disposal to efficiently observe the flow of the game.
 
 The GM role is intended to allow groups to play with a wide variety of rules not supported by Among Us natively. 
