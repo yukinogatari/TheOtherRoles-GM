@@ -86,11 +86,11 @@ The [Role Assignment](#role-assignment) sections explains how the roles are bein
 
 **Version 2.9.0**
 - **New Role:** [Madmate](#madmate) (created by [tomarai](https://github.com/tomarai))
-- **New Role:** [GM](#gm) (created by [yukinogatari](https://github.com/yukinogatari))
+- **New Role:** [GM](#gm) (created by [Virtual_Dusk](https://twitter.com/Virtual_Dusk))
 - Added Lovers Options: "Lovers Can Win With Crew", "Lovers Tasks Are Counted"
 - Added Sheriff Options: "Number of Shots"
 - Improved performance of Morphling/Camouflager abilities.
-- Added Japanese translation (by [yukinogatari](https://github.com/yukinogatari)) and support for adding [other languages](#translation).
+- Added Japanese translation (by [Virtual_Dusk](https://twitter.com/Virtual_Dusk)) and support for adding [other languages](#translation).
 - Miscellaneous changes and bugfixes
 
 **Hotfix 2.8.1**
@@ -347,7 +347,7 @@ syncs your game options automatically.
 If you have problems with the AmongUsModUpdater, make sure to [contact us](https://discord.gg/csa3pHYdPU).
 
 ## Windows Manual Installation
-1. Download and unzip the newest [release](https://github.com/yukinogatari/TheOtherRoles-GM/releases/latest)
+1. Download and unzip the newest [release](https://twitter.com/Virtual_Dusk/TheOtherRoles-GM/releases/latest)
 2. Find the folder of your game, for Steam players you can right click in Steam, on the game, a menu will appear proposing you to go to the folders.
 3. Make a copy of your game, it's not obligatory but advised, put it where you want.
 4. Drag or extract the files from the zip into your game, at the `.exe` level.
@@ -1184,7 +1184,7 @@ an outline or all vents do).
 ## GM
 ### **Team: N/A**
 \
-Created by  [yukinogatari](https://github.com/yukinogatari)\
+Created by  [Virtual_Dusk](https://twitter.com/Virtual_Dusk)\
 \
 The GM (Game Master) is an observer role. Their presence has no effect on the game itself, and all players know who the GM is at all times. The GM cannot be targeted by other players, cannot fix sabotages, and cannot vote or be voted for. They are a completely external presence, provided with a range of tools at their disposal to efficiently observe the flow of the game.
 
