@@ -700,10 +700,10 @@ Depending on the options, there'll be an arrow pointing towards the current targ
 
 ## Madmate
 ### **Team: Impostor**
+TheOtherRoles implementation by [tomarai](https://github.com/tomarai)
 
 The Madmate is a crewmate that works to support the impostors.
 The concepted originally comes from Are You a Werewolf?, and the name for this role is taken from [au.libhalt.net's mod](https://au.libhalt.net/#madmate) (Japanese only).
-TheOtherRoles implementation by [tomarai](https://github.com/tomarai)
 
 1. Functionally, the Madmate is a crewmate role.
 2. If the Impostors win, the Madmate wins as well.
