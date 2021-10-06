@@ -1,6 +1,5 @@
 
 # The Other Roles: GM Edition
-# (**This is a fork of The Other Roles**)
 
 This fork introduces a number of changes to [The Other Roles v2.8.1](https://github.com/Eisbison/TheOtherRoles). The most significant of which is the [GM](#gm) and [Madmate](#madmate) roles. It also adds support for [translating](#translation) the mod into any language currently supported by Among Us.
 
