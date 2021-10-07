@@ -603,6 +603,22 @@
         "0": "Hide Player Names",
         "11": "\u540d\u524d\u3092\u8868\u793a\u3057\u306a\u3044"
     },
+    "disableAdmin": {
+        "0": "Disable Admin Table",
+        "11": "\u30a2\u30c9\u30df\u30f3\u306e\u4f7f\u7528\u7981\u6b62"
+    },
+    "disableCameras": {
+        "0": "Disable Security Devices",
+        "11": "\u30ab\u30e1\u30e9\u30fb\u30c9\u30a2\u30ed\u30b0\u306e\u4f7f\u7528\u7981\u6b62"
+    },
+    "disableVitals": {
+        "0": "Disable Vitals Panel",
+        "11": "\u5fc3\u96fb\u56f3\u306e\u4f7f\u7528\u7981\u6b62"
+    },
+    "disableVents": {
+        "0": "Disable Vents",
+        "11": "\u30d9\u30f3\u30c8\u306e\u4f7f\u7528\u7981\u6b62"
+    },
     "optionOn": {
         "0": "On",
         "11": "\u30aa\u30f3"

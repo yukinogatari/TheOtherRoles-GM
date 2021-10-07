@@ -190,6 +190,11 @@ namespace TheOtherRoles {
         public static CustomOption noVoteIsSelfVote;
         public static CustomOption hidePlayerNames;
 
+        public static CustomOption disableAdmin;
+        public static CustomOption disableCameras;
+        public static CustomOption disableVitals;
+        public static CustomOption disableVents;
+
         internal static Dictionary<byte, byte[]> blockedRolePairings = new Dictionary<byte, byte[]>();
 
         public static string cs(Color c, string s) {
@@ -385,6 +390,11 @@ namespace TheOtherRoles {
             blockSkippingInEmergencyMeetings = CustomOption.Create(4, "blockSkippingInEmergencyMeetings", false);
             noVoteIsSelfVote = CustomOption.Create(5, "noVoteIsSelfVote", false, blockSkippingInEmergencyMeetings);
             hidePlayerNames = CustomOption.Create(6, "hidePlayerNames", false);
+
+            disableAdmin = CustomOption.Create(500, "disableAdmin", false);
+            disableCameras = CustomOption.Create(501, "disableCameras", false);
+            disableVitals = CustomOption.Create(502, "disableVitals", false);
+            disableVents = CustomOption.Create(503, "disableVents", false);
 
             blockedRolePairings.Add((byte)RoleId.Vampire, new [] { (byte)RoleId.Warlock});
             blockedRolePairings.Add((byte)RoleId.Warlock, new [] { (byte)RoleId.Vampire});

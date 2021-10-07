@@ -77,8 +77,8 @@ namespace TheOtherRoles.Modules {
         [HarmonyPatch(typeof(HudManager), nameof(HudManager.Update))]
         public static class EnableChat {
             public static void Postfix(HudManager __instance) {
-                if (!__instance.Chat.isActiveAndEnabled && AmongUsClient.Instance.GameMode == GameModes.FreePlay)
-                    __instance.Chat.SetVisible(true);
+                if (__instance?.Chat?.isActiveAndEnabled == false && AmongUsClient.Instance?.GameMode == GameModes.FreePlay)
+                    __instance?.Chat?.SetVisible(true);
             }
         }
     }

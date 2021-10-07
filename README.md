@@ -88,7 +88,8 @@ The [Role Assignment](#role-assignment) sections explains how the roles are bein
 - **New Role:** [GM](#gm) (created by [Virtual_Dusk](https://twitter.com/Virtual_Dusk))
 - Added Lovers Options: "Lovers Can Win With Crew", "Lovers Tasks Are Counted"
 - Added Sheriff Options: "Number of Shots"
-- Improved performance of Morphling/Camouflager abilities.
+- Improved performance of Morphling/Camouflager abilities
+- Options to disable admin, security, vitals, and vents
 - Added Japanese translation (by [Virtual_Dusk](https://twitter.com/Virtual_Dusk)) and support for adding [other languages](#translation).
 - Miscellaneous changes and bugfixes
 

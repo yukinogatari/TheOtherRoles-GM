@@ -19,6 +19,13 @@ namespace TheOtherRoles.Patches {
             float num = float.MaxValue;
             PlayerControl @object = pc.Object;
 
+            if (MapOptions.disableVents)
+            {
+                canUse = couldUse = false;
+                __result = num;
+                return false;
+            }
+
             bool roleCouldUse = false;
             if (Engineer.engineer != null && Engineer.engineer == @object)
                 roleCouldUse = true;
@@ -229,8 +236,6 @@ namespace TheOtherRoles.Patches {
                 int teamRemaining = Mathf.Max(0, maxNumberOfMeetings - meetingsCount);
                 int remaining = Mathf.Min(localRemaining, (Mayor.mayor != null && Mayor.mayor == PlayerControl.LocalPlayer) ? 1 : teamRemaining);
 
-                //__instance.StatusText.text = $"<size=75%>船員{PlayerControl.LocalPlayer.name}がボタン\n\n\n残っている</size>";
-                //__instance.NumberText.text = $"{localRemaining.ToString()}個　とお船全体が　{teamRemaining.ToString()}個";
                 __instance.StatusText.text = "<size=100%>" + String.Format(ModTranslation.getString("meetingStatus"), PlayerControl.LocalPlayer.name) + "</size>";
                 __instance.NumberText.text = String.Format(ModTranslation.getString("meetingCount"), localRemaining.ToString(), teamRemaining.ToString());
                 __instance.ButtonActive = remaining > 0;
@@ -242,81 +247,114 @@ namespace TheOtherRoles.Patches {
     }
 
 
-    [HarmonyPatch(typeof(Console), nameof(Console.CanUse))]
-    public static class ConsoleCanUsePatch {
-        public static bool Prefix(ref float __result, Console __instance, [HarmonyArgument(0)] GameData.PlayerInfo pc, [HarmonyArgument(1)] out bool canUse, [HarmonyArgument(2)] out bool couldUse) {
+    public static class ConsolePatch {
+
+        public static bool IsBlocked(Console __instance, PlayerControl pc)
+        {
+            if (__instance == null || pc == null || pc != PlayerControl.LocalPlayer)
+            {
+                return false;
+            }
+
+            PlayerTask task = __instance.FindTask(pc);
+            if (task == null) return false;
+
+            bool isLights = task.TaskType == TaskTypes.FixLights;
+            bool isComms = task.TaskType == TaskTypes.FixComms;
+            bool isReactor = task.TaskType == TaskTypes.StopCharles || task.TaskType == TaskTypes.ResetSeismic || task.TaskType == TaskTypes.ResetReactor;
+            bool isO2 = task.TaskType == TaskTypes.RestoreOxy;
+
+            if (Swapper.swapper != null && pc == Swapper.swapper && (isLights || isComms))
+            {
+                return true;
+            }
+
+            if (Madmate.madmate != null && pc == Madmate.madmate && (isLights || (isComms && !Madmate.canFixComm)))
+            {
+                return true;
+            }
+
+            if (pc.isGM() && (isLights || isComms || isReactor || isO2))
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        [HarmonyPatch(typeof(Console), nameof(Console.CanUse))]
+        public static class ConsoleCanUsePatch {
+
+            public static bool Prefix(ref float __result, Console __instance, [HarmonyArgument(0)] GameData.PlayerInfo pc, [HarmonyArgument(1)] out bool canUse, [HarmonyArgument(2)] out bool couldUse) {
+                canUse = couldUse = false;
+                __result = float.MaxValue;
+
+                if (IsBlocked(__instance, pc.Object)) return false;
+                if (__instance.AllowImpostor) return true;
+                if (!pc.Object.hasFakeTasks()) return true;
+
+                return false;
+            }
+        }
+
+        [HarmonyPatch(typeof(Console), nameof(Console.Use))]
+        public static class ConsoleUsePatch
+        {
+            public static bool Prefix(Console __instance)
+            {
+                return !IsBlocked(__instance, PlayerControl.LocalPlayer);
+            }
+        }
+    }
+
+    [HarmonyPatch(typeof(SystemConsole), nameof(SystemConsole.CanUse))]
+    public static class SystemConsoleCanUsePatch
+    {
+        public static bool Prefix(ref float __result, SystemConsole __instance, [HarmonyArgument(0)] GameData.PlayerInfo pc, [HarmonyArgument(1)] out bool canUse, [HarmonyArgument(2)] out bool couldUse)
+        {
             canUse = couldUse = false;
-            if (Swapper.swapper != null && Swapper.swapper == PlayerControl.LocalPlayer)
-                return !__instance.TaskTypes.Any(x => x == TaskTypes.FixLights || x == TaskTypes.FixComms);
-            if (__instance.AllowImpostor) return true;
-            if (!pc.Object.hasFakeTasks()) return true;
+            __result = float.MaxValue;
+
+            string name = __instance.name;
+            bool isSecurity = name == "task_cams" || name == "Surv_Panel" || name == "SurvLogConsole" || name == "SurvConsole";
+            bool isVitals = name == "panel_vitals";
+            bool isButton = name == "EmergencyButton" || name == "EmergencyConsole" || name == "task_emergency";
+
+            if (isSecurity && MapOptions.disableCameras)
+            {
+                return false;
+            }
+
+            if (isVitals && MapOptions.disableVitals)
+            {
+                return false;
+            }
+            return true;
+        }
+    }
+
+    [HarmonyPatch(typeof(MapConsole), nameof(MapConsole.CanUse))]
+    public static class MapConsoleCanUsePatch
+    {
+        public static bool Prefix(ref float __result, MapConsole __instance, [HarmonyArgument(0)] GameData.PlayerInfo pc, [HarmonyArgument(1)] out bool canUse, [HarmonyArgument(2)] out bool couldUse)
+        {
+            // temp fix for the admin bug on airship. 
+            __instance.useIcon = ImageNames.AdminMapButton;
+
+            canUse = couldUse = false;
+            if (!MapOptions.disableAdmin) return true;
             __result = float.MaxValue;
             return false;
         }
     }
 
-    [HarmonyPatch(typeof(TuneRadioMinigame), nameof(TuneRadioMinigame.Begin))]
-    class CommsMinigameBeginPatch
+    [HarmonyPatch(typeof(MapConsole), nameof(MapConsole.Use))]
+    public static class MapConsoleUsePatch
     {
-        static void Postfix(TuneRadioMinigame __instance) {
-            // Block Swapper or Madmate from fixing comms. Still looking for a better way to do this, but deleting the task doesn't seem like a viable option since then the camera, admin table, ... work while comms are out
-            if ((Swapper.swapper != null && Swapper.swapper == PlayerControl.LocalPlayer) ||
-                (!Madmate.canFixComm && Madmate.madmate != null && Madmate.madmate == PlayerControl.LocalPlayer) ||
-                (PlayerControl.LocalPlayer.isGM())) {
-                __instance.ForceClose();
-            }
-        }
-    }
-
-    [HarmonyPatch(typeof(SwitchMinigame), nameof(SwitchMinigame.Begin))]
-    class LightsMinigameBeginPatch {
-
-        static void Postfix(SwitchMinigame __instance) {
-            // Block Swapper or Madmate from fixing lights. One could also just delete the PlayerTask, but I wanted to do it the same way as with coms for now.
-            if ((Swapper.swapper != null && Swapper.swapper == PlayerControl.LocalPlayer) ||
-                (Madmate.madmate != null && Madmate.madmate == PlayerControl.LocalPlayer) ||
-                (PlayerControl.LocalPlayer.isGM())) {
-                __instance.ForceClose();
-            }
-        }
-    }
-
-    [HarmonyPatch(typeof(ReactorMinigame), nameof(ReactorMinigame.Begin))]
-    class ReactorMinigameBeginPatch
-    {
-        static void Postfix(ReactorMinigame __instance)
+        public static bool Prefix(MapConsole __instance)
         {
-            TheOtherRolesPlugin.Instance.Log.LogInfo($"ReactorMinigame.Begin");
-            if (PlayerControl.LocalPlayer.isGM())
-            {
-                __instance.ForceClose();
-            }
-        }
-    }
-
-    [HarmonyPatch(typeof(MonitorOxyMinigame), nameof(MonitorOxyMinigame.Begin))]
-    class MonitorOxyMinigameBeginPatch
-    {
-        static void Postfix(MonitorOxyMinigame __instance)
-        {
-            TheOtherRolesPlugin.Instance.Log.LogInfo($"MonitorOxyMinigame.Begin");
-            if (PlayerControl.LocalPlayer.isGM())
-            {
-                __instance.ForceClose();
-            }
-        }
-    }
-
-    [HarmonyPatch(typeof(AirshipAuthGame), nameof(AirshipAuthGame.Begin))]
-    class AirshipAuthGameBeginPatch
-    {
-        static void Postfix(AirshipAuthGame __instance)
-        {
-            TheOtherRolesPlugin.Instance.Log.LogInfo($"AirshipAuthGame.Begin");
-            if (PlayerControl.LocalPlayer.isGM())
-            {
-                __instance.ForceClose();
-            }
+            if (!MapOptions.disableAdmin) return true;
+            return false;
         }
     }
 

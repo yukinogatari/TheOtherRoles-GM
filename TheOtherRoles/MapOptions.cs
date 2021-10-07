@@ -11,6 +11,12 @@ namespace TheOtherRoles{
         public static bool blockSkippingInEmergencyMeetings = false;
         public static bool noVoteIsSelfVote = false;
         public static bool hidePlayerNames = false;
+
+        public static bool disableAdmin = false;
+        public static bool disableCameras = false;
+        public static bool disableVitals = false;
+        public static bool disableVents = false;
+
         public static bool ghostsSeeRoles = true;
         public static bool ghostsSeeTasks = true;
         public static bool ghostsSeeVotes = true;
@@ -33,6 +39,12 @@ public static void clearAndReloadMapOptions() {
             blockSkippingInEmergencyMeetings = CustomOptionHolder.blockSkippingInEmergencyMeetings.getBool();
             noVoteIsSelfVote = CustomOptionHolder.noVoteIsSelfVote.getBool();
             hidePlayerNames = CustomOptionHolder.hidePlayerNames.getBool();
+
+            disableAdmin = CustomOptionHolder.disableAdmin.getBool();
+            disableCameras = CustomOptionHolder.disableCameras.getBool();
+            disableVitals = CustomOptionHolder.disableVitals.getBool();
+            disableVents = CustomOptionHolder.disableVents.getBool();
+
             ghostsSeeRoles = TheOtherRolesPlugin.GhostsSeeRoles.Value;
             ghostsSeeTasks = TheOtherRolesPlugin.GhostsSeeTasks.Value;
             ghostsSeeVotes = TheOtherRolesPlugin.GhostsSeeVotes.Value;
