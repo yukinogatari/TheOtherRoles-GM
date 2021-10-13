@@ -244,41 +244,19 @@ namespace TheOtherRoles.Patches {
             __instance.KillButton.enabled = enabled;
         }
 
-        static void observerUpdate(HudManager __instance)
+        static void GMUpdate(HudManager __instance)
         {
-            if (PlayerControl.LocalPlayer.isGM())
+            //__instance.UseButton.enabled = false;
+/*            if (PlayerControl.LocalPlayer.isGM() && PlayerControl.LocalPlayer.Data.IsDead)
             {
-                __instance.ReportButton.gameObject.SetActiveRecursively(false);
-                __instance.ReportButton.SetActive(false);
-                __instance.ReportButton.renderer.enabled = false;
-                __instance.ReportButton.enabled = false;
-                __instance.ReportButton.renderer.sprite = null;
-                __instance.ReportButton.text.enabled = false;
-                __instance.ReportButton.text.SetText("");
-
-                //__instance.UseButton.enabled = false;
-                if (PlayerControl.LocalPlayer.Data.IsDead)
+                foreach (UseButton b in HudManager.Instance.UseButton.useButtons)
                 {
-                    foreach (UseButton b in __instance.UseButton.useButtons)
-                    {
-                        //b.gameObject.SetActiveRecursively(false);
-                        b.graphic.enabled = false;
-                        b.enabled = false;
-                        b.text.enabled = false;
-                    }
+                    //b.gameObject.SetActiveRecursively(false);
+                    b.graphic.enabled = false;
+                    b.enabled = false;
+                    b.text.enabled = false;
                 }
-
-                __instance.roomTracker.gameObject.SetActiveRecursively(false);
-                __instance.roomTracker.text.enabled = false;
-                __instance.roomTracker.text.SetText("");
-                __instance.roomTracker.enabled = false;
-
-                __instance.MapButton.gameObject.SetActiveRecursively(false);
-                __instance.MapButton.enabled = false;
-                __instance.MapButton.sprite = null;
-
-                //__instance.ShadowQuad.gameObject.SetActive(PlayerControl.LocalPlayer.Data.IsDead);
-            }
+            }*/
         }
 
         static void Postfix(HudManager __instance)
@@ -300,7 +278,7 @@ namespace TheOtherRoles.Patches {
             // Mini
             miniUpdate();
             // Observer roles
-            observerUpdate(__instance);
+            GMUpdate(__instance);
         }
     }
 }

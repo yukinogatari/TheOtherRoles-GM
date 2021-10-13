@@ -29,7 +29,7 @@ namespace TheOtherRoles{
         public static Dictionary<byte, PoolablePlayer> playerIcons = new Dictionary<byte, PoolablePlayer>();
         public static Dictionary<byte, MorphData> morphData = new Dictionary<byte, MorphData>();
 
-public static void clearAndReloadMapOptions() {
+        public static void clearAndReloadMapOptions() {
             meetingsCount = 0;
             camerasToAdd = new List<SurvCamera>();
             ventsToSeal = new List<Vent>();

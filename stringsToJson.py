@@ -14,7 +14,6 @@ def stringToJson(filename):
     for header in s[1]:
       if header.value:
         headers.append(header.value)
-    print(headers)
     
     stringData = {}
     
@@ -28,7 +27,7 @@ def stringToJson(filename):
       
       for i, string in enumerate(row[1:]):
         if string.value:
-          data[i] = string.value
+          data[i] = string.value.replace("\\n", "\n")
       
       if data:
         stringData[name] = data

@@ -72,6 +72,23 @@ namespace TheOtherRoles.Patches {
             {
                 PlayerControl.LocalPlayer.clearAllTasks();
             }
+
+            if (PlayerControl.LocalPlayer.isGM())
+            {
+                HudManager.Instance.ShadowQuad.gameObject.SetActive(false);
+                HudManager.Instance.ReportButton.gameObject.SetActiveRecursively(false);
+                HudManager.Instance.ReportButton.SetActive(false);
+                HudManager.Instance.ReportButton.renderer.enabled = false;
+                HudManager.Instance.ReportButton.enabled = false;
+                HudManager.Instance.ReportButton.renderer.sprite = null;
+                HudManager.Instance.ReportButton.text.enabled = false;
+                HudManager.Instance.ReportButton.text.SetText("");
+
+                HudManager.Instance.roomTracker.gameObject.SetActiveRecursively(false);
+                HudManager.Instance.roomTracker.text.enabled = false;
+                HudManager.Instance.roomTracker.text.SetText("");
+                HudManager.Instance.roomTracker.enabled = false;
+            }
         }
     }
 

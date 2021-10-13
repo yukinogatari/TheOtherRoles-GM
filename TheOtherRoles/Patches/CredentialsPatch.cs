@@ -56,6 +56,7 @@ Design by <color=#FCCE03FF>Bavari</color>, カスタマイズ・日本語訳 <co
                     modStamp.transform.localScale *= 0.6f;
                 }
                 float offset = (AmongUsClient.Instance.GameState == InnerNet.InnerNetClient.GameStates.Started) ? 0.75f : 0f;
+                if (PlayerControl.LocalPlayer.isGM()) offset += 0.30f;
                 modStamp.transform.position = HudManager.Instance.MapButton.transform.position + Vector3.down * offset;
             }
 

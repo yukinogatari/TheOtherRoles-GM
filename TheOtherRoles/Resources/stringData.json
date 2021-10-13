@@ -1119,10 +1119,12 @@
         "11": "GM"
     },
     "gmIntroDesc": {
-        "0": "You're the Game Master"
+        "0": "You're the Game Master",
+        "11": "\u30b2\u30fc\u30e0\u30de\u30b9\u30bf\u30fc\u3060"
     },
     "gmShortDesc": {
-        "0": "You're the Game Master"
+        "0": "You're the Game Master",
+        "11": "\u30b2\u30fc\u30e0\u30de\u30b9\u30bf\u30fc\u3060"
     },
     "gmKill": {
         "0": "KILL",
@@ -1192,7 +1194,8 @@
         "11": "\u6b7b\u4ea1"
     },
     "roleSummaryDC": {
-        "0": "Disconnected"
+        "0": "Disconnected",
+        "11": "\u5207\u65ad"
     },
     "errorNotInstalled": {
         "0": " has a different or no version of The Other Roles",
@@ -1228,14 +1231,18 @@
     },
     "sheriffShots": {
         "0": "Shots: {0}",
-        "11": "\u6b8b\u5f3e: {0}"
+        "11": "\u6b8b\u308a {0}\u767a"
     },
     "meetingStatus": {
         "0": "CREWMEMBER {0} HAS\n\n\nEMERGENCY MEETINGS LEFT",
-        "11": "\u8239\u54e1 {0} \u304c\u30dc\u30bf\u30f3\n\n\n\u6b8b\u3063\u3066\u3044\u308b"
+        "11": "\u8239\u54e1 {0} \u304c\u6b8b\u308a\n\n\n\u7dca\u6025\u62db\u96c6\u3067\u304d\u308b"
     },
     "meetingCount": {
         "0": "{0} and the ship has {1}",
-        "11": "{0}\u500b\u3000\u3068\u30af\u30eb\u30fc\u5168\u4f53\u304c\u3000{1}\u500b"
+        "11": "{0}\u56de\u3000\u3068\u30af\u30eb\u30fc\u5168\u4f53\u304c\u3000{1}\u56de"
+    },
+    "buttonBlocked": {
+        "0": "BLOCKED",
+        "11": "\u4f7f\u7528\u7981\u6b62"
     }
 }

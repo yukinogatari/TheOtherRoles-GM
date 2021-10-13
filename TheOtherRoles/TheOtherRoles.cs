@@ -817,6 +817,8 @@ namespace TheOtherRoles
         private static Sprite lightOutButtonSprite;
         private static Sprite tricksterVentButtonSprite;
 
+        private static UseButton tricksterVentButton;
+
         public static Sprite getPlaceBoxButtonSprite() {
             if (placeBoxButtonSprite) return placeBoxButtonSprite;
             placeBoxButtonSprite = Helpers.loadSpriteFromResources("TheOtherRoles.Resources.PlaceJackInTheBoxButton.png", 115f);
@@ -833,6 +835,21 @@ namespace TheOtherRoles
             if (tricksterVentButtonSprite) return tricksterVentButtonSprite;
             tricksterVentButtonSprite = Helpers.loadSpriteFromResources("TheOtherRoles.Resources.TricksterVentButton.png", 115f);
             return tricksterVentButtonSprite;
+        }
+
+        public static UseButton getTricksterVentButton()
+        {
+
+            if (tricksterVentButton == null)
+            {
+                UseButton template = HudManager.Instance.UseButton.otherButtons[ImageNames.VentButton];
+                tricksterVentButton = UnityEngine.Object.Instantiate(template, HudManager.Instance.UseButton.transform);
+                tricksterVentButton.graphic.sprite = getTricksterVentButtonSprite();
+            }
+            tricksterVentButton.text.enabled = false;
+            tricksterVentButton.text.text = "";
+
+            return tricksterVentButton;
         }
 
         public static void clearAndReload() {
@@ -1116,14 +1133,57 @@ namespace TheOtherRoles
         public static bool canWarp = true;
         public static bool canKill = false;
 
+        public static Dictionary<byte, SpriteRenderer> MapIcons;
+
+        public static UseButton blockedButton;
+
+        private static Sprite blockedSprite;
+        private static Sprite zoomInSprite;
+        private static Sprite zoomOutSprite;
+
+        public static Sprite getBlockedSprite()
+        {
+            if (blockedSprite) return blockedSprite;
+            blockedSprite = Helpers.loadSpriteFromResources("TheOtherRoles.Resources.deadX.png", 115f / 2f);
+            return blockedSprite;
+        }
+        public static Sprite getZoomInSprite()
+        {
+            if (zoomInSprite) return zoomInSprite;
+            zoomInSprite = Helpers.loadSpriteFromResources("TheOtherRoles.Resources.GMZoomIn.png", 115f / 2f);
+            return zoomInSprite;
+        }
+        public static Sprite getZoomOutSprite()
+        {
+            if (zoomOutSprite) return zoomOutSprite;
+            zoomOutSprite = Helpers.loadSpriteFromResources("TheOtherRoles.Resources.GMZoomOut.png", 115f / 2f);
+            return zoomOutSprite;
+        }
+
+        public static UseButton getBlockedButton()
+        {
+            if (blockedButton == null)
+            {
+                UseButton template = HudManager.Instance.UseButton.otherButtons[ImageNames.UseButton];
+                blockedButton = UnityEngine.Object.Instantiate(template, HudManager.Instance.UseButton.transform);
+            }
+
+            blockedButton.text.text = ModTranslation.getString("buttonBlocked");
+            return blockedButton;
+        }
+
         public static void clearAndReload()
         {
             gm = null;
             gmIsHost = CustomOptionHolder.gmIsHost.getBool();
             diesAtStart = CustomOptionHolder.gmDiesAtStart.getBool();
             hideSettings = CustomOptionHolder.gmHideSettings.getBool();
-            hasTasks = true;
-            canSabotage = true;
+            hasTasks = false;
+            canSabotage = false;
+            blockedButton = null;
+            zoomInSprite = null;
+            zoomOutSprite = null;
+            MapIcons = new Dictionary<byte, SpriteRenderer>();
             canWarp = CustomOptionHolder.gmCanWarp.getBool();
             canKill = CustomOptionHolder.gmCanKill.getBool();
 

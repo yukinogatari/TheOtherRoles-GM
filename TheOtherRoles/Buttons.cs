@@ -1038,9 +1038,9 @@ namespace TheOtherRoles
                 () => { return !(GM.gm == null || PlayerControl.LocalPlayer != GM.gm); },
                 () => { return true; },
                 () => { },
-                null,
+                GM.getZoomOutSprite(),
                 // position
-                Vector3.zero,
+                Vector3.zero + Vector3.up * 3.55f + Vector3.right * 0.55f,
                 // hudmanager
                 __instance,
                 // keyboard shortcut
@@ -1049,6 +1049,7 @@ namespace TheOtherRoles
             );
             gmZoomOut.Timer = 0.0f;
             gmZoomOut.MaxTimer = 0.0f;
+            gmZoomOut.LocalScale = Vector3.one * 0.275f;
 
             gmZoomIn = new CustomButton(
                 () => {
@@ -1069,9 +1070,9 @@ namespace TheOtherRoles
                 () => { return !(GM.gm == null || PlayerControl.LocalPlayer != GM.gm); },
                 () => { return true; },
                 () => { },
-                null,
+                GM.getZoomInSprite(),
                 // position
-                Vector3.zero,
+                Vector3.zero + Vector3.up * 3.55f + Vector3.right * 0.2f,
                 // hudmanager
                 __instance,
                 // keyboard shortcut
@@ -1080,6 +1081,7 @@ namespace TheOtherRoles
             );
             gmZoomIn.Timer = 0.0f;
             gmZoomIn.MaxTimer = 0.0f;
+            gmZoomIn.LocalScale = Vector3.one * 0.275f;
 
             // Set the default (or settings from the previous game) timers/durations when spawning the buttons
             setCustomButtonCooldowns();

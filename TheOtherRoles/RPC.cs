@@ -742,6 +742,11 @@ namespace TheOtherRoles
             if (target == null) return;
             target.Revive();
             target.getPartner()?.Revive(); // Lover check
+
+            if (PlayerControl.LocalPlayer.isGM())
+            {
+                HudManager.Instance.ShadowQuad.gameObject.SetActive(false);
+            }
         }
     }   
 
