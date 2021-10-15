@@ -115,6 +115,7 @@ namespace TheOtherRoles
             clearAndReloadRoles();
             clearGameHistory();
             setCustomButtonCooldowns();
+            MapBehaviorPatch.resetIcons();
         }
 
         public static void shareOptionSelection(uint id, uint selection) {
@@ -723,9 +724,13 @@ namespace TheOtherRoles
         public static void GMKill(byte targetId)
         {
             PlayerControl target = Helpers.playerById(targetId);
+
             if (target == null) return;
+            target.MyPhysics.ExitAllVents();
             target.Exiled();
+
             PlayerControl partner = target.getPartner(); // Lover check
+            partner?.MyPhysics.ExitAllVents();
 
             if (HudManager.Instance != null && GM.gm != null)
             {
@@ -757,8 +762,6 @@ namespace TheOtherRoles
         {
             byte packetId = callId;
             switch (packetId) {
-
-                // Main Controls
 
                 case (byte)CustomRPC.ResetVaribles:
                     RPCProcedure.resetVariables();

@@ -185,6 +185,7 @@ namespace TheOtherRoles {
         public static CustomOption gmCanWarp;
         public static CustomOption gmCanKill;
 
+        public static CustomOption specialOptions;
         public static CustomOption maxNumberOfMeetings;
         public static CustomOption blockSkippingInEmergencyMeetings;
         public static CustomOption noVoteIsSelfVote;
@@ -386,15 +387,17 @@ namespace TheOtherRoles {
             madmateCanFixComm = CustomOption.Create(365, "madmateCanFixComm", true, madmateSpawnRate);
 
             // Other options
-            maxNumberOfMeetings = CustomOption.Create(3, "maxNumberOfMeetings", 10, 0, 15, 1, null, true);
-            blockSkippingInEmergencyMeetings = CustomOption.Create(4, "blockSkippingInEmergencyMeetings", false);
-            noVoteIsSelfVote = CustomOption.Create(5, "noVoteIsSelfVote", false, blockSkippingInEmergencyMeetings);
-            hidePlayerNames = CustomOption.Create(6, "hidePlayerNames", false);
+            specialOptions = CustomOption.Create(500, "", true, null, false, true);
+            maxNumberOfMeetings = CustomOption.Create(3, "maxNumberOfMeetings", 10, 0, 15, 1, specialOptions, true);
+            blockSkippingInEmergencyMeetings = CustomOption.Create(4, "blockSkippingInEmergencyMeetings", false, specialOptions);
+            noVoteIsSelfVote = CustomOption.Create(5, "noVoteIsSelfVote", false, specialOptions);
+            hidePlayerNames = CustomOption.Create(6, "hidePlayerNames", false, specialOptions);
 
-            disableAdmin = CustomOption.Create(500, "disableAdmin", false);
-            disableCameras = CustomOption.Create(501, "disableCameras", false);
-            disableVitals = CustomOption.Create(502, "disableVitals", false);
-            disableVents = CustomOption.Create(503, "disableVents", false);
+            disableAdmin = CustomOption.Create(501, "disableAdmin", false, specialOptions);
+            disableCameras = CustomOption.Create(502, "disableCameras", false, specialOptions);
+            disableVitals = CustomOption.Create(503, "disableVitals", false, specialOptions);
+            disableVents = CustomOption.Create(504, "disableVents", false, specialOptions);
+
 
             blockedRolePairings.Add((byte)RoleId.Vampire, new [] { (byte)RoleId.Warlock});
             blockedRolePairings.Add((byte)RoleId.Warlock, new [] { (byte)RoleId.Vampire});
@@ -417,18 +420,27 @@ namespace TheOtherRoles {
         public int selection;
         public OptionBehaviour optionBehaviour;
         public CustomOption parent;
+        public List<CustomOption> children;
         public bool isHeader;
+        public bool isHidden;
 
         // Option creation
 
-        public CustomOption(int id, string name,  System.Object[] selections, System.Object defaultValue, CustomOption parent, bool isHeader) {
+        public CustomOption(int id, string name,  System.Object[] selections, System.Object defaultValue, CustomOption parent, bool isHeader, bool isHidden) {
             this.id = id;
-            this.name = parent == null ? name : "- " + name;
+            this.name = name;
             this.selections = selections;
             int index = Array.IndexOf(selections, defaultValue);
             this.defaultSelection = index >= 0 ? index : 0;
             this.parent = parent;
             this.isHeader = isHeader;
+            this.isHidden = isHidden;
+
+            this.children = new List<CustomOption>();
+            if (parent != null) {
+                parent.children.Add(this);
+            }
+
             selection = 0;
             if (id != 0) {
                 entry = TheOtherRolesPlugin.Instance.Config.Bind($"Preset{preset}", id.ToString(), defaultSelection);
@@ -437,19 +449,19 @@ namespace TheOtherRoles {
             options.Add(this);
         }
 
-        public static CustomOption Create(int id, string name, string[] selections, CustomOption parent = null, bool isHeader = false) {
-            return new CustomOption(id, name, selections, "", parent, isHeader);
+        public static CustomOption Create(int id, string name, string[] selections, CustomOption parent = null, bool isHeader = false, bool isHidden = false) {
+            return new CustomOption(id, name, selections, "", parent, isHeader, isHidden);
         }
 
-        public static CustomOption Create(int id, string name, float defaultValue, float min, float max, float step, CustomOption parent = null, bool isHeader = false) {
+        public static CustomOption Create(int id, string name, float defaultValue, float min, float max, float step, CustomOption parent = null, bool isHeader = false, bool isHidden = false) {
             List<float> selections = new List<float>();
             for (float s = min; s <= max; s += step)
                 selections.Add(s);
-            return new CustomOption(id, name, selections.Cast<object>().ToArray(), defaultValue, parent, isHeader);
+            return new CustomOption(id, name, selections.Cast<object>().ToArray(), defaultValue, parent, isHeader, isHidden);
         }
 
-        public static CustomOption Create(int id, string name, bool defaultValue, CustomOption parent = null, bool isHeader = false) {
-            return new CustomOption(id, name, new string[]{"optionOff", "optionOn"}, defaultValue ? "optionOn" : "optionOff", parent, isHeader);
+        public static CustomOption Create(int id, string name, bool defaultValue, CustomOption parent = null, bool isHeader = false, bool isHidden = false) {
+            return new CustomOption(id, name, new string[]{"optionOff", "optionOn"}, defaultValue ? "optionOn" : "optionOff", parent, isHeader, isHidden);
         }
 
         // Static behaviour
@@ -519,6 +531,7 @@ namespace TheOtherRoles {
             List<OptionBehaviour> allOptions = __instance.Children.ToList();
             for (int i = 0; i < CustomOption.options.Count; i++) {
                 CustomOption option = CustomOption.options[i];
+                if (option.isHidden) continue;
                 if (option.optionBehaviour == null) {
                     StringOption stringOption = UnityEngine.Object.Instantiate(template, template.transform.parent);
                     allOptions.Add(stringOption);
@@ -621,7 +634,8 @@ namespace TheOtherRoles {
                         enabled = parent.selection != 0;
                         parent = parent.parent;
                     }
-                    option.optionBehaviour.gameObject.SetActive(enabled);
+
+                    option.optionBehaviour.gameObject.SetActive(enabled && !option.isHidden);
                     if (enabled) {
                         offset -= option.isHeader ? 0.75f : 0.5f;
                         option.optionBehaviour.transform.localPosition = new Vector3(option.optionBehaviour.transform.localPosition.x, offset, option.optionBehaviour.transform.localPosition.z);
@@ -682,121 +696,112 @@ namespace TheOtherRoles {
             return typeof(GameOptionsData).GetMethods().Where(x => x.ReturnType == typeof(string) && x.GetParameters().Length == 1 && x.GetParameters()[0].ParameterType == typeof(int));
         }
 
+        private static string optionToString(CustomOption option)
+        {
+            if (option == null) return "";
+            return $"{tl(option.name)}: {tl(option.selections[option.selection].ToString())}";
+        }
+
         private static void Postfix(ref string __result)
         {
-            StringBuilder sb = new StringBuilder(__result);
+
+            bool hideSettings = AmongUsClient.Instance?.AmHost == false && CustomOptionHolder.gmEnabled.getBool() == true && CustomOptionHolder.gmHideSettings.getBool();
+            if (hideSettings)
+            {
+                return;
+            }
+
+            List<string> pages = new List<string>();
+            pages.Add(__result);
+
+            StringBuilder entry = new StringBuilder();
+            List<StringBuilder> entries = new List<StringBuilder>();
+
+            // First add the presets and the role counts
+            entries.Add(new StringBuilder(optionToString(CustomOptionHolder.presetSelection)));
+
+            var optionName = CustomOptionHolder.cs(new Color(204f / 255f, 204f / 255f, 0, 1f), tl("crewmateRoles"));
+            var min = CustomOptionHolder.crewmateRolesCountMin.getSelection();
+            var max = CustomOptionHolder.crewmateRolesCountMax.getSelection();
+            if (min > max) min = max;
+            var optionValue = (min == max) ? $"{max}" : $"{min} - {max}";
+            entry.AppendLine($"{optionName}: {optionValue}");
+
+            optionName = CustomOptionHolder.cs(new Color(204f / 255f, 204f / 255f, 0, 1f), tl("neutralRoles"));
+            min = CustomOptionHolder.neutralRolesCountMin.getSelection();
+            max = CustomOptionHolder.neutralRolesCountMax.getSelection();
+            if (min > max) min = max;
+            optionValue = (min == max) ? $"{max}" : $"{min} - {max}";
+            entry.AppendLine($"{optionName}: {optionValue}");
+
+            optionName = CustomOptionHolder.cs(new Color(204f / 255f, 204f / 255f, 0, 1f), tl("impostorRoles"));
+            min = CustomOptionHolder.impostorRolesCountMin.getSelection();
+            max = CustomOptionHolder.impostorRolesCountMax.getSelection();
+            if (min > max) min = max;
+            optionValue = (min == max) ? $"{max}" : $"{min} - {max}";
+            entry.AppendLine($"{optionName}: {optionValue}");
+
+            entries.Add(entry);
+            entry = new StringBuilder();
+
             foreach (CustomOption option in CustomOption.options) {
+                if ((option == CustomOptionHolder.presetSelection) ||
+                    (option == CustomOptionHolder.crewmateRolesCountMin) ||
+                    (option == CustomOptionHolder.crewmateRolesCountMax) ||
+                    (option == CustomOptionHolder.neutralRolesCountMin) ||
+                    (option == CustomOptionHolder.neutralRolesCountMax) ||
+                    (option == CustomOptionHolder.impostorRolesCountMin) ||
+                    (option == CustomOptionHolder.impostorRolesCountMax))
+                {
+                    continue;
+                }
+
                 if (option.parent == null) {
-                    if (option == CustomOptionHolder.crewmateRolesCountMin)
-                    {
-                        var optionName = CustomOptionHolder.cs(new Color(204f / 255f, 204f / 255f, 0, 1f), tl("crewmateRoles"));
-                        var min = CustomOptionHolder.crewmateRolesCountMin.getSelection();
-                        var max = CustomOptionHolder.crewmateRolesCountMax.getSelection();
-                        if (min > max) min = max;
-                        var optionValue = (min == max) ? $"{max}" : $"{min} - {max}";
-                        sb.AppendLine($"{optionName}: {optionValue}");
-                    }
-                    else if (option == CustomOptionHolder.neutralRolesCountMin)
-                    {
-                        var optionName = CustomOptionHolder.cs(new Color(204f / 255f, 204f / 255f, 0, 1f), tl("neutralRoles"));
-                        var min = CustomOptionHolder.neutralRolesCountMin.getSelection();
-                        var max = CustomOptionHolder.neutralRolesCountMax.getSelection();
-                        if (min > max) min = max;
-                        var optionValue = (min == max) ? $"{max}" : $"{min} - {max}";
-                        sb.AppendLine($"{optionName}: {optionValue}");
-                    }
-                    else if (option == CustomOptionHolder.impostorRolesCountMin)
-                    {
-                        var optionName = CustomOptionHolder.cs(new Color(204f / 255f, 204f / 255f, 0, 1f), tl("impostorRoles"));
-                        var min = CustomOptionHolder.impostorRolesCountMin.getSelection();
-                        var max = CustomOptionHolder.impostorRolesCountMax.getSelection();
-                        if (min > max) min = max;
-                        var optionValue = (min == max) ? $"{max}" : $"{min} - {max}";
-                        sb.AppendLine($"{optionName}: {optionValue}");
-                    }
-                    else if ((option == CustomOptionHolder.crewmateRolesCountMax) || (option == CustomOptionHolder.neutralRolesCountMax) || (option == CustomOptionHolder.impostorRolesCountMax))
-                    {
+                    if (option.selection == 0)
                         continue;
-                    }
-                    else if (option == CustomOptionHolder.presetSelection)
+
+                    entry = new StringBuilder();
+                    if (!option.isHidden)
+                        entry.AppendLine(optionToString(option));
+
+                    foreach (var child in option.children)
                     {
-                        continue;
-                    } else {
-                        sb.AppendLine($"{tl(option.name)}: {tl(option.selections[option.selection].ToString())}");
+                        if (!option.isHidden)
+                            entry.AppendLine("- " + optionToString(child));
                     }
-                    
+                    entries.Add(entry);
                 }
             }
-            CustomOption parent = null;
-            foreach (CustomOption option in CustomOption.options)
-                if (option.parent != null) {
-                    if (option.parent != parent && option.parent.parent == null) {
-                        sb.AppendLine();
-                        sb.AppendLine(tl(option.parent.name));
-                        parent = option.parent;
-                    }
-                    sb.AppendLine($"{tl(option.name)}: {tl(option.selections[option.selection].ToString())}");
+
+            int maxLines = 37;
+            int lineCount = 0;
+            string page = "";
+            foreach (var e in entries)
+            {
+                string str = e.ToString().Trim('\r', '\n');
+                int lines = str.Count(c => c == '\n') + 1;
+
+                if (lineCount + lines > maxLines)
+                {
+                    pages.Add(page);
+                    page = "";
+                    lineCount = 0;
                 }
 
-            var hudString = sb.ToString();
+                page = page + str + "\n\n";
+                lineCount += lines + 1;
+            }
 
-            int defaultSettingsLines = 19;
-            int roleSettingsLines = defaultSettingsLines + 36 - 0;
-            int detailedSettingsP1 = roleSettingsLines + 36;
-            int detailedSettingsP2 = detailedSettingsP1 + 38;
-            int detailedSettingsP3 = detailedSettingsP2 + 39;
-            int detailedSettingsP4 = detailedSettingsP3 + 38;
-            int end1 = hudString.TakeWhile(c => (defaultSettingsLines -= (c == '\n' ? 1 : 0)) > 0).Count();
-            int end2 = hudString.TakeWhile(c => (roleSettingsLines -= (c == '\n' ? 1 : 0)) > 0).Count();
-            int end3 = hudString.TakeWhile(c => (detailedSettingsP1 -= (c == '\n' ? 1 : 0)) > 0).Count();
-            int end4 = hudString.TakeWhile(c => (detailedSettingsP2 -= (c == '\n' ? 1 : 0)) > 0).Count();
-            int end5 = hudString.TakeWhile(c => (detailedSettingsP3 -= (c == '\n' ? 1 : 0)) > 0).Count();
-            int end6 = hudString.TakeWhile(c => (detailedSettingsP4 -= (c == '\n' ? 1 : 0)) > 0).Count();
-            int counter = TheOtherRolesPlugin.optionsPage;
-
-            bool hideSettings = false;
-            if (AmongUsClient.Instance?.AmHost == false && CustomOptionHolder.gmEnabled.getBool() == true && CustomOptionHolder.gmHideSettings.getBool())
+            page = page.Trim('\r', '\n');
+            if (page != "")
             {
-                counter = 0;
-                hideSettings = true;
+                pages.Add(page);
             }
 
-            if (counter == 0) {
-                hudString = hudString.Substring(0, end1) + "\n";   
-            } else if (counter == 1) {
-                hudString = hudString.Substring(end1 + 1, end2 - end1);
-                // Temporary fix, should add a new CustomOption for spaces
-                int gap = 1;
-                int index = hudString.TakeWhile(c => (gap -= (c == '\n' ? 1 : 0)) > 0).Count();
-                //hudString = hudString.Insert(index, "\n");
-                gap = 5 - 2;
-                index = hudString.TakeWhile(c => (gap -= (c == '\n' ? 1 : 0)) > 0).Count();
-                hudString = hudString.Insert(index, "\n");
-                gap = 18 - 2;
-                index = hudString.TakeWhile(c => (gap -= (c == '\n' ? 1 : 0)) > 0).Count();
-                hudString = hudString.Insert(index + 1, "\n");
-                gap = 22 - 2;
-                index = hudString.TakeWhile(c => (gap -= (c == '\n' ? 1 : 0)) > 0).Count();
-                hudString = hudString.Insert(index + 1, "\n");
-            } else if (counter == 2) {
-                hudString = hudString.Substring(end2 + 1, end3 - end2);
-            } else if (counter == 3) {
-                hudString = hudString.Substring(end3 + 1, end4 - end3);
-            } else if (counter == 4) {
-                hudString = hudString.Substring(end4 + 1, end5 - end4);
-            } else if (counter == 5) {
-                //hudString = hudString.Substring(end5 + 1, end6 - end5);
-                hudString = hudString.Substring(end5 + 1);
-            } else if (counter == 6) {
-                hudString = hudString.Substring(end6 + 1);
-            }
+            int numPages = pages.Count;
+            int counter = TheOtherRolesPlugin.optionsPage = TheOtherRolesPlugin.optionsPage % numPages;
 
-            hudString = hudString.Trim('\r', '\n');
-            if (!hideSettings)
-            {
-                hudString += $"\n\n" + tl("pressTabForMore") + $" ({counter + 1}/6)";
-            }
-            __result = hudString;
+            __result = pages[counter].Trim('\r', '\n') + "\n\n" + tl("pressTabForMore") + $" ({counter + 1}/{numPages})";
         }
     }
 
@@ -805,8 +810,8 @@ namespace TheOtherRoles {
     {
         public static void Postfix(KeyboardJoystick __instance)
         {
-            if(Input.GetKeyDown(KeyCode.Tab)) {
-                TheOtherRolesPlugin.optionsPage = (TheOtherRolesPlugin.optionsPage + 1) % 6;
+            if(Input.GetKeyDown(KeyCode.Tab) && AmongUsClient.Instance.GameState != InnerNet.InnerNetClient.GameStates.Started) {
+                TheOtherRolesPlugin.optionsPage = TheOtherRolesPlugin.optionsPage + 1;
             }
         }
     }

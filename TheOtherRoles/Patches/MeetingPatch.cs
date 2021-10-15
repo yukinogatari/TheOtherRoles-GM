@@ -384,9 +384,25 @@ namespace TheOtherRoles.Patches {
             }
         }
 
+        [HarmonyPatch(typeof(HudManager), nameof(HudManager.OpenMeetingRoom))]
+        class OpenMeetingPatch
+        {
+            public static void Prefix(HudManager __instance)
+            {
+                Camouflager.resetCamouflage();
+                Morphling.resetMorph();
+                GM.resetZoom();
+            }
+        }
+
         [HarmonyPatch(typeof(PlayerControl), nameof(PlayerControl.CoStartMeeting))]
         class StartMeetingPatch {
-            public static void Prefix(PlayerControl __instance, [HarmonyArgument(0)]GameData.PlayerInfo meetingTarget) {
+            public static void Prefix(PlayerControl __instance, [HarmonyArgument(0)]GameData.PlayerInfo meetingTarget)
+            {
+                Camouflager.resetCamouflage();
+                Morphling.resetMorph();
+                GM.resetZoom();
+
                 // Reset vampire bitten
                 Vampire.bitten = null;
                 // Count meetings
@@ -400,7 +416,7 @@ namespace TheOtherRoles.Patches {
         class MeetingHudUpdatePatch {
             static void Postfix(MeetingHud __instance) {
                 // Deactivate skip Button if skipping on emergency meetings is disabled
-                if (target == null && blockSkippingInEmergencyMeetings)
+                if (blockSkippingInEmergencyMeetings)
                     __instance.SkipVoteButton.gameObject.SetActive(false);
             }
         }

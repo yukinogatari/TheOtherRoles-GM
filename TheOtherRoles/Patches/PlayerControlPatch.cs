@@ -732,15 +732,17 @@ namespace TheOtherRoles.Patches {
                     string msg = "";
 
                     if (isMedicReport) {
-                        msg = $"Body Report: Killed {Math.Round(timeSinceDeath / 1000)}s ago!";
+                        msg = String.Format(ModTranslation.getString("medicReport"), Math.Round(timeSinceDeath / 1000));
                     } else if (isDetectiveReport) {
                         if (timeSinceDeath < Detective.reportNameDuration * 1000) {
-                            msg =  $"Body Report: The killer appears to be {deadPlayer.killerIfExisting.name}!";
+                            msg = String.Format(ModTranslation.getString("detectiveReportName"), deadPlayer.killerIfExisting.name);
                         } else if (timeSinceDeath < Detective.reportColorDuration * 1000) {
-                            var typeOfColor = Helpers.isLighterColor(deadPlayer.killerIfExisting.Data.ColorId) ? "lighter" : "darker";
-                            msg =  $"Body Report: The killer appears to be a {typeOfColor} color!";
+                            var typeOfColor = Helpers.isLighterColor(deadPlayer.killerIfExisting.Data.ColorId) ? 
+                                ModTranslation.getString("detectiveColorLight") :
+                                ModTranslation.getString("detectiveColorDark");
+                            msg = String.Format(ModTranslation.getString("detectiveReportColor"), typeOfColor);
                         } else {
-                            msg = $"Body Report: The corpse is too old to gain information from!";
+                            msg = ModTranslation.getString("detectiveReportNone");
                         }
                     }
 
@@ -773,6 +775,16 @@ namespace TheOtherRoles.Patches {
             resetToDead = __instance.Data.IsDead;
             __instance.Data.IsImpostor = true;
             __instance.Data.IsDead = false;
+
+            if (Morphling.morphling != null && target == Morphling.morphling)
+            {
+                Morphling.resetMorph();
+            }
+
+            if (MapOptions.morphData.ContainsKey(target.PlayerId))
+            {
+                MapOptions.morphData[target.PlayerId].applyToPlayer(target);
+            }
         }
 
         public static void Postfix(PlayerControl __instance, [HarmonyArgument(0)]PlayerControl target)

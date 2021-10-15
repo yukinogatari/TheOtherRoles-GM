@@ -2,59 +2,154 @@ using HarmonyLib;
 using static TheOtherRoles.TheOtherRoles;
 using TheOtherRoles.Objects;
 using UnityEngine;
+using System.Collections.Generic;
 
 namespace TheOtherRoles.Patches
+
 {
-    [HarmonyPatch(typeof(MapBehaviour), nameof(MapBehaviour.FixedUpdate))]
-    class MapBehaviourFixedUpdatePatch
+    [HarmonyPatch]
+    class MapBehaviorPatch
     {
-        static void Postfix(MapBehaviour __instance)
+        public static Dictionary<byte, SpriteRenderer> mapIcons = null;
+        public static Dictionary<byte, SpriteRenderer> corpseIcons = null;
+
+        public static Sprite corpseSprite;
+
+        public static Sprite getCorpseSprite()
         {
-            if (PlayerControl.LocalPlayer.isGM())
+            if (corpseSprite) return corpseSprite;
+            corpseSprite = Helpers.loadSpriteFromResources("TheOtherRoles.Resources.CorpseIcon.png", 115f);
+            return corpseSprite;
+        }
+
+        public static void resetIcons()
+        {
+            if (mapIcons != null)
             {
+                foreach (SpriteRenderer r in mapIcons.Values)
+                    Object.Destroy(r.gameObject);
+                mapIcons.Clear();
+                mapIcons = null;
+            }
+
+            if (corpseIcons != null)
+            {
+                foreach (SpriteRenderer r in corpseIcons.Values)
+                    Object.Destroy(r.gameObject);
+                corpseIcons.Clear();
+                corpseIcons = null;
+            }
+        }
+
+        static void initializeIcons(MapBehaviour __instance, PlayerControl pc = null)
+        {
+            List<PlayerControl> players = new List<PlayerControl>();
+            if (pc == null)
+            {
+                mapIcons = new Dictionary<byte, SpriteRenderer>();
+                corpseIcons = new Dictionary<byte, SpriteRenderer>();
                 foreach (PlayerControl p in PlayerControl.AllPlayerControls)
                 {
-                    if (p == null || p.isGM()) continue;
+                    players.Add(p);
+                }
+            } else
+            {
+                players.Add(pc);
+            }
 
-                    byte id = p.PlayerId;
-                    if (!GM.MapIcons.ContainsKey(id))
+            foreach (PlayerControl p in players)
+            {
+                if (p.isGM()) continue;
+
+                byte id = p.PlayerId;
+                mapIcons[id] = UnityEngine.Object.Instantiate(__instance.HerePoint, __instance.HerePoint.transform.parent);
+                p.SetPlayerMaterialColors(mapIcons[id]);
+
+                
+                corpseIcons[id] = UnityEngine.Object.Instantiate(__instance.HerePoint, __instance.HerePoint.transform.parent);
+                corpseIcons[id].sprite = getCorpseSprite();
+                corpseIcons[id].transform.localScale = Vector3.one * 0.20f;
+                p.SetPlayerMaterialColors(corpseIcons[id]);
+            }
+        }
+
+        [HarmonyPatch(typeof(MapBehaviour), nameof(MapBehaviour.FixedUpdate))]
+        class MapBehaviourFixedUpdatePatch
+        {
+            static void Postfix(MapBehaviour __instance)
+            {
+                if (PlayerControl.LocalPlayer.isGM())
+                {
+                    foreach (PlayerControl p in PlayerControl.AllPlayerControls)
                     {
-                        GM.MapIcons[id] = UnityEngine.Object.Instantiate(__instance.HerePoint, __instance.HerePoint.transform.parent);
-                        p.SetPlayerMaterialColors(GM.MapIcons[id]);
+                        if (p == null || p.isGM()) continue;
+
+                        byte id = p.PlayerId;
+                        if (!mapIcons.ContainsKey(id))
+                        {
+                            continue;
+                        }
+
+                        bool enabled = !p.Data.IsDead;
+                        if (enabled)
+                        {
+                            Vector3 vector = p.transform.position;
+                            vector /= ShipStatus.Instance.MapScale;
+                            vector.x *= Mathf.Sign(ShipStatus.Instance.transform.localScale.x);
+                            vector.z = -1f;
+                            mapIcons[id].transform.localPosition = vector;
+
+                        }
+
+                        mapIcons[id].enabled = enabled;
                     }
 
-                    Vector3 vector = p.transform.position;
-                    vector /= ShipStatus.Instance.MapScale;
-                    vector.x *= Mathf.Sign(ShipStatus.Instance.transform.localScale.x);
-                    vector.z = -1f;
-                    GM.MapIcons[id].transform.localPosition = vector;
-
-                    // Set dead players as transparent.
-                    float alpha = p.Data.IsDead ? 0.75f : 1f;
-                    Color color = GM.MapIcons[id].color;
-                    Color newColor = new Color(color.r, color.g, color.b, alpha);
-                    if (color != newColor)
+                    foreach (SpriteRenderer r in corpseIcons.Values) { r.enabled = false; }
+                    foreach (DeadBody b in Object.FindObjectsOfType<DeadBody>())
                     {
-                        GM.MapIcons[id].color = newColor;
+                        byte id = b.ParentId;
+                        Vector3 vector = b.transform.position;
+                        vector /= ShipStatus.Instance.MapScale;
+                        vector.x *= Mathf.Sign(ShipStatus.Instance.transform.localScale.x);
+                        vector.z = -1f;
+
+                        if (!corpseIcons.ContainsKey(id))
+                        {
+                            continue;
+                        }
+
+                        corpseIcons[id].transform.localPosition = vector;
+                        corpseIcons[id].enabled = true;
                     }
                 }
             }
         }
-    }
 
-    [HarmonyPatch(typeof(MapBehaviour), nameof(MapBehaviour.ShowNormalMap))]
-    class MapBehaviourShowNormalMapPatch
-    {
-        static void Postfix(MapBehaviour __instance)
+        [HarmonyPatch(typeof(MapBehaviour), nameof(MapBehaviour.ShowNormalMap))]
+        class MapBehaviourShowNormalMapPatch
         {
-            if (PlayerControl.LocalPlayer.isGM())
+            static void Postfix(MapBehaviour __instance)
             {
-                __instance.taskOverlay.Hide();
-                foreach (byte id in GM.MapIcons.Keys)
+                if (PlayerControl.LocalPlayer.isGM())
                 {
-                    GameData.PlayerInfo playerById = GameData.Instance.GetPlayerById(id);
-                    PlayerControl.SetPlayerMaterialColors(playerById.ColorId, GM.MapIcons[id]);
-                    GM.MapIcons[id].enabled = true;
+                    if (mapIcons == null || corpseIcons == null)
+                        initializeIcons(__instance);
+
+                    __instance.taskOverlay.Hide();
+                    foreach (byte id in mapIcons.Keys)
+                    {
+                        GameData.PlayerInfo playerById = GameData.Instance.GetPlayerById(id);
+                        PlayerControl.SetPlayerMaterialColors(playerById.ColorId, mapIcons[id]);
+                        mapIcons[id].enabled = !playerById.IsDead;
+                    }
+
+                    foreach (DeadBody b in Object.FindObjectsOfType<DeadBody>())
+                    {
+                        byte id = b.ParentId;
+                        GameData.PlayerInfo playerById = GameData.Instance.GetPlayerById(id);
+                        PlayerControl.SetPlayerMaterialColors(playerById.ColorId, corpseIcons[id]);
+                        corpseIcons[id].enabled = true;
+                    }
                 }
             }
         }

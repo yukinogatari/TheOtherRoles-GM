@@ -27,7 +27,7 @@ namespace TheOtherRoles
         public Harmony Harmony { get; } = new Harmony(Id);
         public static TheOtherRolesPlugin Instance;
 
-        public static int optionsPage = 1;
+        public static int optionsPage = 0;
 
         public static ConfigEntry<bool> DebugMode { get; private set; }
         public static ConfigEntry<bool> StreamerMode { get; set; }

@@ -446,7 +446,10 @@ namespace TheOtherRoles
         public static void resetMorph() {
             morphTarget = null;
             morphTimer = 0f;
-            handleMorphing();
+            if (morphling != null)
+            {
+                MapOptions.morphData[morphling.PlayerId]?.applyToPlayer(morphling);
+            }
         }
 
         public static void clearAndReload()
@@ -490,7 +493,7 @@ namespace TheOtherRoles
             buttonSprite = Helpers.loadSpriteFromResources("TheOtherRoles.Resources.CamoButton.png", 115f);
             return buttonSprite;
         }
-
+            
         public static void startCamouflage()
         {
             camouflageTimer = duration;
@@ -535,7 +538,7 @@ namespace TheOtherRoles
             camoData.pet = 0;
             camoData.skin = 0;
             camoData.pet = 0;
-    }
+        }
     }
 
     public static class Hacker {
@@ -1133,8 +1136,6 @@ namespace TheOtherRoles
         public static bool canWarp = true;
         public static bool canKill = false;
 
-        public static Dictionary<byte, SpriteRenderer> MapIcons;
-
         public static UseButton blockedButton;
 
         private static Sprite blockedSprite;
@@ -1172,6 +1173,13 @@ namespace TheOtherRoles
             return blockedButton;
         }
 
+        public static void resetZoom()
+        {
+            Camera.main.orthographicSize = 3.0f;
+            HudManager.Instance.UICamera.orthographicSize = 3.0f;
+            HudManager.Instance.transform.localScale = Vector3.one;
+        }
+
         public static void clearAndReload()
         {
             gm = null;
@@ -1183,7 +1191,6 @@ namespace TheOtherRoles
             blockedButton = null;
             zoomInSprite = null;
             zoomOutSprite = null;
-            MapIcons = new Dictionary<byte, SpriteRenderer>();
             canWarp = CustomOptionHolder.gmCanWarp.getBool();
             canKill = CustomOptionHolder.gmCanKill.getBool();
 
