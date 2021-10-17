@@ -638,6 +638,8 @@ namespace TheOtherRoles.Patches {
                 detectiveUpdateFootPrints();
                 // Tracker
                 trackerSetTarget();
+                // Impostor
+                impostorSetTarget();
                 // Vampire
                 vampireSetTarget();
                 Garlic.UpdateAll();
@@ -651,8 +653,6 @@ namespace TheOtherRoles.Patches {
                 jackalSetTarget();
                 // Sidekick
                 sidekickSetTarget();
-                // Impostor
-                impostorSetTarget();
                 // Warlock
                 warlockSetTarget();
                 // Check for sidekick promotion on Jackal disconnect

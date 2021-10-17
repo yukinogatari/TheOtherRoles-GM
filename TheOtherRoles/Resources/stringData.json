@@ -52,27 +52,27 @@
         "11": "GM"
     },
     "gmIsHost": {
-        "0": "GM is always the host",
+        "0": "Always The Host",
         "11": "\u5fc5\u305a\u30db\u30b9\u30c8\u306b\u5272\u308a\u632f\u3089\u308c\u308b"
     },
     "gmHasTasks": {
-        "0": "GM has tasks",
+        "0": "Has Tasks",
         "11": "\u30bf\u30b9\u30af\u304c\u3042\u308b"
     },
     "gmCanWarp": {
-        "0": "GM can warp to other players",
+        "0": "Can Warp To Other Players",
         "11": "\u591a\u30d7\u30ec\u30a4\u30e4\u30fc\u306b\u30ef\u30fc\u30d7\u3067\u304d\u308b"
     },
     "gmCanKill": {
-        "0": "GM can kill/revive players",
+        "0": "Can Kill/Revive Players",
         "11": "\u591a\u30d7\u30ec\u30a4\u30e4\u30fc\u3092\u6bba\u5bb3\u30fb\u8607\u751f\u3067\u304d\u308b"
     },
     "gmHideSettings": {
-        "0": "Hide settings from other players",
+        "0": "Hide Settings From Other Players",
         "11": "\u591a\u30d7\u30ec\u30a4\u30e4\u30fc\u306b\u8a2d\u5b9a\u3092\u96a0\u305b\u308b"
     },
     "gmDiesAtStart": {
-        "0": "GM dies at start of game",
+        "0": "Dies At Start Of Game",
         "11": "\u30b2\u30fc\u30e0\u958b\u59cb\u6642\u306b\u6b7b\u4ea1\u3059\u308b"
     },
     "mafiaSpawnRate": {
@@ -88,7 +88,7 @@
         "11": "\u30e2\u30fc\u30d5\u30a3\u30f3\u30b0"
     },
     "morphlingCooldown": {
-        "0": "Morphling Cooldown",
+        "0": "Morph Cooldown",
         "11": "\u5909\u8eab\u30af\u30fc\u30eb\u30c0\u30a6\u30f3"
     },
     "morphlingDuration": {
@@ -100,7 +100,7 @@
         "11": "\u30ab\u30e2\u30d5\u30e9\u30fc\u30b8\u30e3"
     },
     "camouflagerCooldown": {
-        "0": "Camouflager Cooldown",
+        "0": "Camo Cooldown",
         "11": "\u30ab\u30e2\u30d5\u30e9\u30fc\u30b8\u30e5\u30af\u30fc\u30eb\u30c0\u30a6\u30f3"
     },
     "camouflagerDuration": {
@@ -112,15 +112,15 @@
         "11": "\u30f4\u30a1\u30f3\u30d1\u30a4\u30a2"
     },
     "vampireKillDelay": {
-        "0": "Vampire Kill Delay",
-        "11": "\u30ad\u30eb\u6642\u5dee"
+        "0": "Kill Delay",
+        "11": "\u30ad\u30eb\u9045\u5ef6"
     },
     "vampireCooldown": {
-        "0": "Vampire Cooldown",
+        "0": "Kill Cooldown",
         "11": "\u565b\u3080\u30af\u30fc\u30eb\u30c0\u30a6\u30f3"
     },
     "vampireCanKillNearGarlics": {
-        "0": "Vampire Can Kill Near Garlics",
+        "0": "Can Kill Near Garlic",
         "11": "\u30cb\u30f3\u30cb\u30af\u5185\u3001\u30ad\u30eb\u304c\u3067\u304d\u308b"
     },
     "eraserSpawnRate": {
@@ -128,11 +128,11 @@
         "11": "\u30a4\u30ec\u30a4\u30b5\u30fc"
     },
     "eraserCooldown": {
-        "0": "Eraser Cooldown",
+        "0": "Erase Cooldown",
         "11": "\u524a\u9664\u30af\u30fc\u30eb\u30c0\u30a6\u30f3"
     },
     "eraserCanEraseAnyone": {
-        "0": "Eraser Can Erase Anyone",
+        "0": "Can Erase Anyone",
         "11": "\u3060\u308c\u3067\u3082\u524a\u9664\u3067\u304d\u308b"
     },
     "tricksterSpawnRate": {
@@ -140,15 +140,15 @@
         "11": "\u30c8\u30ea\u30c3\u30af\u30b9\u30bf\u30fc"
     },
     "tricksterPlaceBoxCooldown": {
-        "0": "Trickster Box Cooldown",
+        "0": "Place Box Cooldown",
         "11": "\u3073\u3063\u304f\u308a\u7bb1\u30af\u30fc\u30eb\u30c0\u30a6\u30f3"
     },
     "tricksterLightsOutCooldown": {
-        "0": "Trickster Lights Out Cooldown",
+        "0": "Lights Out Cooldown",
         "11": "\u5f37\u5236\u505c\u96fb\u30af\u30fc\u30eb\u30c0\u30a6\u30f3"
     },
     "tricksterLightsOutDuration": {
-        "0": "Trickster Lights Out Duration",
+        "0": "Lights Out Duration",
         "11": "\u5f37\u5236\u505c\u96fb\u6642\u9593"
     },
     "cleanerSpawnRate": {
@@ -156,7 +156,7 @@
         "11": "\u30af\u30ea\u30fc\u30ca\u30fc"
     },
     "cleanerCooldown": {
-        "0": "Cleaner Cooldown",
+        "0": "Clean Cooldown",
         "11": "\u6383\u9664\u30af\u30fc\u30eb\u30c0\u30a6\u30f3"
     },
     "warlockSpawnRate": {
@@ -164,11 +164,11 @@
         "11": "\u30a6\u30a9\u30fc\u30ed\u30c3\u30af"
     },
     "warlockCooldown": {
-        "0": "Warlock Cooldown",
+        "0": "Curse Cooldown",
         "11": "\u546a\u3044\u30af\u30fc\u30eb\u30c0\u30a6\u30f3"
     },
     "warlockRootTime": {
-        "0": "Warlock Root Time",
+        "0": "Root Time",
         "11": "\u546a\u6bba\u5f8c\u3001\u79fb\u52d5\u4e0d\u80fd\u6642\u9593"
     },
     "bountyHunterSpawnRate": {
@@ -208,7 +208,7 @@
         "11": "\u30e9\u30d0\u30fc\u30ba"
     },
     "loversImpLoverRate": {
-        "0": "Chance That One Lover Is Impostor",
+        "0": "Chance One Lover Is Impostor",
         "11": "\u30a4\u30f3\u30dd\u30b9\u30bf\u30fc\u306b\u306a\u308b\u78ba\u7387"
     },
     "loversBothDie": {
@@ -216,15 +216,15 @@
         "11": "\uff12\u4eba\u540c\u6642\u306b\u6b7b\u306c"
     },
     "loversCanHaveAnotherRole": {
-        "0": "Lovers Can Have Another Role",
+        "0": "Can Have Another Role",
         "11": "\u4ed6\u306e\u5f79\u8077\u3068\u91cd\u8907\u3059\u308b"
     },
     "loversWinWithCrew": {
-        "0": "Lovers Can Win With Crew",
+        "0": "Can Win With Crew",
         "11": "\u30af\u30eb\u30fc\u3068\u4e00\u7dd2\u306b\u52dd\u5229\u3067\u304d\u308b"
     },
     "loversTasksCount": {
-        "0": "Lovers Tasks Are Counted",
+        "0": "Tasks Are Counted",
         "11": "\u30bf\u30b9\u30af\u304c\u30ab\u30a6\u30f3\u30c8\u3055\u308c\u308b"
     },
     "guesserSpawnRate": {
@@ -232,11 +232,11 @@
         "11": "\u30b2\u30c3\u30b5\u30fc"
     },
     "guesserIsImpGuesserRate": {
-        "0": "Chance That The Guesser Is An Impostor",
+        "0": "Chance The Guesser Is An Impostor",
         "11": "\u30a4\u30f3\u30dd\u30b9\u30bf\u30fc\u306b\u306a\u308b\u78ba\u7387"
     },
     "guesserNumberOfShots": {
-        "0": "Guesser Number Of Shots",
+        "0": "Number Of Shots",
         "11": "\u6483\u3066\u308b\u56de\u6570"
     },
     "jesterSpawnRate": {
@@ -244,11 +244,11 @@
         "11": "\u30b8\u30a7\u30b9\u30bf\u30fc"
     },
     "jesterCanCallEmergency": {
-        "0": "Jester can call emergency meeting",
+        "0": "Can Call Emergency Meetings",
         "11": "\u7dca\u6025\u4f1a\u8b70\u30dc\u30bf\u30f3\u3092\u62bc\u305b\u308b"
     },
     "jesterCanSabotage": {
-        "0": "Jester can sabotage",
+        "0": "Can Sabotage",
         "11": "\u30b5\u30dc\u30bf\u30fc\u30b8\u30e5\u3067\u304d\u308b"
     },
     "arsonistSpawnRate": {
@@ -256,11 +256,11 @@
         "11": "\u30a2\u30fc\u30bd\u30cb\u30b9\u30c8"
     },
     "arsonistCooldown": {
-        "0": "Arsonist Cooldown",
+        "0": "Douse Cooldown",
         "11": "\u706f\u6cb9\u304b\u3051\u30af\u30fc\u30eb\u30c0\u30a6\u30f3"
     },
     "arsonistDuration": {
-        "0": "Arsonist Douse Duration",
+        "0": "Douse Duration",
         "11": "\u706f\u6cb9\u304b\u3051\u6642\u9593"
     },
     "jackalSpawnRate": {
@@ -268,19 +268,19 @@
         "11": "\u30b8\u30e3\u30c3\u30ab\u30eb"
     },
     "jackalKillCooldown": {
-        "0": "Jackal/Sidekick Kill Cooldown",
+        "0": "Kill Cooldown",
         "11": "\u30ad\u30eb\u30af\u30fc\u30eb"
     },
     "jackalCreateSidekickCooldown": {
-        "0": "Jackal Create Sidekick Cooldown",
+        "0": "Create Sidekick Cooldown",
         "11": "\u6307\u540d\u30af\u30fc\u30eb\u30c0\u30a6\u30f3"
     },
     "jackalCanUseVents": {
-        "0": "Jackal Can Use Vents",
+        "0": "Can Use Vents",
         "11": "\u30d9\u30f3\u30c8\u306b\u5165\u308c\u308b"
     },
     "jackalCanCreateSidekick": {
-        "0": "Jackal Can Create A Sidekick",
+        "0": "Can Create A Sidekick",
         "11": "\u30b5\u30a4\u30c9\u30ad\u30c3\u30af\u3092\u6307\u540d\u3067\u304d\u308b"
     },
     "sidekickPromotesToJackal": {
@@ -300,11 +300,11 @@
         "11": "\u6607\u683c\u3057\u305f\u30b5\u30a4\u30c9\u30ad\u30c3\u30af\u304c\u30b5\u30a4\u30c9\u30ad\u30c3\u30af\u3092\u6307\u540d\u3067\u304d\u308b"
     },
     "jackalCanCreateSidekickFromImpostor": {
-        "0": "Jackals Can Make An Impostor To His Sidekick",
+        "0": "Can Make An Impostor To His Sidekick",
         "11": "\u30a4\u30f3\u30dd\u30b9\u30bf\u30fc\u3092\u30b5\u30a4\u30c9\u30ad\u30c3\u30af\u306b\u6307\u540d\u3067\u304d\u308b"
     },
     "jackalAndSidekickHaveImpostorVision": {
-        "0": "Jackal And Sidekick Have Impostor Vision",
+        "0": "Has Impostor Vision",
         "11": "\u30a4\u30f3\u30dd\u30b9\u30bf\u30fc\u3068\u540c\u3058\u8996\u91ce"
     },
     "shifterSpawnRate": {
@@ -312,7 +312,7 @@
         "11": "\u30b7\u30d5\u30bf\u30fc"
     },
     "shifterShiftsModifiers": {
-        "0": "Shifter Shifts Modifiers",
+        "0": "Shifts Modifiers",
         "11": "\u5bfe\u8c61\u306e\u30b9\u30c6\u30fc\u30bf\u30b9\u3082\u30b7\u30d5\u30c8\u3055\u308c\u308b"
     },
     "mayorSpawnRate": {
@@ -328,15 +328,15 @@
         "11": "\u30b7\u30a7\u30ea\u30d5"
     },
     "sheriffCooldown": {
-        "0": "Sheriff Cooldown",
+        "0": "Kill Cooldown",
         "11": "\u30ad\u30eb\u30af\u30fc\u30eb"
     },
     "sheriffNumShots": {
-        "0": "Sheriff Number Of Shots",
+        "0": "Number Of Shots",
         "11": "\u6483\u3066\u308b\u56de\u6570"
     },
     "sheriffCanKillNeutrals": {
-        "0": "Sheriff Can Kill Neutrals",
+        "0": "Can Kill Neutrals",
         "11": "\u305d\u306e\u4ed6\u9663\u55b6\u3082\u30ad\u30eb\u3067\u304d\u308b"
     },
     "lighterSpawnRate": {
@@ -344,19 +344,19 @@
         "11": "\u30e9\u30a4\u30bf\u30fc"
     },
     "lighterModeLightsOnVision": {
-        "0": "Lighter Mode Vision On Lights On",
+        "0": "Vision On, Lights On",
         "11": "\u30e9\u30a4\u30c8\u4e2d\u3001\u901a\u5e38\u6642\u8996\u91ce"
     },
     "lighterModeLightsOffVision": {
-        "0": "Lighter Mode Vision On Lights Off",
+        "0": "Vision On, Lights Off",
         "11": "\u30e9\u30a4\u30c8\u4e2d\u3001\u505c\u96fb\u6642\u8996\u91ce"
     },
     "lighterCooldown": {
-        "0": "Lighter Cooldown",
+        "0": "Light Cooldown",
         "11": "\u30e9\u30a4\u30c8\u30af\u30fc\u30eb\u30c0\u30a6\u30f3"
     },
     "lighterDuration": {
-        "0": "Lighter Duration",
+        "0": "Light Duration",
         "11": "\u30e9\u30a4\u30c8\u6642\u9593"
     },
     "detectiveSpawnRate": {
@@ -388,7 +388,7 @@
         "11": "\u30bf\u30a4\u30e0\u30de\u30b9\u30bf\u30fc"
     },
     "timeMasterCooldown": {
-        "0": "Time Master Cooldown",
+        "0": "Shield Cooldown",
         "11": "\u30bf\u30a4\u30e0\u30b7\u30fc\u30eb\u30c9\u30af\u30fc\u30eb\u30c0\u30a6\u30f3"
     },
     "timeMasterRewindTime": {
@@ -396,7 +396,7 @@
         "11": "\u5dfb\u304d\u623b\u3059\u6642\u9593"
     },
     "timeMasterShieldDuration": {
-        "0": "Time Master Shield Duration",
+        "0": "Shield Duration",
         "11": "\u30b7\u30fc\u30eb\u30c9\u6642\u9593"
     },
     "medicSpawnRate": {
@@ -404,7 +404,7 @@
         "11": "\u30e1\u30c7\u30a3\u30c3\u30af"
     },
     "medicShowShielded": {
-        "0": "Show Shielded Player",
+        "0": "Can See Shield",
         "11": "\u30b7\u30fc\u30eb\u30c9\u304c\u898b\u3048\u308b\u4eba"
     },
     "medicShowShieldedMedic": {
@@ -425,18 +425,18 @@
     },
     "medicSetShieldAfterMeeting": {
         "0": "Shield Will Be Set After The Next Meeting",
-        "11": "\u30b7\u30fc\u30eb\u30c9\u3092\u5f35\u3063\u305f\u6b21\u306e\u4f1a\u8b70\u304b\u3089\u767a\u52d5\u3057\u307e\u3059"
+        "11": "\u6b21\u306e\u4f1a\u8b70\u304b\u3089\u30b7\u30fc\u30eb\u30c9\u304c\u6709\u52b9"
     },
     "swapperSpawnRate": {
         "0": "Swapper",
         "11": "\u30b9\u30ef\u30c3\u30d1\u30fc"
     },
     "swapperCanCallEmergency": {
-        "0": "Swapper can call emergency meeting",
+        "0": "Can Call Emergency Meetings",
         "11": "\u7dca\u6025\u4f1a\u8b70\u30dc\u30bf\u30f3\u3092\u62bc\u305b\u308b"
     },
     "swapperCanOnlySwapOthers": {
-        "0": "Swapper can only swap others",
+        "0": "Can Only Swap Others",
         "11": "\u30b9\u30ef\u30c3\u30d1\u30fc\u304c\u30b9\u30ef\u30c3\u30d7\u5bfe\u8c61\u5916"
     },
     "seerSpawnRate": {
@@ -444,7 +444,7 @@
         "11": "\u30b7\u30fc\u30a2"
     },
     "seerMode": {
-        "0": "Seer Mode",
+        "0": "Mode",
         "11": "\u30e2\u30fc\u30c9"
     },
     "seerModeSouls": {
@@ -460,11 +460,11 @@
         "11": "\u6b7b\u306e\u70b9\u6ec5\uff06\u5e7d\u970a\u304c\u898b\u3048\u308b"
     },
     "seerLimitSoulDuration": {
-        "0": "Seer Limit Soul Duration",
+        "0": "Limit Soul Duration",
         "11": "\u6642\u9593\u7d4c\u904e\u3067\u5e7d\u970a\u304c\u6d88\u3048\u308b"
     },
     "seerSoulDuration": {
-        "0": "Seer Soul Duration",
+        "0": "Soul Duration",
         "11": "\u5e7d\u970a\u304c\u898b\u3048\u308b\u6642\u9593"
     },
     "hackerSpawnRate": {
@@ -472,15 +472,15 @@
         "11": "\u30cf\u30c3\u30ab\u30fc"
     },
     "hackerCooldown": {
-        "0": "Hacker Cooldown",
+        "0": "Hack Cooldown",
         "11": "\u30cf\u30c3\u30ad\u30f3\u30b0\u30af\u30fc\u30eb\u30c0\u30a6\u30f3"
     },
     "hackerHackeringDuration": {
-        "0": "Hacker Duration",
+        "0": "Hack Duration",
         "11": "\u30cf\u30c3\u30ad\u30f3\u30b0\u6642\u9593"
     },
     "hackerOnlyColorType": {
-        "0": "Hacker Only Sees Color Type",
+        "0": "Only Sees Color Type",
         "11": "\u8868\u793a\u3055\u308c\u305f\u4eba\u306e\u8272\u8abf\u304c\u898b\u3048\u308b"
     },
     "trackerSpawnRate": {
@@ -488,11 +488,11 @@
         "11": "\u30c8\u30e9\u30c3\u30ab\u30fc"
     },
     "trackerUpdateIntervall": {
-        "0": "Tracker Update Interval",
+        "0": "Update Interval",
         "11": "\u30c8\u30e9\u30c3\u30ab\u30fc\u66f4\u65b0\u9593\u9694"
     },
     "trackerResetTargetAfterMeeting": {
-        "0": "Tracker Reset Target After Meeting",
+        "0": "Reset Target After Meeting",
         "11": "\u4f1a\u8b70\u5f8c\u3001\u30bf\u30fc\u30b2\u30c3\u30c8\u304c\u30ea\u30bb\u30c3\u30c8\u3055\u308c\u308b"
     },
     "snitchSpawnRate": {
@@ -516,7 +516,7 @@
         "11": "\u30b9\u30d1\u30a4"
     },
     "spyCanDieToSheriff": {
-        "0": "Spy Can Die To Sheriff",
+        "0": "Can Die To Sheriff",
         "11": "\u30b7\u30a7\u30ea\u30d5\u304c\u30b9\u30d1\u30a4\u3092\u6bba\u305b\u308b"
     },
     "spyImpostorsCanKillAnyone": {
@@ -524,11 +524,11 @@
         "11": "\u30a4\u30f3\u30dd\u30b9\u30bf\u30fc\u304c\u8ab0\u3067\u3082\u6bba\u305b\u308b"
     },
     "spyCanEnterVents": {
-        "0": "Spy Can Enter Vents",
+        "0": "Can Enter Vents",
         "11": "\u30d9\u30f3\u30c8\u306b\u5165\u308c\u308b"
     },
     "spyHasImpostorVision": {
-        "0": "Spy Has Impostor Vision",
+        "0": "Has Impostor Vision",
         "11": "\u30a4\u30f3\u30dd\u30b9\u30bf\u30fc\u3068\u540c\u3058\u8996\u91ce"
     },
     "securityGuardSpawnRate": {
@@ -536,20 +536,20 @@
         "11": "\u30bb\u30ad\u30e5\u30ea\u30c6\u30a3\u30ac\u30fc\u30c9"
     },
     "securityGuardCooldown": {
-        "0": "Security Guard Cooldown",
+        "0": "Cooldown",
         "11": "\u30bb\u30ad\u30e5\u30ea\u30c6\u30a3\u30ac\u30fc\u30c9\u30af\u30fc\u30eb\u30c0\u30a6\u30f3"
     },
     "securityGuardTotalScrews": {
-        "0": "Security Guard Number Of Screws",
+        "0": "Total Screws",
         "11": "\u30cd\u30b8\u6240\u6301\u6570"
     },
     "securityGuardCamPrice": {
-        "0": "Number Of Screws Per Cam",
-        "11": "\u30ab\u30e1\u30e9\u8a2d\u7f6e\u306b\u4f7f\u7528\u3055\u308c\u308b\u30cd\u30b8\u6570"
+        "0": "Screws Per Cam",
+        "11": "\u30ab\u30e1\u30e9\u8a2d\u7f6e\u306b\u8981\u3059\u308b\u30cd\u30b8\u6570"
     },
     "securityGuardVentPrice": {
-        "0": "Number Of Screws Per Vent",
-        "11": "\u30d9\u30f3\u30c8\u5c01\u9396\u306b\u4f7f\u7528\u3055\u308c\u308b\u30cd\u30b8\u6570"
+        "0": "Screws Per Vent",
+        "11": "\u30d9\u30f3\u30c8\u5c01\u9396\u306b\u8981\u3059\u308b\u30cd\u30b8\u6570"
     },
     "baitSpawnRate": {
         "0": "Bait",
@@ -568,32 +568,32 @@
         "11": "\u30de\u30c3\u30c9\u30e1\u30a4\u30c8"
     },
     "madmateCanDieToSheriff": {
-        "0": "Madmate Can Die To Sheriff",
+        "0": "Can Die To Sheriff",
         "11": "\u30b7\u30a7\u30ea\u30d5\u304c\u30de\u30c3\u30c9\u30e1\u30a4\u30c8\u3092\u6bba\u305b\u308b"
     },
     "madmateCanEnterVents": {
-        "0": "Madmate Can Enter Vents",
+        "0": "Can Enter Vents",
         "11": "\u30d9\u30f3\u30c8\u306b\u5165\u308c\u308b"
     },
     "madmateHasImpostorVision": {
-        "0": "Madmate Has Impostor Vision",
+        "0": "Has Impostor Vision",
         "11": "\u30a4\u30f3\u30dd\u30b9\u30bf\u30fc\u3068\u540c\u3058\u8996\u91ce"
     },
     "madmateCanSabotage": {
-        "0": "Madmate Can Sabotage",
+        "0": "Can Sabotage",
         "11": "\u30b5\u30dc\u30bf\u30fc\u30b8\u30e5\u3067\u304d\u308b"
     },
     "madmateCanFixComm": {
-        "0": "Madmate Can Fix Comm",
+        "0": "Can Fix Comms",
         "11": "\u30b3\u30df\u30e5\u30b5\u30dc\u3092\u76f4\u305b\u308b"
     },
     "maxNumberOfMeetings": {
-        "0": "Number Of Meetings (excluding Mayor meeting)",
-        "11": "\u7dca\u6025\u4f1a\u8b70\u56de\u6570\uff08\u30e1\u30a4\u30e4\u30fc\u5bfe\u8c61\u5916\uff09"
+        "0": "Number Of Meetings (excluding Mayor Meeting)",
+        "11": "\u5408\u8a08\u7dca\u6025\u4f1a\u8b70\u56de\u6570\uff08\u30e1\u30a4\u30e4\u30fc\u5bfe\u8c61\u5916\uff09"
     },
     "blockSkippingInEmergencyMeetings": {
         "0": "Block Skipping In Emergency Meetings",
-        "11": "\u4f1a\u8b70\u4e2d\u3001\u30b9\u30ad\u30c3\u30d7\u7981\u6b62"
+        "11": "\u6295\u7968\u30b9\u30ad\u30c3\u30d7\u7981\u6b62"
     },
     "noVoteIsSelfVote": {
         "0": "No Vote Is Self Vote",
@@ -641,7 +641,7 @@
     },
     "pressTabForMore": {
         "0": "Press tab for more...",
-        "11": "Tab\u30ad\u30fc\u3067\u6b21\u306e\u30da\u30fc\u30b8\u3078\u2026\u2026"
+        "11": "Tab\u30ad\u30fc\u3067\u6b21\u306e\u30da\u30fc\u30b8\u3078\u2026"
     },
     "jester": {
         "0": "Jester",
@@ -661,11 +661,11 @@
     },
     "mayorIntroDesc": {
         "0": "Your vote counts twice",
-        "11": "\u8ab0\u3088\u308a\u3082\u767a\u8a00\u529b\u3092\u6301\u3063\u3066\u308b"
+        "11": "\u81ea\u5206\u306e\u7968\u304c\u500d\u306e\u529b\u3092\u6301\u3063\u3066\u3044\u308b"
     },
     "mayorShortDesc": {
         "0": "Your vote counts twice",
-        "11": "\u8ab0\u3088\u308a\u3082\u767a\u8a00\u529b\u3092\u6301\u3063\u3066\u308b"
+        "11": "\u81ea\u5206\u306e\u7968\u304c\u500d\u306e\u529b\u3092\u6301\u3063\u3066\u3044\u308b"
     },
     "engineer": {
         "0": "Engineer",
@@ -1158,6 +1158,14 @@
     "gmGameOver": {
         "0": "Game Over"
     },
+    "crewWin": {
+        "0": "Crewmates Win",
+        "11": "\u30af\u30eb\u30fc\u52dd\u5229"
+    },
+    "impostorWin": {
+        "0": "Impostors Win",
+        "11": "\u30a4\u30f3\u30dd\u30b9\u30bf\u30fc\u52dd\u5229"
+    },
     "jesterWin": {
         "0": "Jester Wins",
         "11": "\u30b8\u30a7\u30b9\u30bf\u30fc\u52dd\u5229"
@@ -1184,7 +1192,7 @@
     },
     "roleSummaryText": {
         "0": "Players and roles at the end of the game:",
-        "11": "\u6700\u7d42\u5f79\u8077\u4e00\u89a7:"
+        "11": "\u6700\u7d42\u7d50\u679c:"
     },
     "roleSummaryAlive": {
         "0": "Alive",
@@ -1195,7 +1203,7 @@
         "11": "\u6b7b\u4ea1"
     },
     "roleSummaryDC": {
-        "0": "Disconnected",
+        "0": "DC'd",
         "11": "\u5207\u65ad"
     },
     "errorNotInstalled": {
@@ -1269,5 +1277,114 @@
     "detectiveColorDark": {
         "0": "darker",
         "11": "\u6fc3\u3044"
+    },
+    "unitSeconds": {
+        "0": "{0}s",
+        "11": "{0}\u79d2"
+    },
+    "unitShots": {
+        "0": "{0}",
+        "11": "{0}\u767a"
+    },
+    "unitScrews": {
+        "0": "{0}",
+        "11": "{0}\u672c"
+    },
+    "unitMultiplier": {
+        "0": "{0}x",
+        "11": "{0}x"
+    },
+    "creditsMain": {
+        "0": "Modded by <color=#FCCE03FF>Eisbison</color>, <color=#FCCE03FF>Thunderstorm584</color> & <color=#FCCE03FF>EndOfFile</color>, Design by <color=#FCCE03FF>Bavari</color>\nCustomization/Japanese Translation by <color=#c1a9ff>Virtual_Dusk</color>",
+        "11": "MOD <color=#FCCE03FF>Eisbison</color>\u3001<color=#FCCE03FF>Thunderstorm584</color>\u3001<color=#FCCE03FF>EndOfFile</color>\n\u30c7\u30b6\u30a4\u30f3 <color=#FCCE03FF>Bavari</color>\u3001\u30ab\u30b9\u30bf\u30de\u30a4\u30ba\u30fb\u65e5\u672c\u8a9e\u8a33 <color=#c1a9ff>Virtual_Dusk</color>"
+    },
+    "creditsFull": {
+        "0": "<size=80%>Modded by <color=#FCCE03FF>Eisbison</color>,\n<color=#FCCE03FF>Thunderstorm584</color> & <color=#FCCE03FF>EndOfFile</color>\nButton design by <color=#FCCE03FF>Bavari</color>\nCustomization/Japanese Translation by <color=#c1a9ff>Virtual_Dusk</color></size>",
+        "11": "<size=80%>MOD <color=#FCCE03FF>Eisbison</color>\u3001\n<color=#FCCE03FF>Thunderstorm584</color>\u3001<color=#FCCE03FF>EndOfFile</color>\n\u30dc\u30bf\u30f3\u30c7\u30b6\u30a4\u30f3 <color=#FCCE03FF>Bavari</color>\n\u30ab\u30b9\u30bf\u30de\u30a4\u30ba\u30fb\u65e5\u672c\u8a9e\u8a33 <color=#c1a9ff>Virtual_Dusk</color></size>"
+    },
+    "creditsVersion": {
+        "0": "GM Edition v{0}",
+        "11": "GM\u30a8\u30c7\u30a3\u30b7\u30e7\u30f3 v{0}"
+    },
+    "Banner": {
+        "0": "Banner.png"
+    },
+    "CamoButton": {
+        "0": "CamoButton.png"
+    },
+    "CleanButton": {
+        "0": "CleanButton.png"
+    },
+    "CloseVentButton": {
+        "0": "CloseVentButton.png"
+    },
+    "CurseButton": {
+        "0": "CurseButton.png"
+    },
+    "CurseKillButton": {
+        "0": "CurseKillButton.png"
+    },
+    "DouseButton": {
+        "0": "DouseButton.png"
+    },
+    "EraserButton": {
+        "0": "EraserButton.png"
+    },
+    "GarlicButton": {
+        "0": "GarlicButton.png"
+    },
+    "HackerButton": {
+        "0": "HackerButton.png"
+    },
+    "IgniteButton": {
+        "0": "IgniteButton.png"
+    },
+    "LighterButton": {
+        "0": "LighterButton.png"
+    },
+    "LightsOutButton": {
+        "0": "LightsOutButton.png"
+    },
+    "MorphButton": {
+        "0": "MorphButton.png"
+    },
+    "PlaceCameraButton": {
+        "0": "PlaceCameraButton.png"
+    },
+    "PlaceJackInTheBoxButton": {
+        "0": "PlaceJackInTheBoxButton.png"
+    },
+    "RepairButton": {
+        "0": "RepairButton.png"
+    },
+    "RewindButton": {
+        "0": "RewindButton.png"
+    },
+    "SampleButton": {
+        "0": "SampleButton.png"
+    },
+    "SeerButton": {
+        "0": "SeerButton.png"
+    },
+    "ShieldButton": {
+        "0": "ShieldButton.png"
+    },
+    "ShiftButton": {
+        "0": "ShiftButton.png"
+    },
+    "SidekickButton": {
+        "0": "SidekickButton.png"
+    },
+    "TimeShieldButton": {
+        "0": "TimeShieldButton.png"
+    },
+    "TrackerButton": {
+        "0": "TrackerButton.png"
+    },
+    "TricksterVentButton": {
+        "0": "TricksterVentButton.png"
+    },
+    "VampireButton": {
+        "0": "VampireButton.png"
     }
 }

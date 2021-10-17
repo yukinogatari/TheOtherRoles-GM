@@ -10,6 +10,10 @@ namespace TheOtherRoles.Patches {
     class IntroCutsceneOnDestroyPatch
     {
         public static void Prefix(IntroCutscene __instance) {
+            // If we failed to assign roles at the start of the game,
+            // try again after the intro cutscene finishes.
+            RPCProcedure.setUnassignedRoles();
+
             // Generate and initialize player icons
             int playerCounter = 0;
             if (PlayerControl.LocalPlayer != null && HudManager.Instance != null) {
@@ -18,7 +22,7 @@ namespace TheOtherRoles.Patches {
                     GameData.PlayerInfo data = p.Data;
                     PoolablePlayer player = UnityEngine.Object.Instantiate<PoolablePlayer>(__instance.PlayerPrefab, HudManager.Instance.transform);
                     PlayerControl.SetPlayerMaterialColors(data.ColorId, player.Body);
-                    HatManager.Instance?.SetSkin(player.Skin.layer, data.SkinId);
+                    player.Skin.SetSkin(data.SkinId, true);
                     player.HatSlot.SetHat(data.HatId, data.ColorId);
                     PlayerControl.SetPetImage(data.PetId, data.ColorId, player.PetSlot);
                     player.NameText.text = data.PlayerName;

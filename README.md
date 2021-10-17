@@ -17,7 +17,7 @@ This mod is not affiliated with Among Us or Innersloth LLC, and the content cont
 The **The Other Roles**, is a mod for [Among Us](https://store.steampowered.com/app/945360/Among_Us) which adds many new roles, new [Settings](#settings), and new [Custom Hats](#custom-hats) to the game.
 Even more roles are coming soon :)
 
-| Impostors | Crewmates | Neutral | Observer | 
+| Impostors | Crewmates | Neutral | Other | 
 |----------|-------------|-----------------|----------------|
 | [Evil Mini](#mini) | [Nice Mini](#mini) | [Arsonist](#arsonist) | [GM](#gm) |
 | [Evil Guesser](#guesser) | [Nice Guesser](#guesser) | [Jester](#jester) |  
@@ -88,6 +88,8 @@ The [Role Assignment](#role-assignment) sections explains how the roles are bein
 - **New Role:** [GM](#gm) (created by [Virtual_Dusk](https://twitter.com/Virtual_Dusk))
 - Added Lovers Options: "Lovers Can Win With Crew", "Lovers Tasks Are Counted"
 - Added Sheriff Options: "Number of Shots"
+- Changed [Mafia](#mafia) so that if only the Janitor and crew remain, the game automatically ends, as the Janitor is unable to kill.
+- Reworked how options are displayed on the lobby screen.
 - Improved performance of Morphling/Camouflager abilities
 - Options to disable admin, security, vitals, and vents
 - Added Japanese translation (by [Virtual_Dusk](https://twitter.com/Virtual_Dusk)) and support for adding [other languages](#translation).
@@ -507,7 +509,7 @@ The count you set will only be reached, if there are enough Crewmates/Impostors 
 **Example:**\
 Settings: 2 special Crewmate roles, Snitch: 100%, Hacker: 10%, Tracker: 30%\
 Result: Snitch is assigned, then one role out of the pool [Hacker, Tracker, Tracker, Tracker] is being selected\
-Note: Changing the settings to Hacker: 20%, Tracker: 60% would statistically result in the same outcome .
+Note: Changing the settings to Hacker: 20%, Tracker: 60% would statistically result in the same outcome.
 
 
 ## Mafia
@@ -519,6 +521,7 @@ The Janitor is an Impostor who cannot kill nor sabotage, but they can hide dead 
 \
 **NOTE:**
 - There have to be 3 Impostors activated for the mafia to spawn.
+- If only the Janitor is left alive, the Mafia loses as there's no one left able to kill.
 
 ### Game Options
 | Name | Description |

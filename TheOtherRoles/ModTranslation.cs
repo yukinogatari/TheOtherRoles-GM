@@ -7,6 +7,7 @@ using System.IO;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using TheOtherRoles.Patches;
+using UnityEngine;
 
 namespace TheOtherRoles
 {
@@ -86,6 +87,16 @@ namespace TheOtherRoles
             }
 
             return key;
+        }
+
+        public static Sprite getImage(string key, float pixelsPerUnit)
+        {
+            key = getString(key);
+            key = key.Replace("/", ".");
+            key = key.Replace("\\", ".");
+            key = "TheOtherRoles.Resources." + key;
+
+            return Helpers.loadSpriteFromResources(key, pixelsPerUnit);
         }
     }
 

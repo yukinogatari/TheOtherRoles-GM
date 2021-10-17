@@ -35,6 +35,7 @@ namespace TheOtherRoles.Patches {
         public static WinCondition winCondition = WinCondition.Default;
         public static List<PlayerRoleInfo> playerRoles = new List<PlayerRoleInfo>();
         public static bool isGM = false;
+        public static GameOverReason gameOverReason;
 
         public static void clear() {
             playerRoles.Clear();
@@ -56,27 +57,34 @@ namespace TheOtherRoles.Patches {
 
     [HarmonyPatch(typeof(AmongUsClient), nameof(AmongUsClient.OnGameEnd))]
     public class OnGameEndPatch {
-        private static GameOverReason gameOverReason;
+        
         public static void Prefix(AmongUsClient __instance, [HarmonyArgument(0)]ref GameOverReason reason, [HarmonyArgument(1)]bool showAd) {
-            gameOverReason = reason;
+            AdditionalTempData.gameOverReason = reason;
             if ((int)reason >= 10) reason = GameOverReason.ImpostorByKill;
         }
 
         public static void Postfix(AmongUsClient __instance, [HarmonyArgument(0)]ref GameOverReason reason, [HarmonyArgument(1)]bool showAd) {
+            var gameOverReason = AdditionalTempData.gameOverReason;
+
             AdditionalTempData.clear();
 
-            foreach(var playerControl in PlayerControl.AllPlayerControls) {
-                var roles = RoleInfo.getRoleInfoForPlayer(playerControl);
-                var (tasksCompleted, tasksTotal) = TasksHandler.taskInfo(playerControl.Data);
-                var isDead = playerControl.Data.IsDead;
-                var isDisconnected = playerControl.Data.Disconnected;
-                AdditionalTempData.playerRoles.Add(new AdditionalTempData.PlayerRoleInfo() { 
-                    PlayerName = playerControl.Data.PlayerName,
+            //foreach (var pc in PlayerControl.AllPlayerControls)
+            foreach (var p in GameData.Instance.AllPlayers)
+            {
+                //var p = pc.Data;
+                var roles = RoleInfo.getRoleInfoForPlayer(p.Object);
+                var (tasksCompleted, tasksTotal) = TasksHandler.taskInfo(p);
+                var isDead = p.IsDead == true;
+                var isDisconnected = p.Disconnected == true;
+                AdditionalTempData.playerRoles.Add(new AdditionalTempData.PlayerRoleInfo()
+                {
+                    PlayerName = p.PlayerName,
                     Roles = roles,
                     TasksTotal = tasksTotal,
                     TasksCompleted = tasksCompleted,
                     IsDead = isDead,
-                    IsDisconnected = isDisconnected});
+                    IsDisconnected = isDisconnected
+                });
             }
 
             AdditionalTempData.isGM = CustomOptionHolder.gmEnabled.getBool() && PlayerControl.LocalPlayer.isGM();
@@ -188,7 +196,9 @@ namespace TheOtherRoles.Patches {
     }
 
     [HarmonyPatch(typeof(EndGameManager), nameof(EndGameManager.SetEverythingUp))]
-    public class EndGameManagerSetUpPatch {
+    public class EndGameManagerSetUpPatch
+    {
+
         public static void Postfix(EndGameManager __instance) {
             GameObject bonusText = UnityEngine.Object.Instantiate(__instance.WinText.gameObject);
             bonusText.transform.position = new Vector3(__instance.WinText.transform.position.x, __instance.WinText.transform.position.y - 0.8f, __instance.WinText.transform.position.z);
@@ -196,19 +206,28 @@ namespace TheOtherRoles.Patches {
             TMPro.TMP_Text textRenderer = bonusText.GetComponent<TMPro.TMP_Text>();
             textRenderer.text = "";
 
-            if (AdditionalTempData.isGM)
-            {
+            if (AdditionalTempData.isGM) {
                 __instance.WinText.text = ModTranslation.getString("gmGameOver");
                 __instance.WinText.color = GM.color;
             }
 
-            if (AdditionalTempData.winCondition == WinCondition.JesterWin) {
+            if (AdditionalTempData.gameOverReason == GameOverReason.HumansByTask || AdditionalTempData.gameOverReason == GameOverReason.HumansByVote) {
+                textRenderer.text = ModTranslation.getString("crewWin");
+                textRenderer.color = Palette.CrewmateBlue;
+            }
+            else if (AdditionalTempData.gameOverReason == GameOverReason.ImpostorByKill || AdditionalTempData.gameOverReason == GameOverReason.ImpostorBySabotage || AdditionalTempData.gameOverReason == GameOverReason.ImpostorByVote) {
+                textRenderer.text = ModTranslation.getString("impostorWin");
+                textRenderer.color = Palette.ImpostorRed;
+            }
+            else if (AdditionalTempData.winCondition == WinCondition.JesterWin) {
                 textRenderer.text = ModTranslation.getString("jesterWin");
                 textRenderer.color = Jester.color;
+                __instance.BackgroundBar.material.SetColor("_Color", Jester.color);
             }
             else if (AdditionalTempData.winCondition == WinCondition.ArsonistWin) {
                 textRenderer.text = ModTranslation.getString("arsonistWin");
                 textRenderer.color = Arsonist.color;
+                __instance.BackgroundBar.material.SetColor("_Color", Arsonist.color);
             }
             else if (AdditionalTempData.winCondition == WinCondition.LoversTeamWin) {
                 textRenderer.text = ModTranslation.getString("loversTeamWin");
@@ -223,10 +242,12 @@ namespace TheOtherRoles.Patches {
             else if (AdditionalTempData.winCondition == WinCondition.JackalWin) {
                 textRenderer.text = ModTranslation.getString("jackalWin");
                 textRenderer.color = Jackal.color;
+                __instance.BackgroundBar.material.SetColor("_Color", Jackal.color);
             }
             else if (AdditionalTempData.winCondition == WinCondition.MiniLose) {
                 textRenderer.text = ModTranslation.getString("miniDied");
                 textRenderer.color = Mini.color;
+                __instance.BackgroundBar.material.SetColor("_Color", Palette.DisabledGrey);
             }
 
             if (MapOptions.showRoleSummary) {
@@ -238,29 +259,44 @@ namespace TheOtherRoles.Patches {
                 var roleSummaryText = new StringBuilder();
                 roleSummaryText.AppendLine(ModTranslation.getString("roleSummaryText"));
                 AdditionalTempData.playerRoles.Sort((x, y) => {
-                    if (x.IsDead == y.IsDead)
-                        return (x.Roles.FirstOrDefault().roleId.CompareTo(y.Roles.FirstOrDefault().roleId));
-                    if (x.IsDead && !y.IsDead)
-                        return 1;
-                    return -1;
+                    RoleInfo roleX = x.Roles.FirstOrDefault();
+                    RoleInfo roleY = y.Roles.FirstOrDefault();
+                    RoleId idX = roleX == null ? RoleId.NoRole : roleX.roleId;
+                    RoleId idY = roleY == null ? RoleId.NoRole : roleY.roleId;
+
+                    if (x.IsDisconnected == y.IsDisconnected)
+                    {
+                        if (x.IsDead == y.IsDead)
+                        {
+                            if (idX == idY)
+                            {
+                                return x.PlayerName.CompareTo(y.PlayerName);
+                            }
+                            return idX.CompareTo(idY);
+                        }
+                        return x.IsDead.CompareTo(y.IsDead);
+                    }
+                    return x.IsDisconnected.CompareTo(y.IsDisconnected);
+
                 });
                 foreach(var data in AdditionalTempData.playerRoles) {
                     var roles = string.Join(" ", data.Roles.Select(x => Helpers.cs(x.color, x.name)));
-                    var taskInfo = data.TasksTotal > 0 ? $" <color=#FAD934FF>({data.TasksCompleted}/{data.TasksTotal})</color>" : "";
+                    var taskInfo = data.TasksTotal > 0 ? $"<color=#FAD934FF>{data.TasksCompleted}/{data.TasksTotal}</color>" : "";
                     var aliveDead = data.IsDead ?
-                        $" ({ModTranslation.getString("roleSummaryDead")})" :
+                        $"{ModTranslation.getString("roleSummaryDead")}" :
                         data.IsDisconnected ?
-                        $" ({ModTranslation.getString("roleSummaryDC")})" :
-                        $" ({ModTranslation.getString("roleSummaryAlive")})";
+                        $"{ModTranslation.getString("roleSummaryDC")}" :
+                        $"{ModTranslation.getString("roleSummaryAlive")}";
 
-                    roleSummaryText.AppendLine($"{data.PlayerName} - {roles}{taskInfo}{aliveDead}");
+                    roleSummaryText.AppendLine($"{data.PlayerName}<pos=18.5%>{taskInfo}<pos=25%>{aliveDead}<pos=32%>{roles}");
                 }
                 TMPro.TMP_Text roleSummaryTextMesh = roleSummary.GetComponent<TMPro.TMP_Text>();
                 roleSummaryTextMesh.alignment = TMPro.TextAlignmentOptions.TopLeft;
                 roleSummaryTextMesh.color = Color.white;
-                roleSummaryTextMesh.fontSizeMin = 1.5f;
-                roleSummaryTextMesh.fontSizeMax = 1.5f;
-                roleSummaryTextMesh.fontSize = 1.5f;
+                roleSummaryTextMesh.outlineWidth *= 1.2f;
+                roleSummaryTextMesh.fontSizeMin = 1.25f;
+                roleSummaryTextMesh.fontSizeMax = 1.25f;
+                roleSummaryTextMesh.fontSize = 1.25f;
                 
                 var roleSummaryTextMeshRectTransform = roleSummaryTextMesh.GetComponent<RectTransform>();
                 roleSummaryTextMeshRectTransform.anchoredPosition = new Vector2(position.x + 3.5f, position.y - 0.1f);
@@ -457,6 +493,13 @@ namespace TheOtherRoles.Patches {
                         }
                     }
                 }
+            }
+
+            // In the special case of Mafia being enabled, but only the janitor's left alive,
+            // count it as zero impostors alive bc they can't actually do anything.
+            if (Godfather.godfather?.Data.IsDead == true && Mafioso.mafioso?.Data.IsDead == true && Janitor.janitor?.Data.IsDead == false)
+            {
+                numImpostorsAlive = 0;
             }
 
             TeamJackalAlive = numJackalAlive;
