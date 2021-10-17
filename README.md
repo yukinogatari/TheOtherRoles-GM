@@ -89,11 +89,12 @@ The [Role Assignment](#role-assignment) sections explains how the roles are bein
 - Added Lovers Options: "Lovers Can Win With Crew", "Lovers Tasks Are Counted"
 - Added Sheriff Options: "Number of Shots"
 - Changed [Mafia](#mafia) so that if only the Janitor and crew remain, the game automatically ends, as the Janitor is unable to kill.
-- Reworked how options are displayed on the lobby screen.
+- Completely overhauled how options are displayed on the lobby screen
+- Post-game results now displays in a more legible table format
 - Improved performance of Morphling/Camouflager abilities
 - Options to disable admin, security, vitals, and vents
 - Added Japanese translation (by [Virtual_Dusk](https://twitter.com/Virtual_Dusk)) and support for adding [other languages](#translation).
-- Miscellaneous changes and bugfixes
+- Numerous miscellaneous changes and bugfixes
 
 **Hotfix 2.8.1**
 - Fixed a game breaking bug where killing the Bait resulted in a ban of the Bait
@@ -244,7 +245,7 @@ The [Role Assignment](#role-assignment) sections explains how the roles are bein
 - You can now set how long the Time Master shield lasts
 - The host now sees for how long the lobby will remain open
 - We changed the look/layout of the settings
-- Added a new option that deactivates skipping in meetings (if the player does not vote, he votes himself)
+- Added a new option that deactivates skipping in meetings (if the player does not vote, he votes themselves)
 - You can now choose whether the Eraser is able to erase the Spy/Impostors or not
 - Fixed a bug where a Lovers win wasn't displayed properly
 - Fixed the Among Us bug where people were unable to move after meetings
@@ -255,7 +256,7 @@ The [Role Assignment](#role-assignment) sections explains how the roles are bein
 
 **Version 2.1.0**
 - **New Role:** [Spy](#spy)
-- **Eraser:** The Eraser can now also remove the role of other Impostors. This enables him to reveal the Spy, but might result in removing the special ability of his partner.
+- **Eraser:** The Eraser can now also remove the role of other Impostors. This enables them to reveal the Spy, but might result in removing the special ability of his partner.
 - **Camouflager:** The Mini age/size will now also be hidden, to allow the Mini Impostor to kill during camouflage
 
 **Hotfix 2.0.1**
@@ -314,7 +315,7 @@ The [Role Assignment](#role-assignment) sections explains how the roles are bein
 
 \
 **Changes in v1.5:**
-- Time Master - Buff: He is not affected by his rewind anymore, which gives him more utility. Players will now be rewinded out of vents.
+- Time Master - Buff: He is not affected by his rewind anymore, which gives them more utility. Players will now be rewinded out of vents.
 - Mini - Nerf: The Mini now grows up (see [Mini](#mini)) and becomes a normal Crewmate at some point. A growing Mini is not killable anymore. Some tasks are still not doable for the small Mini, we are working on that. But eventually when growing up it can do all the tasks as it's size increases.
 - Seer - Nerf: Added an option that sets how often the Seer mistakes the player for another.
 - Hacker - Nerf: The Hacker now only sees the additional information when he activates his "Hacker mode". That should stops the Hacker from camping the admin table/vitals.
@@ -485,7 +486,7 @@ Here are a few instructions, on how to create a custom hat:
     - This texture will be rendered instead of the Back texture, when facing the left.
     - The name of the texture needs to follow the pattern `hatname_back_flip.png`.
   - `Climb texture (optional)`:
-    - This texture will be rendered in front of the player, when he's climbing.
+    - This texture will be rendered in front of the player, when they're climbing.
     - The name of the texture needs to follow the pattern `hatname_climb.png`.
 - **Testing:** You can test your hat design by putting all the files in the `\TheOtherHats\Test` subfolder of your mod folder. Then whenever you start a freeplay game, you and all the dummies will be wearing the new hat. You don't need to restart Among Us if you change the hat files, just exit and reenter the freeplay mode.
 
@@ -578,7 +579,7 @@ If the Vampire spawn chance is greater 0 (even if there is no Vampire in the gam
 If a victim is near a garlic, the "Bite Button" turns into the default "Kill Button" and the Vampire can only perform a normal kill.\
 \
 **NOTE:**
-- If a bitten player is still alive when a meeting is being called, he dies at the start of the meeting.
+- If a bitten player is still alive when a meeting is being called, they die at the start of the meeting.
 - The cooldown is the same as the default kill cooldown (+ the kill delay if the Vampire bites the target).
 - If there is a Vampire in the game, there can't be a Warlock
 
@@ -588,7 +589,7 @@ If a victim is near a garlic, the "Bite Button" turns into the default "Kill But
 | Vampire Spawn Chance | -
 | Vampire Kill Delay | -
 | Vampire Cooldown | Sets the kill/bite cooldown
-| Vampire Can Kill Near Garlics | The Vampire can never bite when his victim is near a garlic. If this option is set to true, he can still perform a normal kill there.
+| Vampire Can Kill Near Garlics | The Vampire can never bite when their victim is near a garlic. If this option is set to true, they can still perform a normal kill there.
 -----------------------
 
 ## Eraser
@@ -596,13 +597,13 @@ If a victim is near a garlic, the "Bite Button" turns into the default "Kill But
 The Eraser is an Impostor that can erase the role of every player.\
 The targeted players will lose their role after the meeting right before a player is exiled.\
 After every erase, the cooldown increases by 10 seconds.\
-The erase will be performed, even if the Eraser or his target die before the next meeting.\
+The erase will be performed, even if the Eraser or their target die before the next meeting.\
 By default the Eraser can erase everyone but the Spy and other Impostors. Depending on the options
-he can also erase them (Impostors will lose their special Impostor ability).
+you can also erase them (Impostors will lose their special Impostor ability).
 \
 **NOTE:**
-- The Shifter shift will always be triggered before the Erase (hence either the new role of the Shifter will be erased or the Shifter saves the role of his target, depending on who the Eraser erased)
-- Erasing a Lover automatically erases the other Lover as well (if the second Lover is an ImpLover, he will turn into an Impostor)
+- The Shifter shift will always be triggered before the Erase (hence either the new role of the Shifter will be erased or the Shifter saves the role of their target, depending on who the Eraser erased)
+- Erasing a Lover automatically erases the other Lover as well (if the second Lover is an ImpLover, they will turn into an Impostor)
 - Erasing a Jackal that has a Sidekick, triggers the Sidekick promotion if it's activated in the settings
 - As the erasing is being triggered before the eject of a player, erasing and voting out a Lover in the same round, would result in the
 ex Lover surviving as the partnership was erased before. Also a Jester win would not happen, as the erase will be triggered before.
@@ -612,13 +613,13 @@ ex Lover surviving as the partnership was erased before. Also a Jester win would
 |----------|:-------------:|
 | Eraser Spawn Chance | -
 | Eraser Cooldown | The Eraser's cooldown will increase by 10 seconds after every erase.
-| Eraser Can Erase Anyone | If set to false, he can't erase the Spy and other Impostors
+| Eraser Can Erase Anyone | If set to false, they can't erase the Spy and other Impostors
 -----------------------
 
 ## Trickster
 ### **Team: Impostors**
 The Trickster is an Impostor that can place 3 jack-in-the-boxes that are invisible at first to other players. \
-If the Trickster has placed all of his boxes they will be converted into a vent network usable only by the Trickster himself, but the boxes are revealed to the others. \
+If the Trickster has placed all of their boxes they will be converted into a vent network usable only by the Trickster themselves, but the boxes are revealed to the others. \
 If the boxes are converted to a vent network, the Trickster gains a new ability "Lights out" to limit the visibility of Non-Impostors, that cannot be fixed by other players. Lights are automatically restored after a while. \
 
 \
@@ -630,7 +631,7 @@ If the boxes are converted to a vent network, the Trickster gains a new ability 
 |----------|:-------------:|
 | Trickster Spawn Chance | -
 | Trickster Box Cooldown | Cooldown for placing jack-in-the-boxes
-| Trickster Lights Out Cooldown | Cooldown for his "lights out" ability
+| Trickster Lights Out Cooldown | Cooldown for the "lights out" ability
 | Trickster Lights Out Duration | Duration after which the light is automatically restored
 -----------------------
 
@@ -640,7 +641,7 @@ The Cleaner is an Impostor who has the ability to clean up dead bodies. \
 
 \
 **NOTE:**
-- The Kill and Clean cooldown are shared, preventing him from immediately cleaning his own kills.
+- The Kill and Clean cooldown are shared, preventing them from immediately cleaning their own kills.
 
 ### Game Options
 | Name | Description |
@@ -653,13 +654,13 @@ The Cleaner is an Impostor who has the ability to clean up dead bodies. \
 ## Warlock
 ### **Team: Impostors**
 The Warlock is an Impostor, that can curse another player (the cursed player doesn't get notified).\
-If the cursed person stands next to another player, the Warlock is able to kill that player (no matter how far away he is).\
+If the cursed person stands next to another player, the Warlock is able to kill that player (no matter how far away they are).\
 Performing a kill with the help of a cursed player, will lift the curse and it will result in the Warlock being unable to move for a configurable amount of time.\
 The Warlock can still perform normal kills, but the two buttons share the same cooldown.
 
 \
 **NOTE:**
-- The Warlock can always kill his Impostor mates (and even himselfs) using the "cursed kill"
+- The Warlock can always kill their Impostor mates (and even themself) using the "cursed kill"
 - If there is a Warlock in the game, there can't be a Vampire
 - Performing a normal kill, doesn't lift the curse
 
@@ -679,8 +680,8 @@ Created by  [Mallöris](https://github.com/Mallaris)\
 \
 The Bounty Hunter is an Impostor, that continuously get bountys (the targeted player doesn't get notified).\
 The target of the Bounty Hunter swaps after every meeting and after a configuarble amount of time.\
-If the Bounty Hunter kills his target, his kill cooldown will be a lot less than usual.\
-Killing a player that's not his current target results in an increased kill cooldown.\
+If the Bounty Hunter kills their target, their kill cooldown will be a lot less than usual.\
+Killing a player that's not their current target results in an increased kill cooldown.\
 Depending on the options, there'll be an arrow pointing towards the current target.
 
 \
@@ -809,7 +810,7 @@ The Jester does not have any tasks. They win the game as a solo, if they get vot
 
 ## Arsonist
 ### **Team: Neutral**
-The Arsonist does not have any tasks, he has to win the game as a solo.\
+The Arsonist does not have any tasks, they have to win the game solo.\
 The Arsonist can douse other players by pressing the douse button and remaining next to the player for a few seconds.\
 If the player that the Arsonist douses walks out of range, the cooldown will reset to 0.\
 After dousing everyone alive the Arsonist can ignite all the players which results in an Arsonist win.
@@ -826,7 +827,7 @@ After dousing everyone alive the Arsonist can ignite all the players which resul
 ### **Team: Crewmates**
 The Seer has two abilities (one can activate one of them or both in the options).
 The Seer sees the souls of players that died a round earlier, the souls slowy fade away.
-The Seer gets a blue flash on his screen, if a player dies somewhere on the map.
+The Seer gets a blue flash on their screen, if a player dies somewhere on the map.
 
 ### Game Options
 | Name | Description |
@@ -877,7 +878,7 @@ The Detective's other feature shows when they report a corpse: they recieve clue
 
 ## Lighter
 ### **Team: Crewmates**
-The Lighter can turn on his Lighter every now and then, which increases his vision by a customizable amount.
+The Lighter can turn on their Lighter every now and then, which increases their vision by a customizable amount.
 
 ### Game Options
 | Name | Description |
@@ -933,14 +934,14 @@ The Medic's other feature shows when they report a corpse: they will see how lon
 |----------|:-------------:|:-------------:|
 | Medic Spawn Chance | - | -
 | Show Shielded Player | Sets who sees if a player has a shield | "Everyone", "Shielded + Medic", "Medic"
-| Shielded Player Sees Murder Attempt| Whether a shielded player sees if someone tries to kill him | True/false |
+| Shielded Player Sees Murder Attempt| Whether a shielded player sees if someone tries to kill them | True/false |
 | Shield Will Be Set After Next Meeting | - | True/false
 -----------------------
 
 ## Mayor
 ### **Team: Crewmates**
 The Mayor leades the Crewmates by having a vote that counts twice.\
-The Mayor can always use his meeting, even if the maximum number of meetings was reached.
+The Mayor can always use their meeting, even if the maximum number of meetings was reached.
 
 ### Game Options
 | Name | Description |
@@ -951,7 +952,7 @@ The Mayor can always use his meeting, even if the maximum number of meetings was
 ## Hacker
 ### **Team: Crewmates**
 If the Hacker activates the "Hacker mode", the Hacker gets more information than others from the admin table and vitals for a set duration.\
-Otherwise he sees the same information as everyone else.
+Otherwise they see the same information as everyone else.
 **Admin table:** The Hacker can see the colors (or color types) of the players on the table.\
 **Vitals**: The Hacker can see how long dead players have been dead for.\
 \
@@ -980,7 +981,7 @@ This works especially well against the Eraser, but also gives the Eraser the pos
 The **special interactions** with the Shifter are noted in the chapters of the respective roles.\
 \
 **NOTE:**
-- The Shifter shift will always be triggered before the Erase (hence either the new role of the Shifter will be erased or the Shifter saves the role of his target, depending on who the Eraser erased)
+- The Shifter shift will always be triggered before the Erase (hence either the new role of the Shifter will be erased or the Shifter saves the role of their target, depending on who the Eraser erased)
 - If the Shifter takes over a role, their new cooldowns will start at the maximum cooldown of the ability
 - One time use abilities (e.g. shielding a player or Engineer sabotage fix) can only used by one player in the game (i.e. the Shifter
 can only use them, if the previous player did not used them before)
@@ -994,7 +995,7 @@ can only use them, if the previous player did not used them before)
 
 ## Time Master
 ### **Team: Crewmates**
-The Time Master has a time shield which he can activate. The time shield remains active for a configurable amount of time.\
+The Time Master has a time shield which they can activate. The time shield remains active for a configurable amount of time.\
 If a player trys to kill the Time Master while the time shield is active, the kill won't happen and the
 time will rewind for a set amount of time.\
 The kill cooldown of the killer won't be reset, so the Time Master
@@ -1003,9 +1004,9 @@ The Time Master won't be affected by the rewind.\
 \
 **NOTE:**
 - Only the movement is affected by the rewind
-- A Vampire bite will trigger the rewind. If the Time Master misses shielding the bite, he can still shield the kill which happens a few seconds later.
-- If the Time Master was bitten and has his shield active before when a meeting is called, he survives but the time won't be rewinded.
-- If the Time Master has a Medic shield, he won't rewind.
+- A Vampire bite will trigger the rewind. If the Time Master misses shielding the bite, they can still shield the kill which happens a few seconds later.
+- If the Time Master was bitten and has their shield active before when a meeting is called, they survive but the time won't be rewinded.
+- If the Time Master has a Medic shield, they won't rewind.
 - The shield itself ends immediately when triggered. So the timemaster can be attacked again as soon as the rewind ends.
 
 ### Game Options
@@ -1029,7 +1030,7 @@ and can't fix lights and comms.
 |----------|:-------------:|
 | Swapper Spawn Chance | -
 | Swapper can call emergency meeting | Option to disable the emergency button for the Swapper
-| Swapper can only swap others | Sets whether the Swapper can swap himself or not
+| Swapper can only swap others | Sets whether the Swapper can swap themselves or not
 -----------------------
 
 ## Tracker
@@ -1065,10 +1066,10 @@ When the Snitch has one task left (configurable) the Snitch will be revealed to 
 ### **Team: Jackal**
 The Jackal is part of an extra team, that tries to eliminate all the other players.\
 The Jackal has no tasks and can kill Impostors, Crewmates and Neutrals.\
-The Jackal (if allowed by the options) can select another player to be his Sidekick.
-Creating a Sidekick removes all tasks of the Sidekick and adds him to the team Jackal. The Sidekick loses his current role (except if he's a Lover, then he plays in two teams).
+The Jackal (if allowed by the options) can select another player to be their Sidekick.
+Creating a Sidekick removes all tasks of the Sidekick and adds them to the team Jackal. The Sidekick loses their current role (except if they're a Lover, then they play in two teams).
 The "Create Sidekick Action" may only be used once per Jackal or once per game (depending on the options).
-The Jackal can also promote Impostors to be his Sidekick, but depending on the options the Impostor will either really turn into the Sidekick and leave the team Impostors or he will just look like the Sidekick to the Jackal an remain as he was.\
+The Jackal can also promote Impostors to be their Sidekick, but depending on the options the Impostor will either really turn into the Sidekick and leave the team Impostors or they will just look like the Sidekick to the Jackal an remain as they were.\
 \
 The team Jackal enables multiple new outcomes of the game, listing some examples here:
 - The Impostors could be eliminated and then the crew plays against the team Jackal.
@@ -1086,8 +1087,8 @@ The priority of the win conditions is the following:
 9. Team Crew wins by outnumbering (When there is no player of the team Jackal and the team Impostors left)
 
 **NOTE:**
-- The Jackal (and his Sidekick) may be killed by a Sheriff.
-- A Jackal cannot target the Mini, while it's growing up. After that he can kill it or select it as its Sidekick
+- The Jackal (and their Sidekick) may be killed by a Sheriff.
+- A Jackal cannot target the Mini, while it's growing up. After that they can kill it or select it as its Sidekick
 - The Crew can still win, even if all of their members are dead, if they finish their tasks fast enough (that's why converting the last Crewmate with tasks left into a Sidekick results in a task win for the crew)
 
 If both Impostors and Jackals are in the game the game continues even if all Crewmates are dead. Crewmates may still win in this case by completing their tasks. Jackal and Impostor have to kill each other.
@@ -1103,17 +1104,17 @@ If both Impostors and Jackals are in the game the game continues even if all Cre
 | Jackal can use vents | Yes/No |
 | Jackal can create a Sidekick | Yes/No |
 | Jackals promoted from Sidekick can create a Sidekick | Yes/No (to prevent the Jackal team from growing) |
-| Jackals can make an Impostor to his Sidekick | Yes/No (to prevent a Jackal from turning an Impostor into a Sidekick, if he uses the ability on an Impostor he sees the Impostor as Sidekick, but the Impostor isn't converted to Sidekick. If this option is set to "No" Jackal and Sidekick can kill each other ) |
+| Jackals can make an Impostor to their Sidekick | Yes/No (to prevent a Jackal from turning an Impostor into a Sidekick, if they use the ability on an Impostor they see the Impostor as Sidekick, but the Impostor isn't converted to Sidekick. If this option is set to "No" Jackal and Sidekick can kill each other) |
 | Jackal and Sidekick have Impostor vision | - |
 -----------------------
 
 ## Sidekick
 ### **Team: Jackal**
-Gets assigned to a player during the game by the "Create Sidekick Action" of the Jackal and joins the Jackal in his quest to eliminate all other players.\
-Upon the death of the Jackal (depending on the options), he might get promoted to Jackal himself and potentially even assign a Sidekick of his own.
+Gets assigned to a player during the game by the "Create Sidekick Action" of the Jackal and joins the Jackal in their quest to eliminate all other players.\
+Upon the death of the Jackal (depending on the options), they might get promoted to Jackal themselves and potentially even assign a Sidekick of their own.
 \
 **NOTE:**
-- A player that converts into a Sidekick loses his previous role and tasks (if he had one), except the Lover role.
+- A player that converts into a Sidekick loses their previous role and tasks (if they had one), except the Lover role.
 - The Sidekick may be killed by a Sheriff.
 - The Sidekick cannot target the Mini, while it's growing up.
 
@@ -1147,14 +1148,14 @@ You can set whether the Sheriff can kill the Spy or not (in order to keep the li
 
 ## Security Guard
 ### **Team: Crewmates**
-The Security Guard is a Crewmate that has a certain amount of screws that he can use for either sealing vents or for placing new cameras.\
+The Security Guard is a Crewmate that has a certain amount of screws that they can use for either sealing vents or for placing new cameras.\
 Placing a new camera and sealing vents takes a configurable amount of screws. The total number of screws that a Security Guard has can also be configured.\
 The new camera will be visible after the next meeting and accessible by everyone.\
 The vents will be sealed after the next meeting, players can't enter or exit sealed vents, but they can still "move to them" underground.\
 **NOTE:**
 - Tickster boxes can't be sealed
 - The Security Guard can't place Cameras on MiraHQ
-- The remaining number of screws can be seen above his special button
+- The remaining number of screws can be seen above their special button
 - On Skeld the four cameras will be replaced every 3 seconds (with the next four cameras). You can also navigate manually using the arrow keys.
 
 
