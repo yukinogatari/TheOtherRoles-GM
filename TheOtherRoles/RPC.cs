@@ -55,6 +55,7 @@ namespace TheOtherRoles
         Arsonist,
         Jackal,
         Sidekick,
+        Opportunist,
 
 
         GM = 200,
@@ -264,6 +265,9 @@ namespace TheOtherRoles
                             break;
                         case RoleId.GM:
                             GM.gm = player;
+                            break;
+                        case RoleId.Opportunist:
+                            Opportunist.opportunist = player;
                             break;
                         default:
                             assigned = false;
@@ -613,6 +617,7 @@ namespace TheOtherRoles
             if (player == SecurityGuard.securityGuard) SecurityGuard.clearAndReload();
             if (player == Bait.bait) Bait.clearAndReload();
             if (player == Madmate.madmate) Madmate.clearAndReload();
+            if (player == Opportunist.opportunist) Opportunist.clearAndReload();
 
             // Impostor roles
             if (player == Morphling.morphling) Morphling.clearAndReload();

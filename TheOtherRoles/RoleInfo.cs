@@ -62,6 +62,10 @@ namespace TheOtherRoles
         public static RoleInfo crewmate;
         public static RoleInfo lover;
         public static RoleInfo gm;
+        public static RoleInfo opportunist;
+
+        public static List<RoleInfo> allRoleInfos;
+
         public static string tl(string key)
         {
             return ModTranslation.getString(key);
@@ -108,50 +112,52 @@ namespace TheOtherRoles
             crewmate = new RoleInfo(tl("crewmate"), Color.white, tl("crewmateIntroDesc"), tl("crewmateShortDesc"), RoleId.Crewmate);
             lover = new RoleInfo(tl("lover"), Lovers.color, tl("loverIntroDesc"), tl("loverShortDesc"), RoleId.Lover);
             gm = new RoleInfo(tl("gm"), GM.color, tl("gmIntroDesc"), tl("gmShortDesc"), RoleId.GM);
-        }
+            opportunist = new RoleInfo(tl("opportunist"), Opportunist.color, tl("oppIntroDesc"), tl("oppShortDesc"), RoleId.Opportunist);
 
-        public static List<RoleInfo> allRoleInfos = new List<RoleInfo>() {
-            impostor,
-            godfather,
-            mafioso,
-            janitor,
-            morphling,
-            camouflager,
-            vampire,
-            eraser,
-            trickster,
-            cleaner,
-            warlock,
-            bountyHunter,
-            niceMini,
-            evilMini,
-            goodGuesser,
-            badGuesser,
-            lover,
-            jester,
-            arsonist,
-            jackal,
-            sidekick,
-            crewmate,
-            shifter,
-            mayor,
-            engineer,
-            sheriff,
-            lighter,
-            detective,
-            timeMaster,
-            medic,
-            swapper,
-            seer,
-            hacker,
-            tracker,
-            snitch,
-            spy,
-            securityGuard,
-            bait,
-            madmate,
-            gm
-        };
+            allRoleInfos = new List<RoleInfo>() {
+                impostor,
+                godfather,
+                mafioso,
+                janitor,
+                morphling,
+                camouflager,
+                vampire,
+                eraser,
+                trickster,
+                cleaner,
+                warlock,
+                bountyHunter,
+                niceMini,
+                evilMini,
+                goodGuesser,
+                badGuesser,
+                lover,
+                jester,
+                arsonist,
+                jackal,
+                sidekick,
+                crewmate,
+                shifter,
+                mayor,
+                engineer,
+                sheriff,
+                lighter,
+                detective,
+                timeMaster,
+                medic,
+                swapper,
+                seer,
+                hacker,
+                tracker,
+                snitch,
+                spy,
+                securityGuard,
+                bait,
+                madmate,
+                gm,
+                opportunist
+            };
+        }
 
         public static List<RoleInfo> getRoleInfoForPlayer(PlayerControl p) {
             List<RoleInfo> infos = new List<RoleInfo>();
@@ -193,6 +199,7 @@ namespace TheOtherRoles
             if (p == Bait.bait) infos.Add(bait);
             if (p == Madmate.madmate) infos.Add(madmate);
             if (p == GM.gm) infos.Add(gm);
+            if (p == Opportunist.opportunist) infos.Add(opportunist);
 
             // Default roles
             if (infos.Count == 0 && p.Data.IsImpostor) infos.Add(impostor); // Just Impostor

@@ -177,6 +177,8 @@ namespace TheOtherRoles {
         public static CustomOption madmateCanSabotage;
         public static CustomOption madmateCanFixComm;
 
+        public static CustomOption opportunistSpawnRate;
+
         public static CustomOption gmEnabled;
         public static CustomOption gmIsHost;
         public static CustomOption gmHasTasks;
@@ -385,6 +387,8 @@ namespace TheOtherRoles {
             madmateHasImpostorVision = CustomOption.Create(363, "madmateHasImpostorVision", false, madmateSpawnRate);
             madmateCanSabotage = CustomOption.Create(364, "madmateCanSabotage", false, madmateSpawnRate);
             madmateCanFixComm = CustomOption.Create(365, "madmateCanFixComm", true, madmateSpawnRate);
+
+            opportunistSpawnRate = CustomOption.Create(366, cs(Opportunist.color, "opportunistSpawnRate"), rates, null, true);
 
             // Other options
             specialOptions = new CustomOptionBlank(null);

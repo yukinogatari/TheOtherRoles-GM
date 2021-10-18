@@ -24,7 +24,7 @@ Even more roles are coming soon :)
 | [Bounty Hunter](#bounty-hunter) | [Detective](#detective) | [Jackal](#jackal) |  |
 | [Camouflager](#camouflager) | [Engineer](#engineer) | [Sidekick](#sidekick) |  |
 | [Cleaner](#cleaner) | [Hacker](#hacker) | [Lover](#lovers) |  |
-| [Eraser](#eraser) | [Lighter](#lighter) |  |  |
+| [Eraser](#eraser) | [Lighter](#lighter) | [Opportunist](#opportunist) |  |
 | [Godfather (Mafia)](#mafia) | [Mayor](#mayor) |  |  |
 | [Mafioso (Mafia)](#mafia) | [Medic](#medic) |  |  |
 | [Janitor (Mafia)](#mafia)  | [Security Guard](#security-guard) |  |  |
@@ -82,6 +82,11 @@ The [Role Assignment](#role-assignment) sections explains how the roles are bein
 # Changelog
 <details>
   <summary>Click to show the Changelog</summary>
+  
+**Hotfix 2.9.0.1**
+- **New Role:** [Opportunist](#opportunist) (created by [libhalt](https://twitter.com/libhalt))
+- Fixed a bug causing the Guesser to be unable to shoot
+- Added support for a second repository for custom hats
 
 **Version 2.9.0**
 - **New Role:** [Madmate](#madmate) (created by [tomarai](https://github.com/tomarai))
@@ -676,7 +681,7 @@ The Warlock can still perform normal kills, but the two buttons share the same c
 ## Bounty Hunter
 ### **Team: Impostors**
 \
-Created by  [Mallöris](https://github.com/Mallaris)\
+Created by [Mallöris](https://github.com/Mallaris)\
 \
 The Bounty Hunter is an Impostor, that continuously get bountys (the targeted player doesn't get notified).\
 The target of the Bounty Hunter swaps after every meeting and after a configuarble amount of time.\
@@ -1171,7 +1176,7 @@ The vents will be sealed after the next meeting, players can't enter or exit sea
 
 ## Bait
 ### **Team: Crewmates**
-Created by  [Mallöris](https://github.com/Mallaris)
+Created by [Mallöris](https://github.com/Mallaris)
 
 The Bait is a Crewmate that if killed, forces the killer to self report the body (you can configure a delay in the options).
 Additionally, the Bait can see if someone is inside a vent (depending on the options the exact vent gets
@@ -1184,9 +1189,15 @@ an outline or all vents do).
 | Bait Highlight All Vents | If set to true, all vents will be highlighted if a player is inside of one of them. If set to false, only the vents where players are siting in will be highlighted.
 | Bait Report Delay | -
 
+## Opportunist
+### **Team: N/A**
+Created by [libhalt](https://twitter.com/libhalt)
+
+The Opportunist is a outsider role. So long as they are alive at the end of the game, they win alongside the victorious team. They can choose to side with any team they wish to ensure their own survival.
+
 ## GM
 ### **Team: N/A**
-Created by  [Virtual_Dusk](https://twitter.com/Virtual_Dusk)
+Created by [Virtual_Dusk](https://twitter.com/Virtual_Dusk)
 
 The GM (Game Master) is an observer role. Their presence has no effect on the game itself, and all players know who the GM is at all times. The GM cannot be targeted by other players, cannot fix sabotages, and cannot vote or be voted for. They are a completely external presence, provided with a range of tools at their disposal to efficiently observe the flow of the game.
 

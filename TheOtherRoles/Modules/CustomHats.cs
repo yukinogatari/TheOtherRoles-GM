@@ -404,7 +404,12 @@ namespace TheOtherRoles.Modules {
 
     public class CustomHatLoader {
         public static bool running = false;
-        private const string REPO = "https://raw.githubusercontent.com/Eisbison/TheOtherHats/master";
+
+        public static string[] hatRepos = new string[]
+        {
+            "https://raw.githubusercontent.com/yukinogatari/TheOtherHats-GM/master",
+            "https://raw.githubusercontent.com/Eisbison/TheOtherHats/master"
+        };
 
         public static List<CustomHatOnline> hatdetails = new List<CustomHatOnline>();
         private static Task hatFetchTask = null;
@@ -416,12 +421,18 @@ namespace TheOtherRoles.Modules {
         }
 
         private static async Task LaunchHatFetcherAsync() {
-            try {
-                HttpStatusCode status = await FetchHats();
-                if (status != HttpStatusCode.OK)
-                    System.Console.WriteLine("Custom Hats could not be loaded\n");
-            } catch (System.Exception e) {
-                System.Console.WriteLine("Unable to fetch hats\n" + e.Message);
+            foreach (string repo in hatRepos)
+            {
+                try
+                {
+                    HttpStatusCode status = await FetchHats(repo);
+                    if (status != HttpStatusCode.OK)
+                        System.Console.WriteLine($"Custom hats could not be loaded from repo: {repo}\n");
+                }
+                catch (System.Exception e)
+                {
+                    System.Console.WriteLine($"Unable to fetch hats from repo: {repo}\n" + e.Message);
+                }
             }
             running = false;
         }
@@ -437,10 +448,10 @@ namespace TheOtherRoles.Modules {
             return res;
         }
 
-        public static async Task<HttpStatusCode> FetchHats() {
+        public static async Task<HttpStatusCode> FetchHats(string repo) {
             HttpClient http = new HttpClient();
             http.DefaultRequestHeaders.CacheControl = new CacheControlHeaderValue{ NoCache = true };
-			var response = await http.GetAsync(new System.Uri($"{REPO}/CustomHats.json"), HttpCompletionOption.ResponseContentRead);
+			var response = await http.GetAsync(new System.Uri($"{repo}/CustomHats.json"), HttpCompletionOption.ResponseContentRead);
             try {
                 if (response.StatusCode != HttpStatusCode.OK) return response.StatusCode;
                 if (response.Content == null) {
@@ -500,7 +511,7 @@ namespace TheOtherRoles.Modules {
                 
                 foreach(var file in markedfordownload) {
                     
-                    var hatFileResponse = await http.GetAsync($"{REPO}/hats/{file}", HttpCompletionOption.ResponseContentRead);
+                    var hatFileResponse = await http.GetAsync($"{repo}/hats/{file}", HttpCompletionOption.ResponseContentRead);
                     if (hatFileResponse.StatusCode != HttpStatusCode.OK) continue;
                     using (var responseStream = await hatFileResponse.Content.ReadAsStreamAsync()) {
                         using (var fileStream = File.Create($"{filePath}\\{file}")) {

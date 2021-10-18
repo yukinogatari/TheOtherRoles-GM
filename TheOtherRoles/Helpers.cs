@@ -197,7 +197,13 @@ namespace TheOtherRoles {
         }
 
         public static bool hasFakeTasks(this PlayerControl player) {
-            return (player == Madmate.madmate || player == Jester.jester || player == Jackal.jackal || player == Sidekick.sidekick || player == Arsonist.arsonist || Jackal.formerJackals.Contains(player));
+            return (player == Opportunist.opportunist ||
+                    player == Madmate.madmate || 
+                    player == Jester.jester || 
+                    player == Jackal.jackal || 
+                    player == Sidekick.sidekick || 
+                    player == Arsonist.arsonist || 
+                    Jackal.formerJackals.Contains(player));
         }
 
         public static bool isGM(this PlayerControl player)

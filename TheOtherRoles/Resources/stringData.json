@@ -587,6 +587,10 @@
         "0": "Can Fix Comms",
         "11": "\u30b3\u30df\u30e5\u30b5\u30dc\u3092\u76f4\u305b\u308b"
     },
+    "opportunistSpawnRate": {
+        "0": "Opportunist",
+        "11": "\u30aa\u30dd\u30c1\u30e5\u30cb\u30b9\u30c8"
+    },
     "maxNumberOfMeetings": {
         "0": "Number Of Meetings (excluding Mayor Meeting)",
         "11": "\u5408\u8a08\u7dca\u6025\u4f1a\u8b70\u56de\u6570\uff08\u30e1\u30a4\u30e4\u30fc\u5bfe\u8c61\u5916\uff09"
@@ -1135,6 +1139,18 @@
         "0": "REVIVE",
         "11": "REVIVE"
     },
+    "opportunist": {
+        "0": "Opportunist",
+        "11": "\u30aa\u30dd\u30c1\u30e5\u30cb\u30b9\u30c8"
+    },
+    "oppIntroDesc": {
+        "0": "Do whatever it takes to survive",
+        "11": "\u3068\u306b\u304b\u304f\u751f\u304d\u6b8b\u308a\u307e\u3057\u3087\u3046"
+    },
+    "oppShortDesc": {
+        "0": "Do whatever it takes to survive",
+        "11": "\u3068\u306b\u304b\u304f\u751f\u304d\u6b8b\u308a\u307e\u3057\u3087\u3046"
+    },
     "streamerModeButton": {
         "0": "Streamer Mode",
         "11": "\u30b9\u30c8\u30ea\u30fc\u30de\u30fc\u30e2\u30fc\u30c9"
@@ -1174,10 +1190,6 @@
         "0": "Arsonist Wins",
         "11": "\u30a2\u30fc\u30bd\u30cb\u30b9\u30c8\u52dd\u5229"
     },
-    "loversTeamWin": {
-        "0": "Lovers And Crewmates Win",
-        "11": "\u30e9\u30d0\u30fc\u30ba\uff06\u30af\u30eb\u30fc\u52dd\u5229"
-    },
     "loversWin": {
         "0": "Lovers Win",
         "11": "\u30e9\u30d0\u30fc\u30ba\u52dd\u5229"
@@ -1189,6 +1201,42 @@
     "miniDied": {
         "0": "Mini Died",
         "11": "\u30df\u30cb\u304c\u6bba\u3055\u308c\u305f"
+    },
+    "crewWinExtra": {
+        "0": "Crewmates {0} Win",
+        "11": "\u30af\u30eb\u30fc{0}\u52dd\u5229"
+    },
+    "impostorWinExtra": {
+        "0": "Impostors {0} Win",
+        "11": "\u30a4\u30f3\u30dd\u30b9\u30bf\u30fc{0}\u52dd\u5229"
+    },
+    "jesterWinExtra": {
+        "0": "Jester {0} Win",
+        "11": "\u30b8\u30a7\u30b9\u30bf\u30fc{0}\u52dd\u5229"
+    },
+    "arsonistWinExtra": {
+        "0": "Arsonist {0} Win",
+        "11": "\u30a2\u30fc\u30bd\u30cb\u30b9\u30c8{0}\u52dd\u5229"
+    },
+    "loversWinExtra": {
+        "0": "Lovers {0} Win",
+        "11": "\u30e9\u30d0\u30fc\u30ba{0}\u52dd\u5229"
+    },
+    "jackalWinExtra": {
+        "0": "Team Jackal {0} Win",
+        "11": "\u30b8\u30e3\u30c3\u30ab\u30eb{0}\u52dd\u5229"
+    },
+    "miniDiedExtra": {
+        "0": "Mini Died {0} Win",
+        "11": "\u30df\u30cb\u304c\u6bba\u3055\u308c\u305f{0}\u52dd\u5229"
+    },
+    "opportunistExtra": {
+        "0": "& Opportunist",
+        "11": "\uff06\u30aa\u30dd\u30c1\u30e5\u30cb\u30b9\u30c8"
+    },
+    "loversExtra": {
+        "0": "& Lovers",
+        "11": "\uff06\u30e9\u30d0\u30fc\u30ba"
     },
     "roleSummaryText": {
         "0": "Players and roles at the end of the game:",

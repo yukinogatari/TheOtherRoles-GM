@@ -261,8 +261,9 @@ namespace TheOtherRoles.Patches {
             List<Transform> buttons = new List<Transform>();
             Transform selectedButton = null;
 
-            foreach (RoleInfo roleInfo in RoleInfo.allRoleInfos) {
-                if (roleInfo.roleId == RoleId.Lover || roleInfo.roleId == RoleId.Guesser || roleInfo == RoleInfo.niceMini || roleInfo == RoleInfo.gm) continue; // Not guessable roles
+            foreach (RoleInfo roleInfo in RoleInfo.allRoleInfos)
+            {
+                if (roleInfo == null || roleInfo.roleId == RoleId.Lover || roleInfo.roleId == RoleId.Guesser || roleInfo == RoleInfo.niceMini || roleInfo == RoleInfo.gm) continue; // Not guessable roles
                 Transform buttonParent = (new GameObject()).transform;
                 buttonParent.SetParent(container);
                 Transform button = UnityEngine.Object.Instantiate(buttonTemplate, buttonParent);
@@ -275,7 +276,8 @@ namespace TheOtherRoles.Patches {
                 label.text = Helpers.cs(roleInfo.color, roleInfo.name);
                 label.alignment = TMPro.TextAlignmentOptions.Center;
                 label.transform.localPosition = new Vector3(0, 0, label.transform.localPosition.z);
-                label.transform.localScale *= 1.7f;
+                label.transform.localScale *= 1.6f;
+                label.autoSizeTextContainer = true;
                 int copiedIndex = i;
 
                 button.GetComponent<PassiveButton>().OnClick.RemoveAllListeners();
