@@ -284,7 +284,7 @@ namespace TheOtherRoles
 
         public static void setUnassignedRoles()
         {
-            if (unassignedRoles.Count == 0) return;
+            if (unassignedRoles == null || unassignedRoles.Count == 0) return;
             List<(byte, byte, byte)> tempRoles = new List<(byte, byte, byte)>(unassignedRoles);
             unassignedRoles.Clear();
 

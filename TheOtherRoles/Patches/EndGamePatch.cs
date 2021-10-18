@@ -62,6 +62,9 @@ namespace TheOtherRoles.Patches {
     public class OnGameEndPatch {
         
         public static void Prefix(AmongUsClient __instance, [HarmonyArgument(0)]ref GameOverReason reason, [HarmonyArgument(1)]bool showAd) {
+            Camouflager.resetCamouflage();
+            Morphling.resetMorph();
+
             AdditionalTempData.gameOverReason = reason;
             if ((int)reason >= 10) reason = GameOverReason.ImpostorByKill;
         }
@@ -268,7 +271,7 @@ namespace TheOtherRoles.Patches {
             } 
             else if (AdditionalTempData.gameOverReason == GameOverReason.HumansByTask || AdditionalTempData.gameOverReason == GameOverReason.HumansByVote) {
                 bonusText = "crewWin";
-                textRenderer.color = Palette.CrewmateBlue;
+                textRenderer.color = Palette.White;
             }
             else if (AdditionalTempData.gameOverReason == GameOverReason.ImpostorByKill || AdditionalTempData.gameOverReason == GameOverReason.ImpostorBySabotage || AdditionalTempData.gameOverReason == GameOverReason.ImpostorByVote) {
                 bonusText = "impostorWin";
