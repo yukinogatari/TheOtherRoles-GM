@@ -65,12 +65,6 @@ namespace TheOtherRoles.Patches {
 
             static bool Prefix(MeetingHud __instance) {
                 if (__instance.playerStates.All((PlayerVoteArea ps) => ps.AmDead || ps.DidVote)) {
-                    // If skipping is disabled, replace skipps/no-votes with self vote
-                    if (target == null && blockSkippingInEmergencyMeetings && noVoteIsSelfVote) {
-                        foreach (PlayerVoteArea playerVoteArea in __instance.playerStates) {
-                            if (playerVoteArea.VotedFor < 0) playerVoteArea.VotedFor = playerVoteArea.TargetPlayerId; // TargetPlayerId
-                        }
-                    }
 
 			        Dictionary<byte, int> self = CalculateVotes(__instance);
                     bool tie;
@@ -91,6 +85,19 @@ namespace TheOtherRoles.Patches {
                     __instance.RpcVotingComplete(array, exiled, tie);
                 }
                 return false;
+            }
+        }
+        [HarmonyPatch(typeof(MeetingHud), nameof(MeetingHud.Select))]
+        class MeetingHudSelectPatch
+        {
+            public static bool Prefix(ref bool __result, MeetingHud __instance, [HarmonyArgument(0)] int suspectStateIdx)
+            {
+                __result = false;
+                if (GM.gm != null && GM.gm.PlayerId == suspectStateIdx) return false;
+                if (noVoteIsSelfVote && PlayerControl.LocalPlayer.PlayerId == suspectStateIdx) return false;
+                if (blockSkippingInEmergencyMeetings && suspectStateIdx == -1) return false;
+
+                return true;
             }
         }
 

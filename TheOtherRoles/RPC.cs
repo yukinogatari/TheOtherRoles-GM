@@ -487,7 +487,9 @@ namespace TheOtherRoles
                 Bait.bait = oldShifter;
             if (Madmate.madmate != null && Madmate.madmate == player)
                 Madmate.madmate = oldShifter;
-            
+            if (Opportunist.opportunist != null && Opportunist.opportunist == player)
+                Opportunist.opportunist = oldShifter;
+
             // Set cooldowns to max for both players
             if (PlayerControl.LocalPlayer == oldShifter || PlayerControl.LocalPlayer == player)
                 CustomButton.ResetAllCooldowns();

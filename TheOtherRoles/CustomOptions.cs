@@ -219,8 +219,8 @@ namespace TheOtherRoles {
             crewmateRolesCountMax = CustomOption.Create(301, cs(new Color(204f / 255f, 204f / 255f, 0, 1f), "crewmateRolesCountMax"), 0f, 0f, 15f, 1f);
             neutralRolesCountMin = CustomOption.Create(302, cs(new Color(204f / 255f, 204f / 255f, 0, 1f), "neutralRolesCountMin"), 0f, 0f, 15f, 1f);
             neutralRolesCountMax = CustomOption.Create(303, cs(new Color(204f / 255f, 204f / 255f, 0, 1f), "neutralRolesCountMax"), 0f, 0f, 15f, 1f);
-            impostorRolesCountMin = CustomOption.Create(304, cs(new Color(204f / 255f, 204f / 255f, 0, 1f), "impostorRolesCountMin"), 0f, 0f, 3f, 1f);
-            impostorRolesCountMax = CustomOption.Create(305, cs(new Color(204f / 255f, 204f / 255f, 0, 1f), "impostorRolesCountMax"), 0f, 0f, 3f, 1f);
+            impostorRolesCountMin = CustomOption.Create(304, cs(new Color(204f / 255f, 204f / 255f, 0, 1f), "impostorRolesCountMin"), 0f, 0f, 15f, 1f);
+            impostorRolesCountMax = CustomOption.Create(305, cs(new Color(204f / 255f, 204f / 255f, 0, 1f), "impostorRolesCountMax"), 0f, 0f, 15f, 1f);
 
 
             gmEnabled = CustomOption.Create(400, cs(GM.color, "gmEnabled"), false, null, true);
@@ -611,7 +611,10 @@ namespace TheOtherRoles {
                 }
                 option.optionBehaviour.gameObject.SetActive(true);
             }
-            
+
+            var numImpostorsOption = allOptions.FirstOrDefault(x => x.name == "NumImpostors").TryCast<NumberOption>();
+            if (numImpostorsOption != null) numImpostorsOption.ValidRange = new FloatRange(0f, 15f);
+
             var commonTasksOption = allOptions.FirstOrDefault(x => x.name == "NumCommonTasks").TryCast<NumberOption>();
             if(commonTasksOption != null) commonTasksOption.ValidRange = new FloatRange(0f, 4f);
 

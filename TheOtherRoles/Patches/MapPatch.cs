@@ -153,5 +153,26 @@ namespace TheOtherRoles.Patches
                 }
             }
         }
+
+        [HarmonyPatch(typeof(MapBehaviour), nameof(MapBehaviour.Close))]
+        class MapBehaviorClosePatch
+        {
+            private static Vector3 oldpos;
+            static void Prefix(MapBehaviour __instance)
+            {
+                if (PlayerControl.LocalPlayer.isGM())
+                {
+                    oldpos = HudManager.Instance.UseButton.transform.localPosition;
+                }
+            }
+
+            static void Postfix(MapBehaviour __instance)
+            {
+                if (PlayerControl.LocalPlayer.isGM())
+                {
+                    HudManager.Instance.UseButton.transform.localPosition = oldpos;
+                }
+            }
+        }
     }
 }

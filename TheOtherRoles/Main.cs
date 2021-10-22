@@ -73,7 +73,8 @@ namespace TheOtherRoles
 
             UpdateRegions();
 
-            GameOptionsData.RecommendedImpostors = GameOptionsData.MaxImpostors = Enumerable.Repeat(3, 16).ToArray(); // Max Imp = Recommended Imp = 3
+            GameOptionsData.RecommendedImpostors = Enumerable.Repeat(3, 16).ToArray();
+            GameOptionsData.MaxImpostors = Enumerable.Repeat(15, 16).ToArray(); // Max Imp = Recommended Imp = 3
             GameOptionsData.MinPlayers = Enumerable.Repeat(4, 15).ToArray(); // Min Players = 4
 
             DebugMode = Config.Bind("Custom", "Enable Debug Mode", false);
