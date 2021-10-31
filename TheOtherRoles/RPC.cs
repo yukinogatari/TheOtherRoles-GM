@@ -112,7 +112,10 @@ namespace TheOtherRoles
         ArsonistWin,
         GuesserShoot,
         GMKill,
-        GMRevive
+        GMRevive,
+        UseAdminTime,
+        UseCameraTime,
+        UseVitalsTime,
     }
 
     public static class RPCProcedure {
@@ -128,6 +131,10 @@ namespace TheOtherRoles
             clearGameHistory();
             setCustomButtonCooldowns();
             MapBehaviorPatch.resetIcons();
+            MorphData.resetMorphData();
+            AdminPatch.ResetData();
+            CameraPatch.ResetData();
+            VitalsPatch.ResetData();
             unassignedRoles.Clear();
         }
 
@@ -351,7 +358,13 @@ namespace TheOtherRoles
             }
         }
 
-        public static void sheriffKill(byte targetId) {
+        public static void sheriffKill(byte targetId, bool misfire) {
+            if (misfire)
+            {
+                Sheriff.sheriff.MurderPlayer(Sheriff.sheriff);
+                if (!Sheriff.misfireKillsTarget) return;
+            }
+            
             foreach (PlayerControl player in PlayerControl.AllPlayerControls)
             {
                 if (player.PlayerId == targetId)
@@ -694,7 +707,7 @@ namespace TheOtherRoles
             }
         }
 
-        public static void placeCamera(byte[] buff) {
+        public static void placeCamera(byte[] buff, byte roomId) {
             var referenceCamera = UnityEngine.Object.FindObjectOfType<SurvCamera>(); 
             if (referenceCamera == null) return; // Mira HQ
 
@@ -705,10 +718,62 @@ namespace TheOtherRoles
             position.x = BitConverter.ToSingle(buff, 0*sizeof(float));
             position.y = BitConverter.ToSingle(buff, 1*sizeof(float));
 
+            SystemTypes roomType = (SystemTypes)roomId;
+
             var camera = UnityEngine.Object.Instantiate<SurvCamera>(referenceCamera);
             camera.transform.position = new Vector3(position.x, position.y, referenceCamera.transform.position.z - 1f);
             camera.CamName = $"Security Camera {SecurityGuard.placedCameras}";
             camera.Offset = new Vector3(0f, 0f, camera.Offset.z);
+
+            switch(roomType)
+            {
+                case SystemTypes.Hallway: camera.NewName = StringNames.Hallway; break;
+                case SystemTypes.Storage: camera.NewName = StringNames.Storage; break;
+                case SystemTypes.Cafeteria: camera.NewName = StringNames.Cafeteria; break;
+                case SystemTypes.Reactor: camera.NewName = StringNames.Reactor; break;
+                case SystemTypes.UpperEngine: camera.NewName = StringNames.UpperEngine; break;
+                case SystemTypes.Nav: camera.NewName = StringNames.Nav; break;
+                case SystemTypes.Admin: camera.NewName = StringNames.Admin; break;
+                case SystemTypes.Electrical: camera.NewName = StringNames.Electrical; break;
+                case SystemTypes.LifeSupp: camera.NewName = StringNames.LifeSupp; break;
+                case SystemTypes.Shields: camera.NewName = StringNames.Shields; break;
+                case SystemTypes.MedBay: camera.NewName = StringNames.MedBay; break;
+                case SystemTypes.Security: camera.NewName = StringNames.Security; break;
+                case SystemTypes.Weapons: camera.NewName = StringNames.Weapons; break;
+                case SystemTypes.LowerEngine: camera.NewName = StringNames.LowerEngine; break;
+                case SystemTypes.Comms: camera.NewName = StringNames.Comms; break;
+                case SystemTypes.Decontamination: camera.NewName = StringNames.Decontamination; break;
+                case SystemTypes.Launchpad: camera.NewName = StringNames.Launchpad; break;
+                case SystemTypes.LockerRoom: camera.NewName = StringNames.LockerRoom; break;
+                case SystemTypes.Laboratory: camera.NewName = StringNames.Laboratory; break;
+                case SystemTypes.Balcony: camera.NewName = StringNames.Balcony; break;
+                case SystemTypes.Office: camera.NewName = StringNames.Office; break;
+                case SystemTypes.Greenhouse: camera.NewName = StringNames.Greenhouse; break;
+                case SystemTypes.Dropship: camera.NewName = StringNames.Dropship; break;
+                case SystemTypes.Decontamination2: camera.NewName = StringNames.Decontamination2; break;
+                case SystemTypes.Outside: camera.NewName = StringNames.Outside; break;
+                case SystemTypes.Specimens: camera.NewName = StringNames.Specimens; break;
+                case SystemTypes.BoilerRoom: camera.NewName = StringNames.BoilerRoom; break;
+                case SystemTypes.VaultRoom: camera.NewName = StringNames.VaultRoom; break;
+                case SystemTypes.Cockpit: camera.NewName = StringNames.Cockpit; break;
+                case SystemTypes.Armory: camera.NewName = StringNames.Armory; break;
+                case SystemTypes.Kitchen: camera.NewName = StringNames.Kitchen; break;
+                case SystemTypes.ViewingDeck: camera.NewName = StringNames.ViewingDeck; break;
+                case SystemTypes.HallOfPortraits: camera.NewName = StringNames.HallOfPortraits; break;
+                case SystemTypes.CargoBay: camera.NewName = StringNames.CargoBay; break;
+                case SystemTypes.Ventilation: camera.NewName = StringNames.Ventilation; break;
+                case SystemTypes.Showers: camera.NewName = StringNames.Showers; break;
+                case SystemTypes.Engine: camera.NewName = StringNames.Engine; break;
+                case SystemTypes.Brig: camera.NewName = StringNames.Brig; break;
+                case SystemTypes.MeetingRoom: camera.NewName = StringNames.MeetingRoom; break;
+                case SystemTypes.Records: camera.NewName = StringNames.Records; break;
+                case SystemTypes.Lounge: camera.NewName = StringNames.Lounge; break;
+                case SystemTypes.GapRoom: camera.NewName = StringNames.GapRoom; break;
+                case SystemTypes.MainHall: camera.NewName = StringNames.MainHall; break;
+                case SystemTypes.Medical: camera.NewName = StringNames.Medical; break;
+                default: camera.NewName = StringNames.ExitButton; break;
+            }
+
             if (PlayerControl.GameOptions.MapId == 2 || PlayerControl.GameOptions.MapId == 4) camera.transform.localRotation = new Quaternion(0, 0, 1, 1); // Polus and Airship 
 
             if (PlayerControl.LocalPlayer == SecurityGuard.securityGuard) {
@@ -798,6 +863,21 @@ namespace TheOtherRoles
                 HudManager.Instance.ShadowQuad.gameObject.SetActive(false);
             }
         }
+
+        public static void UseAdminTime(float time)
+        {
+            MapOptions.restrictAdminTime -= time;
+        }
+
+        public static void UseCameraTime(float time)
+        {
+            MapOptions.restrictCamerasTime -= time;
+        }
+
+        public static void UseVitalsTime(float time)
+        {
+            MapOptions.restrictVitalsTime -= time;
+        }
     }   
 
     [HarmonyPatch(typeof(PlayerControl), nameof(PlayerControl.HandleRpc))]
@@ -871,7 +951,7 @@ namespace TheOtherRoles
                     RPCProcedure.cleanBody(reader.ReadByte());
                     break;
                 case (byte)CustomRPC.SheriffKill:
-                    RPCProcedure.sheriffKill(reader.ReadByte());
+                    RPCProcedure.sheriffKill(reader.ReadByte(), reader.ReadBoolean());
                     break;
                 case (byte)CustomRPC.TimeMasterRewindTime:
                     RPCProcedure.timeMasterRewindTime();
@@ -947,7 +1027,7 @@ namespace TheOtherRoles
                     RPCProcedure.warlockCurseKill(reader.ReadByte());
                     break;
                 case (byte)CustomRPC.PlaceCamera:
-                    RPCProcedure.placeCamera(reader.ReadBytesAndSize());
+                    RPCProcedure.placeCamera(reader.ReadBytesAndSize(), reader.ReadByte());
                     break;
                 case (byte)CustomRPC.SealVent:
                     RPCProcedure.sealVent(reader.ReadPackedInt32());
@@ -963,6 +1043,15 @@ namespace TheOtherRoles
                     break;
                 case (byte)CustomRPC.GMRevive:
                     RPCProcedure.GMRevive(reader.ReadByte());
+                    break;
+                case (byte)CustomRPC.UseAdminTime:
+                    RPCProcedure.UseAdminTime(reader.ReadSingle());
+                    break;
+                case (byte)CustomRPC.UseCameraTime:
+                    RPCProcedure.UseCameraTime(reader.ReadSingle());
+                    break;
+                case (byte)CustomRPC.UseVitalsTime:
+                    RPCProcedure.UseVitalsTime(reader.ReadSingle());
                     break;
             }
         }

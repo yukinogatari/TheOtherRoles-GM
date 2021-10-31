@@ -1,13 +1,22 @@
-﻿namespace TheOtherRoles
+﻿using System.Collections.Generic;
+
+namespace TheOtherRoles
 {
     public class MorphData
     {
+        public static Dictionary<byte, MorphData> morphData = new Dictionary<byte, MorphData>();
+
         public string name = "";
         public uint hat = 0;
         public int color = 6;
         public uint skin = 0;
         public uint pet = 0;
         public bool visible = true;
+
+        public static void resetMorphData()
+        {
+            morphData = new Dictionary<byte, MorphData>();
+        }
 
         public MorphData() { }
 

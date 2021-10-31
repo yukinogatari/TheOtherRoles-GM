@@ -5,6 +5,11 @@ import copy
 import json
 from openpyxl import load_workbook
 
+WORKING_DIR = os.path.dirname(os.path.realpath(__file__))
+
+IN_FILE = os.path.join(WORKING_DIR, "Strings.xlsx")
+OUT_FILE = os.path.join(WORKING_DIR, "TheOtherRoles", "Resources", "stringData.json")
+
 def stringToJson(filename):
   wb = load_workbook(filename, read_only = True)
   
@@ -31,8 +36,8 @@ def stringToJson(filename):
       if data:
         stringData[name] = data
     
-  with open("TheOtherRoles/Resources/stringData.json", "w") as f:
+  with open(OUT_FILE, "w") as f:
     json.dump(stringData, f, indent=4)
 
 if __name__ == "__main__":
-  stringToJson("Strings.xlsx")
+  stringToJson(IN_FILE)

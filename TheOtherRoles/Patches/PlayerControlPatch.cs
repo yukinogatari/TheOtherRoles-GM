@@ -351,6 +351,16 @@ namespace TheOtherRoles.Patches {
         }
 
         public static void updatePlayerInfo() {
+            bool commsActive = false;
+            foreach (PlayerTask t in PlayerControl.LocalPlayer.myTasks)
+            {
+                if (t.TaskType == TaskTypes.FixComms)
+                {
+                    commsActive = true;
+                    break;
+                }
+            }
+
             foreach (PlayerControl p in PlayerControl.AllPlayerControls) {
                 if (p != PlayerControl.LocalPlayer && !PlayerControl.LocalPlayer.Data.IsDead && !p.isGM() && !PlayerControl.LocalPlayer.isGM()) continue;
 
@@ -358,10 +368,12 @@ namespace TheOtherRoles.Patches {
                 TMPro.TextMeshPro playerInfo = playerInfoTransform != null ? playerInfoTransform.GetComponent<TMPro.TextMeshPro>() : null;
                 if (playerInfo == null) {
                     playerInfo = UnityEngine.Object.Instantiate(p.nameText, p.nameText.transform.parent);
-                    playerInfo.transform.localPosition += Vector3.up * 0.5f;
                     playerInfo.fontSize *= 0.75f;
                     playerInfo.gameObject.name = "Info";
                 }
+
+                // Set the position every time bc it sometimes ends up in the wrong place due to camoflauge
+                playerInfo.transform.localPosition = p.nameText.transform.localPosition + Vector3.up * 0.5f;
 
                 PlayerVoteArea playerVoteArea = MeetingHud.Instance?.playerStates?.FirstOrDefault(x => x.TargetPlayerId == p.PlayerId);
                 Transform meetingInfoTransform = playerVoteArea != null ? playerVoteArea.NameText.transform.parent.FindChild("Info") : null;
@@ -373,10 +385,12 @@ namespace TheOtherRoles.Patches {
                     meetingInfo.autoSizeTextContainer = true;
                     meetingInfo.gameObject.name = "Info";
                 }
-                
+
                 var (tasksCompleted, tasksTotal) = TasksHandler.taskInfo(p.Data);
                 string roleNames = String.Join(" ", RoleInfo.getRoleInfoForPlayer(p).Select(x => Helpers.cs(x.color, x.name)).ToArray());
-                string taskInfo = tasksTotal > 0 ? $"<color=#FAD934FF>({tasksCompleted}/{tasksTotal})</color>" : "";
+
+                var completedStr = commsActive ? "?" : tasksCompleted.ToString();
+                string taskInfo = tasksTotal > 0 ? $"<color=#FAD934FF>({completedStr}/{tasksTotal})</color>" : "";
                 
                 string playerInfoText = "";
                 string meetingInfoText ="";
@@ -781,9 +795,9 @@ namespace TheOtherRoles.Patches {
                 Morphling.resetMorph();
             }
 
-            if (MapOptions.morphData.ContainsKey(target.PlayerId))
+            if (MorphData.morphData.ContainsKey(target.PlayerId))
             {
-                MapOptions.morphData[target.PlayerId].applyToPlayer(target);
+                MorphData.morphData[target.PlayerId].applyToPlayer(target);
             }
         }
 
@@ -803,9 +817,13 @@ namespace TheOtherRoles.Patches {
 
             // Lover suicide trigger on murder
             if ((Lovers.lover1 != null && target == Lovers.lover1) || (Lovers.lover2 != null && target == Lovers.lover2)) {
-                PlayerControl otherLover = target == Lovers.lover1 ? Lovers.lover2 : Lovers.lover1;
+                if (Lovers.separateTeam && Lovers.tasksCount)
+                    target.clearAllTasks();
+
+                PlayerControl otherLover = target.getPartner();
                 if (otherLover != null && !otherLover.Data.IsDead && Lovers.bothDie) {
                     otherLover.MurderPlayer(otherLover);
+                    suicidedPlayers.Add(otherLover.PlayerId);
                 }
             }
             
@@ -905,9 +923,15 @@ namespace TheOtherRoles.Patches {
 
             // Lover suicide trigger on exile
             if ((Lovers.lover1 != null && __instance == Lovers.lover1) || (Lovers.lover2 != null && __instance == Lovers.lover2)) {
-                PlayerControl otherLover = __instance == Lovers.lover1 ? Lovers.lover2 : Lovers.lover1;
+                if (Lovers.separateTeam && Lovers.tasksCount)
+                    __instance.clearAllTasks();
+
+                PlayerControl otherLover = __instance.getPartner();
                 if (otherLover != null && !otherLover.Data.IsDead && Lovers.bothDie)
+                {
                     otherLover.Exiled();
+                    suicidedPlayers.Add(otherLover.PlayerId);
+                }
             }
             
             // Sidekick promotion trigger on exile

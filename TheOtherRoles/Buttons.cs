@@ -193,21 +193,25 @@ namespace TheOtherRoles
                         return;
                     }
 
-                    byte targetId = 0;
+                    bool misfire = false;
+                    byte targetId = Sheriff.currentTarget.PlayerId; ;
                     if ((Sheriff.currentTarget.Data.IsImpostor && (Sheriff.currentTarget != Mini.mini || Mini.isGrownUp())) ||
                         (Sheriff.spyCanDieToSheriff && Spy.spy == Sheriff.currentTarget) ||
                         (Sheriff.madmateCanDieToSheriff && Madmate.madmate == Sheriff.currentTarget) ||
                         (Sheriff.canKillNeutrals && (Arsonist.arsonist == Sheriff.currentTarget || Jester.jester == Sheriff.currentTarget)) ||
                         (Jackal.jackal == Sheriff.currentTarget || Sidekick.sidekick == Sheriff.currentTarget)) {
-                        targetId = Sheriff.currentTarget.PlayerId;
+                        //targetId = Sheriff.currentTarget.PlayerId;
+                        misfire = false;
                     }
                     else {
-                        targetId = PlayerControl.LocalPlayer.PlayerId;
+                        //targetId = PlayerControl.LocalPlayer.PlayerId;
+                        misfire = true;
                     }
                     MessageWriter killWriter = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.SheriffKill, Hazel.SendOption.Reliable, -1);
                     killWriter.Write(targetId);
+                    killWriter.Write(misfire);
                     AmongUsClient.Instance.FinishRpcImmediately(killWriter);
-                    RPCProcedure.sheriffKill(targetId);
+                    RPCProcedure.sheriffKill(targetId, misfire);
 
                     sheriffKillButton.Timer = sheriffKillButton.MaxTimer;
                     Sheriff.currentTarget = null;
@@ -738,16 +742,24 @@ namespace TheOtherRoles
                         writer.EndMessage();
                         RPCProcedure.sealVent(SecurityGuard.ventTarget.Id);
                         SecurityGuard.ventTarget = null;
-                    } else if (PlayerControl.GameOptions.MapId != 1) { // Place camera if there's no vent and it's not MiraHQ
+                    } else if (PlayerControl.GameOptions.MapId != 1 && MapOptions.couldUseCameras) { // Place camera if there's no vent and it's not MiraHQ
                         var pos = PlayerControl.LocalPlayer.transform.position;
                         byte[] buff = new byte[sizeof(float) * 2];
                         Buffer.BlockCopy(BitConverter.GetBytes(pos.x), 0, buff, 0*sizeof(float), sizeof(float));
                         Buffer.BlockCopy(BitConverter.GetBytes(pos.y), 0, buff, 1*sizeof(float), sizeof(float));
 
+                        byte roomId;
+                        try {
+                            roomId = (byte)HudManager.Instance.roomTracker.LastRoom.RoomId;
+                        } catch {
+                            roomId = 255;
+                        }
+
                         MessageWriter writer = AmongUsClient.Instance.StartRpc(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.PlaceCamera, Hazel.SendOption.Reliable);
                         writer.WriteBytesAndSize(buff);
+                        writer.Write(roomId);
                         writer.EndMessage();
-                        RPCProcedure.placeCamera(buff); 
+                        RPCProcedure.placeCamera(buff, roomId); 
                     }
                     securityGuardButton.Timer = securityGuardButton.MaxTimer;
                 },
@@ -758,7 +770,7 @@ namespace TheOtherRoles
 
                     if (SecurityGuard.ventTarget != null)
                         return SecurityGuard.remainingScrews >= SecurityGuard.ventPrice && PlayerControl.LocalPlayer.CanMove;
-                    return PlayerControl.GameOptions.MapId != 1 && SecurityGuard.remainingScrews >= SecurityGuard.camPrice && PlayerControl.LocalPlayer.CanMove;
+                    return PlayerControl.GameOptions.MapId != 1 && MapOptions.couldUseCameras && SecurityGuard.remainingScrews >= SecurityGuard.camPrice && PlayerControl.LocalPlayer.CanMove;
                 },
                 () => { securityGuardButton.Timer = securityGuardButton.MaxTimer; },
                 SecurityGuard.getPlaceCameraButtonSprite(),
@@ -830,9 +842,7 @@ namespace TheOtherRoles
 
             Vector3 gmCalcPos(byte index)
             {
-                int offset = index;
-                //if (offset >= GM.gm.PlayerId) offset--;
-                return new Vector3(-0.25f, -0.25f, 0) + Vector3.right * offset * 0.55f;
+                return new Vector3(-0.25f, -0.25f, 0) + Vector3.right * index * 0.55f;
             }
 
             Action gmButtonOnClick(byte index)

@@ -31,6 +31,15 @@ namespace TheOtherRoles.Patches {
         OpportunistWin
     }
 
+    enum FinalStatus {
+        Alive,
+        Torched,
+        Exiled,
+        Dead,
+        Suicide,
+        Disconnected
+    }
+
     static class AdditionalTempData {
         // Should be implemented using a proper GameOverReason in the future
         public static WinCondition winCondition = WinCondition.Default;
@@ -48,12 +57,10 @@ namespace TheOtherRoles.Patches {
 
         internal class PlayerRoleInfo {
             public string PlayerName { get; set; }
-            public List<RoleInfo> Roles {get;set;}
-            public int TasksCompleted  {get;set;}
-            public int TasksTotal  {get;set;}
-            public bool IsDead { get; set; }
-            public bool IsExiled { get; set; }
-            public bool IsDisconnected { get; set; }
+            public List<RoleInfo> Roles { get; set; }
+            public int TasksCompleted  { get; set; }
+            public int TasksTotal  { get; set; }
+            public FinalStatus Status { get; set; }
         }
     }
 
@@ -80,16 +87,21 @@ namespace TheOtherRoles.Patches {
                 //var p = pc.Data;
                 var roles = RoleInfo.getRoleInfoForPlayer(p.Object);
                 var (tasksCompleted, tasksTotal) = TasksHandler.taskInfo(p);
-                var isDead = p.IsDead == true;
-                var isDisconnected = p.Disconnected == true;
+                var finalStatus = 
+                    p.Disconnected == true ? FinalStatus.Disconnected :
+                    exiledPlayers.Contains(p.PlayerId) ? FinalStatus.Exiled :
+                    suicidedPlayers.Contains(p.PlayerId) ? FinalStatus.Suicide :
+                    p.IsDead == true ? FinalStatus.Dead :
+                    gameOverReason == (GameOverReason)CustomGameOverReason.ArsonistWin && Arsonist.arsonist != p.Object ? FinalStatus.Torched : 
+                    FinalStatus.Alive;
+
                 AdditionalTempData.playerRoles.Add(new AdditionalTempData.PlayerRoleInfo()
                 {
                     PlayerName = p.PlayerName,
                     Roles = roles,
                     TasksTotal = tasksTotal,
-                    TasksCompleted = tasksCompleted,
-                    IsDead = isDead,
-                    IsDisconnected = isDisconnected
+                    TasksCompleted = gameOverReason == GameOverReason.HumansByTask ? tasksTotal : tasksCompleted,
+                    Status = finalStatus,
                 });
             }
 
@@ -107,8 +119,12 @@ namespace TheOtherRoles.Patches {
 
             // GM can't win at all, and we're treating lovers as a separate class
             if (GM.gm != null) notWinners.Add(GM.gm);
-            if (Lovers.lover1 != null) notWinners.Add(Lovers.lover1);
-            if (Lovers.lover2 != null) notWinners.Add(Lovers.lover2);
+
+            if (Lovers.separateTeam)
+            {
+                if (Lovers.lover1 != null) notWinners.Add(Lovers.lover1);
+                if (Lovers.lover2 != null) notWinners.Add(Lovers.lover2);
+            }
 
             List<WinningPlayerData> winnersToRemove = new List<WinningPlayerData>();
             foreach (WinningPlayerData winner in TempData.winners) {
@@ -116,27 +132,32 @@ namespace TheOtherRoles.Patches {
             }
             foreach (var winner in winnersToRemove) TempData.winners.Remove(winner);
 
+
             bool jesterWin = Jester.jester != null && gameOverReason == (GameOverReason)CustomGameOverReason.JesterWin;
             bool arsonistWin = Arsonist.arsonist != null && gameOverReason == (GameOverReason)CustomGameOverReason.ArsonistWin;
             bool miniLose = Mini.mini != null && gameOverReason == (GameOverReason)CustomGameOverReason.MiniLose;
-            bool loversWin = Lovers.existingAndAlive() && 
+            bool loversWin = Lovers.existingAndAlive() && !(Lovers.separateTeam && gameOverReason == GameOverReason.HumansByTask);
+            /*bool loversWin = Lovers.existingAndAlive() && 
                 (gameOverReason == (GameOverReason)CustomGameOverReason.LoversWin || 
                     (TempData.DidHumansWin(gameOverReason) && !Lovers.existingWithKiller() && Lovers.canWinWithCrew)
-                ); // Either they win if they are among the last 3 players, or they win if they are both Crewmates and both alive and the Crew wins (Team Imp/Jackal Lovers can only win solo wins)
+                ); // Either they win if they are among the last 3 players, or they win if they are both Crewmates and both alive and the Crew wins (Team Imp/Jackal Lovers can only win solo wins)*/
             bool teamJackalWin = gameOverReason == (GameOverReason)CustomGameOverReason.TeamJackalWin && ((Jackal.jackal != null && !Jackal.jackal.Data.IsDead) || (Sidekick.sidekick != null && !Sidekick.sidekick.Data.IsDead));
             bool opportunistWin = Opportunist.opportunist != null && !Opportunist.opportunist.Data.IsDead;
 
+
             // Mini lose
-            if (miniLose) {
+            if (miniLose)
+            {
                 TempData.winners = new Il2CppSystem.Collections.Generic.List<WinningPlayerData>();
                 WinningPlayerData wpd = new WinningPlayerData(Mini.mini.Data);
                 wpd.IsYou = false; // If "no one is the Mini", it will display the Mini, but also show defeat to everyone
                 TempData.winners.Add(wpd);
-                AdditionalTempData.winCondition = WinCondition.MiniLose;  
+                AdditionalTempData.winCondition = WinCondition.MiniLose;
             }
 
             // Jester win
-            else if (jesterWin) {
+            else if (jesterWin)
+            {
                 TempData.winners = new Il2CppSystem.Collections.Generic.List<WinningPlayerData>();
                 WinningPlayerData wpd = new WinningPlayerData(Jester.jester.Data);
                 TempData.winners.Add(wpd);
@@ -144,7 +165,8 @@ namespace TheOtherRoles.Patches {
             }
 
             // Arsonist win
-            else if (arsonistWin) {
+            else if (arsonistWin)
+            {
                 TempData.winners = new Il2CppSystem.Collections.Generic.List<WinningPlayerData>();
                 WinningPlayerData wpd = new WinningPlayerData(Arsonist.arsonist.Data);
                 TempData.winners.Add(wpd);
@@ -152,23 +174,24 @@ namespace TheOtherRoles.Patches {
             }
 
             // Lovers win conditions
-            else if (loversWin) {
+            else if (loversWin)
+            {
                 // Double win for lovers, crewmates also win
-                if (!Lovers.existingWithKiller() && Lovers.canWinWithCrew) {
+                if (TempData.DidHumansWin(gameOverReason) && !Lovers.separateTeam && !Lovers.existingWithKiller())
+                {
                     AdditionalTempData.winCondition = WinCondition.LoversTeamWin;
                     AdditionalTempData.extraConditions.Add(WinCondition.LoversTeamWin);
-                    TempData.winners.Add(new WinningPlayerData(Lovers.lover1.Data));
-                    TempData.winners.Add(new WinningPlayerData(Lovers.lover2.Data));
                 }
                 // Lovers solo win
-                else {
+                else
+                {
                     AdditionalTempData.winCondition = WinCondition.LoversSoloWin;
                     TempData.winners = new Il2CppSystem.Collections.Generic.List<WinningPlayerData>();
                     TempData.winners.Add(new WinningPlayerData(Lovers.lover1.Data));
                     TempData.winners.Add(new WinningPlayerData(Lovers.lover2.Data));
                 }
             }
-            
+
             // Jackal win condition (should be implemented using a proper GameOverReason in the future)
             else if (teamJackalWin) {
                 // Jackal wins if nobody except jackal is alive
@@ -214,6 +237,11 @@ namespace TheOtherRoles.Patches {
                 if (toAdd) {
                     TempData.winners.Add(new WinningPlayerData(Opportunist.opportunist.Data));
                 }
+            }
+
+            foreach (WinningPlayerData wpd in TempData.winners)
+            {
+                wpd.IsDead = wpd.IsDead || AdditionalTempData.playerRoles.Any(x => x.PlayerName == wpd.Name && x.Status != FinalStatus.Alive);
             }
 
             // Reset Settings
@@ -317,31 +345,32 @@ namespace TheOtherRoles.Patches {
                     RoleId idX = roleX == null ? RoleId.NoRole : roleX.roleId;
                     RoleId idY = roleY == null ? RoleId.NoRole : roleY.roleId;
 
-                    if (x.IsDisconnected == y.IsDisconnected)
-                    {
-                        if (x.IsDead == y.IsDead)
+                    if (x.Status == y.Status) {
+                        if (idX == idY)
                         {
-                            if (idX == idY)
-                            {
-                                return x.PlayerName.CompareTo(y.PlayerName);
-                            }
-                            return idX.CompareTo(idY);
+                            return x.PlayerName.CompareTo(y.PlayerName);
                         }
-                        return x.IsDead.CompareTo(y.IsDead);
+                        return idX.CompareTo(idY);
                     }
-                    return x.IsDisconnected.CompareTo(y.IsDisconnected);
+                    return x.Status.CompareTo(y.Status);
 
                 });
                 foreach(var data in AdditionalTempData.playerRoles) {
                     var roles = string.Join(" ", data.Roles.Select(x => Helpers.cs(x.color, x.name)));
                     var taskInfo = data.TasksTotal > 0 ? $"<color=#FAD934FF>{data.TasksCompleted}/{data.TasksTotal}</color>" : "";
-                    var aliveDead = data.IsDead ?
-                        $"{ModTranslation.getString("roleSummaryDead")}" :
-                        data.IsDisconnected ?
-                        $"{ModTranslation.getString("roleSummaryDC")}" :
-                        $"{ModTranslation.getString("roleSummaryAlive")}";
+                    string aliveDead = "";
+                    switch (data.Status)
+                    {
+                        case FinalStatus.Alive: aliveDead = ModTranslation.getString("roleSummaryAlive"); break;
+                        case FinalStatus.Torched: aliveDead = ModTranslation.getString("roleSummaryTorched"); break;
+                        case FinalStatus.Exiled: aliveDead = ModTranslation.getString("roleSummaryExiled"); break;
+                        case FinalStatus.Dead: aliveDead = ModTranslation.getString("roleSummaryDead"); break;
+                        case FinalStatus.Suicide: aliveDead = ModTranslation.getString("roleSummarySuicide"); break;
+                        case FinalStatus.Disconnected: aliveDead = ModTranslation.getString("roleSummaryDC"); break;
+                        default: aliveDead = ""; break;
+                    }
 
-                    roleSummaryText.AppendLine($"{data.PlayerName}<pos=18.5%>{taskInfo}<pos=25%>{aliveDead}<pos=32%>{roles}");
+                    roleSummaryText.AppendLine($"{data.PlayerName}<pos=18.5%>{taskInfo}<pos=25%>{aliveDead}<pos=34%>{roles}");
                 }
                 TMPro.TMP_Text roleSummaryTextMesh = roleSummary.GetComponent<TMPro.TMP_Text>();
                 roleSummaryTextMesh.alignment = TMPro.TextAlignmentOptions.TopLeft;
@@ -450,7 +479,7 @@ namespace TheOtherRoles.Patches {
         }
 
         private static bool CheckAndEndGameForJackalWin(ShipStatus __instance, PlayerStatistics statistics) {
-            if (statistics.TeamJackalAlive >= statistics.TotalAlive - statistics.TeamJackalAlive && statistics.TeamImpostorsAlive == 0 && !(statistics.TeamJackalHasAliveLover && statistics.TeamLoversAlive == 2)) {
+            if (statistics.TeamJackalAlive >= statistics.TotalAlive - statistics.TeamJackalAlive && statistics.TeamImpostorsAlive == 0 && !(statistics.TeamJackalLovers < 2 && statistics.TeamLoversAlive == 2)) {
                 __instance.enabled = false;
                 ShipStatus.RpcEndGame((GameOverReason)CustomGameOverReason.TeamJackalWin, false);
                 return true;
@@ -459,7 +488,7 @@ namespace TheOtherRoles.Patches {
         }
 
         private static bool CheckAndEndGameForImpostorWin(ShipStatus __instance, PlayerStatistics statistics) {
-            if (statistics.TeamImpostorsAlive >= statistics.TotalAlive - statistics.TeamImpostorsAlive && statistics.TeamJackalAlive == 0 && !(statistics.TeamImpostorHasAliveLover && statistics.TeamLoversAlive == 2)) {
+            if (statistics.TeamImpostorsAlive >= statistics.TotalAlive - statistics.TeamImpostorsAlive && statistics.TeamJackalAlive == 0 && !(statistics.TeamImpostorLovers < 2 && statistics.TeamLoversAlive == 2)) {
                 __instance.enabled = false;
                 GameOverReason endReason;
                 switch (TempData.LastDeathReason) {
@@ -501,8 +530,8 @@ namespace TheOtherRoles.Patches {
         public int TeamJackalAlive {get;set;}
         public int TeamLoversAlive {get;set;}
         public int TotalAlive {get;set;}
-        public bool TeamImpostorHasAliveLover {get;set;}
-        public bool TeamJackalHasAliveLover {get;set;}
+        public int TeamImpostorLovers {get;set;}
+        public int TeamJackalLovers {get;set;}
 
         public PlayerStatistics(ShipStatus __instance) {
             GetPlayerCounts();
@@ -517,8 +546,8 @@ namespace TheOtherRoles.Patches {
             int numImpostorsAlive = 0;
             int numLoversAlive = 0;
             int numTotalAlive = 0;
-            bool impLover = false;
-            bool jackalLover = false;
+            int impLovers = 0;
+            int jackalLovers = 0;
 
             for (int i = 0; i < GameData.Instance.PlayerCount; i++)
             {
@@ -534,15 +563,15 @@ namespace TheOtherRoles.Patches {
 
                         if (playerInfo.IsImpostor) {
                             numImpostorsAlive++;
-                            if (lover) impLover = true;
+                            if (lover) impLovers++;
                         }
                         if (Jackal.jackal != null && Jackal.jackal.PlayerId == playerInfo.PlayerId) {
                             numJackalAlive++;
-                            if (lover) jackalLover = true;
+                            if (lover) jackalLovers++;
                         }
                         if (Sidekick.sidekick != null && Sidekick.sidekick.PlayerId == playerInfo.PlayerId) {
                             numJackalAlive++;
-                            if (lover) jackalLover = true;
+                            if (lover) jackalLovers++;
                         }
                     }
                 }
@@ -559,8 +588,8 @@ namespace TheOtherRoles.Patches {
             TeamImpostorsAlive = numImpostorsAlive;
             TeamLoversAlive = numLoversAlive;
             TotalAlive = numTotalAlive;
-            TeamImpostorHasAliveLover = impLover;
-            TeamJackalHasAliveLover = jackalLover;
+            TeamImpostorLovers = impLovers;
+            TeamJackalLovers = jackalLovers;
         }
     }
 }

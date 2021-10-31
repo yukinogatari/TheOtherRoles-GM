@@ -18,6 +18,8 @@ namespace TheOtherRoles
     public static class TheOtherRoles
     {
         public static System.Random rnd = new System.Random((int)DateTime.Now.Ticks);
+        public static List<int> exiledPlayers = new List<int>();
+        public static List<int> suicidedPlayers = new List<int>();
 
         public enum Teams
         {
@@ -32,6 +34,9 @@ namespace TheOtherRoles
 
         public static void clearAndReloadRoles()
         {
+            exiledPlayers.Clear();
+            suicidedPlayers.Clear();
+
             Jester.clearAndReload();
             Mayor.clearAndReload();
             Engineer.clearAndReload();
@@ -175,6 +180,7 @@ namespace TheOtherRoles
             public static int numShots = 2;
             public static int maxShots = 2;
             public static bool canKillNeutrals = false;
+            public static bool misfireKillsTarget = false;
             public static bool spyCanDieToSheriff = false;
             public static bool madmateCanDieToSheriff = false;
 
@@ -189,6 +195,7 @@ namespace TheOtherRoles
                 canKillNeutrals = CustomOptionHolder.sheriffCanKillNeutrals.getBool();
                 spyCanDieToSheriff = CustomOptionHolder.spyCanDieToSheriff.getBool();
                 madmateCanDieToSheriff = CustomOptionHolder.madmateCanDieToSheriff.getBool();
+                misfireKillsTarget = CustomOptionHolder.sheriffMisfireKillsTarget.getBool();
             }
         }
 
@@ -382,8 +389,16 @@ namespace TheOtherRoles
             public static bool notAckedExiledIsLover = false;
 
             // Making this closer to the au.libhalt.net version of Lovers
-            public static bool canWinWithCrew = false;
+            public static bool separateTeam = true;
             public static bool tasksCount = false;
+
+            public static bool hasTasks
+            {
+                get
+                {
+                    return !separateTeam || tasksCount;
+                }
+            }
 
             public static bool existing()
             {
@@ -409,7 +424,7 @@ namespace TheOtherRoles
                 lover2 = null;
                 notAckedExiledIsLover = false;
                 bothDie = CustomOptionHolder.loversBothDie.getBool();
-                canWinWithCrew = CustomOptionHolder.loversWinWithCrew.getBool();
+                separateTeam = CustomOptionHolder.loversSeparateTeam.getBool();
                 tasksCount = CustomOptionHolder.loversTasksCount.getBool();
             }
         }
@@ -465,13 +480,13 @@ namespace TheOtherRoles
                 if (Camouflager.camouflager != null && Camouflager.camouflageTimer > 0f) return;
 
                 // next, if we're currently morphed, set our skin to the target
-                if (morphTimer > 0f && morphTarget != null && MapOptions.morphData.ContainsKey(morphTarget.PlayerId))
+                if (morphTimer > 0f && morphTarget != null && MorphData.morphData.ContainsKey(morphTarget.PlayerId))
                 {
-                    MapOptions.morphData[morphTarget.PlayerId]?.applyToPlayer(morphling);
+                    MorphData.morphData[morphTarget.PlayerId]?.applyToPlayer(morphling);
                 }
-                else if (MapOptions.morphData.ContainsKey(morphling.PlayerId))
+                else if (MorphData.morphData.ContainsKey(morphling.PlayerId))
                 {
-                    MapOptions.morphData[morphling.PlayerId]?.applyToPlayer(morphling);
+                    MorphData.morphData[morphling.PlayerId]?.applyToPlayer(morphling);
                 }
             }
 
@@ -552,7 +567,7 @@ namespace TheOtherRoles
                 foreach (PlayerControl p in PlayerControl.AllPlayerControls)
                 {
                     if (p == null) continue;
-                    if (!MapOptions.morphData.ContainsKey(p.PlayerId)) continue;
+                    if (!MorphData.morphData.ContainsKey(p.PlayerId)) continue;
 
                     // special case for morphling
                     if (Morphling.morphling?.PlayerId == p.PlayerId)
@@ -561,7 +576,7 @@ namespace TheOtherRoles
                     }
                     else
                     {
-                        MapOptions.morphData[p.PlayerId].applyToPlayer(p);
+                        MorphData.morphData[p.PlayerId].applyToPlayer(p);
                     }
                 }
             }
@@ -1107,6 +1122,37 @@ namespace TheOtherRoles
             public static bool dousedEveryoneAlive()
             {
                 return PlayerControl.AllPlayerControls.ToArray().All(x => { return x == Arsonist.arsonist || x.Data.IsDead || x.Data.Disconnected || x.isGM() || Arsonist.dousedPlayers.Any(y => y.PlayerId == x.PlayerId); });
+            }
+
+            public static void updateIcons()
+            {
+                if (Arsonist.arsonist != null && Arsonist.arsonist == PlayerControl.LocalPlayer)
+                {
+                    int visibleCounter = 0;
+                    Vector3 bottomLeft = HudManager.Instance.UseButton.transform.localPosition;
+                    bottomLeft.x *= -1;
+                    bottomLeft += new Vector3(-0.25f, -0.25f, 0);
+
+                    foreach (PlayerControl p in PlayerControl.AllPlayerControls)
+                    {
+                        if (p.PlayerId == PlayerControl.LocalPlayer.PlayerId) continue;
+                        if (!MapOptions.playerIcons.ContainsKey(p.PlayerId)) continue;
+
+                        if (p.Data.IsDead || p.Data.Disconnected)
+                        {
+                            MapOptions.playerIcons[p.PlayerId].gameObject.SetActive(false);
+                        }
+                        else
+                        {
+                            MapOptions.playerIcons[p.PlayerId].gameObject.SetActive(true);
+                            MapOptions.playerIcons[p.PlayerId].transform.localScale = Vector3.one * 0.25f;
+                            MapOptions.playerIcons[p.PlayerId].transform.localPosition = bottomLeft + Vector3.right * visibleCounter * 0.45f;
+                            visibleCounter++;
+                        }
+                        bool isDoused = dousedPlayers.Any(x => x.PlayerId == p.PlayerId);
+                        MapOptions.playerIcons[p.PlayerId].setSemiTransparent(!isDoused);
+                    }
+                }
             }
 
             public static void clearAndReload()

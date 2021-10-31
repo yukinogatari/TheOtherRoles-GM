@@ -188,7 +188,15 @@ namespace TheOtherRoles.Patches {
                 // Lovers save next to be exiled, because RPC of ending game comes before RPC of exiled
                 Lovers.notAckedExiledIsLover = false;
                 if (exiled != null)
-                    Lovers.notAckedExiledIsLover = ((Lovers.lover1 != null && Lovers.lover1.PlayerId == exiled.PlayerId) || (Lovers.lover2 != null && Lovers.lover2.PlayerId == exiled.PlayerId));
+                {
+                    exiledPlayers.Add(exiled.PlayerId);
+                    bool isLovers = Lovers.notAckedExiledIsLover = exiled.Object.isLovers();
+
+                    if (isLovers)
+                    {
+                        suicidedPlayers.Add(exiled.Object.getPartner().PlayerId);
+                    }
+                }
             }
         }
 

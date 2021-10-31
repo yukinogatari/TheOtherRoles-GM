@@ -15,7 +15,6 @@ namespace TheOtherRoles.Patches {
             RPCProcedure.setUnassignedRoles();
 
             // Generate and initialize player icons
-            int playerCounter = 0;
             if (PlayerControl.LocalPlayer != null && HudManager.Instance != null) {
                 Vector3 bottomLeft = new Vector3(-HudManager.Instance.UseButton.transform.localPosition.x, HudManager.Instance.UseButton.transform.localPosition.y, HudManager.Instance.UseButton.transform.localPosition.z);
                 foreach (PlayerControl p in PlayerControl.AllPlayerControls) {
@@ -28,16 +27,9 @@ namespace TheOtherRoles.Patches {
                     player.NameText.text = data.PlayerName;
                     player.SetFlipX(true);
                     MapOptions.playerIcons[p.PlayerId] = player;
-                    MapOptions.morphData[p.PlayerId] = new MorphData(p);
+                    MorphData.morphData[p.PlayerId] = new MorphData(p);
 
-                    if (PlayerControl.LocalPlayer == Arsonist.arsonist && p != Arsonist.arsonist)
-                    {
-                        player.transform.localPosition = bottomLeft + new Vector3(-0.25f, -0.25f, 0) + Vector3.right * playerCounter++ * 0.35f;
-                        player.transform.localScale = Vector3.one * 0.2f;
-                        player.setSemiTransparent(true);
-                        player.gameObject.SetActive(true);
-                    }
-                    else if (PlayerControl.LocalPlayer == BountyHunter.bountyHunter)
+                    if (PlayerControl.LocalPlayer == BountyHunter.bountyHunter)
                     {
                         player.transform.localPosition = bottomLeft + new Vector3(-0.25f, 0f, 0);
                         player.transform.localScale = Vector3.one * 0.4f;
@@ -45,9 +37,6 @@ namespace TheOtherRoles.Patches {
                     }
                     else if (PlayerControl.LocalPlayer == GM.gm)
                     {
-                        int offset = p.PlayerId;
-                        //if (offset >= GM.gm.PlayerId) offset--;
-
                         player.transform.localPosition = Vector3.zero;
                         player.transform.localScale = Vector3.one * 0.3f;
                         player.setSemiTransparent(false);
@@ -71,6 +60,8 @@ namespace TheOtherRoles.Patches {
                     BountyHunter.cooldownText.gameObject.SetActive(true);
                 }
             }
+
+            Arsonist.updateIcons();
 
             if (PlayerControl.LocalPlayer == GM.gm && !GM.hasTasks)
             {

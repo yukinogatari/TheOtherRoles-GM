@@ -17,7 +17,7 @@ namespace TheOtherRoles {
                 (PlayerControl.GameOptions.GhostsDoTasks || !playerInfo.IsDead) &&
                 !playerInfo.IsImpostor &&
                 !(playerInfo.Object.isGM() && !GM.hasTasks) &&
-                !(playerInfo.Object.isLovers() && !Lovers.tasksCount) &&
+                !(playerInfo.Object.isLovers() && !Lovers.hasTasks) &&
                 !playerInfo.Object.hasFakeTasks()
                 ) {
 
@@ -38,7 +38,7 @@ namespace TheOtherRoles {
                 __instance.CompletedTasks = 0;
                 for (int i = 0; i < __instance.AllPlayers.Count; i++) {
                     GameData.PlayerInfo playerInfo = __instance.AllPlayers[i];
-                    if (playerInfo.Object?.isLovers() == true && !Lovers.tasksCount)
+                    if (playerInfo.Object?.isLovers() == true && !Lovers.hasTasks)
                         continue;
                     var (playerCompleted, playerTotal) = taskInfo(playerInfo);
                     __instance.TotalTasks += playerTotal;
