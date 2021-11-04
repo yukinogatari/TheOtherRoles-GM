@@ -128,6 +128,11 @@ namespace TheOtherRoles.Patches
         [HarmonyPatch(typeof(MapBehaviour), nameof(MapBehaviour.ShowNormalMap))]
         class MapBehaviourShowNormalMapPatch
         {
+            static void Prefix(MapBehaviour __instance)
+            {
+                CustomOverlays.hideInfoOverlay();
+            }
+
             static void Postfix(MapBehaviour __instance)
             {
                 if (PlayerControl.LocalPlayer.isGM())

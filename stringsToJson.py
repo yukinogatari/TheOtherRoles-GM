@@ -31,7 +31,8 @@ def stringToJson(filename):
       
       for i, string in enumerate(row[1:]):
         if string.value:
-          data[i] = string.value.replace("\\n", "\n")
+          # I hate excel why did I do this to myself
+          data[i] = string.value.replace("\r", "").replace("_x000D_", "").replace("\\n", "\n")
       
       if data:
         stringData[name] = data

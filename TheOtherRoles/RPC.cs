@@ -130,11 +130,11 @@ namespace TheOtherRoles
             clearAndReloadRoles();
             clearGameHistory();
             setCustomButtonCooldowns();
-            MapBehaviorPatch.resetIcons();
             MorphData.resetMorphData();
             AdminPatch.ResetData();
             CameraPatch.ResetData();
             VitalsPatch.ResetData();
+            MapBehaviorPatch.resetIcons();
             unassignedRoles.Clear();
         }
 
@@ -362,7 +362,10 @@ namespace TheOtherRoles
             if (misfire)
             {
                 Sheriff.sheriff.MurderPlayer(Sheriff.sheriff);
+                misfiredPlayers.Add(Sheriff.sheriff.PlayerId);
+
                 if (!Sheriff.misfireKillsTarget) return;
+                misfiredPlayers.Add(targetId);
             }
             
             foreach (PlayerControl player in PlayerControl.AllPlayerControls)
@@ -612,6 +615,10 @@ namespace TheOtherRoles
         public static void erasePlayerRoles(byte playerId, bool ignoreLovers = false) {
             PlayerControl player = Helpers.playerById(playerId);
             if (player == null) return;
+
+            // Don't give a former neutral role tasks because that destroys the balance.
+            if (player.isNeutral())
+                player.clearAllTasks();
 
             // Crewmate roles
             if (player == Mayor.mayor) Mayor.clearAndReload();

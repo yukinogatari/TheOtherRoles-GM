@@ -37,6 +37,7 @@ namespace TheOtherRoles.Patches {
         Exiled,
         Dead,
         Suicide,
+        Misfire,
         Disconnected
     }
 
@@ -89,10 +90,12 @@ namespace TheOtherRoles.Patches {
                 var (tasksCompleted, tasksTotal) = TasksHandler.taskInfo(p);
                 var finalStatus = 
                     p.Disconnected == true ? FinalStatus.Disconnected :
-                    exiledPlayers.Contains(p.PlayerId) ? FinalStatus.Exiled :
                     suicidedPlayers.Contains(p.PlayerId) ? FinalStatus.Suicide :
+                    misfiredPlayers.Contains(p.PlayerId) ? FinalStatus.Misfire :
+                    exiledPlayers.Contains(p.PlayerId) ? FinalStatus.Exiled :
                     p.IsDead == true ? FinalStatus.Dead :
-                    gameOverReason == (GameOverReason)CustomGameOverReason.ArsonistWin && Arsonist.arsonist != p.Object ? FinalStatus.Torched : 
+                    gameOverReason == (GameOverReason)CustomGameOverReason.ArsonistWin && Arsonist.arsonist != p.Object ? FinalStatus.Torched :
+                    gameOverReason == GameOverReason.ImpostorBySabotage && !p.IsImpostor ? FinalStatus.Dead :
                     FinalStatus.Alive;
 
                 AdditionalTempData.playerRoles.Add(new AdditionalTempData.PlayerRoleInfo()
@@ -366,6 +369,7 @@ namespace TheOtherRoles.Patches {
                         case FinalStatus.Exiled: aliveDead = ModTranslation.getString("roleSummaryExiled"); break;
                         case FinalStatus.Dead: aliveDead = ModTranslation.getString("roleSummaryDead"); break;
                         case FinalStatus.Suicide: aliveDead = ModTranslation.getString("roleSummarySuicide"); break;
+                        case FinalStatus.Misfire: aliveDead = ModTranslation.getString("roleSummaryMisfire"); break;
                         case FinalStatus.Disconnected: aliveDead = ModTranslation.getString("roleSummaryDC"); break;
                         default: aliveDead = ""; break;
                     }

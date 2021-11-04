@@ -105,7 +105,6 @@ namespace TheOtherRoles
     {
         static void Postfix()
         {
-            RoleInfo.Load();
             OptionsMenuBehaviourStartPatch.updateButtons();
         }
     }

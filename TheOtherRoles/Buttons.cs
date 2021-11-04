@@ -198,7 +198,7 @@ namespace TheOtherRoles
                     if ((Sheriff.currentTarget.Data.IsImpostor && (Sheriff.currentTarget != Mini.mini || Mini.isGrownUp())) ||
                         (Sheriff.spyCanDieToSheriff && Spy.spy == Sheriff.currentTarget) ||
                         (Sheriff.madmateCanDieToSheriff && Madmate.madmate == Sheriff.currentTarget) ||
-                        (Sheriff.canKillNeutrals && (Arsonist.arsonist == Sheriff.currentTarget || Jester.jester == Sheriff.currentTarget)) ||
+                        (Sheriff.canKillNeutrals && Sheriff.currentTarget.isNeutral()) ||
                         (Jackal.jackal == Sheriff.currentTarget || Sidekick.sidekick == Sheriff.currentTarget)) {
                         //targetId = Sheriff.currentTarget.PlayerId;
                         misfire = false;

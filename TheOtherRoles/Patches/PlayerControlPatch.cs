@@ -21,7 +21,7 @@ namespace TheOtherRoles.Patches {
             float num = GameOptionsData.KillDistances[Mathf.Clamp(PlayerControl.GameOptions.KillDistance, 0, 2)];
             if (!ShipStatus.Instance) return result;
             if (targetingPlayer == null) targetingPlayer = PlayerControl.LocalPlayer;
-            if (targetingPlayer.Data.IsDead) return result;
+            if (targetingPlayer.Data.IsDead || targetingPlayer.inVent) return result;
             if (targetingPlayer.isGM()) return result;
 
             // GM is untargetable by anything
@@ -471,6 +471,7 @@ namespace TheOtherRoles.Patches {
                 if (Snitch.localArrows.Count != 0 && Snitch.localArrows[0] != null)
                 {
                     Snitch.localArrows[0].arrow.SetActive(true);
+                    Snitch.localArrows[0].image.color = Color.blue;
                     Snitch.localArrows[0].Update(Snitch.snitch.transform.position);
                 }
             }
@@ -480,11 +481,14 @@ namespace TheOtherRoles.Patches {
                 foreach (PlayerControl p in PlayerControl.AllPlayerControls)
                 {
                     if (!p.Data.IsDead && (p.Data.IsImpostor || (Snitch.includeTeamJackal && (p == Jackal.jackal || p == Sidekick.sidekick)))) {
+                        // Update the arrows' color every time bc things go weird when you add a sidekick or someone dies
+                        Color c = Snitch.teamJackalUseDifferentArrowColor && (p == Jackal.jackal || p == Sidekick.sidekick) ? Jackal.color : Palette.ImpostorRed;
+
                         if (arrowIndex >= Snitch.localArrows.Count) {
-                            if (Snitch.teamJackalUseDifferentArrowColor && (p == Jackal.jackal || p == Sidekick.sidekick)) Snitch.localArrows.Add(new Arrow(Jackal.color));
-                            else Snitch.localArrows.Add(new Arrow(Palette.ImpostorRed));
+                            Snitch.localArrows.Add(new Arrow(c));
                         }
                         if (arrowIndex < Snitch.localArrows.Count && Snitch.localArrows[arrowIndex] != null) {
+                            Snitch.localArrows[arrowIndex].image.color = c;
                             Snitch.localArrows[arrowIndex].arrow.SetActive(true);
                             Snitch.localArrows[arrowIndex].Update(p.transform.position);
                         }

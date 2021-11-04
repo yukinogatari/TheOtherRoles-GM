@@ -36,7 +36,7 @@ namespace TheOtherRoles
             p.SetHat(hat, color);
             Helpers.setSkinWithAnim(p.MyPhysics, skin);
             p.SetPet(pet);
-            p.CurrentPet.Visible = visible;
+            p.CurrentPet.Visible = visible && !p.Data.IsDead;
             p.SetColor(color);
         }
     }

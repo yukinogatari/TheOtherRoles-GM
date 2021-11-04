@@ -372,6 +372,7 @@ namespace TheOtherRoles.Modules {
 
                 var orderedKeys = packages.Keys.OrderBy((string x) => {
                     if (x == innerslothPackageName) return 1000;
+                    if (x.Contains("‚µ‚¤‚Ë")) return 10;
                     if (x == "Developer Hats") return 0;
                     return 500;
                 });
@@ -421,7 +422,13 @@ namespace TheOtherRoles.Modules {
         }
 
         private static async Task LaunchHatFetcherAsync() {
-            foreach (string repo in hatRepos)
+            hatdetails = new List<CustomHatOnline>();
+            List<string> repos = new List<string>(hatRepos);
+
+            if (TheOtherRolesPlugin.DebugRepo.Value != "")
+                repos.Insert(0, TheOtherRolesPlugin.DebugRepo.Value);
+
+            foreach (string repo in repos)
             {
                 try
                 {
@@ -520,7 +527,7 @@ namespace TheOtherRoles.Modules {
                     }
                 }
 
-                hatdetails = hatdatas;
+                hatdetails.AddRange(hatdatas);
             } catch (System.Exception ex) {
                 TheOtherRolesPlugin.Instance.Log.LogError(ex.ToString());
                 System.Console.WriteLine(ex);

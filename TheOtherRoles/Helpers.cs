@@ -169,7 +169,7 @@ namespace TheOtherRoles {
                 var task = new GameObject("RoleTask").AddComponent<ImportantTextTask>();
                 task.transform.SetParent(player.transform, false);
 
-                if (roleInfo.name == "Jackal") {
+                if (roleInfo.roleId == RoleId.Jackal) {
                     if (Jackal.canCreateSidekick)
                     {
                         task.Text = cs(roleInfo.color, $"{roleInfo.name}: " + ModTranslation.getString("jackalWithSidekick"));
@@ -196,14 +196,19 @@ namespace TheOtherRoles {
             return n != StringNames.ServerNA && n != StringNames.ServerEU && n != StringNames.ServerAS;
         }
 
+        public static bool isNeutral(this PlayerControl player)
+        {
+            return (player != null &&
+                   (player == Jackal.jackal ||
+                    player == Sidekick.sidekick ||
+                    Jackal.formerJackals.Contains(player) ||
+                    player == Arsonist.arsonist ||
+                    player == Jester.jester ||
+                    player == Opportunist.opportunist));
+        }
+
         public static bool hasFakeTasks(this PlayerControl player) {
-            return (player == Opportunist.opportunist ||
-                    player == Madmate.madmate || 
-                    player == Jester.jester || 
-                    player == Jackal.jackal || 
-                    player == Sidekick.sidekick || 
-                    player == Arsonist.arsonist || 
-                    Jackal.formerJackals.Contains(player));
+            return player.isNeutral() || player == Madmate.madmate || (player.isLovers() && Lovers.separateTeam && !Lovers.tasksCount);
         }
 
         public static bool isGM(this PlayerControl player)
@@ -216,6 +221,22 @@ namespace TheOtherRoles {
             return player != null &&
                 ((Lovers.lover1 != null && player == Lovers.lover1) ||
                 (Lovers.lover2 != null && player == Lovers.lover2));
+        }
+
+        public static bool hasAliveKillingLover(this PlayerControl player)
+        {
+            return player.isLovers() && Lovers.existingAndAlive() && Lovers.existingWithKiller();
+        }
+
+        public static PlayerControl getPartner(this PlayerControl player)
+        {
+            if (player == null)
+                return null;
+            if (Lovers.lover1 == player)
+                return Lovers.lover2;
+            if (Lovers.lover2 == player)
+                return Lovers.lover1;
+            return null;
         }
 
         public static bool canBeErased(this PlayerControl player) {

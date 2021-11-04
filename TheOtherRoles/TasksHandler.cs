@@ -9,6 +9,15 @@ namespace TheOtherRoles {
     [HarmonyPatch]
     public static class TasksHandler {
 
+        [HarmonyPatch(typeof(NormalPlayerTask), nameof(NormalPlayerTask.FixedUpdate))]
+        public static class NormalPlayerTaskPatch
+        {
+            public static void Postfix(NormalPlayerTask __instance)
+            {
+                if (__instance.IsComplete && __instance.Arrow?.isActiveAndEnabled == true) __instance.Arrow?.gameObject?.SetActive(false);
+            }
+        }
+
         public static Tuple<int, int> taskInfo(GameData.PlayerInfo playerInfo) {
             int TotalTasks = 0;
             int CompletedTasks = 0;

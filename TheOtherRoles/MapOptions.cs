@@ -44,9 +44,9 @@ namespace TheOtherRoles{
             hidePlayerNames = CustomOptionHolder.hidePlayerNames.getBool();
 
             restrictDevices = CustomOptionHolder.restrictDevices.getSelection();
-            restrictAdminTime = restrictAdminTimeMax = CustomOptionHolder.restrictAdmin.getFloat() * 60f;
-            restrictCamerasTime = restrictCamerasTimeMax = CustomOptionHolder.restrictCameras.getFloat() * 60f;
-            restrictVitalsTime = restrictVitalsTimeMax = CustomOptionHolder.restrictVents.getFloat() * 60f;
+            restrictAdminTime = restrictAdminTimeMax = CustomOptionHolder.restrictAdmin.getFloat();
+            restrictCamerasTime = restrictCamerasTimeMax = CustomOptionHolder.restrictCameras.getFloat();
+            restrictVitalsTime = restrictVitalsTimeMax = CustomOptionHolder.restrictVents.getFloat();
             disableVents = CustomOptionHolder.disableVents.getBool();
 
             ghostsSeeRoles = TheOtherRolesPlugin.GhostsSeeRoles.Value;

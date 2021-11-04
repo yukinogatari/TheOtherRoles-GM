@@ -39,6 +39,7 @@ namespace TheOtherRoles
         public static ConfigEntry<string> StreamerModeReplacementColor { get; set; }
         public static ConfigEntry<string> Ip { get; set; }
         public static ConfigEntry<ushort> Port { get; set; }
+        public static ConfigEntry<string> DebugRepo { get; private set; }
 
         public static Sprite ModStamp;
 
@@ -65,7 +66,7 @@ namespace TheOtherRoles
             ShowRoleSummary = Config.Bind("Custom", "Show Role Summary", true);
             StreamerModeReplacementText = Config.Bind("Custom", "Streamer Mode Replacement Text", "\n\nThe Other Roles");
             StreamerModeReplacementColor = Config.Bind("Custom", "Streamer Mode Replacement Text Hex Color", "#87AAF5FF");
-            
+            DebugRepo = Config.Bind("Custom", "Debug Hat Repo", "");
 
             Ip = Config.Bind("Custom", "Custom Server IP", "127.0.0.1");
             Port = Config.Bind("Custom", "Custom Server Port", (ushort)22023);
@@ -81,7 +82,6 @@ namespace TheOtherRoles
             Instance = this;
             CustomOptionHolder.Load();
             CustomColors.Load();
-            RoleInfo.Load();
 
             Harmony.PatchAll();
         }

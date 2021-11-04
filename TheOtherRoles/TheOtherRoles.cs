@@ -20,6 +20,7 @@ namespace TheOtherRoles
         public static System.Random rnd = new System.Random((int)DateTime.Now.Ticks);
         public static List<int> exiledPlayers = new List<int>();
         public static List<int> suicidedPlayers = new List<int>();
+        public static List<int> misfiredPlayers = new List<int>();
 
         public enum Teams
         {
@@ -29,13 +30,16 @@ namespace TheOtherRoles
             Jester,
             Arsonist,
             Lovers,
-            None,
+            Opportunist,
+
+            None = int.MaxValue,
         }
 
         public static void clearAndReloadRoles()
         {
             exiledPlayers.Clear();
             suicidedPlayers.Clear();
+            CustomOverlays.resetOverlays();
 
             Jester.clearAndReload();
             Mayor.clearAndReload();
@@ -539,6 +543,7 @@ namespace TheOtherRoles
             public static float cooldown = 30f;
             public static float duration = 10f;
             public static float camouflageTimer = 0f;
+            public static bool randomColors = false;
 
             public static MorphData camoData;
 
@@ -553,6 +558,11 @@ namespace TheOtherRoles
             public static void startCamouflage()
             {
                 camouflageTimer = duration;
+
+                if (randomColors)
+                    camoData.color = (byte)TheOtherRoles.rnd.Next(0, Palette.PlayerColors.Length);
+                else
+                    camoData.color = 6;
 
                 foreach (PlayerControl p in PlayerControl.AllPlayerControls)
                 {
@@ -588,11 +598,12 @@ namespace TheOtherRoles
                 camouflageTimer = 0f;
                 cooldown = CustomOptionHolder.camouflagerCooldown.getFloat();
                 duration = CustomOptionHolder.camouflagerDuration.getFloat();
+                randomColors = CustomOptionHolder.camouflagerRandomColors.getBool();
 
                 camoData = new MorphData();
                 camoData.name = "";
+                camoData.hat = 0;
                 camoData.color = 6;
-                camoData.pet = 0;
                 camoData.skin = 0;
                 camoData.pet = 0;
             }
@@ -1178,6 +1189,7 @@ namespace TheOtherRoles
             private static Sprite targetSprite;
 
             public static int remainingShots = 2;
+            public static bool onlyAvailableRoles = true;
 
             public static Sprite getTargetSprite()
             {
@@ -1191,6 +1203,7 @@ namespace TheOtherRoles
                 guesser = null;
 
                 remainingShots = Mathf.RoundToInt(CustomOptionHolder.guesserNumberOfShots.getFloat());
+                onlyAvailableRoles = CustomOptionHolder.guesserOnlyAvailableRoles.getBool();
             }
         }
 
@@ -1354,23 +1367,6 @@ namespace TheOtherRoles
             {
                 opportunist = null;
             }
-        }
-        public static bool hasAliveKillingLover(this PlayerControl player)
-        {
-            if (!Lovers.existingAndAlive() || !Lovers.existingWithKiller())
-                return false;
-            return (player != null && (player == Lovers.lover1 || player == Lovers.lover2));
-        }
-
-        public static PlayerControl getPartner(this PlayerControl player)
-        {
-            if (player == null)
-                return null;
-            if (Lovers.lover1 == player)
-                return Lovers.lover2;
-            if (Lovers.lover2 == player)
-                return Lovers.lover1;
-            return null;
         }
     }
 

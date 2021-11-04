@@ -19,6 +19,30 @@ namespace TheOtherRoles.Patches {
         private static GameData.PlayerInfo target = null;
         private const float scale = 0.65f;
 
+        [HarmonyPatch(typeof(MeetingHud), nameof(MeetingHud.Update))]
+        class MeetingHudUpdatePatch
+        {
+            static void Postfix(MeetingHud __instance)
+            {
+                // Deactivate skip Button if skipping on emergency meetings is disabled
+                if (blockSkippingInEmergencyMeetings)
+                    __instance.SkipVoteButton.gameObject.SetActive(false);
+
+                // This fixes a bug with the original game where pressing the button and a kill happens simultaneously
+                // results in bodies sometimes being created *after* the meeting starts, marking them as dead and
+                // removing the corpses so there's no random corpses leftover afterwards
+                foreach (DeadBody b in UnityEngine.Object.FindObjectsOfType<DeadBody>()) {
+                    foreach (PlayerVoteArea pva in __instance.playerStates){
+                        if (pva.TargetPlayerId == b.ParentId) {
+                            pva.SetDead(pva.DidReport, true);
+                            pva.Overlay.gameObject.SetActive(true);
+                        }
+                    }
+                    UnityEngine.Object.Destroy(b.gameObject);
+                }
+            }
+        }
+
         [HarmonyPatch(typeof(MeetingHud), nameof(MeetingHud.CheckForEndVoting))]
         class MeetingCalculateVotesPatch {
             private static Dictionary<byte, int> CalculateVotes(MeetingHud __instance) {
@@ -87,6 +111,7 @@ namespace TheOtherRoles.Patches {
                 return false;
             }
         }
+
         [HarmonyPatch(typeof(MeetingHud), nameof(MeetingHud.Select))]
         class MeetingHudSelectPatch
         {
@@ -122,9 +147,9 @@ namespace TheOtherRoles.Patches {
             
             static bool Prefix(MeetingHud __instance, Il2CppStructArray<MeetingHud.VoterState> states) {
                 // Swapper swap
-
                 PlayerVoteArea swapped1 = null;
                 PlayerVoteArea swapped2 = null;
+
                 foreach (PlayerVoteArea playerVoteArea in __instance.playerStates) {
                     if (playerVoteArea.TargetPlayerId == Swapper.playerId1) swapped1 = playerVoteArea;
                     if (playerVoteArea.TargetPlayerId == Swapper.playerId2) swapped2 = playerVoteArea;
@@ -185,6 +210,8 @@ namespace TheOtherRoles.Patches {
                 Swapper.playerId1 = Byte.MaxValue;
                 Swapper.playerId2 = Byte.MaxValue;
 
+                CustomOverlays.hideInfoOverlay();
+
                 // Lovers save next to be exiled, because RPC of ending game comes before RPC of exiled
                 Lovers.notAckedExiledIsLover = false;
                 if (exiled != null)
@@ -193,9 +220,7 @@ namespace TheOtherRoles.Patches {
                     bool isLovers = Lovers.notAckedExiledIsLover = exiled.Object.isLovers();
 
                     if (isLovers)
-                    {
                         suicidedPlayers.Add(exiled.Object.getPartner().PlayerId);
-                    }
                 }
             }
         }
@@ -251,7 +276,7 @@ namespace TheOtherRoles.Patches {
 
             Transform container = UnityEngine.Object.Instantiate(__instance.transform.FindChild("Background"), __instance.transform);
             container.FindChild("BlackBG").gameObject.SetActive(false);
-            container.transform.localPosition = new Vector3(0, 0, -5f);
+            container.transform.localPosition = new Vector3(0, 0, -200f);
             guesserUI = container.gameObject;
 
             int i = 0;
@@ -265,8 +290,8 @@ namespace TheOtherRoles.Patches {
             Transform exitButton = UnityEngine.Object.Instantiate(buttonTemplate.transform, exitButtonParent);
             Transform exitButtonMask = UnityEngine.Object.Instantiate(maskTemplate, exitButtonParent);
             exitButton.gameObject.GetComponent<SpriteRenderer>().sprite = smallButtonTemplate.GetComponent<SpriteRenderer>().sprite;
-            exitButtonParent.transform.localPosition = new Vector3(2.725f, 2.1f, -5);
-            exitButtonParent.transform.localScale = new Vector3(0.25f, 0.9f, 1);
+            exitButtonParent.transform.localPosition = new Vector3(2.725f, 2.1f, -200f);
+            exitButtonParent.transform.localScale = new Vector3(0.25f, 0.9f, 1f);
             exitButton.GetComponent<PassiveButton>().OnClick.RemoveAllListeners();
             exitButton.GetComponent<PassiveButton>().OnClick.AddListener((UnityEngine.Events.UnityAction)(() => {
                 __instance.playerStates.ToList().ForEach(x => x.gameObject.SetActive(true));
@@ -278,7 +303,13 @@ namespace TheOtherRoles.Patches {
 
             foreach (RoleInfo roleInfo in RoleInfo.allRoleInfos)
             {
-                if (roleInfo == null || roleInfo.roleId == RoleId.Lover || roleInfo.roleId == RoleId.Guesser || roleInfo == RoleInfo.niceMini || roleInfo == RoleInfo.gm) continue; // Not guessable roles
+                if (roleInfo == null || 
+                    roleInfo.roleId == RoleId.Lover || 
+                    roleInfo.roleId == RoleId.Guesser || 
+                    roleInfo == RoleInfo.niceMini || 
+                    roleInfo == RoleInfo.gm ||
+                    (Guesser.onlyAvailableRoles && !roleInfo.enabled && (GM.gm == null || !GM.hideSettings)))
+                    continue; // Not guessable roles
                 Transform buttonParent = (new GameObject()).transform;
                 buttonParent.SetParent(container);
                 Transform button = UnityEngine.Object.Instantiate(buttonTemplate, buttonParent);
@@ -286,7 +317,7 @@ namespace TheOtherRoles.Patches {
                 TMPro.TextMeshPro label = UnityEngine.Object.Instantiate(textTemplate, button);
                 buttons.Add(button);
                 int row = i/4, col = i%4;
-                buttonParent.localPosition = new Vector3(-2.725f + 1.83f * col, 1.5f - 0.45f * row, -5);
+                buttonParent.localPosition = new Vector3(-2.725f + 1.83f * col, 1.5f - 0.45f * row, -200f);
                 buttonParent.localScale = new Vector3(0.55f, 0.55f, 1f);
                 label.text = Helpers.cs(roleInfo.color, roleInfo.name);
                 label.alignment = TMPro.TextAlignmentOptions.Center;
@@ -401,14 +432,21 @@ namespace TheOtherRoles.Patches {
             }
         }
 
+        public static void startMeeting()
+        {
+            CustomOverlays.showBlackBG();
+            CustomOverlays.hideInfoOverlay();
+            Camouflager.resetCamouflage();
+            Morphling.resetMorph();
+            GM.resetZoom();
+        }
+
         [HarmonyPatch(typeof(HudManager), nameof(HudManager.OpenMeetingRoom))]
         class OpenMeetingPatch
         {
             public static void Prefix(HudManager __instance)
             {
-                Camouflager.resetCamouflage();
-                Morphling.resetMorph();
-                GM.resetZoom();
+                startMeeting();
             }
         }
 
@@ -416,9 +454,7 @@ namespace TheOtherRoles.Patches {
         class StartMeetingPatch {
             public static void Prefix(PlayerControl __instance, [HarmonyArgument(0)]GameData.PlayerInfo meetingTarget)
             {
-                Camouflager.resetCamouflage();
-                Morphling.resetMorph();
-                GM.resetZoom();
+                startMeeting();
 
                 // Reset vampire bitten
                 Vampire.bitten = null;
@@ -426,15 +462,6 @@ namespace TheOtherRoles.Patches {
                 if (meetingTarget == null) meetingsCount++;
                 // Save the meeting target
                 target = meetingTarget;
-            }
-        }
-
-        [HarmonyPatch(typeof(MeetingHud), nameof(MeetingHud.Update))]
-        class MeetingHudUpdatePatch {
-            static void Postfix(MeetingHud __instance) {
-                // Deactivate skip Button if skipping on emergency meetings is disabled
-                if (blockSkippingInEmergencyMeetings)
-                    __instance.SkipVoteButton.gameObject.SetActive(false);
             }
         }
     }
