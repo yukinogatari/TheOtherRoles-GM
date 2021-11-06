@@ -111,6 +111,8 @@ namespace TheOtherRoles.Patches
                     roleCouldUse = true;
                 else if (Madmate.canEnterVents && Madmate.madmate != null && Madmate.madmate == @object)
                     roleCouldUse = true;
+            	else if (Vulture.canUseVents && Vulture.vulture != null && Vulture.vulture == @object)
+                	roleCouldUse = true;
                 else if (pc.IsImpostor)
                 {
                     if (Janitor.janitor != null && Janitor.janitor == PlayerControl.LocalPlayer)

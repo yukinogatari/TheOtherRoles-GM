@@ -31,6 +31,7 @@ namespace TheOtherRoles
         Spy,
         SecurityGuard,
         Bait,
+        Medium,
 
 
         Impostor = 100,
@@ -56,6 +57,7 @@ namespace TheOtherRoles
         Jackal,
         Sidekick,
         Opportunist,
+        Vulture,
 
 
         GM = 200,
@@ -116,6 +118,7 @@ namespace TheOtherRoles
         UseAdminTime,
         UseCameraTime,
         UseVitalsTime,
+        VultureWin
     }
 
     public static class RPCProcedure {
@@ -276,6 +279,12 @@ namespace TheOtherRoles
                         case RoleId.Opportunist:
                             Opportunist.opportunist = player;
                             break;
+	                    case RoleId.Vulture:
+	                        Vulture.vulture = player;
+	                        break;
+	                    case RoleId.Medium:
+	                        Medium.medium = player;
+	                        break;
                         default:
                             assigned = false;
                             break;
@@ -353,8 +362,9 @@ namespace TheOtherRoles
         public static void cleanBody(byte playerId) {
             DeadBody[] array = UnityEngine.Object.FindObjectsOfType<DeadBody>();
             for (int i = 0; i < array.Length; i++) {
-                if (GameData.Instance.GetPlayerById(array[i].ParentId).PlayerId == playerId)
+                if (GameData.Instance.GetPlayerById(array[i].ParentId).PlayerId == playerId) {
                     UnityEngine.Object.Destroy(array[i].gameObject);
+                }     
             }
         }
 
@@ -499,8 +509,12 @@ namespace TheOtherRoles
                 SecurityGuard.securityGuard = oldShifter;
             if (Guesser.guesser != null && Guesser.guesser == player)
                 Guesser.guesser = oldShifter;
-            if (Bait.bait != null && Bait.bait == player)
+            if (Bait.bait != null && Bait.bait == player) {
                 Bait.bait = oldShifter;
+                if (Bait.bait.Data.IsDead) Bait.reported = true;
+            }
+            if (Medium.medium != null && Medium.medium == player)
+                Medium.medium = oldShifter;
 
             // Set cooldowns to max for both players
             if (PlayerControl.LocalPlayer == oldShifter || PlayerControl.LocalPlayer == player)
@@ -636,6 +650,7 @@ namespace TheOtherRoles
             if (player == Bait.bait) Bait.clearAndReload();
             if (player == Madmate.madmate) Madmate.clearAndReload();
             if (player == Opportunist.opportunist) Opportunist.clearAndReload();
+            if (player == Medium.medium) Medium.clearAndReload();
 
             // Impostor roles
             if (player == Morphling.morphling) Morphling.clearAndReload();
@@ -665,6 +680,7 @@ namespace TheOtherRoles
             }
             if (player == Sidekick.sidekick) Sidekick.clearAndReload();
             if (player == BountyHunter.bountyHunter) BountyHunter.clearAndReload();
+            if (player == Vulture.vulture) Vulture.clearAndReload();
         }
 
         public static void setFutureErased(byte playerId) {
@@ -807,6 +823,10 @@ namespace TheOtherRoles
 
         public static void arsonistWin() {
             Arsonist.triggerArsonistWin = true;
+        }
+
+        public static void vultureWin() {
+            Vulture.triggerVultureWin = true;
         }
 
         public static void guesserShoot(byte playerId) {
@@ -1055,6 +1075,9 @@ namespace TheOtherRoles
                     break;
                 case (byte)CustomRPC.UseVitalsTime:
                     RPCProcedure.UseVitalsTime(reader.ReadSingle());
+                    break;
+                case (byte)CustomRPC.VultureWin:
+                    RPCProcedure.vultureWin();
                     break;
             }
         }

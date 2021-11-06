@@ -79,6 +79,8 @@ namespace TheOtherRoles
         public static RoleInfo lover = new RoleInfo("lover", Lovers.color, "loverIntroDesc", "loverShortDesc", "loverFullDesc", CustomOptionHolder.loversSpawnRate, RoleId.Lover);
         public static RoleInfo gm = new RoleInfo("gm", GM.color, "gmIntroDesc", "gmShortDesc", "gmFullDesc", CustomOptionHolder.gmEnabled, RoleId.GM);
         public static RoleInfo opportunist = new RoleInfo("opportunist", Opportunist.color, "oppIntroDesc", "oppShortDesc", "oppFullDesc", CustomOptionHolder.opportunistSpawnRate, RoleId.Opportunist);
+        public static RoleInfo vulture = new RoleInfo("Vulture", Vulture.color, "Eat Corpses to win", "Eat dead bodies", RoleId.Vulture);
+        public static RoleInfo medium = new RoleInfo("Medium", Medium.color, "Question the souls of the dead to gain informations", "Question the souls", RoleId.Medium);
 
         public static List<RoleInfo> allRoleInfos = new List<RoleInfo>() {
                 impostor,
@@ -102,6 +104,7 @@ namespace TheOtherRoles
                 arsonist,
                 jackal,
                 sidekick,
+            	vulture,
                 crewmate,
                 shifter,
                 mayor,
@@ -121,7 +124,8 @@ namespace TheOtherRoles
                 bait,
                 madmate,
                 gm,
-                opportunist
+                opportunist,
+	            medium
             };
 
         public static string tl(string key)
@@ -170,6 +174,8 @@ namespace TheOtherRoles
             if (p == Madmate.madmate) infos.Add(madmate);
             if (p == GM.gm) infos.Add(gm);
             if (p == Opportunist.opportunist) infos.Add(opportunist);
+            if (p == Vulture.vulture) infos.Add(vulture);
+            if (p == Medium.medium) infos.Add(medium);
 
             // Default roles
             if (infos.Count == 0 && p.Data.IsImpostor) infos.Add(impostor); // Just Impostor
@@ -179,6 +185,13 @@ namespace TheOtherRoles
             if (p == Lovers.lover1|| p == Lovers.lover2) infos.Add(lover);
 
             return infos;
+        }
+
+        public static String GetRole(PlayerControl p) {
+            string roleName;
+            roleName = String.Join("", getRoleInfoForPlayer(p).Select(x => x.name).ToArray());
+            if (roleName.Contains("Lover")) roleName.Replace("Lover", "");
+            return roleName;
         }
     }
 }
