@@ -16,7 +16,7 @@ using TheOtherRoles.Modules;
 
 namespace TheOtherRoles
 {
-    [BepInPlugin(Id, "The Other Roles", VersionString)]
+    [BepInPlugin(Id, "The Other Roles GM", VersionString)]
     [BepInProcess("Among Us.exe")]
     public class TheOtherRolesPlugin : BasePlugin
     {
@@ -85,6 +85,7 @@ namespace TheOtherRoles
 
             Harmony.PatchAll();
         }
+
         public static Sprite GetModStamp() {
             if (ModStamp) return ModStamp;
             return ModStamp = Helpers.loadSpriteFromResources("TheOtherRoles.Resources.ModStamp.png", 150f);

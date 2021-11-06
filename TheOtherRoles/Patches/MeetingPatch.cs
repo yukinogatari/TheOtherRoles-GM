@@ -24,6 +24,9 @@ namespace TheOtherRoles.Patches {
         {
             static void Postfix(MeetingHud __instance)
             {
+                if (__instance.state == MeetingHud.VoteStates.Animating)
+                    return;
+
                 // Deactivate skip Button if skipping on emergency meetings is disabled
                 if (blockSkippingInEmergencyMeetings)
                     __instance.SkipVoteButton.gameObject.SetActive(false);
@@ -31,14 +34,17 @@ namespace TheOtherRoles.Patches {
                 // This fixes a bug with the original game where pressing the button and a kill happens simultaneously
                 // results in bodies sometimes being created *after* the meeting starts, marking them as dead and
                 // removing the corpses so there's no random corpses leftover afterwards
-                foreach (DeadBody b in UnityEngine.Object.FindObjectsOfType<DeadBody>()) {
-                    foreach (PlayerVoteArea pva in __instance.playerStates){
-                        if (pva.TargetPlayerId == b.ParentId) {
+                foreach (DeadBody b in UnityEngine.Object.FindObjectsOfType<DeadBody>())
+                {
+                    foreach (PlayerVoteArea pva in __instance.playerStates)
+                    {
+                        if (pva.TargetPlayerId == b.ParentId && !pva.AmDead)
+                        {
                             pva.SetDead(pva.DidReport, true);
                             pva.Overlay.gameObject.SetActive(true);
                         }
                     }
-                    UnityEngine.Object.Destroy(b.gameObject);
+                    //UnityEngine.Object.Destroy(b.gameObject);
                 }
             }
         }
@@ -212,6 +218,12 @@ namespace TheOtherRoles.Patches {
 
                 CustomOverlays.hideInfoOverlay();
 
+
+                foreach (DeadBody b in UnityEngine.Object.FindObjectsOfType<DeadBody>())
+                {
+                    UnityEngine.Object.Destroy(b.gameObject);
+                }
+
                 // Lovers save next to be exiled, because RPC of ending game comes before RPC of exiled
                 Lovers.notAckedExiledIsLover = false;
                 if (exiled != null)
@@ -308,7 +320,7 @@ namespace TheOtherRoles.Patches {
                     roleInfo.roleId == RoleId.Guesser || 
                     roleInfo == RoleInfo.niceMini || 
                     roleInfo == RoleInfo.gm ||
-                    (Guesser.onlyAvailableRoles && !roleInfo.enabled && (GM.gm == null || !GM.hideSettings)))
+                    (Guesser.onlyAvailableRoles && !roleInfo.enabled && !MapOptions.hideSettings))
                     continue; // Not guessable roles
                 Transform buttonParent = (new GameObject()).transform;
                 buttonParent.SetParent(container);

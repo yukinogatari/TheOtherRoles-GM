@@ -396,8 +396,9 @@ namespace TheOtherRoles.Patches {
     class CheckEndCriteriaPatch {
         public static bool Prefix(ShipStatus __instance) {
             if (!GameData.Instance) return false;
-            if (DestroyableSingleton<TutorialManager>.InstanceExists) // InstanceExists | Don't check Custom Criteria when in Tutorial
-                return true;
+            if (DestroyableSingleton<TutorialManager>.InstanceExists) return true; // InstanceExists | Don't check Custom Criteria when in Tutorial
+            if (HudManager.Instance.isIntroDisplayed) return false;
+
             var statistics = new PlayerStatistics(__instance);
             if (CheckAndEndGameForMiniLose(__instance)) return false;
             if (CheckAndEndGameForJesterWin(__instance)) return false;
@@ -465,7 +466,7 @@ namespace TheOtherRoles.Patches {
         }
 
         private static bool CheckAndEndGameForTaskWin(ShipStatus __instance) {
-            if (GameData.Instance.TotalTasks <= GameData.Instance.CompletedTasks) {
+            if (GameData.Instance.TotalTasks > 0 && GameData.Instance.TotalTasks <= GameData.Instance.CompletedTasks) {
                 __instance.enabled = false;
                 ShipStatus.RpcEndGame(GameOverReason.HumansByTask, false);
                 return true;
@@ -513,7 +514,7 @@ namespace TheOtherRoles.Patches {
         }
 
         private static bool CheckAndEndGameForCrewmateWin(ShipStatus __instance, PlayerStatistics statistics) {
-            if (statistics.TeamImpostorsAlive == 0 && statistics.TeamJackalAlive == 0) {
+            if (statistics.TeamCrew > 0 && statistics.TeamImpostorsAlive == 0 && statistics.TeamJackalAlive == 0) {
                 __instance.enabled = false;
                 ShipStatus.RpcEndGame(GameOverReason.HumansByVote, false);
                 return true;
@@ -531,8 +532,10 @@ namespace TheOtherRoles.Patches {
 
     internal class PlayerStatistics {
         public int TeamImpostorsAlive {get;set;}
-        public int TeamJackalAlive {get;set;}
-        public int TeamLoversAlive {get;set;}
+        public int TeamJackalAlive {get;set; }
+        public int TeamLoversAlive { get; set; }
+        public int TeamCrew { get; set; }
+        public int NeutralAlive { get; set; }
         public int TotalAlive {get;set;}
         public int TeamImpostorLovers {get;set;}
         public int TeamJackalLovers {get;set;}
@@ -552,10 +555,13 @@ namespace TheOtherRoles.Patches {
             int numTotalAlive = 0;
             int impLovers = 0;
             int jackalLovers = 0;
+            int numNeutralAlive = 0;
+            int numCrew = 0;
 
             for (int i = 0; i < GameData.Instance.PlayerCount; i++)
             {
                 GameData.PlayerInfo playerInfo = GameData.Instance.AllPlayers[i];
+                if (playerInfo.Object.isCrew()) numCrew++;
                 if (!playerInfo.Disconnected)
                 {
                     if (!playerInfo.IsDead && !playerInfo.Object.isGM())
@@ -577,6 +583,8 @@ namespace TheOtherRoles.Patches {
                             numJackalAlive++;
                             if (lover) jackalLovers++;
                         }
+
+                        if (playerInfo.Object.isNeutral()) numNeutralAlive++;
                     }
                 }
             }
@@ -588,9 +596,11 @@ namespace TheOtherRoles.Patches {
                 numImpostorsAlive = 0;
             }
 
+            TeamCrew = numCrew;
             TeamJackalAlive = numJackalAlive;
             TeamImpostorsAlive = numImpostorsAlive;
             TeamLoversAlive = numLoversAlive;
+            NeutralAlive = numNeutralAlive;
             TotalAlive = numTotalAlive;
             TeamImpostorLovers = impLovers;
             TeamJackalLovers = jackalLovers;

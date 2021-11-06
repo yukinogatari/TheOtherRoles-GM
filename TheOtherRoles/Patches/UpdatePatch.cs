@@ -120,8 +120,12 @@ namespace TheOtherRoles.Patches {
                 setPlayerNameColor(Bait.bait, Bait.color);
             } else if (Madmate.madmate != null && Madmate.madmate == PlayerControl.LocalPlayer) {
                 setPlayerNameColor(Madmate.madmate, Madmate.color);
-            } 
-            
+            }
+            else if (Opportunist.opportunist != null && Opportunist.opportunist == PlayerControl.LocalPlayer)
+            {
+                setPlayerNameColor(Opportunist.opportunist, Opportunist.color);
+            }
+
             if (GM.gm != null) {
                 setPlayerNameColor(GM.gm, GM.color);
             }

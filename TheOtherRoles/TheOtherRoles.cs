@@ -39,6 +39,7 @@ namespace TheOtherRoles
         {
             exiledPlayers.Clear();
             suicidedPlayers.Clear();
+            misfiredPlayers.Clear();
             CustomOverlays.resetOverlays();
 
             Jester.clearAndReload();
@@ -1295,7 +1296,6 @@ namespace TheOtherRoles
 
             public static bool gmIsHost = true;
             public static bool diesAtStart = true;
-            public static bool hideSettings = true;
             public static bool hasTasks = false;
             public static bool canSabotage = false;
             public static bool canWarp = true;
@@ -1343,7 +1343,6 @@ namespace TheOtherRoles
                 gm = null;
                 gmIsHost = CustomOptionHolder.gmIsHost.getBool();
                 diesAtStart = CustomOptionHolder.gmDiesAtStart.getBool();
-                hideSettings = CustomOptionHolder.gmHideSettings.getBool();
                 hasTasks = false;
                 canSabotage = false;
                 blockedButton = null;

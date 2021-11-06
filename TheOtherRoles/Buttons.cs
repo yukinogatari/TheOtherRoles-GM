@@ -33,8 +33,9 @@ namespace TheOtherRoles
         private static CustomButton lightsOutButton;
         private static List<CustomButton> gmButtons;
         private static List<CustomButton> gmKillButtons;
-        private static CustomButton gmZoomOut;
         private static CustomButton gmZoomIn;
+        private static CustomButton gmZoomOut;
+        //public static CustomButton showInfoOverlay;
         public static CustomButton cleanerCleanButton;
         public static CustomButton warlockCurseButton;
         public static CustomButton securityGuardButton;
@@ -87,6 +88,9 @@ namespace TheOtherRoles
             {
                 gmButton.MaxTimer = 0.0f;
             }
+
+            gmZoomIn.MaxTimer = 0.0f;
+            gmZoomOut.MaxTimer = 0.0f;
         }
 
         public static void resetTimeMasterButton() {
@@ -1098,6 +1102,32 @@ namespace TheOtherRoles
             gmZoomIn.Timer = 0.0f;
             gmZoomIn.MaxTimer = 0.0f;
             gmZoomIn.LocalScale = Vector3.one * 0.275f;
+
+/*            CustomOverlays.initializeOverlays();
+            Vector3 overlayPos = Vector3.zero; // Vector3.down * 0.75f;
+            showInfoOverlay = new CustomButton(
+                // OnClick
+                () => { CustomOverlays.toggleInfoOverlay();  },
+                // HasButton
+                () => { return !PlayerControl.LocalPlayer.isGM() && !MapOptions.hideSettings; },
+                // CouldUse
+                () => { return !PlayerControl.LocalPlayer.isGM() && !MapOptions.hideSettings; },
+                // OnMeetingEnds
+                () => { },
+                // Sprite
+                CustomOverlays.helpButton,
+                // Position
+                overlayPos,
+                // HudManager
+                __instance,
+                // Keyboard Shortcut
+                null,
+                // Mirror
+                false);
+            showInfoOverlay.Timer = 0.0f;
+            showInfoOverlay.MaxTimer = 0.0f;
+            showInfoOverlay.LocalScale = Vector3.one;
+            //showInfoOverlay.killButtonManager.transform.parent = __instance.MapButton.transform;*/
 
             // Set the default (or settings from the previous game) timers/durations when spawning the buttons
             setCustomButtonCooldowns();

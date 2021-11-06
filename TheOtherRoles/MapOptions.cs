@@ -11,6 +11,7 @@ namespace TheOtherRoles{
         public static bool blockSkippingInEmergencyMeetings = false;
         public static bool noVoteIsSelfVote = false;
         public static bool hidePlayerNames = false;
+        public static bool hideSettings = false;
 
         public static int restrictDevices = 0;
         public static float restrictAdminTime = 600f;
@@ -42,6 +43,8 @@ namespace TheOtherRoles{
             blockSkippingInEmergencyMeetings = CustomOptionHolder.blockSkippingInEmergencyMeetings.getBool();
             noVoteIsSelfVote = CustomOptionHolder.noVoteIsSelfVote.getBool();
             hidePlayerNames = CustomOptionHolder.hidePlayerNames.getBool();
+
+            hideSettings = CustomOptionHolder.hideSettings.getBool();
 
             restrictDevices = CustomOptionHolder.restrictDevices.getSelection();
             restrictAdminTime = restrictAdminTimeMax = CustomOptionHolder.restrictAdmin.getFloat();

@@ -186,7 +186,6 @@ namespace TheOtherRoles {
         public static CustomOption gmIsHost;
         public static CustomOption gmHasTasks;
         public static CustomOption gmDiesAtStart;
-        public static CustomOption gmHideSettings;
         public static CustomOption gmCanWarp;
         public static CustomOption gmCanKill;
 
@@ -196,6 +195,7 @@ namespace TheOtherRoles {
         public static CustomOption noVoteIsSelfVote;
         public static CustomOption hidePlayerNames;
 
+        public static CustomOption hideSettings;
         public static CustomOption restrictDevices;
         public static CustomOption restrictAdmin;
         public static CustomOption restrictCameras;
@@ -232,7 +232,6 @@ namespace TheOtherRoles {
             //gmHasTasks = CustomOption.Create(402, "gmHasTasks", false, gmEnabled);
             gmCanWarp = CustomOption.Create(405, "gmCanWarp", true, gmEnabled);
             gmCanKill = CustomOption.Create(406, "gmCanKill", false, gmEnabled);
-            gmHideSettings = CustomOption.Create(403, "gmHideSettings", true, gmEnabled);
             gmDiesAtStart = CustomOption.Create(404, "gmDiesAtStart", true, gmEnabled);
 
 
@@ -277,6 +276,14 @@ namespace TheOtherRoles {
             bountyHunterArrowUpdateIntervall = CustomOption.Create(325, "bountyHunterArrowUpdateIntervall", 15f, 2.5f, 60f, 2.5f, bountyHunterShowArrow, format: "unitSeconds");
 
 
+            madmateSpawnRate = CustomOption.Create(360, cs(Madmate.color, "madmate"), rates, null, true);
+            madmateCanDieToSheriff = CustomOption.Create(361, "madmateCanDieToSheriff", false, madmateSpawnRate);
+            madmateCanEnterVents = CustomOption.Create(362, "madmateCanEnterVents", false, madmateSpawnRate);
+            madmateHasImpostorVision = CustomOption.Create(363, "madmateHasImpostorVision", false, madmateSpawnRate);
+            madmateCanSabotage = CustomOption.Create(364, "madmateCanSabotage", false, madmateSpawnRate);
+            madmateCanFixComm = CustomOption.Create(365, "madmateCanFixComm", true, madmateSpawnRate);
+
+
             miniSpawnRate = CustomOption.Create(180, cs(Mini.color, "miniSpawnRate"), rates, null, true);
             miniGrowingUpDuration = CustomOption.Create(181, "miniGrowingUpDuration", 400f, 100f, 1500f, 100f, miniSpawnRate, format: "unitSeconds");
 
@@ -299,6 +306,8 @@ namespace TheOtherRoles {
             arsonistSpawnRate = CustomOption.Create(290, cs(Arsonist.color, "arsonist"), rates, null, true);
             arsonistCooldown = CustomOption.Create(291, "arsonistCooldown", 12.5f, 2.5f, 60f, 2.5f, arsonistSpawnRate, format: "unitSeconds");
             arsonistDuration = CustomOption.Create(292, "arsonistDuration", 3f, 0f, 10f, 1f, arsonistSpawnRate, format: "unitSeconds");
+
+            opportunistSpawnRate = CustomOption.Create(366, cs(Opportunist.color, "opportunist"), rates, null, true);
 
             jackalSpawnRate = CustomOption.Create(220, cs(Jackal.color, "jackal"), rates, null, true);
             jackalKillCooldown = CustomOption.Create(221, "jackalKillCooldown", 30f, 2.5f, 60f, 2.5f, jackalSpawnRate, format: "unitSeconds");
@@ -388,21 +397,13 @@ namespace TheOtherRoles {
             baitHighlightAllVents = CustomOption.Create(331, "baitHighlightAllVents", false, baitSpawnRate);
             baitReportDelay = CustomOption.Create(332, "baitReportDelay", 0f, 0f, 10f, 1f, baitSpawnRate, format: "unitSeconds");
 
-            madmateSpawnRate = CustomOption.Create(360, cs(Madmate.color, "madmate"), rates, null, true);
-            madmateCanDieToSheriff = CustomOption.Create(361, "madmateCanDieToSheriff", false, madmateSpawnRate);
-            madmateCanEnterVents = CustomOption.Create(362, "madmateCanEnterVents", false, madmateSpawnRate);
-            madmateHasImpostorVision = CustomOption.Create(363, "madmateHasImpostorVision", false, madmateSpawnRate);
-            madmateCanSabotage = CustomOption.Create(364, "madmateCanSabotage", false, madmateSpawnRate);
-            madmateCanFixComm = CustomOption.Create(365, "madmateCanFixComm", true, madmateSpawnRate);
-
-            opportunistSpawnRate = CustomOption.Create(366, cs(Opportunist.color, "opportunist"), rates, null, true);
-
             // Other options
             specialOptions = new CustomOptionBlank(null);
             maxNumberOfMeetings = CustomOption.Create(3, "maxNumberOfMeetings", 10, 0, 15, 1, specialOptions, true);
             blockSkippingInEmergencyMeetings = CustomOption.Create(4, "blockSkippingInEmergencyMeetings", false, specialOptions);
             noVoteIsSelfVote = CustomOption.Create(5, "noVoteIsSelfVote", false, specialOptions);
             hidePlayerNames = CustomOption.Create(6, "hidePlayerNames", false, specialOptions);
+            hideSettings = CustomOption.Create(520, "hideSettings", false, specialOptions);
 
             restrictDevices = CustomOption.Create(510, "restrictDevices", new string[] { "optionOff", "restrictPerTurn", "restrictPerGame" }, specialOptions);
             restrictAdmin = CustomOption.Create(501, "disableAdmin", 30f, 0f, 600f, 5f, restrictDevices, format: "unitSeconds");
@@ -536,7 +537,12 @@ namespace TheOtherRoles {
             {
                 return string.Format(ModTranslation.getString(format), sel);
             }
-            return sel;
+            return ModTranslation.getString(sel);
+        }
+
+        public virtual string getName()
+        {
+            return ModTranslation.getString(name);
         }
 
         // Option changes
@@ -545,7 +551,7 @@ namespace TheOtherRoles {
             selection = Mathf.Clamp((newSelection + selections.Length) % selections.Length, 0, selections.Length - 1);
             if (optionBehaviour != null && optionBehaviour is StringOption stringOption) {
                 stringOption.oldValue = stringOption.Value = selection;
-                stringOption.ValueText.text = ModTranslation.getString(getString());
+                stringOption.ValueText.text = getString();
 
                 if (AmongUsClient.Instance?.AmHost == true && PlayerControl.LocalPlayer) {
                     if (id == 0) switchPreset(selection); // Switch presets
@@ -616,9 +622,9 @@ namespace TheOtherRoles {
                     allOptions.Add(stringOption);
 
                     stringOption.OnValueChanged = new Action<OptionBehaviour>((o) => {});
-                    stringOption.TitleText.text = ModTranslation.getString(option.name);
+                    stringOption.TitleText.text = option.getName();
                     stringOption.Value = stringOption.oldValue = option.selection;
-                    stringOption.ValueText.text = ModTranslation.getString(option.getString());
+                    stringOption.ValueText.text = option.getString();
 
                     option.optionBehaviour = stringOption;
                 }
@@ -704,9 +710,9 @@ namespace TheOtherRoles {
             if (option == null) return true;
 
             __instance.OnValueChanged = new Action<OptionBehaviour>((o) => {});
-            __instance.TitleText.text = ModTranslation.getString(option.name);
+            __instance.TitleText.text = option.getName();
             __instance.Value = __instance.oldValue = option.selection;
-            __instance.ValueText.text = ModTranslation.getString(option.getString());
+            __instance.ValueText.text = option.getString();
             
             return false;
         }
@@ -763,7 +769,7 @@ namespace TheOtherRoles {
                     bool enabled = true;
                     var parent = option.parent;
 
-                    if (AmongUsClient.Instance?.AmHost == false && CustomOptionHolder.gmEnabled.getBool() && CustomOptionHolder.gmHideSettings.getBool())
+                    if (AmongUsClient.Instance?.AmHost == false && CustomOptionHolder.hideSettings.getBool())
                     {
                         enabled = false;
                     }
@@ -878,7 +884,7 @@ namespace TheOtherRoles {
         public static string optionToString(CustomOption option)
         {
             if (option == null) return "";
-            return $"{tl(option.name)}: {tl(option.getString())}";
+            return $"{option.getName()}: {option.getString()}";
         }
 
         public static string optionsToString(CustomOption option, bool skipFirst = false)
@@ -900,7 +906,7 @@ namespace TheOtherRoles {
         private static void Postfix(ref string __result)
         {
 
-            bool hideSettings = AmongUsClient.Instance?.AmHost == false && CustomOptionHolder.gmEnabled.getBool() == true && CustomOptionHolder.gmHideSettings.getBool();
+            bool hideSettings = AmongUsClient.Instance?.AmHost == false && CustomOptionHolder.hideSettings.getBool();
             if (hideSettings)
             {
                 return;
@@ -1054,6 +1060,16 @@ namespace TheOtherRoles {
     public class GameSettingsScalePatch {
         public static void Prefix(HudManager __instance) {
             if (__instance.GameSettings != null) __instance.GameSettings.fontSize = 1.2f; 
+        }
+    }
+
+    [HarmonyPatch(typeof(CreateOptionsPicker), nameof(CreateOptionsPicker.Start))]
+    public class CreateOptionsPickerPatch
+    {
+        public static void Postfix(CreateOptionsPicker __instance)
+        {
+            int numImpostors = Math.Clamp(__instance.GetTargetOptions().NumImpostors, 1, 3);
+            __instance.SetImpostorButtons(numImpostors);
         }
     }
 }

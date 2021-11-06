@@ -207,6 +207,11 @@ namespace TheOtherRoles {
                     player == Opportunist.opportunist));
         }
 
+        public static bool isCrew(this PlayerControl player)
+        {
+            return !player.Data.IsImpostor && !player.isNeutral();
+        }
+
         public static bool hasFakeTasks(this PlayerControl player) {
             return player.isNeutral() || player == Madmate.madmate || (player.isLovers() && Lovers.separateTeam && !Lovers.tasksCount);
         }

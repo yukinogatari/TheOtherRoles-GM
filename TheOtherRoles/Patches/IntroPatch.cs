@@ -15,7 +15,9 @@ namespace TheOtherRoles.Patches {
             RPCProcedure.setUnassignedRoles();
 
             // Generate and initialize player icons
-            if (PlayerControl.LocalPlayer != null && HudManager.Instance != null) {
+            if (PlayerControl.LocalPlayer != null && HudManager.Instance != null)
+            {
+                CustomOverlays.initializeOverlays();
                 Vector3 bottomLeft = new Vector3(-HudManager.Instance.UseButton.transform.localPosition.x, HudManager.Instance.UseButton.transform.localPosition.y, HudManager.Instance.UseButton.transform.localPosition.z);
                 foreach (PlayerControl p in PlayerControl.AllPlayerControls) {
                     GameData.PlayerInfo data = p.Data;

@@ -14,7 +14,8 @@ namespace TheOtherRoles {
         {
             public static void Postfix(NormalPlayerTask __instance)
             {
-                if (__instance.IsComplete && __instance.Arrow?.isActiveAndEnabled == true) __instance.Arrow?.gameObject?.SetActive(false);
+                if (__instance.IsComplete && __instance.Arrow?.isActiveAndEnabled == true)
+                    __instance.Arrow?.gameObject?.SetActive(false);
             }
         }
 

@@ -4,11 +4,13 @@ using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Collections;
+using static TheOtherRoles.TheOtherRoles;
 
 namespace TheOtherRoles {
     [Harmony]
     public class CustomOverlays {
 
+        public static Sprite helpButton;
         private static Sprite colorBG;
         private static SpriteRenderer meetingUnderlay;
         private static SpriteRenderer infoUnderlay;
@@ -29,10 +31,15 @@ namespace TheOtherRoles {
             overlayShown = false;
         }
 
-        private static void initializeOverlays()
+        public static void initializeOverlays()
         {
             HudManager hudManager = DestroyableSingleton<HudManager>.Instance;
             if (hudManager == null) return;
+
+            if (helpButton == null)
+            {
+                helpButton = Helpers.loadSpriteFromResources("TheOtherRoles.Resources.HelpButton.png", 115f);
+            }
 
             if (colorBG == null)
             {
@@ -58,7 +65,7 @@ namespace TheOtherRoles {
             if (infoOverlayRules == null)
             {
                 infoOverlayRules = UnityEngine.Object.Instantiate(hudManager.TaskText, hudManager.transform);
-                infoOverlayRules.fontSize = infoOverlayRules.fontSizeMin = infoOverlayRules.fontSizeMax = 1.2f;
+                infoOverlayRules.fontSize = infoOverlayRules.fontSizeMin = infoOverlayRules.fontSizeMax = 1.15f;
                 infoOverlayRules.autoSizeTextContainer = false;
                 infoOverlayRules.enableWordWrapping = false;
                 infoOverlayRules.alignment = TMPro.TextAlignmentOptions.TopLeft;
@@ -71,8 +78,8 @@ namespace TheOtherRoles {
 
             if (infoOverlayRoles == null) { 
                 infoOverlayRoles = UnityEngine.Object.Instantiate(infoOverlayRules, hudManager.transform);
-                infoOverlayRoles.maxVisibleLines = 26;
-                infoOverlayRoles.fontSize = infoOverlayRoles.fontSizeMin = infoOverlayRoles.fontSizeMax = 1.2f;
+                infoOverlayRoles.maxVisibleLines = 28;
+                infoOverlayRoles.fontSize = infoOverlayRoles.fontSizeMin = infoOverlayRoles.fontSizeMax = 1.15f;
                 infoOverlayRoles.outlineWidth += 0.02f;
                 infoOverlayRoles.autoSizeTextContainer = false;
                 infoOverlayRoles.enableWordWrapping = false;
@@ -91,6 +98,8 @@ namespace TheOtherRoles {
             meetingUnderlay.sprite = colorBG;
             meetingUnderlay.color = Palette.Black;
             meetingUnderlay.transform.localScale = new Vector3(20f, 20f, 1f);
+            if (HudManager.Instance == null) return;
+
             HudManager.Instance.StartCoroutine(Effects.Lerp(5f, new Action<float>(t =>
             {
                 meetingUnderlay.enabled = t > 0.2f && t < 1f;
@@ -105,7 +114,7 @@ namespace TheOtherRoles {
 
         public static void showInfoOverlay()
         {
-            if (overlayShown) return;
+            if (overlayShown || MapOptions.hideSettings) return;
 
             HudManager hudManager = DestroyableSingleton<HudManager>.Instance;
             if (ShipStatus.Instance == null || PlayerControl.LocalPlayer == null || hudManager == null || HudManager.Instance.isIntroDisplayed || (!PlayerControl.LocalPlayer.CanMove && MeetingHud.Instance == null))
