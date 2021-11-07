@@ -247,6 +247,10 @@
         "0": "Only Show Enabled Roles",
         "11": "\u51fa\u73fe\u53ef\u80fd\u306a\u5f79\u8077\u306e\u307f\u8868\u793a"
     },
+    "guesserHasMultipleShotsPerMeeting": {
+        "0": "Can Shoot Multiple Times Per Meeting",
+        "11": "\u4f1a\u8b70\u4e2d\u3001\u8907\u6570\u56de\u6483\u3066\u308b"
+    },
     "jesterSpawnRate": {
         "0": "Jester",
         "11": "\u30b8\u30a7\u30b9\u30bf\u30fc"
@@ -314,6 +318,10 @@
     "jackalAndSidekickHaveImpostorVision": {
         "0": "Has Impostor Vision",
         "11": "\u30a4\u30f3\u30dd\u30b9\u30bf\u30fc\u3068\u540c\u3058\u8996\u91ce"
+    },
+    "jackalCanSeeEngineerVent": {
+        "0": "Can See If Engineer Is In A Vent",
+        "11": "\u30d9\u30f3\u30c8\u5185\u306e\u30a8\u30f3\u30b8\u30cb\u30a2\u304c\u898b\u3048\u308b"
     },
     "shifterSpawnRate": {
         "0": "Shifter",
@@ -602,6 +610,38 @@
     "opportunistSpawnRate": {
         "0": "Opportunist",
         "11": "\u30aa\u30dd\u30c1\u30e5\u30cb\u30b9\u30c8"
+    },
+    "vultureCooldown": {
+        "0": "Eat Cooldown",
+        "11": "\u55b0\u3089\u3046\u30af\u30fc\u30eb\u30c0\u30a6\u30f3"
+    },
+    "vultureNumberToWin": {
+        "0": "Number Of Corpses Required",
+        "11": "\u5fc5\u8981\u306a\u6b7b\u4f53\u306e\u6570"
+    },
+    "vultureCanUseVents": {
+        "0": "Can Use Vents",
+        "11": "\u30d9\u30f3\u30c8\u306b\u5165\u308c\u308b"
+    },
+    "vultureShowArrows": {
+        "0": "Show Arrows Pointing Towards Corpses",
+        "11": "\u6b7b\u4f53\u3092\u6307\u3059\u77e2\u5370\u3092\u8868\u793a"
+    },
+    "vultureCorpses": {
+        "0": "Remaining: {0}",
+        "11": "\u6b8b\u308a {0}\u4f53"
+    },
+    "mediumCooldown": {
+        "0": "Questioning Cooldown",
+        "11": "\u970a\u80fd\u529b\u30af\u30fc\u30eb\u30c0\u30a6\u30f3"
+    },
+    "mediumDuration": {
+        "0": "Questioning Duration",
+        "11": "\u970a\u80fd\u529b\u6642\u9593"
+    },
+    "mediumOneTimeUse": {
+        "0": "Each Soul Can Only Be Questioned Once",
+        "11": "1\u4eba\u305a\u30641\u56de\u306e\u307f\u970a\u80fd\u529b\u3092\u4f7f\u3048\u308b"
     },
     "maxNumberOfMeetings": {
         "0": "Total Meetings (excluding Mayor's)",
@@ -1187,6 +1227,30 @@
         "0": "Do whatever it takes to survive",
         "11": "\u3068\u306b\u304b\u304f\u751f\u304d\u6b8b\u308a\u307e\u3057\u3087\u3046"
     },
+    "vulture": {
+        "0": "Vulture",
+        "11": "\u30f4\u30a1\u30eb\u30c1\u30e3\u30fc"
+    },
+    "vultureIntroDesc": {
+        "0": "Eat corpses to win",
+        "11": "\u6b7b\u4f53\u3092\u55b0\u3089\u304a\u3046"
+    },
+    "vultureShortDesc": {
+        "0": "Eat dead bodies",
+        "11": "\u6b7b\u4f53\u3092\u55b0\u3089\u304a\u3046"
+    },
+    "medium": {
+        "0": "Medium",
+        "11": "\u30df\u30fc\u30c7\u30a3\u30a2\u30e0"
+    },
+    "mediumIntroDesc": {
+        "0": "Question the souls of the dead to gain information",
+        "11": "\u5e7d\u970a\u304b\u3089\u60c5\u5831\u3092\u805e\u304d\u51fa\u305d\u3046"
+    },
+    "mediumShortDesc": {
+        "0": "Question the souls",
+        "11": "\u5e7d\u970a\u304b\u3089\u60c5\u5831\u3092\u805e\u304d\u51fa\u305d\u3046"
+    },
     "streamerModeButton": {
         "0": "Streamer Mode",
         "11": "\u30b9\u30c8\u30ea\u30fc\u30de\u30fc\u30e2\u30fc\u30c9"
@@ -1238,6 +1302,10 @@
         "0": "Mini Died",
         "11": "\u30df\u30cb\u304c\u6bba\u3055\u308c\u305f"
     },
+    "vultureWin": {
+        "0": "Vulture Wins",
+        "11": "\u30f4\u30a1\u30eb\u30c1\u30e3\u30fc\u52dd\u5229"
+    },
     "crewWinExtra": {
         "0": "Crewmates {0} Win",
         "11": "\u30af\u30eb\u30fc{0}\u52dd\u5229"
@@ -1265,6 +1333,10 @@
     "miniDiedExtra": {
         "0": "Mini Died {0} Win",
         "11": "\u30df\u30cb\u304c\u6bba\u3055\u308c\u305f{0}\u52dd\u5229"
+    },
+    "vultureWinExtra": {
+        "0": "Vulture {0} Win",
+        "11": "\u30f4\u30a1\u30eb\u30c1\u30e3\u30fc{0}\u52dd\u5229"
     },
     "opportunistExtra": {
         "0": "& Opportunist",
@@ -1377,6 +1449,22 @@
     "detectiveColorDark": {
         "0": "darker",
         "11": "\u6fc3\u3044"
+    },
+    "mediumQuestion1": {
+        "0": "What is your role? My role is {0}.",
+        "11": "\u300c\u541b\u306e\u5f79\u8077\u306f\u4f55\u3067\u3057\u3087\u3046\u300d\u300e\u79c1\u306f{0}\u3067\u3059\u300f"
+    },
+    "mediumQuestion2": {
+        "0": "What is your killer's color type? My killer is a {0} color.",
+        "11": "\u300c\u541b\u3092\u6bba\u3057\u305f\u4eba\u306f\u3069\u3093\u306a\u8272\u3067\u3057\u3087\u3046\u300d\u300e\u79c1\u3092\u6bba\u3057\u305f\u4eba\u306f{0}\u8272\u3092\u3057\u3066\u3044\u307e\u3057\u305f\u300f"
+    },
+    "mediumQuestion3": {
+        "0": "When did you die? I died {0}s before the meeting started.",
+        "11": "\u300c\u541b\u306f\u3044\u3064\u6b7b\u3093\u3060\u3093\u3067\u3057\u3087\u3046\u300d\u300e\u79c1\u306f\u4f1a\u8b70\u306e{0}\u79d2\u524d\u306b\u6b7b\u306b\u307e\u3057\u305f\u300f"
+    },
+    "mediumQuestion4": {
+        "0": "What is your killer's role? My killer is {0}.",
+        "11": "\u300c\u541b\u3092\u6bba\u3057\u305f\u4eba\u306e\u5f79\u8077\u306f\u4f55\u3067\u3057\u3087\u3046\u300d\u300e\u79c1\u3092\u6bba\u3057\u305f\u4eba\u306f{0}\u3067\u3059\u300f"
     },
     "unitSeconds": {
         "0": "{0}s",
@@ -1573,6 +1661,12 @@
     "oppFullDesc": {
         "0": "The Opportunist is a outsider role. So long as they are alive at the end of the game,\nthey win alongside the victorious team. They can choose to side with any team they\nwish to ensure their own survival.",
         "11": "\u30fb\u6700\u5f8c\u307e\u3067\u751f\u304d\u6b8b\u308c\u3070\u52dd\u5229\n\u30fb\u30ad\u30ebor\u8ffd\u653e\u3055\u308c\u305a\u306b<color=#8cffffff>\u30af\u30eb\u30fc</color>\u307e\u305f\u306f<color=#ff1919ff>\u30a4\u30f3\u30dd\u30b9\u30bf\u30fc</color>\u307e\u305f\u306f<color=#ffff00ff>\u305d\u306e\u4ed6\u9663\u55b6</color>\u304c\u52dd\u5229\u3057\u305f\u969b\u306b\n\u3000\u8ffd\u52a0\u52dd\u5229\u3068\u306a\u308b"
+    },
+    "vultureFullDesc": {
+        "0": "The Vulture does not have any tasks, he has to win the game as a solo.\nThe Vulture is a neutral role that must eat a specified number of corpses\n(depending on the options) in order to win.\nDepending on the options, when a player dies, the Vulture gets an arrow pointing\nto the corpse."
+    },
+    "mediumFullDesc": {
+        "0": "The medium is a crewmate who can ask the souls of dead players for information.\nLike the Seer, it sees the places where the players have died (after the next meeting)\nand can question them. It then gets random information about the soul or the killer\nin the chat. The souls only stay for one round, i.e. until the next meeting.\nDepending on the options, the souls can only be questioned once and then disappear."
     },
     "Banner": {
         "0": "Banner.png"

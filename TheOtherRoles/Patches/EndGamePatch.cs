@@ -293,8 +293,9 @@ namespace TheOtherRoles.Patches {
                 __instance.BackgroundBar.material.SetColor("_Color", Arsonist.color);
             }
             else if (AdditionalTempData.winCondition == WinCondition.VultureWin) {
-                textRenderer.text = "Vulture Wins";
+                bonusText = "vultureWin";
                 textRenderer.color = Vulture.color;
+                __instance.BackgroundBar.material.SetColor("_Color", Vulture.color);
             }
             else if (AdditionalTempData.winCondition == WinCondition.LoversTeamWin) {
                 bonusText = "crewWin";

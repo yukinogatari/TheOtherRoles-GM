@@ -187,7 +187,6 @@ namespace TheOtherRoles.Patches {
             Trickster.lightsOutTimer -= Time.deltaTime;
         }
 
-            if ((oldMorphTimer > 0f || oldCamouflageTimer > 0f) && Camouflager.camouflageTimer <= 0f && Morphling.morphTimer <= 0f && Morphling.morphling != null) {
         public static void miniUpdate() {
             if (Mini.mini == null || Camouflager.camouflageTimer > 0f) return;
                 

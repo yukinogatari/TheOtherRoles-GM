@@ -44,6 +44,7 @@ namespace TheOtherRoles
         public static CustomButton mediumButton;
         public static TMPro.TMP_Text securityGuardButtonScrewsText;
         public static TMPro.TMP_Text sheriffNumShotsText;
+        public static TMPro.TMP_Text vultureNumCorpsesText;
 
         public static void setCustomButtonCooldowns() {
             engineerRepairButton.MaxTimer = 0f;
@@ -237,7 +238,7 @@ namespace TheOtherRoles
                     }
                     return Sheriff.currentTarget && PlayerControl.LocalPlayer.CanMove;
                 },
-                () => { sheriffKillButton.Timer = sheriffKillButton.MaxTimer;},
+                () => { sheriffKillButton.Timer = sheriffKillButton.MaxTimer; },
                 __instance.KillButton.renderer.sprite,
                 new Vector3(-1.3f, 0, 0),
                 __instance,
@@ -1158,7 +1159,7 @@ namespace TheOtherRoles
                             }
                         }
                     }
-                    if (Vulture.eatenBodies == Vulture.vultureNumberToWin) {
+                    if (Vulture.eatenBodies >= Vulture.vultureNumberToWin) {
                         MessageWriter winWriter = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.VultureWin, Hazel.SendOption.Reliable, -1);
                         AmongUsClient.Instance.FinishRpcImmediately(winWriter);
                         RPCProcedure.vultureWin();
@@ -1166,13 +1167,24 @@ namespace TheOtherRoles
                     }
                 },
                 () => { return Vulture.vulture != null && Vulture.vulture == PlayerControl.LocalPlayer && !PlayerControl.LocalPlayer.Data.IsDead; },
-                () => { return __instance.ReportButton.renderer.color == Palette.EnabledColor && PlayerControl.LocalPlayer.CanMove; },
+                () => {
+                    if (vultureNumCorpsesText != null)
+                        vultureNumCorpsesText.text = String.Format(ModTranslation.getString("vultureCorpses"), Vulture.vultureNumberToWin - Vulture.eatenBodies);
+
+                    return __instance.ReportButton.renderer.color == Palette.EnabledColor && PlayerControl.LocalPlayer.CanMove;
+                },
                 () => { vultureEatButton.Timer = vultureEatButton.MaxTimer; },
                 Vulture.getButtonSprite(),
                 new Vector3(-1.3f, 0f, 0f),
                 __instance,
                 KeyCode.F
             );
+
+            vultureNumCorpsesText = GameObject.Instantiate(vultureEatButton.killButtonManager.TimerText, vultureEatButton.killButtonManager.TimerText.transform.parent);
+            vultureNumCorpsesText.text = "";
+            vultureNumCorpsesText.enableWordWrapping = false;
+            vultureNumCorpsesText.transform.localScale = Vector3.one * 0.5f;
+            vultureNumCorpsesText.transform.localPosition += new Vector3(0.0f, 0.7f, 0);
 
             // Medium button
             mediumButton = new CustomButton(
@@ -1208,15 +1220,16 @@ namespace TheOtherRoles
                     string msg = "";
 
                     int randomNumber = Medium.target.killerIfExisting?.PlayerId == Mini.mini?.PlayerId ? TheOtherRoles.rnd.Next(3) : TheOtherRoles.rnd.Next(4);
-                    string typeOfColor = Helpers.isLighterColor(Medium.target.killerIfExisting.Data.ColorId) ? "lighter" : "darker";
+                    var typeOfColor = Helpers.isLighterColor(Medium.target.killerIfExisting.Data.ColorId) ?
+                        ModTranslation.getString("detectiveColorLight") :
+                        ModTranslation.getString("detectiveColorDark");
                     float timeSinceDeath = ((float)(Medium.meetingStartTime - Medium.target.timeOfDeath).TotalMilliseconds);
                     string name = " (" + Medium.target.player.Data.PlayerName + ")";
 
-
-                    if (randomNumber == 0) msg = "What is your role? My role is " + RoleInfo.GetRole(Medium.target.player) + name;
-                    else if (randomNumber == 1) msg = "What is your killer`s color type? My killer is a " + typeOfColor + " color" + name;
-                    else if (randomNumber == 2) msg = "When did you die? I have died " + Math.Round(timeSinceDeath / 1000) + "s before meeting started" + name;
-                    else msg = "What is your killer`s role? My killer is " + RoleInfo.GetRole(Medium.target.killerIfExisting) + name; //exlude mini 
+                    if (randomNumber == 0)      msg = string.Format(ModTranslation.getString("mediumQuestion1"), RoleInfo.GetRole(Medium.target.player)) + name;
+                    else if (randomNumber == 1) msg = string.Format(ModTranslation.getString("mediumQuestion2"), typeOfColor) + name;
+                    else if (randomNumber == 2) msg = string.Format(ModTranslation.getString("mediumQuestion3"), Math.Round(timeSinceDeath / 1000)) + name;
+                    else                        msg = string.Format(ModTranslation.getString("mediumQuestion4"), RoleInfo.GetRole(Medium.target.killerIfExisting)) + name; ; // Excludes mini 
 
                     DestroyableSingleton<HudManager>.Instance.Chat.AddChat(PlayerControl.LocalPlayer, $"{msg}");
 

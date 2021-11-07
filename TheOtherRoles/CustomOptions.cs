@@ -311,7 +311,7 @@ namespace TheOtherRoles {
             guesserIsImpGuesserRate = CustomOption.Create(311, "guesserIsImpGuesserRate", rates, guesserSpawnRate);
             guesserNumberOfShots = CustomOption.Create(312, "guesserNumberOfShots", 2f, 1f, 15f, 1f, guesserSpawnRate, format: "unitShots");
             guesserOnlyAvailableRoles = CustomOption.Create(313, "guesserOnlyAvailableRoles", true, guesserSpawnRate);
-            guesserHasMultipleShotsPerMeeting = CustomOption.Create(313, "Guesser Can Shoot Multiple Times Per Meeting", false, guesserSpawnRate);
+            guesserHasMultipleShotsPerMeeting = CustomOption.Create(314, "guesserHasMultipleShotsPerMeeting", false, guesserSpawnRate);
 
             jesterSpawnRate = CustomOption.Create(60, cs(Jester.color, "jester"), rates, null, true);
             jesterCanCallEmergency = CustomOption.Create(61, "jesterCanCallEmergency", true, jesterSpawnRate);
@@ -321,7 +321,7 @@ namespace TheOtherRoles {
             arsonistCooldown = CustomOption.Create(291, "arsonistCooldown", 12.5f, 2.5f, 60f, 2.5f, arsonistSpawnRate, format: "unitSeconds");
             arsonistDuration = CustomOption.Create(292, "arsonistDuration", 3f, 0f, 10f, 1f, arsonistSpawnRate, format: "unitSeconds");
 
-            opportunistSpawnRate = CustomOption.Create(366, cs(Opportunist.color, "opportunist"), rates, null, true);
+            opportunistSpawnRate = CustomOption.Create(380, cs(Opportunist.color, "opportunist"), rates, null, true);
 
             jackalSpawnRate = CustomOption.Create(220, cs(Jackal.color, "jackal"), rates, null, true);
             jackalKillCooldown = CustomOption.Create(221, "jackalKillCooldown", 30f, 2.5f, 60f, 2.5f, jackalSpawnRate, format: "unitSeconds");
@@ -334,13 +334,13 @@ namespace TheOtherRoles {
             sidekickCanUseVents = CustomOption.Create(227, "sidekickCanUseVents", true, jackalCanCreateSidekick);
             jackalPromotedFromSidekickCanCreateSidekick = CustomOption.Create(228, "jackalPromotedFromSidekickCanCreateSidekick", true, jackalCanCreateSidekick);
             jackalCanCreateSidekickFromImpostor = CustomOption.Create(229, "jackalCanCreateSidekickFromImpostor", true, jackalCanCreateSidekick);
-            jackalCanSeeEngineerVent = CustomOption.Create(431, "Jackal Can See If Engineer Is In A Vent", false, jackalSpawnRate);
+            jackalCanSeeEngineerVent = CustomOption.Create(431, "jackalCanSeeEngineerVent", false, jackalSpawnRate);
 
-            vultureSpawnRate = CustomOption.Create(340, cs(Vulture.color, "Vulture"), rates, null, true);
-            vultureCooldown = CustomOption.Create(341, "Vulture Cooldown", 15f, 10f, 60f, 2.5f, vultureSpawnRate);
-            vultureNumberToWin = CustomOption.Create(342, "Number Of Corpses Needed To Be Eaten", 4f, 0f, 10f, 1f, vultureSpawnRate);
-            vultureCanUseVents = CustomOption.Create(343, "Vulture Can Use Vents", true, vultureSpawnRate);
-            vultureShowArrows = CustomOption.Create(344, "Show Arrows Pointing Towards The Corpes", true, vultureSpawnRate);
+            vultureSpawnRate = CustomOption.Create(340, cs(Vulture.color, "vulture"), rates, null, true);
+            vultureCooldown = CustomOption.Create(341, "vultureCooldown", 15f, 10f, 60f, 2.5f, vultureSpawnRate, format: "unitSeconds");
+            vultureNumberToWin = CustomOption.Create(342, "vultureNumberToWin", 4f, 1f, 12f, 1f, vultureSpawnRate);
+            vultureCanUseVents = CustomOption.Create(343, "vultureCanUseVents", true, vultureSpawnRate);
+            vultureShowArrows = CustomOption.Create(344, "vultureShowArrows", true, vultureSpawnRate);
 
             shifterSpawnRate = CustomOption.Create(70, cs(Shifter.color, "shifter"), rates, null, true);
             shifterShiftsModifiers = CustomOption.Create(71, "shifterShiftsModifiers", false, shifterSpawnRate);
@@ -417,10 +417,10 @@ namespace TheOtherRoles {
             baitHighlightAllVents = CustomOption.Create(331, "baitHighlightAllVents", false, baitSpawnRate);
             baitReportDelay = CustomOption.Create(332, "baitReportDelay", 0f, 0f, 10f, 1f, baitSpawnRate, format: "unitSeconds");
 
-            mediumSpawnRate = CustomOption.Create(360, cs(Medium.color, "Medium"), rates, null, true);
-            mediumCooldown = CustomOption.Create(361, "Medium Questioning Cooldown", 30f, 5f, 120f, 5f, mediumSpawnRate);
-            mediumDuration = CustomOption.Create(362, "Medium Questioning Duration", 3f, 0f, 15f, 1f, mediumSpawnRate);
-            mediumOneTimeUse = CustomOption.Create(363, "Each Soul Can Only Be Questioned Once", false, mediumSpawnRate);
+            mediumSpawnRate = CustomOption.Create(370, cs(Medium.color, "medium"), rates, null, true);
+            mediumCooldown = CustomOption.Create(371, "mediumCooldown", 30f, 5f, 120f, 5f, mediumSpawnRate, format: "unitSeconds");
+            mediumDuration = CustomOption.Create(372, "mediumDuration", 3f, 0f, 15f, 1f, mediumSpawnRate, format: "unitSeconds");
+            mediumOneTimeUse = CustomOption.Create(373, "mediumOneTimeUse", false, mediumSpawnRate);
 
             // Other options
             specialOptions = new CustomOptionBlank(null);

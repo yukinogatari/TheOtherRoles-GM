@@ -31,6 +31,7 @@ namespace TheOtherRoles
             Arsonist,
             Lovers,
             Opportunist,
+            Vulture,
 
             None = int.MaxValue,
         }

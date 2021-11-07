@@ -14,6 +14,30 @@ using Hazel;
 namespace TheOtherRoles {
     public static class Helpers {
 
+        public static void setSkinWithAnim(PlayerPhysics playerPhysics, uint SkinId)
+        {
+            SkinData nextSkin = DestroyableSingleton<HatManager>.Instance.AllSkins[(int)SkinId];
+            AnimationClip clip = null;
+            var spriteAnim = playerPhysics.Skin.animator;
+            var anim = spriteAnim.m_animator;
+            var skinLayer = playerPhysics.Skin;
+
+            var currentPhysicsAnim = playerPhysics.Animator.GetCurrentAnimation();
+            if (currentPhysicsAnim == playerPhysics.RunAnim) clip = nextSkin.RunAnim;
+            else if (currentPhysicsAnim == playerPhysics.SpawnAnim) clip = nextSkin.SpawnAnim;
+            else if (currentPhysicsAnim == playerPhysics.EnterVentAnim) clip = nextSkin.EnterVentAnim;
+            else if (currentPhysicsAnim == playerPhysics.ExitVentAnim) clip = nextSkin.ExitVentAnim;
+            else if (currentPhysicsAnim == playerPhysics.IdleAnim) clip = nextSkin.IdleAnim;
+            else clip = nextSkin.IdleAnim;
+
+            float progress = playerPhysics.Animator.m_animator.GetCurrentAnimatorStateInfo(0).normalizedTime;
+            skinLayer.skin = nextSkin;
+
+            spriteAnim.Play(clip, 1f);
+            anim.Play("a", 0, progress % 1);
+            anim.Update(0f);
+        }
+
         public static Sprite loadSpriteFromResources(string path, float pixelsPerUnit) {
             try {
                 Texture2D texture = loadTextureFromResources(path);
@@ -181,7 +205,8 @@ namespace TheOtherRoles {
                     Jackal.formerJackals.Contains(player) ||
                     player == Arsonist.arsonist ||
                     player == Jester.jester ||
-                    player == Opportunist.opportunist));
+                    player == Opportunist.opportunist) ||
+                    player == Vulture.vulture);
         }
 
         public static bool isCrew(this PlayerControl player)
