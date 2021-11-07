@@ -588,9 +588,9 @@ namespace TheOtherRoles.Patches {
             for (int i = 0; i < GameData.Instance.PlayerCount; i++)
             {
                 GameData.PlayerInfo playerInfo = GameData.Instance.AllPlayers[i];
-                if (playerInfo.Object.isCrew()) numCrew++;
                 if (!playerInfo.Disconnected)
                 {
+                    if (playerInfo.Object.isCrew()) numCrew++;
                     if (!playerInfo.IsDead && !playerInfo.Object.isGM())
                     {
                         numTotalAlive++;

@@ -211,7 +211,7 @@ namespace TheOtherRoles {
 
         public static bool isCrew(this PlayerControl player)
         {
-            return !player.Data.IsImpostor && !player.isNeutral();
+            return player != null && !player.Data.IsImpostor && !player.isNeutral();
         }
 
         public static bool hasFakeTasks(this PlayerControl player) {

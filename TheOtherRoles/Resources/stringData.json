@@ -629,7 +629,7 @@
     },
     "vultureCorpses": {
         "0": "Remaining: {0}",
-        "11": "\u6b8b\u308a {0}\u4f53"
+        "11": "\u6b8b\u308a {0}\u4eba"
     },
     "mediumCooldown": {
         "0": "Questioning Cooldown",
@@ -1233,11 +1233,11 @@
     },
     "vultureIntroDesc": {
         "0": "Eat corpses to win",
-        "11": "\u6b7b\u4f53\u3092\u55b0\u3089\u304a\u3046"
+        "11": "\u6b7b\u9ab8\u3092\u55b0\u3089\u304a\u3046"
     },
     "vultureShortDesc": {
         "0": "Eat dead bodies",
-        "11": "\u6b7b\u4f53\u3092\u55b0\u3089\u304a\u3046"
+        "11": "\u6b7b\u9ab8\u3092\u55b0\u3089\u304a\u3046"
     },
     "medium": {
         "0": "Medium",
@@ -1245,11 +1245,11 @@
     },
     "mediumIntroDesc": {
         "0": "Question the souls of the dead to gain information",
-        "11": "\u5e7d\u970a\u304b\u3089\u60c5\u5831\u3092\u805e\u304d\u51fa\u305d\u3046"
+        "11": "\u53d6\u308a\u6b8b\u3055\u308c\u305f\u9b42\u304b\u3089\u60c5\u5831\u3092\u805e\u304d\u51fa\u305d\u3046"
     },
     "mediumShortDesc": {
         "0": "Question the souls",
-        "11": "\u5e7d\u970a\u304b\u3089\u60c5\u5831\u3092\u805e\u304d\u51fa\u305d\u3046"
+        "11": "\u9b42\u304b\u3089\u60c5\u5831\u3092\u805e\u304d\u51fa\u305d\u3046"
     },
     "streamerModeButton": {
         "0": "Streamer Mode",
@@ -1452,19 +1452,19 @@
     },
     "mediumQuestion1": {
         "0": "What is your role? My role is {0}.",
-        "11": "\u300c\u541b\u306e\u5f79\u8077\u306f\u4f55\u3067\u3057\u3087\u3046\u300d\u300e\u79c1\u306f{0}\u3067\u3059\u300f"
+        "11": "\u300c\u3042\u306a\u305f\u306e\u5f79\u8077\u306f\u4f55\u3067\u3057\u3087\u3046\u300d\u300e\u79c1\u306f{0}\u3067\u3059\u300f"
     },
     "mediumQuestion2": {
         "0": "What is your killer's color type? My killer is a {0} color.",
-        "11": "\u300c\u541b\u3092\u6bba\u3057\u305f\u4eba\u306f\u3069\u3093\u306a\u8272\u3067\u3057\u3087\u3046\u300d\u300e\u79c1\u3092\u6bba\u3057\u305f\u4eba\u306f{0}\u8272\u3092\u3057\u3066\u3044\u307e\u3057\u305f\u300f"
+        "11": "\u300c\u3042\u306a\u305f\u3092\u6bba\u3057\u305f\u4eba\u306f\u3069\u3093\u306a\u8272\u3067\u3057\u3087\u3046\u300d\u300e\u79c1\u3092\u6bba\u3057\u305f\u4eba\u306f{0}\u8272\u3092\u3057\u3066\u3044\u307e\u3057\u305f\u300f"
     },
     "mediumQuestion3": {
         "0": "When did you die? I died {0}s before the meeting started.",
-        "11": "\u300c\u541b\u306f\u3044\u3064\u6b7b\u3093\u3060\u3093\u3067\u3057\u3087\u3046\u300d\u300e\u79c1\u306f\u4f1a\u8b70\u306e{0}\u79d2\u524d\u306b\u6b7b\u306b\u307e\u3057\u305f\u300f"
+        "11": "\u300c\u3042\u306a\u305f\u306f\u3044\u3064\u6b7b\u3093\u3060\u3093\u3067\u3057\u3087\u3046\u300d\u300e\u79c1\u306f\u4f1a\u8b70\u306e{0}\u79d2\u524d\u306b\u6b7b\u306b\u307e\u3057\u305f\u300f"
     },
     "mediumQuestion4": {
         "0": "What is your killer's role? My killer is {0}.",
-        "11": "\u300c\u541b\u3092\u6bba\u3057\u305f\u4eba\u306e\u5f79\u8077\u306f\u4f55\u3067\u3057\u3087\u3046\u300d\u300e\u79c1\u3092\u6bba\u3057\u305f\u4eba\u306f{0}\u3067\u3059\u300f"
+        "11": "\u300c\u3042\u306a\u305f\u3092\u6bba\u3057\u305f\u4eba\u306e\u5f79\u8077\u306f\u4f55\u3067\u3057\u3087\u3046\u300d\u300e\u79c1\u3092\u6bba\u3057\u305f\u4eba\u306f{0}\u3067\u3059\u300f"
     },
     "unitSeconds": {
         "0": "{0}s",
@@ -1487,16 +1487,40 @@
         "11": "{0}x"
     },
     "creditsMain": {
-        "0": "Modded by <color=#FCCE03FF>Eisbison</color>, <color=#FCCE03FF>Thunderstorm584</color> & <color=#FCCE03FF>EndOfFile</color>, Design by <color=#FCCE03FF>Bavari</color>\nCustomization by <color=#c1a9ff>Virtual_Dusk</color>",
-        "11": "MOD <color=#FCCE03FF>Eisbison</color>\u3001<color=#FCCE03FF>Thunderstorm584</color>\u3001<color=#FCCE03FF>EndOfFile</color>\n\u30c7\u30b6\u30a4\u30f3 <color=#FCCE03FF>Bavari</color>\u3001\u30ab\u30b9\u30bf\u30de\u30a4\u30ba\u30fb\u65e5\u672c\u8a9e\u8a33 <color=#c1a9ff>Virtual_Dusk</color>"
+        "0": "Modded by <color=#FCCE03FF>Eisbison</color>, <color=#FCCE03FF>Thunderstorm584</color>, <color=#FCCE03FF>EndOfFile</color> & <color=#FCCE03FF>Mall\u00f6ris</color>\nDesign by <color=#FCCE03FF>Bavari</color>, Customization by <color=#c1a9ff>Virtual_Dusk</color>",
+        "11": "MOD <color=#FCCE03FF>Eisbison</color>\u3001<color=#FCCE03FF>Thunderstorm584</color>\u3001<color=#FCCE03FF>EndOfFile</color>\u3001<color=#FCCE03FF>Mall\u00f6ris</color>\n\u30c7\u30b6\u30a4\u30f3 <color=#FCCE03FF>Bavari</color>\u3001\u30ab\u30b9\u30bf\u30de\u30a4\u30ba\u30fb\u65e5\u672c\u8a9e\u8a33 <color=#c1a9ff>Virtual_Dusk</color>"
     },
     "creditsFull": {
-        "0": "<size=80%>Modded by <color=#FCCE03FF>Eisbison</color>,\n<color=#FCCE03FF>Thunderstorm584</color> & <color=#FCCE03FF>EndOfFile</color>\nButton design by <color=#FCCE03FF>Bavari</color>\nCustomization by <color=#c1a9ff>Virtual_Dusk</color></size>",
-        "11": "<size=80%>MOD <color=#FCCE03FF>Eisbison</color>\u3001\n<color=#FCCE03FF>Thunderstorm584</color>\u3001<color=#FCCE03FF>EndOfFile</color>\n\u30dc\u30bf\u30f3\u30c7\u30b6\u30a4\u30f3 <color=#FCCE03FF>Bavari</color>\n\u30ab\u30b9\u30bf\u30de\u30a4\u30ba\u30fb\u65e5\u672c\u8a9e\u8a33 <color=#c1a9ff>Virtual_Dusk</color></size>"
+        "0": "<size=80%>Modded by <color=#FCCE03FF>Eisbison</color>, <color=#FCCE03FF>EndOfFile</color>\n<color=#FCCE03FF>Thunderstorm584</color> & <color=#FCCE03FF>Mall\u00f6ris</color>\nButton design by <color=#FCCE03FF>Bavari</color>\nCustomization by <color=#c1a9ff>Virtual_Dusk</color></size>",
+        "11": "<size=80%>MOD <color=#FCCE03FF>Eisbison</color>\u3001<color=#FCCE03FF>EndOfFile</color>\n<color=#FCCE03FF>Thunderstorm584</color>\u3001<color=#FCCE03FF>Mall\u00f6ris</color>\n\u30dc\u30bf\u30f3\u30c7\u30b6\u30a4\u30f3 <color=#FCCE03FF>Bavari</color>\n\u30ab\u30b9\u30bf\u30de\u30a4\u30ba\u30fb\u65e5\u672c\u8a9e\u8a33 <color=#c1a9ff>Virtual_Dusk</color></size>"
     },
     "creditsVersion": {
         "0": "GM Edition v{0}",
         "11": "GM\u30a8\u30c7\u30a3\u30b7\u30e7\u30f3 v{0}"
+    },
+    "updateButton": {
+        "0": "Update\nThe Other Roles GM",
+        "11": "TOR GM\u3092\n\u30a2\u30c3\u30d7\u30c7\u30fc\u30c8"
+    },
+    "updatePleaseWait": {
+        "0": "Updating The Other Roles GM\nPlease wait...",
+        "11": "\u30a2\u30c3\u30d7\u30c7\u30fc\u30c8\u4e2d\n\u5c11\u3005\u304a\u5f85\u3061\u304f\u3060\u3055\u3044\u2026"
+    },
+    "updateManually": {
+        "0": "Unable to auto-update.\nPlease update manually.",
+        "11": "\u81ea\u52d5\u30a2\u30c3\u30d7\u30c7\u30fc\u30c8\u304c\n\u3067\u304d\u307e\u305b\u3093\u3067\u3057\u305f\n\u624b\u52d5\u3067\u66f4\u65b0\u3057\u3066\u304f\u3060\u3055\u3044"
+    },
+    "updateInProgress": {
+        "0": "Update might already\nbe in progress.",
+        "11": "\u30a2\u30c3\u30d7\u30c7\u30fc\u30c8\u5b9f\u884c\u4e2d"
+    },
+    "updateRestart": {
+        "0": "The Other Roles GM\nupdated successfully.\nPlease restart the game.",
+        "11": "The Other Roles GM\u306e\n\u30a2\u30c3\u30d7\u30c7\u30fc\u30c8\u304c\u5b8c\u4e86\u3057\u307e\u3057\u305f\n\u30b2\u30fc\u30e0\u3092\u518d\u8d77\u52d5\u3057\u3066\u304f\u3060\u3055\u3044"
+    },
+    "updateFailed": {
+        "0": "Update failed.\nTry again later,\nor update manually.",
+        "11": "\u81ea\u52d5\u30a2\u30c3\u30d7\u30c7\u30fc\u30c8\u304c\n\u3067\u304d\u307e\u305b\u3093\u3067\u3057\u305f\n\u624b\u52d5\u3067\u66f4\u65b0\u3057\u3066\u304f\u3060\u3055\u3044"
     },
     "jesterFullDesc": {
         "0": "The Jester does not have any tasks.\nThey win the game as a solo if they get voted out during a meeting.",
@@ -1564,7 +1588,7 @@
     },
     "detectiveFullDesc": {
         "0": "The Detective can see footprints that other players leave behind.\nThe Detective's other feature shows when they report a corpse: they recieve clues\nabout the killer's identity. The type of information they get is based on the time it took\nthem to find the corpse.",
-        "11": "\u30fb\u63a2\u5075\n\u30fb\u30d7\u30ec\u30a4\u30e4\u30fc\u306e\u8db3\u8de1\u304c\u898b\u3048\u308b\n\u30fb\u4e00\u5b9a\u6642\u9593\u5185\u306b\u6b7b\u4f53\u3092\u767a\u898b\u3059\u308b\u3068\u3001\u72af\u4eba\u306b\u3064\u3044\u3066\u306e\u60c5\u5831\u304c\u5f97\u3089\u308c\u308b\n\u30fb\u4f1a\u8b70\u306b\u5165\u3063\u305f\u3089\u3001\u30c1\u30e3\u30c3\u30c8\u3067\u8868\u793a\u3055\u308c\u308b"
+        "11": "\u30fb\u63a2\u5075\n\u30fb\u30d7\u30ec\u30a4\u30e4\u30fc\u306e\u8db3\u8de1\u304c\u898b\u3048\u308b\n\u30fb\u4e00\u5b9a\u6642\u9593\u5185\u306b\u6b7b\u4f53\u3092\u767a\u898b\u3059\u308b\u3068\u3001\u72af\u4eba\u306b\u3064\u3044\u3066\u306e\u60c5\u5831\u304c\u5f97\u3089\u308c\u308b\n\u30fb\u4f1a\u8b70\u306b\u5165\u3063\u305f\u3089\u3001\u30c1\u30e3\u30c3\u30c8\u3067\u8868\u793a\u3055\u308c\u308b\n\n\u3010\u8272\u8abf\u8868\u8a18\u3011\n\u30fb\u6fc3\u3044\u8272\n\u3000\u8d64\u3001\u9752\u3001\u7dd1\u3001\u9ed2\u3001\u7d2b\u3001\u8336\u3001\u30de\u30eb\u30fc\u30f3\u3001\u30bf\u30f3\n\u30fb\u6de1\u3044\u8272\n\u3000\u30d4\u30f3\u30af\u3001\u30aa\u30ec\u30f3\u30b8\u3001\u9ec4\u8272\u3001\u767d\u3001\u6c34\u8272\u3001\u9ec4\u7dd1\u3001\u30ed\u30fc\u30ba\u3001\u3000\u30d0\u30ca\u30ca\u3001\u30b0\u30ec\u30fc\u3001\u30b3\u30fc\u30e9\u30eb "
     },
     "timeMasterFullDesc": {
         "0": "The Time Master has a time shield which they can activate.\nThe time shield remains active for a configurable amount of time.\nIf a player tries to kill the Time Master while the time shield is active,\nthe kill won't happen and the time will rewind for a set amount of time.\nThe kill cooldown of the killer won't be reset, so the Time Master\nhas to make sure that the game won't result in the same situation.\nThe Time Master won't be affected by the rewind.",
@@ -1663,10 +1687,12 @@
         "11": "\u30fb\u6700\u5f8c\u307e\u3067\u751f\u304d\u6b8b\u308c\u3070\u52dd\u5229\n\u30fb\u30ad\u30ebor\u8ffd\u653e\u3055\u308c\u305a\u306b<color=#8cffffff>\u30af\u30eb\u30fc</color>\u307e\u305f\u306f<color=#ff1919ff>\u30a4\u30f3\u30dd\u30b9\u30bf\u30fc</color>\u307e\u305f\u306f<color=#ffff00ff>\u305d\u306e\u4ed6\u9663\u55b6</color>\u304c\u52dd\u5229\u3057\u305f\u969b\u306b\n\u3000\u8ffd\u52a0\u52dd\u5229\u3068\u306a\u308b"
     },
     "vultureFullDesc": {
-        "0": "The Vulture does not have any tasks, he has to win the game as a solo.\nThe Vulture is a neutral role that must eat a specified number of corpses\n(depending on the options) in order to win.\nDepending on the options, when a player dies, the Vulture gets an arrow pointing\nto the corpse."
+        "0": "The Vulture does not have any tasks, he has to win the game as a solo.\nThe Vulture is a neutral role that must eat a specified number of corpses\n(depending on the options) in order to win.\nDepending on the options, when a player dies, the Vulture gets an arrow pointing\nto the corpse.",
+        "11": "\u30fb\u4e00\u5b9a\u6570\u306e\u6b7b\u4f53\u3092\u98df\u3079\u308b\u3068\u52dd\u5229\u3059\u308b\n\u30fb\u6b7b\u4f53\u306e\u5834\u6240\u304c\u77e2\u5370\u306b\u3066\u3042\u308b\u7a0b\u5ea6\u308f\u304b\u308b\uff08\u8a2d\u5b9a\u306b\u3088\u308b\uff09\n\u30fb\u98df\u3079\u305f\u6b7b\u4f53\u306f\u305d\u306e\u5834\u304b\u3089\u6d88\u3048\u308b\n\u30fb\u30d9\u30f3\u30c8\u306e\u4f7f\u7528\u304c\u53ef\u80fd\uff08\u8a2d\u5b9a\u306b\u3088\u308b\uff09"
     },
     "mediumFullDesc": {
-        "0": "The medium is a crewmate who can ask the souls of dead players for information.\nLike the Seer, it sees the places where the players have died (after the next meeting)\nand can question them. It then gets random information about the soul or the killer\nin the chat. The souls only stay for one round, i.e. until the next meeting.\nDepending on the options, the souls can only be questioned once and then disappear."
+        "0": "The medium is a crewmate who can ask the souls of dead players for information.\nLike the Seer, it sees the places where the players have died (after the next meeting)\nand can question them. It then gets random information about the soul or the killer\nin the chat. The souls only stay for one round, i.e. until the next meeting.\nDepending on the options, the souls can only be questioned once and then disappear.",
+        "11": "\u30fb\u9b42\u304b\u3089\u60c5\u5831\u3092\u5f97\u3089\u308c\u308b\n\u30fb\u6b7b\u4f53\u304c\u4e0a\u304c\u3063\u305f\u6b21\u306e\u30bf\u30fc\u30f3\u305d\u306e\u9b42\u304c\u898b\u3048\u308b\n\u30fb\u9b42\u306f\u6b21\u306e\u4f1a\u8b70\u5f8c\u306b\u6d88\u3048\u308b\n\n\u3010\u8272\u8abf\u8868\u8a18\u3011\n\u30fb\u6fc3\u3044\u8272\n\u3000\u8d64\u3001\u9752\u3001\u7dd1\u3001\u9ed2\u3001\u7d2b\u3001\u8336\u3001\u30de\u30eb\u30fc\u30f3\u3001\u30bf\u30f3\n\u30fb\u6de1\u3044\u8272\n\u3000\u30d4\u30f3\u30af\u3001\u30aa\u30ec\u30f3\u30b8\u3001\u9ec4\u8272\u3001\u767d\u3001\u6c34\u8272\u3001\u9ec4\u7dd1\u3001\u30ed\u30fc\u30ba\u3001\u3000\u30d0\u30ca\u30ca\u3001\u30b0\u30ec\u30fc\u3001\u30b3\u30fc\u30e9\u30eb "
     },
     "Banner": {
         "0": "Banner.png"

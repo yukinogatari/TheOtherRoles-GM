@@ -310,8 +310,8 @@ namespace TheOtherRoles {
             guesserSpawnRate = CustomOption.Create(310, cs(Guesser.color, "guesserSpawnRate"), rates, null, true);
             guesserIsImpGuesserRate = CustomOption.Create(311, "guesserIsImpGuesserRate", rates, guesserSpawnRate);
             guesserNumberOfShots = CustomOption.Create(312, "guesserNumberOfShots", 2f, 1f, 15f, 1f, guesserSpawnRate, format: "unitShots");
-            guesserOnlyAvailableRoles = CustomOption.Create(313, "guesserOnlyAvailableRoles", true, guesserSpawnRate);
             guesserHasMultipleShotsPerMeeting = CustomOption.Create(314, "guesserHasMultipleShotsPerMeeting", false, guesserSpawnRate);
+            guesserOnlyAvailableRoles = CustomOption.Create(313, "guesserOnlyAvailableRoles", true, guesserSpawnRate);
 
             jesterSpawnRate = CustomOption.Create(60, cs(Jester.color, "jester"), rates, null, true);
             jesterCanCallEmergency = CustomOption.Create(61, "jesterCanCallEmergency", true, jesterSpawnRate);
@@ -337,7 +337,7 @@ namespace TheOtherRoles {
             jackalCanSeeEngineerVent = CustomOption.Create(431, "jackalCanSeeEngineerVent", false, jackalSpawnRate);
 
             vultureSpawnRate = CustomOption.Create(340, cs(Vulture.color, "vulture"), rates, null, true);
-            vultureCooldown = CustomOption.Create(341, "vultureCooldown", 15f, 10f, 60f, 2.5f, vultureSpawnRate, format: "unitSeconds");
+            vultureCooldown = CustomOption.Create(341, "vultureCooldown", 15f, 2.5f, 60f, 2.5f, vultureSpawnRate, format: "unitSeconds");
             vultureNumberToWin = CustomOption.Create(342, "vultureNumberToWin", 4f, 1f, 12f, 1f, vultureSpawnRate);
             vultureCanUseVents = CustomOption.Create(343, "vultureCanUseVents", true, vultureSpawnRate);
             vultureShowArrows = CustomOption.Create(344, "vultureShowArrows", true, vultureSpawnRate);
