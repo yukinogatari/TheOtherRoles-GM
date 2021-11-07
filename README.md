@@ -84,18 +84,58 @@ The [Role Assignment](#role-assignment) sections explains how the roles are bein
 <details>
   <summary>Click to show the Changelog</summary>
   
-**Version 2.9.1**
+**Version 2.9.2**
+
 - Merged from upstream
 - **New Role:** [Medium](#medium)
 - **New Role:** [Vulture](#vulture)
 - Added Jackal Option: "Jackal Can See If Engineer Is In A Vent"
 - Added Guesser Option: "Guesser Can Shoot Multiple Times Per Meeting"
 - Fixed a bug that occured when the Shifter shifted the Bait
-- Fixed a bug where [Camouflager](#camouflager) & [Morphling](#morphling) caused performance issues
 - Fixed a bug where [Medium](#medium) did not exlude the Evil [Mini](#mini)
-- [Vulture](#vulture) "Number Of Corpses Needed To Be Eaten" max value extended to 10
-- Added Vulture Option: "Show Arrows Pointing Towards The Corpes"
-- Removed Medium Question: "What is your name?" (name of the soul is added after each question)
+- [Vulture](#vulture) "Number Of Corpses Needed To Be Eaten" max value extended to 12
+- Added Vulture Option: "Show Arrows Pointing Towards The Corpses"
+
+## v2.9.1
+
+**New Features:**
+
+  * Added an overlay to display current settings/role summary in-game (press H key to display)
+  Japanese summaries by [Ao](https://twitter.com/aokunnnnn2525)
+  * New Camouflager Option: Randomize Colors
+  * New Guesser Option: Only Show Available Roles
+  * New Sheriff Option: Misfire Kills Target
+  * New GM Edition exclusive hats, 30 designs based on Japanese Among Us streamers and drawn by [Unohana Shiune](https://twitter.com/konken5)
+
+**Major Changes:**
+
+  * Opportunist is now handled as a Neutral role instead of a Crew role
+    As a result, the Opportunist can now be killed by the Sheriff
+  * Shifter now dies when attempting to steal Opportunist or Madmate (Opportunist is a Neutral role, and Madmate is technically a Crew role but effectively an Impostor role)
+  * An erased Neutral role no longer results in the player having to do tasks
+  * Adjusted Lovers quite a bit
+    * Option "Can Win With Crew" replaced with "Counts as Separate Team"
+    * When off, Lovers now properly behaves like old TOR (some fixes from the previous update left us inconsistent there)
+  * Hide number of tasks completed during a Comms sabotage
+  * Expanded the Impostors setting from 1-3 to 0-15
+  * Extended all Kill Cooldowns to go down as far as 2.5s
+  * More granular info on the results screen, such as Lovers who committed suicide or players who were torched by the Arsonist
+  * Replace the On/Off special device restriction with a more granular time-based system (idea by [tomarai](https://github.com/tomarai))
+    * Time limits are shared across the entire crew, and can be reset after each round if desired
+    * Setting the time limit to 0s is the same as disabling the device entirely
+
+**Bug Fixes:**
+
+  * Briefly display a black screen in the period between the report animation and the meeting starting
+  * Fix a bug with the original game where a kill happening *after* a meeting begins results in a corpse being left behind for some players
+  * Fix a bug with the original game where the arrow for a task completed during a Comms sabotage stays behind
+  * Don't highlight potential targets while inside a vent
+  * Fix issues with the Snitch arrows sometimes showing the wrong color
+  * The Security Guard's cameras now display their room name properly on Polus and Airship
+  * Fix Airship showing up as Dleks on the options menu after every game
+  * Results screen didn't display properly if the game ended during a Camouflage or Morph
+  * Fix the UI getting lost if you open and then close the map while zoomed out
+  * A task win cannot occur if there are zero players with tasks (ie. everyone is an Impostor or Neutral role)
 
 **Hotfix 2.9.0.1**
 - **New Role:** [Opportunist](#opportunist) (created by [libhalt](https://twitter.com/libhalt))
@@ -1264,9 +1304,9 @@ Depending on the options, when a player dies, the Vulture gets an arrow pointing
 |----------|:-------------:|
 | Vulture Spawn Chance | -
 | Vulture Countdown | -
-| Number Of Corpses Needed To Be Eaten | Corpes needed to be eaten to win the game
+| Number Of Corpses Needed To Be Eaten | Corpses needed to be eaten to win the game
 | Vulture Can Use Vents | -
-| Show Arrows Pointing Towards The Corpes | -
+| Show Arrows Pointing Towards The Corpses | -
 -----------------------
 
 # Source code
@@ -1274,4 +1314,4 @@ It's bad I know, this is a side project and my second week of modding. So there 
 You can use parts of the code but don't copy paste the whole thing. Make sure you give credits to the other developers, because some parts of the code are based on theirs.
 
 # Translation
-As of v2.9.0, The Other Roles now supports translation into other languages. To add a new language, add translations to [Strings.xlsx](/Strings.xlsx) and submit a pull request.
+As of v2.9.0, The Other Roles GM now supports translation into other languages. To add a new language, add translations to [Strings.xlsx](/Strings.xlsx) and submit a pull request.
