@@ -496,6 +496,10 @@ namespace TheOtherRoles
                 {
                     MorphData.morphData[morphling.PlayerId]?.applyToPlayer(morphling);
                 }
+                else
+                {
+                    TheOtherRolesPlugin.Instance.Log.LogError("handleMorphing failed?");
+                }
             }
 
             public static void startMorph(PlayerControl target)

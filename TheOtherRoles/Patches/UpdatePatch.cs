@@ -224,6 +224,27 @@ namespace TheOtherRoles.Patches {
             __instance.KillButton.enabled = enabled;
         }
 
+        static void camouflageAndMorphActions()
+        {
+            float oldCamouflageTimer = Camouflager.camouflageTimer;
+            float oldMorphTimer = Morphling.morphTimer;
+
+            Camouflager.camouflageTimer -= Time.deltaTime;
+            Morphling.morphTimer -= Time.deltaTime;
+
+            // Everyone but morphling reset
+            if (oldCamouflageTimer > 0f && Camouflager.camouflageTimer <= 0f)
+            {
+                Camouflager.resetCamouflage();
+            }
+
+            // Morphling reset
+            if (oldMorphTimer > 0f && Morphling.morphTimer <= 0f)
+            {
+                Morphling.resetMorph();
+            }
+        }
+
         static void GMUpdate(HudManager __instance)
         {
             //__instance.UseButton.enabled = false;
@@ -248,6 +269,9 @@ namespace TheOtherRoles.Patches {
             setNameColors();
             updateShielded();
             setNameTags();
+
+            // Camouflager and Morphling
+            camouflageAndMorphActions();
 
             // Impostors
             updateImpostorKillButton(__instance);
