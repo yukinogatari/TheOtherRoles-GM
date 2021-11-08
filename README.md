@@ -45,6 +45,8 @@ The [Role Assignment](#role-assignment) sections explains how the roles are bein
 # Releases
 | Among Us - Version| Mod Version | Link |
 |----------|-------------|-----------------|
+| 2021.6.30s| v2.9.2.1| [Download](https://github.com/yukinogatari/TheOtherRoles-GM/releases/download/v2.9.2.1/TheOtherRoles-GM.v2.9.2.1.zip)
+| 2021.6.30s| v2.9.2| [Download](https://github.com/yukinogatari/TheOtherRoles-GM/releases/download/v2.9.2/TheOtherRoles-GM.v2.9.2.zip)
 | 2021.6.30s| v2.9.0.1| [Download](https://github.com/yukinogatari/TheOtherRoles-GM/releases/download/v2.9.0/TheOtherRoles-GM.v2.9.0.1.zip)
 | 2021.6.30s| v2.8.1| [Download](https://github.com/Eisbison/TheOtherRoles/releases/download/v2.8.1/TheOtherRoles.zip)
 | 2021.6.30s| v2.8.0| [Download](https://github.com/Eisbison/TheOtherRoles/releases/download/v2.8.0/TheOtherRoles.zip)
@@ -83,6 +85,10 @@ The [Role Assignment](#role-assignment) sections explains how the roles are bein
 # Changelog
 <details>
   <summary>Click to show the Changelog</summary>
+
+**Hotfix 2.9.2.1**
+
+- Fix for Morphing/Camoflauger's powers not properly ending when the timer ran out.
   
 **Version 2.9.2**
 
