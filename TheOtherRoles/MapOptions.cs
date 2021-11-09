@@ -49,8 +49,8 @@ namespace TheOtherRoles{
 
             hideSettings = CustomOptionHolder.hideSettings.getBool();
 
-            randomizeColors = CustomOptionHolder.playerColorRandom.getBool();
-            allowDupeNames = CustomOptionHolder.playerNameDupes.getBool();
+            randomizeColors = CustomOptionHolder.uselessOptions.getBool() && CustomOptionHolder.playerColorRandom.getBool();
+            allowDupeNames = CustomOptionHolder.uselessOptions.getBool() && CustomOptionHolder.playerNameDupes.getBool();
 
             restrictDevices = CustomOptionHolder.restrictDevices.getSelection();
             restrictAdminTime = restrictAdminTimeMax = CustomOptionHolder.restrictAdmin.getFloat();

@@ -1,6 +1,8 @@
 using HarmonyLib;
 using static TheOtherRoles.TheOtherRoles;
 using UnityEngine;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace TheOtherRoles.Patches {
 
@@ -54,6 +56,18 @@ namespace TheOtherRoles.Patches {
         [HarmonyPatch(typeof(ShipStatus), nameof(ShipStatus.Begin))]
         public static bool Prefix(ShipStatus __instance)
         {
+            if (CustomOptionHolder.uselessOptions.getBool() && CustomOptionHolder.playerColorRandom.getBool() && AmongUsClient.Instance.AmHost)
+            {
+                List<int> colors = Enumerable.Range(0, Palette.PlayerColors.Count).ToList();
+                foreach (PlayerControl p in PlayerControl.AllPlayerControls)
+                {
+                    int i = TheOtherRoles.rnd.Next(0, colors.Count);
+                    p.SetColor(colors[i]);
+                    p.RpcSetColor((byte)colors[i]);
+                    colors.RemoveAt(i);
+                }
+            }
+
             var commonTaskCount = __instance.CommonTasks.Count;
             var normalTaskCount = __instance.NormalTasks.Count;
             var longTaskCount = __instance.LongTasks.Count;

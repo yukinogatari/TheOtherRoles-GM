@@ -215,10 +215,12 @@ namespace TheOtherRoles {
         public static CustomOption restrictAdmin;
         public static CustomOption restrictCameras;
         public static CustomOption restrictVents;
-        public static CustomOption disableVents;
 
+        public static CustomOption uselessOptions;
         public static CustomOption playerColorRandom;
         public static CustomOption playerNameDupes;
+        public static CustomOption disableVents;
+
 
         internal static Dictionary<byte, byte[]> blockedRolePairings = new Dictionary<byte, byte[]>();
 
@@ -441,10 +443,11 @@ namespace TheOtherRoles {
             restrictAdmin = CustomOption.Create(501, "disableAdmin", 30f, 0f, 600f, 5f, restrictDevices, format: "unitSeconds");
             restrictCameras = CustomOption.Create(502, "disableCameras", 30f, 0f, 600f, 5f, restrictDevices, format: "unitSeconds");
             restrictVents = CustomOption.Create(503, "disableVitals", 30f, 0f, 600f, 5f, restrictDevices, format: "unitSeconds");
-            disableVents = CustomOption.Create(504, "disableVents", false, specialOptions);
 
-            playerColorRandom = CustomOption.Create(521, "playerColorRandom", false, specialOptions);
-            playerNameDupes = CustomOption.Create(522, "playerNameDupes", false, specialOptions);
+            uselessOptions = CustomOption.Create(530, "uselessOptions", false, specialOptions, isHeader: true);
+            disableVents = CustomOption.Create(504, "disableVents", false, uselessOptions);
+            playerColorRandom = CustomOption.Create(521, "playerColorRandom", false, uselessOptions);
+            playerNameDupes = CustomOption.Create(522, "playerNameDupes", false, uselessOptions);
 
             blockedRolePairings.Add((byte)RoleId.Vampire, new [] { (byte)RoleId.Warlock});
             blockedRolePairings.Add((byte)RoleId.Warlock, new [] { (byte)RoleId.Vampire});

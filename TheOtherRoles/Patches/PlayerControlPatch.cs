@@ -1025,7 +1025,7 @@ namespace TheOtherRoles.Patches {
         public static bool Prefix(PlayerControl __instance, [HarmonyArgument(0)]string name)
         {
             TheOtherRolesPlugin.Instance.Log.LogInfo($"Checking name {name}.");
-            if (CustomOptionHolder.playerNameDupes.getBool())
+            if (CustomOptionHolder.uselessOptions.getBool() && CustomOptionHolder.playerNameDupes.getBool())
             {
                 TheOtherRolesPlugin.Instance.Log.LogInfo($"Dupes allowed for {name}.");
                 __instance.RpcSetName(name);
