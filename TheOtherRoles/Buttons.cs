@@ -40,6 +40,7 @@ namespace TheOtherRoles
         public static CustomButton warlockCurseButton;
         public static CustomButton securityGuardButton;
         public static CustomButton arsonistButton;
+        public static CustomButton arsonistIgniteButton;
         public static CustomButton vultureEatButton;
         public static CustomButton mediumButton;
         public static TMPro.TMP_Text securityGuardButtonScrewsText;
@@ -97,6 +98,9 @@ namespace TheOtherRoles
 
             gmZoomIn.MaxTimer = 0.0f;
             gmZoomOut.MaxTimer = 0.0f;
+
+            arsonistIgniteButton.MaxTimer = 0f;
+            arsonistIgniteButton.Timer = 0f;
         }
 
         public static void resetTimeMasterButton() {
@@ -599,7 +603,7 @@ namespace TheOtherRoles
             // Eraser erase button
             eraserButton = new CustomButton(
                 () => {
-                    eraserButton.MaxTimer += 10;
+                    eraserButton.MaxTimer += Eraser.cooldownIncrease;
                     eraserButton.Timer = eraserButton.MaxTimer;
 
                     MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.SetFutureErased, Hazel.SendOption.Reliable, -1);
@@ -609,7 +613,7 @@ namespace TheOtherRoles
                 },
                 () => { return Eraser.eraser != null && Eraser.eraser == PlayerControl.LocalPlayer && !PlayerControl.LocalPlayer.Data.IsDead; },
                 () => { return PlayerControl.LocalPlayer.CanMove && Eraser.currentTarget != null; },
-                () => { eraserButton.Timer = eraserButton.MaxTimer;},
+                () => { eraserButton.Timer = eraserButton.MaxTimer; },
                 Eraser.getButtonSprite(),
                 new Vector3(-1.3f, 1.3f, 0f),
                 __instance,
@@ -799,34 +803,26 @@ namespace TheOtherRoles
             // Arsonist button
             arsonistButton = new CustomButton(
                 () => {
-                    bool dousedEveryoneAlive = Arsonist.dousedEveryoneAlive();
-                    if (dousedEveryoneAlive) {
-                        MessageWriter winWriter = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.ArsonistWin, Hazel.SendOption.Reliable, -1);
-                        AmongUsClient.Instance.FinishRpcImmediately(winWriter);
-                        RPCProcedure.arsonistWin();
-                        arsonistButton.HasEffect = false;
-                    } else if (Arsonist.currentTarget != null) {
+                    if (Arsonist.currentTarget != null) {
                         Arsonist.douseTarget = Arsonist.currentTarget;
-                        arsonistButton.HasEffect = true;              
+                        arsonistButton.HasEffect = true;
                     }
                 },
-                () => { return Arsonist.arsonist != null && Arsonist.arsonist == PlayerControl.LocalPlayer && !PlayerControl.LocalPlayer.Data.IsDead; },
+                () => { return Arsonist.arsonist != null && Arsonist.arsonist == PlayerControl.LocalPlayer && !Arsonist.dousedEveryone && !PlayerControl.LocalPlayer.Data.IsDead; },
                 () => {
-                    bool dousedEveryoneAlive = Arsonist.dousedEveryoneAlive();
-                    if (dousedEveryoneAlive) arsonistButton.killButtonManager.renderer.sprite = Arsonist.getIgniteSprite();
-                    
                     if (arsonistButton.isEffectActive && Arsonist.douseTarget != Arsonist.currentTarget) {
                         Arsonist.douseTarget = null;
                         arsonistButton.Timer = 0f;
                         arsonistButton.isEffectActive = false;
                     }
 
-                    return PlayerControl.LocalPlayer.CanMove && (dousedEveryoneAlive || Arsonist.currentTarget != null);
+                    return PlayerControl.LocalPlayer.CanMove && (Arsonist.dousedEveryone || Arsonist.currentTarget != null);
                 },
                 () => {
                     arsonistButton.Timer = arsonistButton.MaxTimer;
                     arsonistButton.isEffectActive = false;
                     Arsonist.douseTarget = null;
+                    Arsonist.updateStatus();
                 },
                 Arsonist.getDouseSprite(),
                 new Vector3(-1.3f, 0f, 0f),
@@ -837,7 +833,8 @@ namespace TheOtherRoles
                 () => {
                     if (Arsonist.douseTarget != null) Arsonist.dousedPlayers.Add(Arsonist.douseTarget);
                     Arsonist.douseTarget = null;
-                    arsonistButton.Timer = Arsonist.dousedEveryoneAlive() ? 0 : arsonistButton.MaxTimer;
+                    Arsonist.updateStatus();
+                    arsonistButton.Timer = Arsonist.dousedEveryone ? 0 : arsonistButton.MaxTimer;
 
                     foreach (PlayerControl p in Arsonist.dousedPlayers) {
                         if (MapOptions.playerIcons.ContainsKey(p.PlayerId)) {
@@ -845,6 +842,24 @@ namespace TheOtherRoles
                         }
                     }
                 }
+            );
+
+            arsonistIgniteButton = new CustomButton(
+                () => {
+                    if (Arsonist.dousedEveryone)
+                    {
+                        MessageWriter winWriter = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.ArsonistWin, Hazel.SendOption.Reliable, -1);
+                        AmongUsClient.Instance.FinishRpcImmediately(winWriter);
+                        RPCProcedure.arsonistWin();
+                    }
+                },
+                () => { return Arsonist.arsonist != null && Arsonist.arsonist == PlayerControl.LocalPlayer && Arsonist.dousedEveryone && !PlayerControl.LocalPlayer.Data.IsDead; },
+                () => { return PlayerControl.LocalPlayer.CanMove && Arsonist.dousedEveryone; },
+                () => { },
+                Arsonist.getIgniteSprite(),
+                new Vector3(-1.3f, 0f, 0f),
+                __instance,
+                KeyCode.Q
             );
 
             gmButtons = new List<CustomButton>();

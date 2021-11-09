@@ -213,7 +213,7 @@ namespace TheOtherRoles.Patches {
 
         private static void selectFactionForFactionIndependentRoles(RoleAssignmentData data) {
             // Assign Mini (33% chance impostor / 67% chance crewmate)
-            if (data.impostors.Count > 0 && data.maxImpostorRoles > 0 && rnd.Next(1, 101) <= 33) {
+            if (data.impostors.Count > 0 && data.maxImpostorRoles > 0 && rnd.Next(1, 101) <= CustomOptionHolder.miniIsImpRate.getSelection() * 10) {
                 data.impSettings.Add((byte)RoleId.Mini, CustomOptionHolder.miniSpawnRate.getSelection());
             } else if (data.crewmates.Count > 0 && data.maxCrewmateRoles > 0) {
                 data.crewSettings.Add((byte)RoleId.Mini, CustomOptionHolder.miniSpawnRate.getSelection());

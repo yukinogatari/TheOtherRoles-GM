@@ -131,6 +131,10 @@
         "0": "Erase Cooldown",
         "11": "\u524a\u9664\u30af\u30fc\u30eb\u30c0\u30a6\u30f3"
     },
+    "eraserCooldownIncrease": {
+        "0": "Erase Cooldown Penalty",
+        "11": "\u524a\u9664\u3059\u308b\u5ea6\u306b\u8ffd\u52a0\u3055\u308c\u308b\u30af\u30fc\u30eb\u30c0\u30a6\u30f3"
+    },
     "eraserCanEraseAnyone": {
         "0": "Can Erase Anyone",
         "11": "\u3060\u308c\u3067\u3082\u524a\u9664\u3067\u304d\u308b"
@@ -199,8 +203,12 @@
         "0": "Mini",
         "11": "\u30df\u30cb"
     },
+    "miniIsImpRate": {
+        "0": "Chance Mini Is Impostor",
+        "11": "\u30a4\u30f3\u30dd\u30b9\u30bf\u30fc\u306b\u306a\u308b\u78ba\u7387"
+    },
     "miniGrowingUpDuration": {
-        "0": "Mini Growing Up Duration",
+        "0": "Growing Up Duration",
         "11": "\u6210\u9577\u306b\u8981\u3059\u308b\u6642\u9593"
     },
     "loversSpawnRate": {
@@ -236,7 +244,7 @@
         "11": "\u30b2\u30c3\u30b5\u30fc"
     },
     "guesserIsImpGuesserRate": {
-        "0": "Chance The Guesser Is An Impostor",
+        "0": "Chance Guesser Is Impostor",
         "11": "\u30a4\u30f3\u30dd\u30b9\u30bf\u30fc\u306b\u306a\u308b\u78ba\u7387"
     },
     "guesserNumberOfShots": {
@@ -698,6 +706,14 @@
     "timeRemaining": {
         "0": "Remaining: {0}",
         "11": "\u6b8b\u308a {0}"
+    },
+    "playerColorRandom": {
+        "0": "Randomize Player Colors",
+        "11": "\u5168\u54e1\u306e\u8272\u304c\u30e9\u30f3\u30c0\u30e0\u306b"
+    },
+    "playerNameDupes": {
+        "0": "Allow Duplicate Names",
+        "11": "\u540d\u524d\u88ab\u308a\u3092\u8a31\u53ef"
     },
     "optionOn": {
         "0": "On",

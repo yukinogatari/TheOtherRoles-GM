@@ -934,6 +934,9 @@ namespace TheOtherRoles.Patches {
                 else
                     BountyHunter.bountyHunter.SetKillTimer(PlayerControl.GameOptions.KillCooldown + BountyHunter.punishmentTime); 
             }
+
+            // Update arsonist status
+            Arsonist.updateStatus();
         }
     }
 
@@ -1013,6 +1016,24 @@ namespace TheOtherRoles.Patches {
                 !ExileController.Instance &&
                 !IntroCutscene.Instance;
             return false;
+        }
+    }
+
+    [HarmonyPatch(typeof(PlayerControl), nameof(PlayerControl.CheckName))]
+    class PlayerControlCheckNamePatch
+    {
+        public static bool Prefix(PlayerControl __instance, [HarmonyArgument(0)]string name)
+        {
+            TheOtherRolesPlugin.Instance.Log.LogInfo($"Checking name {name}.");
+            if (CustomOptionHolder.playerNameDupes.getBool())
+            {
+                TheOtherRolesPlugin.Instance.Log.LogInfo($"Dupes allowed for {name}.");
+                __instance.RpcSetName(name);
+                GameData.Instance.UpdateName(__instance.PlayerId, name, false);
+                return false;
+            }
+
+            return true;
         }
     }
 }

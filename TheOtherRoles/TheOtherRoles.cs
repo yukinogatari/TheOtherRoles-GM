@@ -877,6 +877,7 @@ namespace TheOtherRoles
             public static List<PlayerControl> futureErased = new List<PlayerControl>();
             public static PlayerControl currentTarget;
             public static float cooldown = 30f;
+            public static float cooldownIncrease = 10f;
             public static bool canEraseAnyone = false;
 
             private static Sprite buttonSprite;
@@ -893,6 +894,7 @@ namespace TheOtherRoles
                 futureErased = new List<PlayerControl>();
                 currentTarget = null;
                 cooldown = CustomOptionHolder.eraserCooldown.getFloat();
+                cooldownIncrease = CustomOptionHolder.eraserCooldownIncrease.getFloat();
                 canEraseAnyone = CustomOptionHolder.eraserCanEraseAnyone.getBool();
             }
         }
@@ -1119,6 +1121,7 @@ namespace TheOtherRoles
             public static float cooldown = 30f;
             public static float duration = 3f;
             public static bool triggerArsonistWin = false;
+            public static bool dousedEveryone = false;
 
             public static PlayerControl currentTarget;
             public static PlayerControl douseTarget;
@@ -1143,6 +1146,13 @@ namespace TheOtherRoles
             public static bool dousedEveryoneAlive()
             {
                 return PlayerControl.AllPlayerControls.ToArray().All(x => { return x == Arsonist.arsonist || x.Data.IsDead || x.Data.Disconnected || x.isGM() || Arsonist.dousedPlayers.Any(y => y.PlayerId == x.PlayerId); });
+            }
+
+            public static void updateStatus()
+            {
+                if (Arsonist.arsonist != null && Arsonist.arsonist == PlayerControl.LocalPlayer) { 
+                    dousedEveryone = dousedEveryoneAlive();
+                }
             }
 
             public static void updateIcons()
@@ -1182,6 +1192,7 @@ namespace TheOtherRoles
                 currentTarget = null;
                 douseTarget = null;
                 triggerArsonistWin = false;
+                dousedEveryone = false;
                 dousedPlayers = new List<PlayerControl>();
                 foreach (PoolablePlayer p in MapOptions.playerIcons.Values)
                 {

@@ -13,6 +13,9 @@ namespace TheOtherRoles{
         public static bool hidePlayerNames = false;
         public static bool hideSettings = false;
 
+        public static bool randomizeColors = false;
+        public static bool allowDupeNames = false;
+
         public static int restrictDevices = 0;
         public static float restrictAdminTime = 600f;
         public static float restrictAdminTimeMax = 600f;
@@ -45,6 +48,9 @@ namespace TheOtherRoles{
             hidePlayerNames = CustomOptionHolder.hidePlayerNames.getBool();
 
             hideSettings = CustomOptionHolder.hideSettings.getBool();
+
+            randomizeColors = CustomOptionHolder.playerColorRandom.getBool();
+            allowDupeNames = CustomOptionHolder.playerNameDupes.getBool();
 
             restrictDevices = CustomOptionHolder.restrictDevices.getSelection();
             restrictAdminTime = restrictAdminTimeMax = CustomOptionHolder.restrictAdmin.getFloat();

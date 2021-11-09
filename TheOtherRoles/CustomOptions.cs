@@ -42,10 +42,12 @@ namespace TheOtherRoles {
 
         public static CustomOption eraserSpawnRate;
         public static CustomOption eraserCooldown;
+        public static CustomOption eraserCooldownIncrease;
         public static CustomOption eraserCanEraseAnyone;
 
         public static CustomOption miniSpawnRate;
         public static CustomOption miniGrowingUpDuration;
+        public static CustomOption miniIsImpRate;
 
         public static CustomOption loversSpawnRate;
         public static CustomOption loversImpLoverRate;
@@ -215,6 +217,9 @@ namespace TheOtherRoles {
         public static CustomOption restrictVents;
         public static CustomOption disableVents;
 
+        public static CustomOption playerColorRandom;
+        public static CustomOption playerNameDupes;
+
         internal static Dictionary<byte, byte[]> blockedRolePairings = new Dictionary<byte, byte[]>();
 
         public static string cs(Color c, string s) {
@@ -267,6 +272,7 @@ namespace TheOtherRoles {
 
             eraserSpawnRate = CustomOption.Create(230, cs(Eraser.color, "eraser"), rates, null, true);
             eraserCooldown = CustomOption.Create(231, "eraserCooldown", 30f, 5f, 120f, 5f, eraserSpawnRate, format: "unitSeconds");
+            eraserCooldownIncrease = CustomOption.Create(233, "eraserCooldownIncrease", 10f, 0f, 120f, 2.5f, eraserSpawnRate, format: "unitSeconds");
             eraserCanEraseAnyone = CustomOption.Create(232, "eraserCanEraseAnyone", false, eraserSpawnRate);
 
             tricksterSpawnRate = CustomOption.Create(250, cs(Trickster.color, "trickster"), rates, null, true);
@@ -299,6 +305,7 @@ namespace TheOtherRoles {
 
             miniSpawnRate = CustomOption.Create(180, cs(Mini.color, "miniSpawnRate"), rates, null, true);
             miniGrowingUpDuration = CustomOption.Create(181, "miniGrowingUpDuration", 400f, 100f, 1500f, 100f, miniSpawnRate, format: "unitSeconds");
+            miniIsImpRate = CustomOption.Create(182, "miniIsImpRate", rates, miniSpawnRate);
 
             loversSpawnRate = CustomOption.Create(50, cs(Lovers.color, "lover"), rates, null, true);
             loversImpLoverRate = CustomOption.Create(51, "loversImpLoverRate", rates, loversSpawnRate);
@@ -435,6 +442,9 @@ namespace TheOtherRoles {
             restrictCameras = CustomOption.Create(502, "disableCameras", 30f, 0f, 600f, 5f, restrictDevices, format: "unitSeconds");
             restrictVents = CustomOption.Create(503, "disableVitals", 30f, 0f, 600f, 5f, restrictDevices, format: "unitSeconds");
             disableVents = CustomOption.Create(504, "disableVents", false, specialOptions);
+
+            playerColorRandom = CustomOption.Create(521, "playerColorRandom", false, specialOptions);
+            playerNameDupes = CustomOption.Create(522, "playerNameDupes", false, specialOptions);
 
             blockedRolePairings.Add((byte)RoleId.Vampire, new [] { (byte)RoleId.Warlock});
             blockedRolePairings.Add((byte)RoleId.Warlock, new [] { (byte)RoleId.Vampire});
