@@ -21,7 +21,7 @@ namespace TheOtherRoles
     public class TheOtherRolesPlugin : BasePlugin
     {
         public const string Id = "me.eisbison.theotherroles";
-        public const string VersionString = "2.9.2.1";
+        public const string VersionString = "3.0.0";
         public static System.Version Version = System.Version.Parse(VersionString);
 
         public Harmony Harmony { get; } = new Harmony(Id);
@@ -85,11 +85,6 @@ namespace TheOtherRoles
 
             Harmony.PatchAll();
         }
-
-        public static Sprite GetModStamp() {
-            if (ModStamp) return ModStamp;
-            return ModStamp = Helpers.loadSpriteFromResources("TheOtherRoles.Resources.ModStamp.png", 150f);
-        }
     }
 
     // Deactivate bans, since I always leave my local testing game and ban myself
@@ -130,15 +125,22 @@ namespace TheOtherRoles
                 bots.Add(playerControl);
                 GameData.Instance.AddPlayer(playerControl);
                 AmongUsClient.Instance.Spawn(playerControl, -2, InnerNet.SpawnFlags.None);
-                
+
+                int hat = random.Next(HatManager.Instance.AllHats.Count);
+                int pet = random.Next(HatManager.Instance.AllPets.Count);
+                int skin = random.Next(HatManager.Instance.AllSkins.Count);
+                int visor = random.Next(HatManager.Instance.AllVisors.Count);
+                int color = random.Next(Palette.PlayerColors.Length);
+
                 playerControl.transform.position = PlayerControl.LocalPlayer.transform.position;
                 playerControl.GetComponent<DummyBehaviour>().enabled = true;
                 playerControl.NetTransform.enabled = false;
                 playerControl.SetName(RandomString(10));
-                playerControl.SetColor((byte) random.Next(Palette.PlayerColors.Length));
-                playerControl.SetHat((uint) random.Next(HatManager.Instance.AllHats.Count), playerControl.Data.ColorId);
-                playerControl.SetPet((uint) random.Next(HatManager.Instance.AllPets.Count));
-                playerControl.SetSkin((uint) random.Next(HatManager.Instance.AllSkins.Count));
+                playerControl.SetColor(color);
+                playerControl.SetHat(HatManager.Instance.AllHats[hat].ProductId, color);
+                playerControl.SetPet(HatManager.Instance.AllPets[pet].ProductId, color);
+                playerControl.SetVisor(HatManager.Instance.AllVisors[visor].ProductId);
+                playerControl.SetSkin(HatManager.Instance.AllSkins[skin].ProductId);
                 GameData.Instance.RpcSetTasks(playerControl.PlayerId, new byte[0]);
             }
 
@@ -152,7 +154,13 @@ namespace TheOtherRoles
 
         public static string RandomString(int length)
         {
-            const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+            string chars;
+
+            if (random.Next(2) == 0)
+                chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+            else
+                chars = "あいうえかきくけこさしすせそたちつてとなにぬねのはひふへほまみむめもやゆよらりるれろわを";
+
             return new string(Enumerable.Repeat(chars, length)
                 .Select(s => s[random.Next(s.Length)]).ToArray());
         }

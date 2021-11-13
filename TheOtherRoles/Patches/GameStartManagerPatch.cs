@@ -73,13 +73,13 @@ namespace TheOtherRoles.Patches {
                     var hats = HatManager.Instance.GetUnlockedHats();
                     var unlockedHatIndex = TheOtherRoles.rnd.Next(0, hats.Length);
                     var hatId = (uint)HatManager.Instance.AllHats.IndexOf(hats[unlockedHatIndex]);
-                    if (PlayerControl.LocalPlayer) PlayerControl.LocalPlayer.RpcSetHat(hatId);
+                    if (PlayerControl.LocalPlayer) PlayerControl.LocalPlayer.RpcSetHat(hatId.ToString());
 
                     // Random Skin
                     var skins = HatManager.Instance.GetUnlockedSkins();
                     var unlockedSkinIndex = TheOtherRoles.rnd.Next(0, skins.Length);
                     var skinId = (uint)HatManager.Instance.AllSkins.IndexOf(skins[unlockedSkinIndex]);
-                    if (PlayerControl.LocalPlayer) PlayerControl.LocalPlayer.RpcSetSkin(skinId);
+                    if (PlayerControl.LocalPlayer) PlayerControl.LocalPlayer.RpcSetSkin(skinId.ToString());
                 }
 
 

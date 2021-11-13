@@ -144,7 +144,7 @@ namespace TheOtherRoles.Patches
                     foreach (byte id in mapIcons.Keys)
                     {
                         GameData.PlayerInfo playerById = GameData.Instance.GetPlayerById(id);
-                        PlayerControl.SetPlayerMaterialColors(playerById.ColorId, mapIcons[id]);
+                        PlayerControl.SetPlayerMaterialColors(playerById.Object.CurrentOutfit.ColorId, mapIcons[id]);
                         mapIcons[id].enabled = !playerById.IsDead;
                     }
 
@@ -152,7 +152,7 @@ namespace TheOtherRoles.Patches
                     {
                         byte id = b.ParentId;
                         GameData.PlayerInfo playerById = GameData.Instance.GetPlayerById(id);
-                        PlayerControl.SetPlayerMaterialColors(playerById.ColorId, corpseIcons[id]);
+                        PlayerControl.SetPlayerMaterialColors(playerById.Object.CurrentOutfit.ColorId, corpseIcons[id]);
                         corpseIcons[id].enabled = true;
                     }
                 }

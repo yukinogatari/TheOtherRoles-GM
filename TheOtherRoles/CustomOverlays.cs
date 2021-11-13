@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Collections;
 using static TheOtherRoles.TheOtherRoles;
+using TheOtherRoles.Roles;
 
 namespace TheOtherRoles {
     [Harmony]

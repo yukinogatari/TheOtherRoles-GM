@@ -9,6 +9,7 @@ using static TheOtherRoles.TheOtherRoles;
 using static TheOtherRoles.GameHistory;
 using TheOtherRoles.Objects;
 using UnityEngine;
+using TheOtherRoles.Roles;
 
 namespace TheOtherRoles.Patches {
     [HarmonyPatch(typeof(PlayerControl), nameof(PlayerControl.FixedUpdate))]
@@ -39,7 +40,7 @@ namespace TheOtherRoles.Patches {
             for (int i = 0; i < allPlayers.Count; i++)
             {
                 GameData.PlayerInfo playerInfo = allPlayers[i];
-                if (!playerInfo.Disconnected && playerInfo.PlayerId != targetingPlayer.PlayerId && !playerInfo.IsDead && (!onlyCrewmates || !playerInfo.IsImpostor))
+                if (!playerInfo.Disconnected && playerInfo.PlayerId != targetingPlayer.PlayerId && !playerInfo.IsDead && (!onlyCrewmates || !playerInfo.Role.IsImpostor))
                 {
                     PlayerControl @object = playerInfo.Object;
                     if(untargetablePlayers != null && untargetablePlayers.Any(x => x == @object)) {
@@ -243,7 +244,7 @@ namespace TheOtherRoles.Patches {
         }
 
         static void engineerUpdate() {
-            if ((Jackal.canSeeEngineerVent && (PlayerControl.LocalPlayer == Jackal.jackal || PlayerControl.LocalPlayer == Sidekick.sidekick)) || PlayerControl.LocalPlayer.Data.IsImpostor && ShipStatus.Instance?.AllVents != null) {
+            if ((Jackal.canSeeEngineerVent && (PlayerControl.LocalPlayer == Jackal.jackal || PlayerControl.LocalPlayer == Sidekick.sidekick)) || PlayerControl.LocalPlayer.Data.Role.IsImpostor && ShipStatus.Instance?.AllVents != null) {
                 foreach (Vent vent in ShipStatus.Instance.AllVents) {
                     try {
                         if (vent?.myRend?.material != null) {
@@ -260,7 +261,7 @@ namespace TheOtherRoles.Patches {
         }
 
         static void impostorSetTarget() {
-            if (!PlayerControl.LocalPlayer.Data.IsImpostor ||!PlayerControl.LocalPlayer.CanMove || PlayerControl.LocalPlayer.Data.IsDead) { // !isImpostor || !canMove || isDead
+            if (!PlayerControl.LocalPlayer.Data.Role.IsImpostor ||!PlayerControl.LocalPlayer.CanMove || PlayerControl.LocalPlayer.Data.IsDead) { // !isImpostor || !canMove || isDead
                 HudManager.Instance.KillButton.SetTarget(null);
                 return;
             }
@@ -466,7 +467,7 @@ namespace TheOtherRoles.Patches {
             var (playerCompleted, playerTotal) = TasksHandler.taskInfo(Snitch.snitch.Data);
             int numberOfTasks = playerTotal - playerCompleted;
 
-            if (numberOfTasks <= Snitch.taskCountForReveal && (PlayerControl.LocalPlayer.Data.IsImpostor || (Snitch.includeTeamJackal && (PlayerControl.LocalPlayer == Jackal.jackal || PlayerControl.LocalPlayer == Sidekick.sidekick)))) {
+            if (numberOfTasks <= Snitch.taskCountForReveal && (PlayerControl.LocalPlayer.Data.Role.IsImpostor || (Snitch.includeTeamJackal && (PlayerControl.LocalPlayer == Jackal.jackal || PlayerControl.LocalPlayer == Sidekick.sidekick)))) {
                 if (Snitch.localArrows.Count == 0) Snitch.localArrows.Add(new Arrow(Color.blue));
                 if (Snitch.localArrows.Count != 0 && Snitch.localArrows[0] != null)
                 {
@@ -480,7 +481,7 @@ namespace TheOtherRoles.Patches {
                 int arrowIndex = 0;
                 foreach (PlayerControl p in PlayerControl.AllPlayerControls)
                 {
-                    if (!p.Data.IsDead && (p.Data.IsImpostor || (Snitch.includeTeamJackal && (p == Jackal.jackal || p == Sidekick.sidekick)))) {
+                    if (!p.Data.IsDead && (p.Data.Role.IsImpostor || (Snitch.includeTeamJackal && (p == Jackal.jackal || p == Sidekick.sidekick)))) {
                         // Update the arrows' color every time bc things go weird when you add a sidekick or someone dies
                         Color c = Snitch.teamJackalUseDifferentArrowColor && (p == Jackal.jackal || p == Sidekick.sidekick) ? Jackal.color : Palette.ImpostorRed;
 
@@ -523,7 +524,7 @@ namespace TheOtherRoles.Patches {
                 BountyHunter.bountyUpdateTimer = BountyHunter.bountyDuration;
                 var possibleTargets = new List<PlayerControl>();
                 foreach (PlayerControl p in PlayerControl.AllPlayerControls) {
-                    if (!p.Data.IsDead && !p.Data.Disconnected && !p.Data.IsImpostor && p != Spy.spy && (p != Mini.mini || Mini.isGrownUp()) && !p.isGM()) possibleTargets.Add(p);
+                    if (!p.Data.IsDead && !p.Data.Disconnected && !p.Data.Role.IsImpostor && p != Spy.spy && (p != Mini.mini || Mini.isGrownUp()) && !p.isGM()) possibleTargets.Add(p);
                 }
                 BountyHunter.bounty = possibleTargets[TheOtherRoles.rnd.Next(0, possibleTargets.Count)];
                 if (BountyHunter.bounty == null) return;
@@ -803,7 +804,7 @@ namespace TheOtherRoles.Patches {
                         if (timeSinceDeath < Detective.reportNameDuration * 1000) {
                             msg = String.Format(ModTranslation.getString("detectiveReportName"), deadPlayer.killerIfExisting.name);
                         } else if (timeSinceDeath < Detective.reportColorDuration * 1000) {
-                            var typeOfColor = Helpers.isLighterColor(deadPlayer.killerIfExisting.Data.ColorId) ? 
+                            var typeOfColor = Helpers.isLighterColor(deadPlayer.killerIfExisting.CurrentOutfit.ColorId) ? 
                                 ModTranslation.getString("detectiveColorLight") :
                                 ModTranslation.getString("detectiveColorDark");
                             msg = String.Format(ModTranslation.getString("detectiveReportColor"), typeOfColor);
@@ -837,9 +838,9 @@ namespace TheOtherRoles.Patches {
         public static void Prefix(PlayerControl __instance, [HarmonyArgument(0)]PlayerControl target)
         {
             // Allow everyone to murder players
-            resetToCrewmate = !__instance.Data.IsImpostor;
+            resetToCrewmate = !__instance.Data.Role.IsImpostor;
             resetToDead = __instance.Data.IsDead;
-            __instance.Data.IsImpostor = true;
+            //__instance.Data.Role.IsImpostor = true;
             __instance.Data.IsDead = false;
 
             if (Morphling.morphling != null && target == Morphling.morphling)
@@ -860,7 +861,7 @@ namespace TheOtherRoles.Patches {
             GameHistory.deadPlayers.Add(deadPlayer);
 
             // Reset killer to crewmate if resetToCrewmate
-            if (resetToCrewmate) __instance.Data.IsImpostor = false;
+            //if (resetToCrewmate) __instance.Data.Role.IsImpostor = false;
             if (resetToDead) __instance.Data.IsDead = true;
 
             // Remove fake tasks when player dies
@@ -868,16 +869,8 @@ namespace TheOtherRoles.Patches {
                 target.clearAllTasks();
 
             // Lover suicide trigger on murder
-            if ((Lovers.lover1 != null && target == Lovers.lover1) || (Lovers.lover2 != null && target == Lovers.lover2)) {
-                if (Lovers.separateTeam && Lovers.tasksCount)
-                    target.clearAllTasks();
-
-                PlayerControl otherLover = target.getPartner();
-                if (otherLover != null && !otherLover.Data.IsDead && Lovers.bothDie) {
-                    otherLover.MurderPlayer(otherLover);
-                    suicidedPlayers.Add(otherLover.PlayerId);
-                }
-            }
+            foreach (RoleModifier mod in target.getModifiers())
+                mod.OnDeath();
             
             // Sidekick promotion trigger on murder
             if (Sidekick.promotesToJackal && Sidekick.sidekick != null && !Sidekick.sidekick.Data.IsDead && target == Jackal.jackal && Jackal.jackal == PlayerControl.LocalPlayer) {
@@ -920,7 +913,7 @@ namespace TheOtherRoles.Patches {
             }
 
             // Mini set adapted kill cooldown
-            if (Mini.mini != null && PlayerControl.LocalPlayer == Mini.mini && Mini.mini.Data.IsImpostor && Mini.mini == __instance) {
+            if (Mini.mini != null && PlayerControl.LocalPlayer == Mini.mini && Mini.mini.Data.Role.IsImpostor && Mini.mini == __instance) {
                 var multiplier = Mini.isGrownUp() ? 0.66f : 2f;
                 Mini.mini.SetKillTimer(PlayerControl.GameOptions.KillCooldown * multiplier);
             }
@@ -946,7 +939,7 @@ namespace TheOtherRoles.Patches {
             if (PlayerControl.GameOptions.KillCooldown <= 0f) return false;
             float multiplier = 1f;
             float addition = 0f;
-            if (Mini.mini != null && PlayerControl.LocalPlayer == Mini.mini && Mini.mini.Data.IsImpostor) multiplier = Mini.isGrownUp() ? 0.66f : 2f;
+            if (Mini.mini != null && PlayerControl.LocalPlayer == Mini.mini && Mini.mini.Data.Role.IsImpostor) multiplier = Mini.isGrownUp() ? 0.66f : 2f;
             if (BountyHunter.bountyHunter != null && PlayerControl.LocalPlayer == BountyHunter.bountyHunter) addition = BountyHunter.punishmentTime;
 
             __instance.killTimer = Mathf.Clamp(time, 0f, PlayerControl.GameOptions.KillCooldown * multiplier + addition);
@@ -982,18 +975,9 @@ namespace TheOtherRoles.Patches {
                 __instance.clearAllTasks();
 
             // Lover suicide trigger on exile
-            if ((Lovers.lover1 != null && __instance == Lovers.lover1) || (Lovers.lover2 != null && __instance == Lovers.lover2)) {
-                if (Lovers.separateTeam && Lovers.tasksCount)
-                    __instance.clearAllTasks();
+            foreach (RoleModifier mod in __instance.getModifiers())
+                mod.OnDeath();
 
-                PlayerControl otherLover = __instance.getPartner();
-                if (otherLover != null && !otherLover.Data.IsDead && Lovers.bothDie)
-                {
-                    otherLover.Exiled();
-                    suicidedPlayers.Add(otherLover.PlayerId);
-                }
-            }
-            
             // Sidekick promotion trigger on exile
             if (Sidekick.promotesToJackal && Sidekick.sidekick != null && !Sidekick.sidekick.Data.IsDead && __instance == Jackal.jackal && Jackal.jackal == PlayerControl.LocalPlayer) {
                 MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.SidekickPromotes, Hazel.SendOption.Reliable, -1);
@@ -1012,7 +996,7 @@ namespace TheOtherRoles.Patches {
                 (!DestroyableSingleton<HudManager>.InstanceExists || (!DestroyableSingleton<HudManager>.Instance.Chat.IsOpen && !DestroyableSingleton<HudManager>.Instance.KillOverlay.IsOpen && !DestroyableSingleton<HudManager>.Instance.GameMenu.IsOpen)) &&
                 (!MapBehaviour.Instance || !MapBehaviour.Instance.IsOpenStopped) &&
                 !MeetingHud.Instance &&
-                !CustomPlayerMenu.Instance &&
+                //!CustomPlayerMenu.Instance &&
                 !ExileController.Instance &&
                 !IntroCutscene.Instance;
             return false;

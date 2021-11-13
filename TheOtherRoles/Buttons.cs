@@ -6,6 +6,7 @@ using static TheOtherRoles.TheOtherRoles;
 using TheOtherRoles.Modules;
 using TheOtherRoles.Objects;
 using System.Collections.Generic;
+using TheOtherRoles.Roles;
 
 namespace TheOtherRoles
 {
@@ -106,7 +107,7 @@ namespace TheOtherRoles
         public static void resetTimeMasterButton() {
             timeMasterShieldButton.Timer = timeMasterShieldButton.MaxTimer;
             timeMasterShieldButton.isEffectActive = false;
-            timeMasterShieldButton.killButtonManager.TimerText.color = Palette.EnabledColor;
+            timeMasterShieldButton.killButton.cooldownTimerText.color = Palette.EnabledColor;
         }
 
         public static void Postfix(HudManager __instance)
@@ -184,7 +185,7 @@ namespace TheOtherRoles
                     }
                 },
                 () => { return Janitor.janitor != null && Janitor.janitor == PlayerControl.LocalPlayer && !PlayerControl.LocalPlayer.Data.IsDead; },
-                () => { return __instance.ReportButton.renderer.color == Palette.EnabledColor  && PlayerControl.LocalPlayer.CanMove; },
+                () => { return __instance.ReportButton.graphic.color == Palette.EnabledColor  && PlayerControl.LocalPlayer.CanMove; },
                 () => { janitorCleanButton.Timer = janitorCleanButton.MaxTimer; },
                 Janitor.getButtonSprite(),
                 new Vector3(-1.3f, 0, 0),
@@ -209,7 +210,7 @@ namespace TheOtherRoles
 
                     bool misfire = false;
                     byte targetId = Sheriff.currentTarget.PlayerId; ;
-                    if ((Sheriff.currentTarget.Data.IsImpostor && (Sheriff.currentTarget != Mini.mini || Mini.isGrownUp())) ||
+                    if ((Sheriff.currentTarget.Data.Role.IsImpostor && (Sheriff.currentTarget != Mini.mini || Mini.isGrownUp())) ||
                         (Sheriff.spyCanDieToSheriff && Spy.spy == Sheriff.currentTarget) ||
                         (Sheriff.madmateCanDieToSheriff && Madmate.madmate == Sheriff.currentTarget) ||
                         (Sheriff.canKillNeutrals && Sheriff.currentTarget.isNeutral()) ||
@@ -243,13 +244,13 @@ namespace TheOtherRoles
                     return Sheriff.currentTarget && PlayerControl.LocalPlayer.CanMove;
                 },
                 () => { sheriffKillButton.Timer = sheriffKillButton.MaxTimer; },
-                __instance.KillButton.renderer.sprite,
+                __instance.KillButton.graphic.sprite,
                 new Vector3(-1.3f, 0, 0),
                 __instance,
                 KeyCode.Q
             );
 
-            sheriffNumShotsText = GameObject.Instantiate(sheriffKillButton.killButtonManager.TimerText, sheriffKillButton.killButtonManager.TimerText.transform.parent);
+            sheriffNumShotsText = GameObject.Instantiate(sheriffKillButton.killButton.cooldownTimerText, sheriffKillButton.killButton.cooldownTimerText.transform.parent);
             sheriffNumShotsText.text = "";
             sheriffNumShotsText.enableWordWrapping = false;
             sheriffNumShotsText.transform.localScale = Vector3.one * 0.5f;
@@ -267,7 +268,7 @@ namespace TheOtherRoles
                 () => {
                     timeMasterShieldButton.Timer = timeMasterShieldButton.MaxTimer;
                     timeMasterShieldButton.isEffectActive = false;
-                    timeMasterShieldButton.killButtonManager.TimerText.color = Palette.EnabledColor;
+                    timeMasterShieldButton.killButton.cooldownTimerText.color = Palette.EnabledColor;
                 },
                 TimeMaster.getButtonSprite(),
                 new Vector3(-1.3f, 0, 0),
@@ -340,7 +341,7 @@ namespace TheOtherRoles
                     morphlingButton.Timer = morphlingButton.MaxTimer;
                     morphlingButton.Sprite = Morphling.getSampleSprite();
                     morphlingButton.isEffectActive = false;
-                    morphlingButton.killButtonManager.TimerText.color = Palette.EnabledColor;
+                    morphlingButton.killButton.cooldownTimerText.color = Palette.EnabledColor;
                     Morphling.sampledTarget = null;
                 },
                 Morphling.getSampleSprite(),
@@ -369,7 +370,7 @@ namespace TheOtherRoles
                 () => {
                     camouflagerButton.Timer = camouflagerButton.MaxTimer;
                     camouflagerButton.isEffectActive = false;
-                    camouflagerButton.killButtonManager.TimerText.color = Palette.EnabledColor;
+                    camouflagerButton.killButton.cooldownTimerText.color = Palette.EnabledColor;
                 },
                 Camouflager.getButtonSprite(),
                  new Vector3(-1.3f, 1.3f, 0f),
@@ -390,7 +391,7 @@ namespace TheOtherRoles
                 () => {
                     hackerButton.Timer = hackerButton.MaxTimer;
                     hackerButton.isEffectActive = false;
-                    hackerButton.killButtonManager.TimerText.color = Palette.EnabledColor;
+                    hackerButton.killButton.cooldownTimerText.color = Palette.EnabledColor;
                 },
                 Hacker.getButtonSprite(),
                 new Vector3(-1.3f, 0, 0),
@@ -470,11 +471,11 @@ namespace TheOtherRoles
                 {
                     if (Vampire.targetNearGarlic && Vampire.canKillNearGarlics)
                     {
-                        vampireKillButton.killButtonManager.renderer.sprite = __instance.KillButton.renderer.sprite;
+                        vampireKillButton.killButton.graphic.sprite = __instance.KillButton.graphic.sprite;
                         vampireKillButton.showButtonText = true;
                     }
                     else { 
-                        vampireKillButton.killButtonManager.renderer.sprite = Vampire.getButtonSprite();
+                        vampireKillButton.killButton.graphic.sprite = Vampire.getButtonSprite();
                         vampireKillButton.showButtonText = false;
                     }
                     return Vampire.currentTarget != null && PlayerControl.LocalPlayer.CanMove && (!Vampire.targetNearGarlic || Vampire.canKillNearGarlics);
@@ -482,7 +483,7 @@ namespace TheOtherRoles
                 () => {
                     vampireKillButton.Timer = vampireKillButton.MaxTimer;
                     vampireKillButton.isEffectActive = false;
-                    vampireKillButton.killButtonManager.TimerText.color = Palette.EnabledColor;
+                    vampireKillButton.killButton.cooldownTimerText.color = Palette.EnabledColor;
                 },
                 Vampire.getButtonSprite(),
                 new Vector3(-1.3f, 0, 0),
@@ -551,7 +552,7 @@ namespace TheOtherRoles
                 () => { return Jackal.jackal != null && Jackal.jackal == PlayerControl.LocalPlayer && !PlayerControl.LocalPlayer.Data.IsDead; },
                 () => { return Jackal.currentTarget && PlayerControl.LocalPlayer.CanMove; },
                 () => { jackalKillButton.Timer = jackalKillButton.MaxTimer;},
-                __instance.KillButton.renderer.sprite,
+                __instance.KillButton.graphic.sprite,
                 new Vector3(-1.3f, 0, 0),
                 __instance,
                 KeyCode.Q
@@ -573,7 +574,7 @@ namespace TheOtherRoles
                 () => { return Sidekick.canKill && Sidekick.sidekick != null && Sidekick.sidekick == PlayerControl.LocalPlayer && !PlayerControl.LocalPlayer.Data.IsDead; },
                 () => { return Sidekick.currentTarget && PlayerControl.LocalPlayer.CanMove; },
                 () => { sidekickKillButton.Timer = sidekickKillButton.MaxTimer;},
-                __instance.KillButton.renderer.sprite,
+                __instance.KillButton.graphic.sprite,
                 new Vector3(-1.3f, 0, 0),
                 __instance,
                 KeyCode.Q
@@ -589,7 +590,7 @@ namespace TheOtherRoles
                 () => {
                     lighterButton.Timer = lighterButton.MaxTimer;
                     lighterButton.isEffectActive = false;
-                    lighterButton.killButtonManager.TimerText.color = Palette.EnabledColor;
+                    lighterButton.killButton.cooldownTimerText.color = Palette.EnabledColor;
                 },
                 Lighter.getButtonSprite(),
                 new Vector3(-1.3f, 0f, 0f),
@@ -654,7 +655,7 @@ namespace TheOtherRoles
                 () => { 
                     lightsOutButton.Timer = lightsOutButton.MaxTimer;
                     lightsOutButton.isEffectActive = false;
-                    lightsOutButton.killButtonManager.TimerText.color = Palette.EnabledColor;
+                    lightsOutButton.killButton.cooldownTimerText.color = Palette.EnabledColor;
                 },
                 Trickster.getLightsOutButtonSprite(),
                  new Vector3(-1.3f, 1.3f, 0f),
@@ -692,7 +693,7 @@ namespace TheOtherRoles
                     }
                 },
                 () => { return Cleaner.cleaner != null && Cleaner.cleaner == PlayerControl.LocalPlayer && !PlayerControl.LocalPlayer.Data.IsDead; },
-                () => { return __instance.ReportButton.renderer.color == Palette.EnabledColor && PlayerControl.LocalPlayer.CanMove; },
+                () => { return __instance.ReportButton.graphic.color == Palette.EnabledColor && PlayerControl.LocalPlayer.CanMove; },
                 () => { cleanerCleanButton.Timer = cleanerCleanButton.MaxTimer; },
                 Cleaner.getButtonSprite(),
                 new Vector3(-1.3f, 1.3f, 0f),
@@ -779,7 +780,7 @@ namespace TheOtherRoles
                 },
                 () => { return SecurityGuard.securityGuard != null && SecurityGuard.securityGuard == PlayerControl.LocalPlayer && !PlayerControl.LocalPlayer.Data.IsDead && SecurityGuard.remainingScrews >= Mathf.Min(SecurityGuard.ventPrice, SecurityGuard.camPrice); },
                 () => {
-                    securityGuardButton.killButtonManager.renderer.sprite = (SecurityGuard.ventTarget == null && PlayerControl.GameOptions.MapId != 1) ? SecurityGuard.getPlaceCameraButtonSprite() : SecurityGuard.getCloseVentButtonSprite(); 
+                    securityGuardButton.killButton.graphic.sprite = (SecurityGuard.ventTarget == null && PlayerControl.GameOptions.MapId != 1) ? SecurityGuard.getPlaceCameraButtonSprite() : SecurityGuard.getCloseVentButtonSprite(); 
                     if (securityGuardButtonScrewsText != null) securityGuardButtonScrewsText.text = $"{SecurityGuard.remainingScrews}/{SecurityGuard.totalScrews}";
 
                     if (SecurityGuard.ventTarget != null)
@@ -794,7 +795,7 @@ namespace TheOtherRoles
             );
             
             // Security Guard button screws counter
-            securityGuardButtonScrewsText = GameObject.Instantiate(securityGuardButton.killButtonManager.TimerText, securityGuardButton.killButtonManager.TimerText.transform.parent);
+            securityGuardButtonScrewsText = GameObject.Instantiate(securityGuardButton.killButton.cooldownTimerText, securityGuardButton.killButton.cooldownTimerText.transform.parent);
             securityGuardButtonScrewsText.text = "";
             securityGuardButtonScrewsText.enableWordWrapping = false;
             securityGuardButtonScrewsText.transform.localScale = Vector3.one * 0.5f;
@@ -997,10 +998,10 @@ namespace TheOtherRoles
                     PlayerControl target = Helpers.playerById(index);
                     if (target.Data.IsDead)
                     {
-                        gmKillButtons[index].killButtonManager.killText.SetText(ModTranslation.getString("gmRevive"));
+                        gmKillButtons[index].killButton.buttonLabelText.SetText(ModTranslation.getString("gmRevive"));
                     } else
                     {
-                        gmKillButtons[index].killButtonManager.killText.SetText(ModTranslation.getString("gmKill"));
+                        gmKillButtons[index].killButton.buttonLabelText.SetText(ModTranslation.getString("gmKill"));
                     }
 
                     //MapOptions.playerIcons[index].gameObject.SetActive(PlayerControl.LocalPlayer.CanMove);
@@ -1186,7 +1187,7 @@ namespace TheOtherRoles
                     if (vultureNumCorpsesText != null)
                         vultureNumCorpsesText.text = String.Format(ModTranslation.getString("vultureCorpses"), Vulture.vultureNumberToWin - Vulture.eatenBodies);
 
-                    return __instance.ReportButton.renderer.color == Palette.EnabledColor && PlayerControl.LocalPlayer.CanMove;
+                    return __instance.ReportButton.graphic.color == Palette.EnabledColor && PlayerControl.LocalPlayer.CanMove;
                 },
                 () => { vultureEatButton.Timer = vultureEatButton.MaxTimer; },
                 Vulture.getButtonSprite(),
@@ -1195,7 +1196,7 @@ namespace TheOtherRoles
                 KeyCode.F
             );
 
-            vultureNumCorpsesText = GameObject.Instantiate(vultureEatButton.killButtonManager.TimerText, vultureEatButton.killButtonManager.TimerText.transform.parent);
+            vultureNumCorpsesText = GameObject.Instantiate(vultureEatButton.killButton.cooldownTimerText, vultureEatButton.killButton.cooldownTimerText.transform.parent);
             vultureNumCorpsesText.text = "";
             vultureNumCorpsesText.enableWordWrapping = false;
             vultureNumCorpsesText.transform.localScale = Vector3.one * 0.5f;
@@ -1235,7 +1236,7 @@ namespace TheOtherRoles
                     string msg = "";
 
                     int randomNumber = Medium.target.killerIfExisting?.PlayerId == Mini.mini?.PlayerId ? TheOtherRoles.rnd.Next(3) : TheOtherRoles.rnd.Next(4);
-                    var typeOfColor = Helpers.isLighterColor(Medium.target.killerIfExisting.Data.ColorId) ?
+                    var typeOfColor = Helpers.isLighterColor(Medium.target.killerIfExisting.CurrentOutfit.ColorId) ?
                         ModTranslation.getString("detectiveColorLight") :
                         ModTranslation.getString("detectiveColorDark");
                     float timeSinceDeath = ((float)(Medium.meetingStartTime - Medium.target.timeOfDeath).TotalMilliseconds);

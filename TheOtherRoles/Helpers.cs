@@ -10,9 +10,33 @@ using static TheOtherRoles.TheOtherRoles;
 using TheOtherRoles.Modules;
 using HarmonyLib;
 using Hazel;
+using TheOtherRoles.Roles;
 
 namespace TheOtherRoles {
-    public static class Helpers {
+    public static class Helpers
+    {
+        public static void destroyList<T>(Il2CppSystem.Collections.Generic.List<T> items) where T : UnityEngine.Object
+        {
+            if (items == null) return;
+            foreach (T item in items)
+            {
+                UnityEngine.Object.Destroy(item);
+            }
+        }
+
+        public static void destroyList<T>(List<T> items) where T : UnityEngine.Object
+        {
+            if (items == null) return;
+            foreach (T item in items)
+            {
+                UnityEngine.Object.Destroy(item);
+            }
+        }
+
+        public static void log(string msg)
+        {
+            TheOtherRolesPlugin.Instance.Log.LogInfo(msg);
+        }
 
         public static void setSkinWithAnim(PlayerPhysics playerPhysics, uint SkinId)
         {
@@ -84,6 +108,12 @@ namespace TheOtherRoles {
                 iCall_LoadImage = IL2CPP.ResolveICall<d_LoadImage>("UnityEngine.ImageConversion::LoadImage");
             var il2cppArray = (Il2CppStructArray<byte>) data;
             return iCall_LoadImage.Invoke(tex.Pointer, il2cppArray.Pointer, markNonReadable);
+        }
+
+
+        public static PlayerControl playerById(int id)
+        {
+            return playerById((byte)id);
         }
 
         public static PlayerControl playerById(byte id)
@@ -170,7 +200,7 @@ namespace TheOtherRoles {
                 var task = new GameObject("RoleTask").AddComponent<ImportantTextTask>();
                 task.transform.SetParent(player.transform, false);
 
-                if (roleInfo.roleId == RoleId.Jackal) {
+                if (roleInfo.roleId == CustomRoleTypes.Jackal) {
                     if (Jackal.canCreateSidekick)
                     {
                         task.Text = cs(roleInfo.color, $"{roleInfo.name}: " + ModTranslation.getString("jackalWithSidekick"));
@@ -211,7 +241,7 @@ namespace TheOtherRoles {
 
         public static bool isCrew(this PlayerControl player)
         {
-            return player != null && !player.Data.IsImpostor && !player.isNeutral();
+            return player != null && !player.Data.Role.IsImpostor && !player.isNeutral();
         }
 
         public static bool hasFakeTasks(this PlayerControl player) {
@@ -223,26 +253,15 @@ namespace TheOtherRoles {
             return GM.gm != null && player == GM.gm;
         }
 
-        public static bool isLovers(this PlayerControl player)
-        {
-            return player != null &&
-                ((Lovers.lover1 != null && player == Lovers.lover1) ||
-                (Lovers.lover2 != null && player == Lovers.lover2));
-        }
-
-        public static bool hasAliveKillingLover(this PlayerControl player)
-        {
-            return player.isLovers() && Lovers.existingAndAlive() && Lovers.existingWithKiller();
-        }
-
         public static PlayerControl getPartner(this PlayerControl player)
         {
             if (player == null)
                 return null;
-            if (Lovers.lover1 == player)
-                return Lovers.lover2;
-            if (Lovers.lover2 == player)
-                return Lovers.lover1;
+
+            Lovers mod = (Lovers)player.getModifier(RoleModifierTypes.Lovers);
+            if (mod != null)
+                return mod.partner;
+
             return null;
         }
 
@@ -306,46 +325,10 @@ namespace TheOtherRoles {
             else if (!MapOptions.hidePlayerNames) return false; // All names are visible
             else if (source == null || target == null) return true;
             else if (source == target) return false; // Player sees his own name
-            else if (source.Data.IsImpostor && (target.Data.IsImpostor || target == Spy.spy)) return false; // Members of team Impostors see the names of Impostors/Spies
-            else if ((source == Lovers.lover1 || source == Lovers.lover2) && (target == Lovers.lover1 || target == Lovers.lover2)) return false; // Members of team Lovers see the names of each other
+            else if (source.Data.Role.IsImpostor && (target.Data.Role.IsImpostor || target.Data.Role.Role == (RoleTypes)CustomRoleTypes.Spy)) return false; // Members of team Impostors see the names of Impostors/Spies
+            else if (source.hasModifier(RoleModifierTypes.Lovers) && (target == source.getPartner())) return false; // Members of team Lovers see the names of each other
             else if ((source == Jackal.jackal || source == Sidekick.sidekick) && (target == Jackal.jackal || target == Sidekick.sidekick || target == Jackal.fakeSidekick)) return false; // Members of team Jackal see the names of each other
             return true;
-        }
-
-        public static void setDefaultLook(this PlayerControl target) {
-            target.setLook(target.Data.PlayerName, target.Data.ColorId, target.Data.HatId, target.Data.SkinId, target.Data.PetId);
-        }
-
-        public static void setLook(this PlayerControl target, String playerName, int colorId, uint hatId, uint skinId, uint petId) {
-            target.nameText.text = hidePlayerName(PlayerControl.LocalPlayer, target) ? "" : playerName;
-            target.myRend.material.SetColor("_BackColor", Palette.ShadowColors[colorId]);
-            target.myRend.material.SetColor("_BodyColor", Palette.PlayerColors[colorId]);
-            target.HatRenderer.SetHat(hatId, colorId);
-            target.nameText.transform.localPosition = new Vector3(0f, ((hatId == 0U) ? 0.7f : 1.05f) * 2f, -0.5f);
-
-            SkinData nextSkin = DestroyableSingleton<HatManager>.Instance.AllSkins[(int)skinId];
-            PlayerPhysics playerPhysics = target.MyPhysics;
-            AnimationClip clip = null;
-            var spriteAnim = playerPhysics.Skin.animator;
-            var currentPhysicsAnim = playerPhysics.Animator.GetCurrentAnimation();
-            if (currentPhysicsAnim == playerPhysics.RunAnim) clip = nextSkin.RunAnim;
-            else if (currentPhysicsAnim == playerPhysics.SpawnAnim) clip = nextSkin.SpawnAnim;
-            else if (currentPhysicsAnim == playerPhysics.EnterVentAnim) clip = nextSkin.EnterVentAnim;
-            else if (currentPhysicsAnim == playerPhysics.ExitVentAnim) clip = nextSkin.ExitVentAnim;
-            else if (currentPhysicsAnim == playerPhysics.IdleAnim) clip = nextSkin.IdleAnim;
-            else clip = nextSkin.IdleAnim;
-            float progress = playerPhysics.Animator.m_animator.GetCurrentAnimatorStateInfo(0).normalizedTime;
-            playerPhysics.Skin.skin = nextSkin;
-            spriteAnim.Play(clip, 1f);
-            spriteAnim.m_animator.Play("a", 0, progress % 1);
-            spriteAnim.m_animator.Update(0f);
-
-            if (target.CurrentPet) UnityEngine.Object.Destroy(target.CurrentPet.gameObject);
-            target.CurrentPet = UnityEngine.Object.Instantiate<PetBehaviour>(DestroyableSingleton<HatManager>.Instance.AllPets[(int)petId]);
-            target.CurrentPet.transform.position = target.transform.position;
-            target.CurrentPet.Source = target;
-            target.CurrentPet.Visible = target.Visible;
-            PlayerControl.SetPlayerMaterialColors(colorId, target.CurrentPet.rend);
         }
     }
 }

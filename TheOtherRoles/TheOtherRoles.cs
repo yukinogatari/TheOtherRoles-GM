@@ -21,6 +21,14 @@ namespace TheOtherRoles
         public static List<int> exiledPlayers = new List<int>();
         public static List<int> suicidedPlayers = new List<int>();
         public static List<int> misfiredPlayers = new List<int>();
+        public static Sprite blankIcon;
+
+        public static Sprite getBlankIcon()
+        {
+            if (blankIcon) return blankIcon;
+            blankIcon = Helpers.loadSpriteFromResources("TheOtherRoles.Resources.BlankButton.png", 115f);
+            return blankIcon;
+        }
 
         public enum Teams
         {
@@ -56,7 +64,7 @@ namespace TheOtherRoles
             Medic.clearAndReload();
             Shifter.clearAndReload();
             Swapper.clearAndReload();
-            Lovers.clearAndReload();
+            //Lovers.clearAndReload();
             Seer.clearAndReload();
             Morphling.clearAndReload();
             Camouflager.clearAndReload();
@@ -176,34 +184,6 @@ namespace TheOtherRoles
             {
                 janitor = null;
                 cooldown = CustomOptionHolder.janitorCooldown.getFloat();
-            }
-        }
-
-        public static class Sheriff
-        {
-            public static PlayerControl sheriff;
-            public static Color color = new Color32(248, 205, 70, byte.MaxValue);
-
-            public static float cooldown = 30f;
-            public static int numShots = 2;
-            public static int maxShots = 2;
-            public static bool canKillNeutrals = false;
-            public static bool misfireKillsTarget = false;
-            public static bool spyCanDieToSheriff = false;
-            public static bool madmateCanDieToSheriff = false;
-
-            public static PlayerControl currentTarget;
-
-            public static void clearAndReload()
-            {
-                sheriff = null;
-                currentTarget = null;
-                cooldown = CustomOptionHolder.sheriffCooldown.getFloat();
-                maxShots = numShots = (int)CustomOptionHolder.sheriffNumShots.getFloat();
-                canKillNeutrals = CustomOptionHolder.sheriffCanKillNeutrals.getBool();
-                spyCanDieToSheriff = CustomOptionHolder.spyCanDieToSheriff.getBool();
-                madmateCanDieToSheriff = CustomOptionHolder.madmateCanDieToSheriff.getBool();
-                misfireKillsTarget = CustomOptionHolder.sheriffMisfireKillsTarget.getBool();
             }
         }
 
@@ -385,20 +365,13 @@ namespace TheOtherRoles
                 canOnlySwapOthers = CustomOptionHolder.swapperCanOnlySwapOthers.getBool();
             }
         }
-
+/*
         public static class Lovers
         {
             public static PlayerControl lover1;
             public static PlayerControl lover2;
             public static Color color = new Color32(232, 57, 185, byte.MaxValue);
 
-            public static bool bothDie = true;
-            // Lovers save if next to be exiled is a lover, because RPC of ending game comes before RPC of exiled
-            public static bool notAckedExiledIsLover = false;
-
-            // Making this closer to the au.libhalt.net version of Lovers
-            public static bool separateTeam = true;
-            public static bool tasksCount = false;
 
             public static bool hasTasks
             {
@@ -422,7 +395,7 @@ namespace TheOtherRoles
             {
                 return existing() && (lover1 == Jackal.jackal || lover2 == Jackal.jackal
                                    || lover1 == Sidekick.sidekick || lover2 == Sidekick.sidekick
-                                   || lover1.Data.IsImpostor || lover2.Data.IsImpostor);
+                                   || lover1.Data.Role.IsImpostor || lover2.Data.Role.IsImpostor);
             }
 
 
@@ -431,11 +404,8 @@ namespace TheOtherRoles
                 lover1 = null;
                 lover2 = null;
                 notAckedExiledIsLover = false;
-                bothDie = CustomOptionHolder.loversBothDie.getBool();
-                separateTeam = CustomOptionHolder.loversSeparateTeam.getBool();
-                tasksCount = CustomOptionHolder.loversTasksCount.getBool();
             }
-        }
+        }*/
 
         public static class Seer
         {
@@ -610,10 +580,10 @@ namespace TheOtherRoles
 
                 camoData = new MorphData();
                 camoData.name = "";
-                camoData.hat = 0;
+                camoData.hat = "";
                 camoData.color = 6;
-                camoData.skin = 0;
-                camoData.pet = 0;
+                camoData.skin = "";
+                camoData.pet = "";
             }
         }
 
@@ -930,7 +900,7 @@ namespace TheOtherRoles
             private static Sprite lightOutButtonSprite;
             private static Sprite tricksterVentButtonSprite;
 
-            private static UseButton tricksterVentButton;
+            private static VentButton tricksterVentButton;
 
             public static Sprite getPlaceBoxButtonSprite()
             {
@@ -953,17 +923,16 @@ namespace TheOtherRoles
                 return tricksterVentButtonSprite;
             }
 
-            public static UseButton getTricksterVentButton()
+            public static VentButton getTricksterVentButton()
             {
-
                 if (tricksterVentButton == null)
                 {
-                    UseButton template = HudManager.Instance.UseButton.otherButtons[ImageNames.VentButton];
-                    tricksterVentButton = UnityEngine.Object.Instantiate(template, HudManager.Instance.UseButton.transform);
+                    VentButton template = HudManager.Instance.ImpostorVentButton;
+                    tricksterVentButton = UnityEngine.Object.Instantiate(template, HudManager.Instance.ImpostorVentButton.transform);
                     tricksterVentButton.graphic.sprite = getTricksterVentButtonSprite();
                 }
-                tricksterVentButton.text.enabled = false;
-                tricksterVentButton.text.text = "";
+                tricksterVentButton.buttonLabelText.enabled = false;
+                tricksterVentButton.buttonLabelText.text = "";
 
                 return tricksterVentButton;
             }
@@ -1048,7 +1017,7 @@ namespace TheOtherRoles
             {
                 HudManagerStartPatch.warlockCurseButton.Timer = HudManagerStartPatch.warlockCurseButton.MaxTimer;
                 HudManagerStartPatch.warlockCurseButton.Sprite = Warlock.getCurseButtonSprite();
-                HudManagerStartPatch.warlockCurseButton.killButtonManager.TimerText.color = Palette.EnabledColor;
+                HudManagerStartPatch.warlockCurseButton.killButton.cooldownTimerText.color = Palette.EnabledColor;
                 currentTarget = null;
                 curseVictim = null;
                 curseVictimTarget = null;
@@ -1345,11 +1314,11 @@ namespace TheOtherRoles
             {
                 if (blockedButton == null)
                 {
-                    UseButton template = HudManager.Instance.UseButton.otherButtons[ImageNames.UseButton];
+                    UseButton template = HudManager.Instance.UseButton;
                     blockedButton = UnityEngine.Object.Instantiate(template, HudManager.Instance.UseButton.transform);
                 }
 
-                blockedButton.text.text = ModTranslation.getString("buttonBlocked");
+                blockedButton.buttonLabelText.text = ModTranslation.getString("buttonBlocked");
                 return blockedButton;
             }
 
@@ -1465,6 +1434,35 @@ namespace TheOtherRoles
             cooldown = CustomOptionHolder.mediumCooldown.getFloat();
             duration = CustomOptionHolder.mediumDuration.getFloat();
             oneTimeUse = CustomOptionHolder.mediumOneTimeUse.getBool();
+        }
+    }
+
+
+    public static class Sheriff
+    {
+        public static PlayerControl sheriff;
+        public static Color color = new Color32(248, 205, 70, byte.MaxValue);
+
+        public static float cooldown = 30f;
+        public static int numShots = 2;
+        public static int maxShots = 2;
+        public static bool canKillNeutrals = false;
+        public static bool misfireKillsTarget = false;
+        public static bool spyCanDieToSheriff = false;
+        public static bool madmateCanDieToSheriff = false;
+
+        public static PlayerControl currentTarget;
+
+        public static void clearAndReload()
+        {
+            sheriff = null;
+            currentTarget = null;
+            cooldown = CustomOptionHolder.sheriffCooldown.getFloat();
+            maxShots = numShots = (int)CustomOptionHolder.sheriffNumShots.getFloat();
+            canKillNeutrals = CustomOptionHolder.sheriffCanKillNeutrals.getBool();
+            spyCanDieToSheriff = CustomOptionHolder.spyCanDieToSheriff.getBool();
+            madmateCanDieToSheriff = CustomOptionHolder.madmateCanDieToSheriff.getBool();
+            misfireKillsTarget = CustomOptionHolder.sheriffMisfireKillsTarget.getBool();
         }
     }
 }

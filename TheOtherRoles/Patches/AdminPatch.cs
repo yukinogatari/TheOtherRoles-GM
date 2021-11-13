@@ -208,9 +208,9 @@ namespace TheOtherRoles.Patches {
                                         GameData.PlayerInfo playerInfo = GameData.Instance.GetPlayerById(component.ParentId);
                                         if (playerInfo != null)
                                         {
-                                            var color = Palette.PlayerColors[playerInfo.ColorId];
+                                            var color = Palette.PlayerColors[playerInfo.Object.CurrentOutfit.ColorId];
                                             if (Hacker.onlyColorType)
-                                                color = Helpers.isLighterColor(playerInfo.ColorId) ? Palette.PlayerColors[7] : Palette.PlayerColors[6];
+                                                color = Helpers.isLighterColor(playerInfo.Object.CurrentOutfit.ColorId) ? Palette.PlayerColors[7] : Palette.PlayerColors[6];
                                             roomColors.Add(color);
                                         }
                                     }

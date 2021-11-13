@@ -10,6 +10,7 @@ using System;
 using System.Text;
 using UnityEngine;
 using System.Reflection;
+using TheOtherRoles.Roles;
 
 namespace TheOtherRoles.Patches {
     [HarmonyPatch]
@@ -137,7 +138,7 @@ namespace TheOtherRoles.Patches {
             public static bool Prefix(MeetingHud __instance, [HarmonyArgument(0)]GameData.PlayerInfo voterPlayer, [HarmonyArgument(1)]int index, [HarmonyArgument(2)]Transform parent) {
                 SpriteRenderer spriteRenderer = UnityEngine.Object.Instantiate<SpriteRenderer>(__instance.PlayerVotePrefab);
                 if (!PlayerControl.GameOptions.AnonymousVotes || (PlayerControl.LocalPlayer.Data.IsDead && MapOptions.ghostsSeeVotes))
-                    PlayerControl.SetPlayerMaterialColors(voterPlayer.ColorId, spriteRenderer);
+                    PlayerControl.SetPlayerMaterialColors(voterPlayer.Object.CurrentOutfit.ColorId, spriteRenderer);
                 else
                     PlayerControl.SetPlayerMaterialColors(Palette.DisabledGrey, spriteRenderer);
                 spriteRenderer.transform.SetParent(parent);
@@ -225,7 +226,8 @@ namespace TheOtherRoles.Patches {
                 }
 
                 // Lovers save next to be exiled, because RPC of ending game comes before RPC of exiled
-                Lovers.notAckedExiledIsLover = false;
+                // TODO: REWRITE LOVERS POST-MEETING HANDLER
+/*                Lovers.notAckedExiledIsLover = false;
                 if (exiled != null)
                 {
                     exiledPlayers.Add(exiled.PlayerId);
@@ -233,7 +235,7 @@ namespace TheOtherRoles.Patches {
 
                     if (isLovers)
                         suicidedPlayers.Add(exiled.Object.getPartner().PlayerId);
-                }
+                }*/
             }
         }
 
@@ -316,8 +318,7 @@ namespace TheOtherRoles.Patches {
             foreach (RoleInfo roleInfo in RoleInfo.allRoleInfos)
             {
                 if (roleInfo == null || 
-                    roleInfo.roleId == RoleId.Lover || 
-                    roleInfo.roleId == RoleId.Guesser || 
+                    roleInfo.roleId == CustomRoleTypes.Lovers || 
                     roleInfo == RoleInfo.niceMini || 
                     roleInfo == RoleInfo.gm ||
                     (Guesser.onlyAvailableRoles && !roleInfo.enabled && !MapOptions.hideSettings))

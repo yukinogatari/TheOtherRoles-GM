@@ -113,7 +113,7 @@ namespace TheOtherRoles.Patches
                     roleCouldUse = true;
             	else if (Vulture.canUseVents && Vulture.vulture != null && Vulture.vulture == @object)
                 	roleCouldUse = true;
-                else if (pc.IsImpostor)
+                else if (pc.Role.IsImpostor)
                 {
                     if (Janitor.janitor != null && Janitor.janitor == PlayerControl.LocalPlayer)
                         roleCouldUse = false;
@@ -203,6 +203,8 @@ namespace TheOtherRoles.Patches
             }
         }
 
+        // TODO: REWRITE THIS TOO
+/*
         [HarmonyPatch(typeof(UseButtonManager), nameof(UseButtonManager.SetTarget))]
         class UseButtonSetTargetPatch
         {
@@ -251,10 +253,10 @@ namespace TheOtherRoles.Patches
                 bool blockSabotageMafioso = (Mafioso.mafioso != null && Mafioso.mafioso == pc && Godfather.godfather != null && !Godfather.godfather.Data.IsDead);
                 if (__instance.currentTarget == null && (blockSabotageJanitor || blockSabotageMafioso))
                 {
-                    /*                var useButton = __instance.currentButtonShown;
+                    *//*                var useButton = __instance.currentButtonShown;
                                     useButton.graphic.sprite = DestroyableSingleton<TranslationController>.Instance.GetImage(ImageNames.UseButton);
                                     useButton.graphic.color = UseButtonManager.DisabledColor;
-                                    useButton.text.enabled = false;*/
+                                    useButton.text.enabled = false;*//*
                     newButton = __instance.otherButtons[ImageNames.UseButton];
                     enabled = false;
                 }
@@ -283,8 +285,11 @@ namespace TheOtherRoles.Patches
 
             }
         }
+*/
 
-        [HarmonyPatch(typeof(UseButtonManager), nameof(UseButtonManager.DoClick))]
+        // TODO: give them a proper HudManager.SabotageButton
+
+/*        [HarmonyPatch(typeof(UseButtonManager), nameof(UseButtonManager.DoClick))]
         class UseButtonDoClickPatch
         {
             static bool Prefix(UseButtonManager __instance)
@@ -314,7 +319,7 @@ namespace TheOtherRoles.Patches
 
                 return true;
             }
-        }
+        }*/
 
         [HarmonyPatch(typeof(EmergencyMinigame), nameof(EmergencyMinigame.Update))]
         class EmergencyMinigameUpdatePatch
