@@ -360,6 +360,8 @@ namespace TheOtherRoles {
                 roleCouldUse = true;
             else if (Spy.canEnterVents && Spy.spy != null && Spy.spy == player)
                 roleCouldUse = true;
+            else if (Madmate.canEnterVents && Madmate.madmate != null && Madmate.madmate == player)
+                roleCouldUse = true;
             else if (Vulture.canUseVents && Vulture.vulture != null && Vulture.vulture == player)
                 roleCouldUse = true;
             else if (player.Data?.Role != null && player.Data.Role.CanVent)  {
@@ -370,6 +372,19 @@ namespace TheOtherRoles {
                 else
                     roleCouldUse = true;
             }
+            return roleCouldUse;
+        }
+
+        public static bool roleCanSabotage(this PlayerControl player)
+        {
+            bool roleCouldUse = false;
+            if (Madmate.canSabotage && Madmate.madmate != null && Madmate.madmate == player)
+                roleCouldUse = true;
+            else if (Jester.canSabotage && Jester.jester != null && Jester.jester == player)
+                roleCouldUse = true;
+            else if (player.Data?.Role != null && player.Data.Role.IsImpostor)
+                roleCouldUse = true;
+
             return roleCouldUse;
         }
 

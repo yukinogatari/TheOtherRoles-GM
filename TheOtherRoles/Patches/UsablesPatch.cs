@@ -189,9 +189,16 @@ namespace TheOtherRoles.Patches
         {
             static void Postfix(PlayerControl __instance)
             {
-                if (__instance.AmOwner && __instance.roleCanUseVents() && HudManager.Instance.ReportButton.isActiveAndEnabled)
+                if (__instance.AmOwner && Helpers.ShowButtons)
                 {
-                    HudManager.Instance.ImpostorVentButton.Show();
+                    if (__instance.roleCanUseVents())
+                        HudManager.Instance.ImpostorVentButton.Show();
+
+                    if (__instance.roleCanSabotage())
+                    {
+                        HudManager.Instance.SabotageButton.Show();
+                        HudManager.Instance.SabotageButton.gameObject.SetActive(true);
+                    }
                 }
             }
         }
@@ -242,6 +249,20 @@ namespace TheOtherRoles.Patches
                 }
             }
         }
+
+        [HarmonyPatch(typeof(SabotageButton), nameof(SabotageButton.DoClick))]
+        public static class SabotageButtonDoClickPatch
+        {
+            public static bool Prefix(SabotageButton __instance)
+            {
+                // The sabotage button behaves just fine if it's a regular impostor
+                if (PlayerControl.LocalPlayer.Data.Role.TeamType == RoleTeamTypes.Impostor) return true;
+
+                DestroyableSingleton<HudManager>.Instance.ShowMap((Il2CppSystem.Action<MapBehaviour>)((m) => { m.ShowSabotageMap(); }));
+                return false;
+            }
+        }
+
         [HarmonyPatch(typeof(UseButton), nameof(UseButton.SetTarget))]
         class UseButtonSetTargetPatch
         {

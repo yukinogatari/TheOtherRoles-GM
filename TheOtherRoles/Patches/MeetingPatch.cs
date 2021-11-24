@@ -207,7 +207,7 @@ namespace TheOtherRoles.Patches {
                         votesApplied[voter.PlayerId]++;
 
                         // Major vote, redo this iteration to place a second vote
-                        if (voter.PlayerId == Mayor.mayor.PlayerId && votesApplied[voter.PlayerId] < Mayor.numVotes) {
+                        if (Mayor.mayor != null && voter.PlayerId == Mayor.mayor.PlayerId && votesApplied[voter.PlayerId] < Mayor.numVotes) {
                             j--;    
                         }
                     }

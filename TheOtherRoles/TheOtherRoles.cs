@@ -98,7 +98,7 @@ namespace TheOtherRoles
                 jester = null;
                 triggerJesterWin = false;
                 canCallEmergency = CustomOptionHolder.jesterCanCallEmergency.getBool();
-                //canSabotage = CustomOptionHolder.jesterCanSabotage.getBool();
+                canSabotage = CustomOptionHolder.jesterCanSabotage.getBool();
             }
         }
 
