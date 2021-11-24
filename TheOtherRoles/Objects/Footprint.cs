@@ -44,14 +44,15 @@ namespace TheOtherRoles.Objects {
             footprint.SetActive(true);
             footprints.Add(this);
 
-            HudManager.Instance.StartCoroutine(Effects.Lerp(footprintDuration, new Action<float>((p) => {
+            DestroyableSingleton<HudManager>.Instance.StartCoroutine(Effects.Lerp(footprintDuration, new Action<float>((p) => {
             Color c = color;
-            if (!anonymousFootprints && owner != null) {
+            // TODO: HANDLE SHAPESHIFTER/CAMO FOOTPRINTS
+/*            if (!anonymousFootprints && owner != null) {
                 if (owner == Morphling.morphling && Morphling.morphTimer > 0 && Morphling.morphTarget?.Data != null)
                     c = Palette.ShadowColors[Morphling.morphTarget.CurrentOutfit.ColorId];
                 else if (Camouflager.camouflageTimer > 0)
                     c = Palette.PlayerColors[6];
-            }
+            }*/
 
             if (spriteRenderer) spriteRenderer.color = new Color(c.r, c.g, c.b, Mathf.Clamp01(1 - p));
 

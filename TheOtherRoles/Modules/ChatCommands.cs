@@ -44,7 +44,7 @@ namespace TheOtherRoles.Modules {
                 if (AmongUsClient.Instance.GameMode == GameModes.FreePlay) {
                     if (text.ToLower().Equals("/murder")) {
                         PlayerControl.LocalPlayer.Exiled();
-                        HudManager.Instance.KillOverlay.ShowKillAnimation(PlayerControl.LocalPlayer.Data, PlayerControl.LocalPlayer.Data);
+                        DestroyableSingleton<HudManager>.Instance.KillOverlay.ShowKillAnimation(PlayerControl.LocalPlayer.Data, PlayerControl.LocalPlayer.Data);
                         handled = true;
                     } else if (text.ToLower().StartsWith("/color ")) {
                         handled = true;

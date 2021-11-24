@@ -1,6 +1,7 @@
 using HarmonyLib;
 using static TheOtherRoles.TheOtherRoles;
 using TheOtherRoles.Objects;
+using TheOtherRoles.Roles;
 using UnityEngine;
 using System.Collections.Generic;
 
@@ -59,7 +60,7 @@ namespace TheOtherRoles.Patches
 
             foreach (PlayerControl p in players)
             {
-                if (p.isGM()) continue;
+                if (p.isRole(CustomRoleTypes.GM)) continue;
 
                 byte id = p.PlayerId;
                 mapIcons[id] = UnityEngine.Object.Instantiate(__instance.HerePoint, __instance.HerePoint.transform.parent);
@@ -78,11 +79,11 @@ namespace TheOtherRoles.Patches
         {
             static void Postfix(MapBehaviour __instance)
             {
-                if (PlayerControl.LocalPlayer.isGM())
+                if (PlayerControl.LocalPlayer.isRole(CustomRoleTypes.GM))
                 {
                     foreach (PlayerControl p in PlayerControl.AllPlayerControls)
                     {
-                        if (p == null || p.isGM()) continue;
+                        if (p == null || p.isRole(CustomRoleTypes.GM)) continue;
 
                         byte id = p.PlayerId;
                         if (!mapIcons.ContainsKey(id))
@@ -135,7 +136,7 @@ namespace TheOtherRoles.Patches
 
             static void Postfix(MapBehaviour __instance)
             {
-                if (PlayerControl.LocalPlayer.isGM())
+                if (PlayerControl.LocalPlayer.isRole(CustomRoleTypes.GM))
                 {
                     if (mapIcons == null || corpseIcons == null)
                         initializeIcons(__instance);
@@ -165,17 +166,17 @@ namespace TheOtherRoles.Patches
             private static Vector3 oldpos;
             static void Prefix(MapBehaviour __instance)
             {
-                if (PlayerControl.LocalPlayer.isGM())
+                if (PlayerControl.LocalPlayer.isRole(CustomRoleTypes.GM))
                 {
-                    oldpos = HudManager.Instance.UseButton.transform.localPosition;
+                    oldpos = DestroyableSingleton<HudManager>.Instance.UseButton.transform.localPosition;
                 }
             }
 
             static void Postfix(MapBehaviour __instance)
             {
-                if (PlayerControl.LocalPlayer.isGM())
+                if (PlayerControl.LocalPlayer.isRole(CustomRoleTypes.GM))
                 {
-                    HudManager.Instance.UseButton.transform.localPosition = oldpos;
+                    DestroyableSingleton<HudManager>.Instance.UseButton.transform.localPosition = oldpos;
                 }
             }
         }

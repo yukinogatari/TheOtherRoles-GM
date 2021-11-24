@@ -17,6 +17,7 @@ namespace TheOtherRoles.Patches {
     enum FinalStatus {
         Alive,
         Torched,
+
         Exiled,
         Dead,
         Suicide,
@@ -54,16 +55,14 @@ namespace TheOtherRoles.Patches {
         
         public static void Prefix(AmongUsClient __instance, [HarmonyArgument(0)]ref EndGameResult endGameResult) {
             Camouflager.resetCamouflage();
-            Morphling.resetMorph();
 
             AdditionalTempData.gameOverReason = endGameResult.GameOverReason;
-            GameOverReason reason = endGameResult.GameOverReason;
-            if ((int)reason >= 10) reason = GameOverReason.ImpostorByKill;
+            if ((int)endGameResult.GameOverReason >= 10) endGameResult.GameOverReason = GameOverReason.ImpostorByKill;
         }
 
         public static void Postfix(AmongUsClient __instance, [HarmonyArgument(0)]ref EndGameResult endGameResult) {
             var gameOverReason = AdditionalTempData.gameOverReason;
-
+            
             AdditionalTempData.clear();
 
             //foreach (var pc in PlayerControl.AllPlayerControls)
@@ -73,13 +72,13 @@ namespace TheOtherRoles.Patches {
                 var roles = RoleInfo.getRoleInfoForPlayer(p.Object);
                 var (tasksCompleted, tasksTotal) = TasksHandler.taskInfo(p);
                 var finalStatus = 
-                    p.Disconnected == true ? FinalStatus.Disconnected :
+                    p.Disconnected ? FinalStatus.Disconnected :
                     suicidedPlayers.Contains(p.PlayerId) ? FinalStatus.Suicide :
                     misfiredPlayers.Contains(p.PlayerId) ? FinalStatus.Misfire :
                     exiledPlayers.Contains(p.PlayerId) ? FinalStatus.Exiled :
-                    p.IsDead == true ? FinalStatus.Dead :
-                    gameOverReason == (GameOverReason)CustomGameOverReason.ArsonistWin && Arsonist.arsonist != p.Object ? FinalStatus.Torched :
-                    gameOverReason == GameOverReason.ImpostorBySabotage && !p.Role.IsImpostor ? FinalStatus.Dead :
+                    p.IsDead ? FinalStatus.Dead :
+                    gameOverReason == (GameOverReason)CustomGameOverReason.ArsonistWin && p.Object != Arsonist.winner ? FinalStatus.Torched :
+                    gameOverReason == GameOverReason.ImpostorBySabotage && !(p.Object.role()?.IsImpostor == true) ? FinalStatus.Dead :
                     FinalStatus.Alive;
 
                 AdditionalTempData.playerRoles.Add(new AdditionalTempData.PlayerRoleInfo()
@@ -93,27 +92,27 @@ namespace TheOtherRoles.Patches {
             }
 
             // TODO: WE PROBABLY NEED TO REWRITE THE ENTIRETY OF THE ENDGAME STUFF
-/*
-            AdditionalTempData.isGM = CustomOptionHolder.gmEnabled.getBool() && PlayerControl.LocalPlayer.isGM();
+
+            AdditionalTempData.isGM = PlayerControl.LocalPlayer.isRole(CustomRoleTypes.GM);
 
             // Remove Jester, Arsonist, Vulture, Jackal, former Jackals and Sidekick from winners (if they win, they'll be readded)
             List<PlayerControl> notWinners = new List<PlayerControl>();
-            if (Jester.jester != null) notWinners.Add(Jester.jester);
-            if (Sidekick.sidekick != null) notWinners.Add(Sidekick.sidekick);
-            if (Jackal.jackal != null) notWinners.Add(Jackal.jackal);
-            if (Arsonist.arsonist != null) notWinners.Add(Arsonist.arsonist);
-            if (Madmate.madmate != null) notWinners.Add(Madmate.madmate);
-            if (Opportunist.opportunist != null) notWinners.Add(Opportunist.opportunist);
-            if (Vulture.vulture != null) notWinners.Add(Vulture.vulture);
-            notWinners.AddRange(Jackal.formerJackals);
+            notWinners.AddRange(RoleHelpers.getPlayersWithRole(CustomRoleTypes.Jester));
+            notWinners.AddRange(RoleHelpers.getPlayersWithRole(CustomRoleTypes.Jackal));
+            notWinners.AddRange(RoleHelpers.getPlayersWithRole(CustomRoleTypes.Sidekick));
+            notWinners.AddRange(RoleHelpers.getPlayersWithRole(CustomRoleTypes.Arsonist));
+            notWinners.AddRange(RoleHelpers.getPlayersWithRole(CustomRoleTypes.Madmate));
+            notWinners.AddRange(RoleHelpers.getPlayersWithRole(CustomRoleTypes.Opportunist));
+            notWinners.AddRange(RoleHelpers.getPlayersWithRole(CustomRoleTypes.Vulture));
+            notWinners.AddRange(RoleHelpers.getPlayersWithRole(CustomRoleTypes.GM));
 
-            // GM can't win at all, and we're treating lovers as a separate class
-            if (GM.gm != null) notWinners.Add(GM.gm);
+            // Husk is incapable of winning.
+            notWinners.AddRange(RoleHelpers.getPlayersWithRole(CustomRoleTypes.Husk));
+            //notWinners.AddRange(Jackal.formerJackals);
 
             if (Lovers.separateTeam)
             {
-                if (Lovers.lover1 != null) notWinners.Add(Lovers.lover1);
-                if (Lovers.lover2 != null) notWinners.Add(Lovers.lover2);
+                notWinners.AddRange(RoleHelpers.getPlayersWithModifier(RoleModifierTypes.Lovers));
             }
 
             List<WinningPlayerData> winnersToRemove = new List<WinningPlayerData>();
@@ -122,121 +121,144 @@ namespace TheOtherRoles.Patches {
             }
             foreach (var winner in winnersToRemove) TempData.winners.Remove(winner);
 
+            /*
+                        bool jesterWin = Jester.jester != null && gameOverReason == (GameOverReason)CustomGameOverReason.JesterWin;
+                        bool arsonistWin = Arsonist.arsonist != null && gameOverReason == (GameOverReason)CustomGameOverReason.ArsonistWin;
+                        bool miniLose = Mini.mini != null && gameOverReason == (GameOverReason)CustomGameOverReason.MiniLose;
+                        // TODO: IMPLEMENT LOVERS WIN
+                        //bool loversWin = Lovers.existingAndAlive() && !(Lovers.separateTeam && gameOverReason == GameOverReason.HumansByTask);
+                        *//*bool loversWin = Lovers.existingAndAlive() && 
+                            (gameOverReason == (GameOverReason)CustomGameOverReason.LoversWin || 
+                                (TempData.DidHumansWin(gameOverReason) && !Lovers.existingWithKiller() && Lovers.canWinWithCrew)
+                            ); // Either they win if they are among the last 3 players, or they win if they are both Crewmates and both alive and the Crew wins (Team Imp/Jackal Lovers can only win solo wins)*//*
 
-            bool jesterWin = Jester.jester != null && gameOverReason == (GameOverReason)CustomGameOverReason.JesterWin;
-            bool arsonistWin = Arsonist.arsonist != null && gameOverReason == (GameOverReason)CustomGameOverReason.ArsonistWin;
-            bool miniLose = Mini.mini != null && gameOverReason == (GameOverReason)CustomGameOverReason.MiniLose;
-            // TODO: IMPLEMENT LOVERS WIN
-            //bool loversWin = Lovers.existingAndAlive() && !(Lovers.separateTeam && gameOverReason == GameOverReason.HumansByTask);
-            *//*bool loversWin = Lovers.existingAndAlive() && 
-                (gameOverReason == (GameOverReason)CustomGameOverReason.LoversWin || 
-                    (TempData.DidHumansWin(gameOverReason) && !Lovers.existingWithKiller() && Lovers.canWinWithCrew)
-                ); // Either they win if they are among the last 3 players, or they win if they are both Crewmates and both alive and the Crew wins (Team Imp/Jackal Lovers can only win solo wins)*//*
-            bool teamJackalWin = gameOverReason == (GameOverReason)CustomGameOverReason.TeamJackalWin && ((Jackal.jackal != null && !Jackal.jackal.Data.IsDead) || (Sidekick.sidekick != null && !Sidekick.sidekick.Data.IsDead));
-            bool vultureWin = Vulture.vulture != null && gameOverReason == (GameOverReason)CustomGameOverReason.VultureWin;
-            bool opportunistWin = Opportunist.opportunist != null && !Opportunist.opportunist.Data.IsDead;
+                        bool teamJackalWin = gameOverReason == (GameOverReason)CustomGameOverReason.TeamJackalWin && ((Jackal.jackal != null && !Jackal.jackal.Data.IsDead) || (Sidekick.sidekick != null && !Sidekick.sidekick.Data.IsDead));
+                        bool vultureWin = Vulture.vulture != null && gameOverReason == (GameOverReason)CustomGameOverReason.VultureWin;
+                        bool opportunistWin = Opportunist.opportunist != null && !Opportunist.opportunist.Data.IsDead;
+
+
+
+                        // Lovers win conditions
+                        // TODO: IMPLEMENT LOVERS WIN
+            *//*            else if (loversWin)
+                        {
+                            // Double win for lovers, crewmates also win
+                            if (TempData.DidHumansWin(gameOverReason) && !Lovers.separateTeam && !Lovers.existingWithKiller())
+                            {
+                                AdditionalTempData.winCondition = WinCondition.LoversTeamWin;
+                                AdditionalTempData.extraConditions.Add(WinCondition.LoversTeamWin);
+                            }
+                            // Lovers solo win
+                            else
+                            {
+                                AdditionalTempData.winCondition = WinCondition.LoversSoloWin;
+                                TempData.winners = new Il2CppSystem.Collections.Generic.List<WinningPlayerData>();
+                                TempData.winners.Add(new WinningPlayerData(Lovers.lover1.Data));
+                                TempData.winners.Add(new WinningPlayerData(Lovers.lover2.Data));
+                            }
+                        }*/
+
+            // Jackal win condition (should be implemented using a proper GameOverReason in the future)
+            /*           else if (teamJackalWin)
+                       {
+                           // Jackal wins if nobody except jackal is alive
+                           AdditionalTempData.winCondition = WinCondition.JackalWin;
+                           TempData.winners = new Il2CppSystem.Collections.Generic.List<WinningPlayerData>();
+                           WinningPlayerData wpd = new WinningPlayerData(Jackal.jackal.Data);
+                           wpd.IsImpostor = false;
+                           TempData.winners.Add(wpd);
+                           // If there is a sidekick. The sidekick also wins
+                           if (Sidekick.sidekick != null)
+                           {
+                               WinningPlayerData wpdSidekick = new WinningPlayerData(Sidekick.sidekick.Data);
+                               wpdSidekick.IsImpostor = false;
+                               TempData.winners.Add(wpdSidekick);
+                           }
+                           foreach (var player in Jackal.formerJackals)
+                           {
+                               WinningPlayerData wpdFormerJackal = new WinningPlayerData(player.Data);
+                               wpdFormerJackal.IsImpostor = false;
+                               TempData.winners.Add(wpdFormerJackal);
+                           }
+                       }
+                       else */
 
 
             // Mini lose
-            if (miniLose)
+            if (gameOverReason == (GameOverReason)CustomGameOverReason.MiniLose)
             {
                 TempData.winners = new Il2CppSystem.Collections.Generic.List<WinningPlayerData>();
-                WinningPlayerData wpd = new WinningPlayerData(Mini.mini.Data);
+                WinningPlayerData wpd = new WinningPlayerData(Mini.exiled.Data);
                 wpd.IsYou = false; // If "no one is the Mini", it will display the Mini, but also show defeat to everyone
                 TempData.winners.Add(wpd);
                 AdditionalTempData.winCondition = WinCondition.MiniLose;
             }
 
             // Jester win
-            else if (jesterWin)
+            else if (gameOverReason == (GameOverReason)CustomGameOverReason.JesterWin)
             {
                 TempData.winners = new Il2CppSystem.Collections.Generic.List<WinningPlayerData>();
-                WinningPlayerData wpd = new WinningPlayerData(Jester.jester.Data);
+                WinningPlayerData wpd = new WinningPlayerData(Jester.winner.Data);
                 TempData.winners.Add(wpd);
                 AdditionalTempData.winCondition = WinCondition.JesterWin;
             }
 
             // Arsonist win
-            else if (arsonistWin)
+            else if (gameOverReason == (GameOverReason)CustomGameOverReason.ArsonistWin)
             {
                 TempData.winners = new Il2CppSystem.Collections.Generic.List<WinningPlayerData>();
-                WinningPlayerData wpd = new WinningPlayerData(Arsonist.arsonist.Data);
+                WinningPlayerData wpd = new WinningPlayerData(Arsonist.winner.Data);
                 TempData.winners.Add(wpd);
                 AdditionalTempData.winCondition = WinCondition.ArsonistWin;
             }
 
             // Vulture win
-            else if (vultureWin) {
+            else if (gameOverReason == (GameOverReason)CustomGameOverReason.VultureWin)
+            {
                 TempData.winners = new Il2CppSystem.Collections.Generic.List<WinningPlayerData>();
-                WinningPlayerData wpd = new WinningPlayerData(Vulture.vulture.Data);
+                WinningPlayerData wpd = new WinningPlayerData(Vulture.winner.Data);
                 TempData.winners.Add(wpd);
                 AdditionalTempData.winCondition = WinCondition.VultureWin;
             }
 
-            // Lovers win conditions
-            // TODO: IMPLEMENT LOVERS WIN
-*//*            else if (loversWin)
+            var madmates = RoleHelpers.getPlayersWithRole(CustomRoleTypes.Madmate);
+            if (madmates.Count > 0)
             {
-                // Double win for lovers, crewmates also win
-                if (TempData.DidHumansWin(gameOverReason) && !Lovers.separateTeam && !Lovers.existingWithKiller())
-                {
-                    AdditionalTempData.winCondition = WinCondition.LoversTeamWin;
-                    AdditionalTempData.extraConditions.Add(WinCondition.LoversTeamWin);
-                }
-                // Lovers solo win
-                else
-                {
-                    AdditionalTempData.winCondition = WinCondition.LoversSoloWin;
-                    TempData.winners = new Il2CppSystem.Collections.Generic.List<WinningPlayerData>();
-                    TempData.winners.Add(new WinningPlayerData(Lovers.lover1.Data));
-                    TempData.winners.Add(new WinningPlayerData(Lovers.lover2.Data));
-                }
-            }*//*
-
-            // Jackal win condition (should be implemented using a proper GameOverReason in the future)
-            else if (teamJackalWin) {
-                // Jackal wins if nobody except jackal is alive
-                AdditionalTempData.winCondition = WinCondition.JackalWin;
-                TempData.winners = new Il2CppSystem.Collections.Generic.List<WinningPlayerData>();
-                WinningPlayerData wpd = new WinningPlayerData(Jackal.jackal.Data);
-                wpd.IsImpostor = false; 
-                TempData.winners.Add(wpd);
-                // If there is a sidekick. The sidekick also wins
-                if (Sidekick.sidekick != null) {
-                    WinningPlayerData wpdSidekick = new WinningPlayerData(Sidekick.sidekick.Data);
-                    wpdSidekick.IsImpostor = false; 
-                    TempData.winners.Add(wpdSidekick);
-                }
-                foreach(var player in Jackal.formerJackals) {
-                    WinningPlayerData wpdFormerJackal = new WinningPlayerData(player.Data);
-                    wpdFormerJackal.IsImpostor = false; 
-                    TempData.winners.Add(wpdFormerJackal);
-                }
-            } else if (Madmate.madmate != null) {
                 // Madmate wins if team impostors wins
-                foreach (WinningPlayerData winner in TempData.winners) {
-                    if (winner.IsImpostor) {
-                        WinningPlayerData wpd = new WinningPlayerData(Madmate.madmate.Data);
-                        TempData.winners.Add(wpd);
+                foreach (WinningPlayerData winner in TempData.winners)
+                {
+                    if (winner.IsImpostor)
+                    {
+                        foreach (var madmate in madmates)
+                        {
+                            WinningPlayerData wpd = new WinningPlayerData(madmate.Data);
+                            TempData.winners.Add(wpd);
+                        }
                         break;
                     }
                 }
             }
 
-            if (opportunistWin) {
+            var opps = RoleHelpers.getPlayersWithRole(CustomRoleTypes.Opportunist).Where(x => !x.Data.IsDead).ToList();
+            if (opps.Count > 0)
+            {
                 AdditionalTempData.extraConditions.Add(WinCondition.OpportunistWin);
-                bool toAdd = true;
-                foreach (WinningPlayerData winner in TempData.winners)
+                foreach (var opp in opps)
                 {
-                    if (winner.PlayerName == Opportunist.opportunist.Data.PlayerName)
+                    bool toAdd = true;
+                    foreach (WinningPlayerData winner in TempData.winners)
                     {
-                        toAdd = false;
-                        break;
+                        if (opp.Data.PlayerName == winner.PlayerName)
+                        {
+                            toAdd = false;
+                            break;
+                        }
                     }
-                }
 
-                if (toAdd) {
-                    TempData.winners.Add(new WinningPlayerData(Opportunist.opportunist.Data));
+                    if (toAdd)
+                    {
+                        TempData.winners.Add(new WinningPlayerData(opp.Data));
+                    }
                 }
             }
 
@@ -244,7 +266,7 @@ namespace TheOtherRoles.Patches {
             {
                 wpd.IsDead = wpd.IsDead || AdditionalTempData.playerRoles.Any(x => x.PlayerName == wpd.PlayerName && x.Status != FinalStatus.Alive);
             }
-*/
+
             // Reset Settings
             RPCProcedure.resetVariables();
         }
@@ -253,63 +275,73 @@ namespace TheOtherRoles.Patches {
     [HarmonyPatch(typeof(EndGameManager), nameof(EndGameManager.SetEverythingUp))]
     public class EndGameManagerSetUpPatch
     {
-
-        public static void Postfix(EndGameManager __instance) {
+        public static void Postfix(EndGameManager __instance)
+        {
             GameObject bonusTextObject = UnityEngine.Object.Instantiate(__instance.WinText.gameObject);
             bonusTextObject.transform.position = new Vector3(__instance.WinText.transform.position.x, __instance.WinText.transform.position.y - 0.8f, __instance.WinText.transform.position.z);
             bonusTextObject.transform.localScale = new Vector3(0.7f, 0.7f, 1f);
             TMPro.TMP_Text textRenderer = bonusTextObject.GetComponent<TMPro.TMP_Text>();
             textRenderer.text = "";
 
-            if (AdditionalTempData.isGM) {
+            if (AdditionalTempData.isGM)
+            {
                 __instance.WinText.text = ModTranslation.getString("gmGameOver");
-                __instance.WinText.color = GM.color;
+                __instance.WinText.color = RoleColors.GM;
             }
 
             string bonusText = "";
 
-            if (AdditionalTempData.winCondition == WinCondition.JesterWin) {
+            if (AdditionalTempData.winCondition == WinCondition.JesterWin)
+            {
                 bonusText = "jesterWin";
-                textRenderer.color = Jester.color;
-                __instance.BackgroundBar.material.SetColor("_Color", Jester.color);
+                textRenderer.color = RoleColors.Jester;
+                __instance.BackgroundBar.material.SetColor("_Color", RoleColors.Jester);
             }
-            else if (AdditionalTempData.winCondition == WinCondition.ArsonistWin) {
+            else if (AdditionalTempData.winCondition == WinCondition.ArsonistWin)
+            {
                 bonusText = "arsonistWin";
-                textRenderer.color = Arsonist.color;
-                __instance.BackgroundBar.material.SetColor("_Color", Arsonist.color);
+                textRenderer.color = RoleColors.Arsonist;
+                __instance.BackgroundBar.material.SetColor("_Color", RoleColors.Arsonist);
             }
-            else if (AdditionalTempData.winCondition == WinCondition.VultureWin) {
+            else if (AdditionalTempData.winCondition == WinCondition.VultureWin)
+            {
                 bonusText = "vultureWin";
-                textRenderer.color = Vulture.color;
-                __instance.BackgroundBar.material.SetColor("_Color", Vulture.color);
+                textRenderer.color = RoleColors.Vulture;
+                __instance.BackgroundBar.material.SetColor("_Color", RoleColors.Vulture);
             }
-            else if (AdditionalTempData.winCondition == WinCondition.LoversTeamWin) {
+            else if (AdditionalTempData.winCondition == WinCondition.LoversTeamWin)
+            {
                 bonusText = "crewWin";
                 textRenderer.color = RoleColors.Lovers;
                 __instance.BackgroundBar.material.SetColor("_Color", RoleColors.Lovers);
-            } 
-            else if (AdditionalTempData.winCondition == WinCondition.LoversSoloWin) {
+            }
+            else if (AdditionalTempData.winCondition == WinCondition.LoversSoloWin)
+            {
                 bonusText = "loversWin";
                 textRenderer.color = RoleColors.Lovers;
                 __instance.BackgroundBar.material.SetColor("_Color", RoleColors.Lovers);
             }
-            else if (AdditionalTempData.winCondition == WinCondition.JackalWin) {
+            else if (AdditionalTempData.winCondition == WinCondition.JackalWin)
+            {
                 bonusText = "jackalWin";
-                textRenderer.color = Jackal.color;
-                __instance.BackgroundBar.material.SetColor("_Color", Jackal.color);
+                textRenderer.color = RoleColors.Jackal;
+                __instance.BackgroundBar.material.SetColor("_Color", RoleColors.Jackal);
             }
-            else if (AdditionalTempData.winCondition == WinCondition.MiniLose) {
+            else if (AdditionalTempData.winCondition == WinCondition.MiniLose)
+            {
                 bonusText = "miniDied";
-                textRenderer.color = Mini.color;
+                textRenderer.color = RoleColors.Mini;
                 __instance.BackgroundBar.material.SetColor("_Color", Palette.DisabledGrey);
-            } 
-            else if (AdditionalTempData.gameOverReason == GameOverReason.HumansByTask || AdditionalTempData.gameOverReason == GameOverReason.HumansByVote) {
-                bonusText = "crewWin";
-                textRenderer.color = Palette.White;
             }
-            else if (AdditionalTempData.gameOverReason == GameOverReason.ImpostorByKill || AdditionalTempData.gameOverReason == GameOverReason.ImpostorBySabotage || AdditionalTempData.gameOverReason == GameOverReason.ImpostorByVote) {
+            else if (AdditionalTempData.gameOverReason == GameOverReason.HumansByTask || AdditionalTempData.gameOverReason == GameOverReason.HumansByVote)
+            {
+                bonusText = "crewWin";
+                textRenderer.color = RoleColors.Crewmate;
+            }
+            else if (AdditionalTempData.gameOverReason == GameOverReason.ImpostorByKill || AdditionalTempData.gameOverReason == GameOverReason.ImpostorBySabotage || AdditionalTempData.gameOverReason == GameOverReason.ImpostorByVote)
+            {
                 bonusText = "impostorWin";
-                textRenderer.color = Palette.ImpostorRed;
+                textRenderer.color = RoleColors.Impostor;
             }
 
             string extraText = "";
@@ -331,13 +363,14 @@ namespace TheOtherRoles.Patches {
             if (extraText.Length > 0)
             {
                 textRenderer.text = string.Format(ModTranslation.getString(bonusText + "Extra"), extraText);
-            } 
+            }
             else
             {
                 textRenderer.text = ModTranslation.getString(bonusText);
             }
 
-            if (MapOptions.showRoleSummary) {
+            if (MapOptions.showRoleSummary)
+            {
                 var position = Camera.main.ViewportToWorldPoint(new Vector3(0f, 1f, Camera.main.nearClipPlane));
                 GameObject roleSummary = UnityEngine.Object.Instantiate(__instance.WinText.gameObject);
                 //roleSummary.transform.position = new Vector3(__instance.ExitButton.transform.position.x + 0.1f, position.y - 0.1f, -14f); 
@@ -346,13 +379,15 @@ namespace TheOtherRoles.Patches {
 
                 var roleSummaryText = new StringBuilder();
                 roleSummaryText.AppendLine(ModTranslation.getString("roleSummaryText"));
-                AdditionalTempData.playerRoles.Sort((x, y) => {
+                AdditionalTempData.playerRoles.Sort((x, y) =>
+                {
                     RoleInfo roleX = x.Roles.FirstOrDefault();
                     RoleInfo roleY = y.Roles.FirstOrDefault();
-                    CustomRoleTypes idX = roleX == null ? CustomRoleTypes.NoRole : roleX.roleId;
-                    CustomRoleTypes idY = roleY == null ? CustomRoleTypes.NoRole : roleY.roleId;
+                    CustomRoleTypes idX = roleX == null ? CustomRoleTypes.NoRole : roleX.type;
+                    CustomRoleTypes idY = roleY == null ? CustomRoleTypes.NoRole : roleY.type;
 
-                    if (x.Status == y.Status) {
+                    if (x.Status == y.Status)
+                    {
                         if (idX == idY)
                         {
                             return x.PlayerName.CompareTo(y.PlayerName);
@@ -362,7 +397,8 @@ namespace TheOtherRoles.Patches {
                     return x.Status.CompareTo(y.Status);
 
                 });
-                foreach(var data in AdditionalTempData.playerRoles) {
+                foreach (var data in AdditionalTempData.playerRoles)
+                {
                     var roles = string.Join(" ", data.Roles.Select(x => Helpers.cs(x.color, x.name)));
                     var taskInfo = data.TasksTotal > 0 ? $"<color=#FAD934FF>{data.TasksCompleted}/{data.TasksTotal}</color>" : "";
                     string aliveDead = "";
@@ -387,7 +423,7 @@ namespace TheOtherRoles.Patches {
                 roleSummaryTextMesh.fontSizeMin = 1.25f;
                 roleSummaryTextMesh.fontSizeMax = 1.25f;
                 roleSummaryTextMesh.fontSize = 1.25f;
-                
+
                 var roleSummaryTextMeshRectTransform = roleSummaryTextMesh.GetComponent<RectTransform>();
                 roleSummaryTextMeshRectTransform.anchoredPosition = new Vector2(position.x + 3.5f, position.y - 0.1f);
                 roleSummaryTextMesh.text = roleSummaryText.ToString();
@@ -401,7 +437,7 @@ namespace TheOtherRoles.Patches {
         public static bool Prefix(ShipStatus __instance) {
             if (!GameData.Instance) return false;
             if (DestroyableSingleton<TutorialManager>.InstanceExists) return true; // InstanceExists | Don't check Custom Criteria when in Tutorial
-            if (HudManager.Instance.isIntroDisplayed) return false;
+            if (DestroyableSingleton<HudManager>.Instance.isIntroDisplayed) return false;
 
             var statistics = new PlayerStatistics(__instance);
             if (CheckAndEndGameForMiniLose(__instance)) return false;
@@ -489,10 +525,18 @@ namespace TheOtherRoles.Patches {
         }
 
         private static bool CheckAndEndGameForLoverWin(ShipStatus __instance, PlayerStatistics statistics) {
-            if (statistics.TeamLoversAlive == 2 && statistics.TotalAlive <= 3) {
-                __instance.enabled = false;
-                ShipStatus.RpcEndGame((GameOverReason)CustomGameOverReason.LoversWin, false);
-                return true;
+            // Forced lovers victory: there's a pair alive and only three players remaining
+            if (statistics.TotalAlive <= 3)
+            {
+                foreach (PlayerControl pc in RoleHelpers.getPlayersWithModifier(RoleModifierTypes.Lovers))
+                {
+                    if (pc.loversBothAlive())
+                    {
+                        __instance.enabled = false;
+                        ShipStatus.RpcEndGame((GameOverReason)CustomGameOverReason.LoversWin, false);
+                        return true;
+                    }
+                }
             }
             return false;
         }
@@ -563,6 +607,7 @@ namespace TheOtherRoles.Patches {
         }
 
         private void GetPlayerCounts() {
+            // TODO: REWRITE THIS TO HANDLE MULTIPLE LOVERS PROPERLY
             int numJackalAlive = 0;
             int numImpostorsAlive = 0;
             int numLoversAlive = 0;
@@ -578,22 +623,19 @@ namespace TheOtherRoles.Patches {
                 if (!playerInfo.Disconnected)
                 {
                     if (playerInfo.Object.isCrew()) numCrew++;
-                    if (!playerInfo.IsDead && !playerInfo.Object.isGM())
+                    if (!playerInfo.IsDead && !playerInfo.Object.isRole(CustomRoleTypes.GM))
                     {
                         numTotalAlive++;
 
                         bool lover = isLover(playerInfo);
                         if (lover) numLoversAlive++;
 
-                        if (playerInfo.Role.IsImpostor) {
+                        if (playerInfo.Object.role()?.IsImpostor == true) {
                             numImpostorsAlive++;
                             if (lover) impLovers++;
                         }
-                        if (Jackal.jackal != null && Jackal.jackal.PlayerId == playerInfo.PlayerId) {
-                            numJackalAlive++;
-                            if (lover) jackalLovers++;
-                        }
-                        if (Sidekick.sidekick != null && Sidekick.sidekick.PlayerId == playerInfo.PlayerId) {
+
+                        if (playerInfo.Object.isRole(CustomRoleTypes.Jackal) || playerInfo.Object.isRole(CustomRoleTypes.Sidekick)) {
                             numJackalAlive++;
                             if (lover) jackalLovers++;
                         }
@@ -603,12 +645,13 @@ namespace TheOtherRoles.Patches {
                 }
             }
 
+            // TODO: REIMPLEMENT
             // In the special case of Mafia being enabled, but only the janitor's left alive,
             // count it as zero impostors alive bc they can't actually do anything.
-            if (Godfather.godfather?.Data.IsDead == true && Mafioso.mafioso?.Data.IsDead == true && Janitor.janitor?.Data.IsDead == false)
+/*            if (Godfather.godfather?.Data.IsDead == true && Mafioso.mafioso?.Data.IsDead == true && Janitor.janitor?.Data.IsDead == false)
             {
                 numImpostorsAlive = 0;
-            }
+            }*/
 
             TeamCrew = numCrew;
             TeamJackalAlive = numJackalAlive;

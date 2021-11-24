@@ -2,6 +2,7 @@ using HarmonyLib;
 using Hazel;
 using System;
 using System.Collections.Generic;
+using TheOtherRoles.Roles;
 using UnityEngine;
 using static TheOtherRoles.TheOtherRoles;
 
@@ -34,7 +35,7 @@ namespace TheOtherRoles.Patches {
         static void UseAdminTime()
         {
             // Don't waste network traffic if we're out of time.
-            if (MapOptions.restrictDevices > 0 && MapOptions.restrictAdminTime > 0f && !PlayerControl.LocalPlayer.Data.IsDead)
+            if (MapOptions.restrictDevices > 0 && MapOptions.restrictAdminTime > 0f && !PlayerControl.LocalPlayer.Data.IsDead && !PlayerControl.LocalPlayer.isGM())
             {
                 MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.UseAdminTime, Hazel.SendOption.Reliable, -1);
                 writer.Write(adminTimer);
@@ -49,9 +50,6 @@ namespace TheOtherRoles.Patches {
         {
             public static bool Prefix(ref float __result, MapConsole __instance, [HarmonyArgument(0)] GameData.PlayerInfo pc, [HarmonyArgument(1)] out bool canUse, [HarmonyArgument(2)] out bool couldUse)
             {
-                // temp fix for the admin bug on airship
-                if (PlayerControl.GameOptions.MapId == 4)
-                    __instance.useIcon = ImageNames.PolusAdminButton;
                 canUse = couldUse = false;
                 return true;
             }
@@ -115,7 +113,7 @@ namespace TheOtherRoles.Patches {
 
                     if (TimeRemaining == null)
                     {
-                        TimeRemaining = UnityEngine.Object.Instantiate(HudManager.Instance.TaskText, __instance.transform);
+                        TimeRemaining = UnityEngine.Object.Instantiate(DestroyableSingleton<HudManager>.Instance.TaskText, __instance.transform);
                         TimeRemaining.alignment = TMPro.TextAlignmentOptions.BottomRight;
                         TimeRemaining.transform.position = Vector3.zero;
                         TimeRemaining.transform.localPosition = new Vector3(3.25f, 5.25f);
@@ -240,7 +238,7 @@ namespace TheOtherRoles.Patches {
             static void Postfix(CounterArea __instance)
             {
                 // Hacker display saved colors on the admin panel
-                bool showHackerInfo = Hacker.hacker != null && Hacker.hacker == PlayerControl.LocalPlayer && Hacker.hackerTimer > 0;
+                bool showHackerInfo = PlayerControl.LocalPlayer.isRole(CustomRoleTypes.Hacker) && PlayerControl.LocalPlayer.role<Hacker>().hackerTimer > 0;
                 if (playerColors.ContainsKey(__instance.RoomType))
                 {
                     List<Color> colors = playerColors[__instance.RoomType];

@@ -24,7 +24,7 @@ namespace TheOtherRoles.Patches {
         static void UseCameraTime()
         {
             // Don't waste network traffic if we're out of time.
-            if (MapOptions.restrictDevices > 0 && MapOptions.restrictCamerasTime > 0f && !PlayerControl.LocalPlayer.Data.IsDead)
+            if (MapOptions.restrictDevices > 0 && MapOptions.restrictCamerasTime > 0f && !PlayerControl.LocalPlayer.Data.IsDead && !PlayerControl.LocalPlayer.isGM())
             {
                 MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.UseCameraTime, Hazel.SendOption.Reliable, -1);
                 writer.Write(cameraTimer);
@@ -94,7 +94,7 @@ namespace TheOtherRoles.Patches {
                     {
                         if (TimeRemaining == null)
                         {
-                            TimeRemaining = UnityEngine.Object.Instantiate(HudManager.Instance.TaskText, __instance.transform);
+                            TimeRemaining = UnityEngine.Object.Instantiate(DestroyableSingleton<HudManager>.Instance.TaskText, __instance.transform);
                             TimeRemaining.alignment = TMPro.TextAlignmentOptions.Center;
                             TimeRemaining.transform.position = Vector3.zero;
                             TimeRemaining.transform.localPosition = new Vector3(0.0f, -1.7f);
@@ -205,7 +205,7 @@ namespace TheOtherRoles.Patches {
                     {
                         if (TimeRemaining == null)
                         {
-                            TimeRemaining = UnityEngine.Object.Instantiate(HudManager.Instance.TaskText, __instance.transform);
+                            TimeRemaining = UnityEngine.Object.Instantiate(DestroyableSingleton<HudManager>.Instance.TaskText, __instance.transform);
                             TimeRemaining.alignment = TMPro.TextAlignmentOptions.BottomRight;
                             TimeRemaining.transform.position = Vector3.zero;
                             TimeRemaining.transform.localPosition = new Vector3(0.95f, 4.45f);
@@ -276,7 +276,7 @@ namespace TheOtherRoles.Patches {
                     {
                         if (TimeRemaining == null)
                         {
-                            TimeRemaining = UnityEngine.Object.Instantiate(HudManager.Instance.TaskText, __instance.transform);
+                            TimeRemaining = UnityEngine.Object.Instantiate(DestroyableSingleton<HudManager>.Instance.TaskText, __instance.transform);
                             TimeRemaining.alignment = TMPro.TextAlignmentOptions.BottomRight;
                             TimeRemaining.transform.position = Vector3.zero;
                             TimeRemaining.transform.localPosition = new Vector3(1.0f, 4.25f);

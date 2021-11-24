@@ -9,7 +9,8 @@ namespace TheOtherRoles.Objects {
     public class CustomButton
     {
         public static List<CustomButton> buttons = new List<CustomButton>();
-        public KillButton killButton;
+        public ActionButton actionButton;
+        private ActionButton template;
         public Vector3 PositionOffset;
         public Vector3 LocalScale = Vector3.one;
         public float MaxTimer = float.MaxValue;
@@ -21,18 +22,30 @@ namespace TheOtherRoles.Objects {
         private Action OnEffectEnds;
         public bool HasEffect;
         public bool isEffectActive = false;
-        public bool showButtonText = false;
+        public bool showButtonText = true;
+        public string buttonText = null;
         public float EffectDuration;
         public Sprite Sprite;
         public Func<Sprite> SpriteFunc;
-        private HudManager hudManager;
         private bool mirror;
         private KeyCode? hotkey;
         public int Data;
 
-        public CustomButton(Action OnClick, Func<bool> HasButton, Func<bool> CouldUse, Action OnMeetingEnds, Sprite Sprite, Vector3 PositionOffset, HudManager hudManager, KeyCode? hotkey, bool HasEffect, float EffectDuration, Action OnEffectEnds, bool mirror = false)
+        public CustomButton(
+            Action OnClick,
+            Func<bool> HasButton,
+            Func<bool> CouldUse,
+            Action OnMeetingEnds,
+            Sprite Sprite,
+            Vector3 PositionOffset,
+            ActionButton? template,
+            ActionButton? textTemplate,
+            KeyCode? hotkey,
+            bool HasEffect,
+            float EffectDuration,
+            Action OnEffectEnds,
+            bool mirror = false)
         {
-            this.hudManager = hudManager;
             this.OnClick = OnClick;
             this.HasButton = HasButton;
             this.CouldUse = CouldUse;
@@ -44,31 +57,47 @@ namespace TheOtherRoles.Objects {
             this.Sprite = Sprite;
             this.mirror = mirror;
             this.hotkey = hotkey;
-            this.SpriteFunc = null;
-            Timer = 16.2f;
+            this.template = template ?? DestroyableSingleton<HudManager>.Instance.UseButton;
+            if (template)
+            {
+                LocalScale = template.transform.localScale;
+            }
+
+            //Timer = 16.2f;
+            Timer = 10.0f;
             buttons.Add(this);
-            killButton = UnityEngine.Object.Instantiate(hudManager.KillButton, hudManager.transform);
-            this.showButtonText = killButton.graphic.sprite == Sprite;
-            PassiveButton button = killButton.GetComponent<PassiveButton>();
+            actionButton = UnityEngine.Object.Instantiate(this.template, this.template.transform.parent);
+            PassiveButton button = actionButton.GetComponent<PassiveButton>();
             button.OnClick = new Button.ButtonClickedEvent();
             button.OnClick.AddListener((UnityEngine.Events.UnityAction)onClickEvent);
+
+            if (textTemplate)
+            {
+                UnityEngine.Object.Destroy(actionButton.buttonLabelText);
+                actionButton.buttonLabelText = UnityEngine.Object.Instantiate(textTemplate.buttonLabelText, actionButton.transform);
+            }
 
             setActive(false);
         }
 
-        public CustomButton(Action OnClick, Func<bool> HasButton, Func<bool> CouldUse, Action OnMeetingEnds, Sprite Sprite, Vector3 PositionOffset, HudManager hudManager, KeyCode? hotkey, bool mirror = false)
-        : this(OnClick, HasButton, CouldUse, OnMeetingEnds, Sprite, PositionOffset, hudManager, hotkey, false, 0f, () => {}, mirror) { }
+        public CustomButton(Action OnClick, Func<bool> HasButton, Func<bool> CouldUse, Action OnMeetingEnds, Sprite Sprite, Vector3 PositionOffset, ActionButton template, ActionButton? textTemplate, KeyCode? hotkey, bool mirror = false)
+        : this(OnClick, HasButton, CouldUse, OnMeetingEnds, Sprite, PositionOffset, template, textTemplate, hotkey, false, 0f, () => {}, mirror) { }
+
+        ~CustomButton()
+        {
+            UnityEngine.Object.Destroy(actionButton);
+        }
 
         void onClickEvent()
         {
             if (this.Timer < 0f && HasButton() && CouldUse())
             {
-                killButton.graphic.color = new Color(1f, 1f, 1f, 0.3f);
+                actionButton.graphic.color = new Color(1f, 1f, 1f, 0.3f);
                 this.OnClick();
 
                 if (this.HasEffect && !this.isEffectActive) {
                     this.Timer = this.EffectDuration;
-                    killButton.cooldownTimerText.color = new Color(0F, 0.8F, 0F);
+                    actionButton.cooldownTimerText.color = new Color(0F, 0.8F, 0F);
                     this.isEffectActive = true;
                 }
             }
@@ -76,7 +105,7 @@ namespace TheOtherRoles.Objects {
 
         public static void HudUpdate()
         {
-            buttons.RemoveAll(item => item.killButton == null);
+            buttons.RemoveAll(item => item.actionButton == null);
         
             for (int i = 0; i < buttons.Count; i++)
             {
@@ -86,13 +115,13 @@ namespace TheOtherRoles.Objects {
                 }
                 catch (NullReferenceException)
                 {
-                    System.Console.WriteLine("[WARNING] NullReferenceException from HudUpdate().HasButton(), if theres only one warning its fine");
+                    Helpers.log("[WARNING] NullReferenceException from HudUpdate().HasButton(), if theres only one warning its fine");
                 }
             }
         }
 
         public static void MeetingEndedUpdate() {
-            buttons.RemoveAll(item => item.killButton == null);
+            buttons.RemoveAll(item => item.actionButton == null);
             for (int i = 0; i < buttons.Count; i++)
             {
                 try
@@ -102,7 +131,7 @@ namespace TheOtherRoles.Objects {
                 }
                 catch (NullReferenceException)
                 {
-                    System.Console.WriteLine("[WARNING] NullReferenceException from MeetingEndedUpdate().HasButton(), if theres only one warning its fine");
+                    Helpers.log("[WARNING] NullReferenceException from MeetingEndedUpdate().HasButton(), if theres only one warning its fine");
                 }
             }
         }
@@ -117,51 +146,54 @@ namespace TheOtherRoles.Objects {
                 }
                 catch (NullReferenceException)
                 {
-                    System.Console.WriteLine("[WARNING] NullReferenceException from MeetingEndedUpdate().HasButton(), if theres only one warning its fine");
+                    Helpers.log("[WARNING] NullReferenceException from MeetingEndedUpdate().HasButton(), if theres only one warning its fine");
                 }
             }
         }
 
         public void setActive(bool isActive) {
             if (isActive) {
-                killButton.gameObject.SetActive(true);
-                killButton.graphic.enabled = true;
+                actionButton.gameObject.SetActive(true);
+                actionButton.graphic.enabled = true;
             } else {
-                killButton.gameObject.SetActive(false);
-                killButton.graphic.enabled = false;
+                actionButton.gameObject.SetActive(false);
+                actionButton.graphic.enabled = false;
             }
         }
 
         private void Update()
         {
+            if (actionButton == null) return;
+
             if (PlayerControl.LocalPlayer.Data == null || MeetingHud.Instance || ExileController.Instance || !HasButton()) {
                 setActive(false);
                 return;
             }
-            setActive(hudManager.UseButton.isActiveAndEnabled);
+            setActive(DestroyableSingleton<HudManager>.Instance.UseButton.isActiveAndEnabled);
 
-            if (SpriteFunc != null)
+            if (Sprite != null)
             {
-                killButton.graphic.sprite = SpriteFunc();
-            } else
-            {
-                killButton.graphic.sprite = Sprite;
+                actionButton.graphic.sprite = Sprite;
             }
-            
-            killButton.graphic.enabled = showButtonText; // Only show the text if it's a kill button
-            if (hudManager.UseButton != null) {
-                Vector3 pos = hudManager.UseButton.transform.localPosition;
+
+            if (buttonText != null) {
+                actionButton.buttonLabelText.text = buttonText;
+            }
+            actionButton.buttonLabelText.enabled = showButtonText; // Only show the text if it's a kill button
+
+            if (template != null) {
+                Vector3 pos = template.transform.localPosition;
                 if (mirror) pos = new Vector3(-pos.x, pos.y, pos.z);
-                killButton.transform.localPosition = pos + PositionOffset;
-                killButton.transform.localScale = LocalScale;
-                if (hudManager.KillButton != null) hudManager.KillButton.transform.localPosition = hudManager.UseButton.transform.localPosition - new Vector3(1.3f, 0, 0); // Align the kill button (because it's on another position depending on the screen resolution)
+                actionButton.transform.localPosition = pos + PositionOffset;
+                actionButton.transform.localScale = LocalScale;
             }
+
             if (CouldUse()) {
-                killButton.graphic.color = killButton.buttonLabelText.color = Palette.EnabledColor;
-                killButton.graphic.material.SetFloat("_Desat", 0f);
+                actionButton.graphic.color = actionButton.buttonLabelText.color = Palette.EnabledColor;
+                actionButton.graphic.material.SetFloat("_Desat", 0f);
             } else {
-                killButton.graphic.color = killButton.buttonLabelText.color = Palette.DisabledClear;
-                killButton.graphic.material.SetFloat("_Desat", 1f);
+                actionButton.graphic.color = actionButton.buttonLabelText.color = Palette.DisabledClear;
+                actionButton.graphic.material.SetFloat("_Desat", 1f);
             }
 
             if (Timer >= 0) {
@@ -173,11 +205,21 @@ namespace TheOtherRoles.Objects {
             
             if (Timer <= 0 && HasEffect && isEffectActive) {
                 isEffectActive = false;
-                killButton.cooldownTimerText.color = Palette.EnabledColor;
+                actionButton.cooldownTimerText.color = Palette.EnabledColor;
                 OnEffectEnds();
             }
-        
-            killButton.SetCoolDown(Timer, (HasEffect && isEffectActive) ? EffectDuration : MaxTimer);
+
+            if (actionButton.cooldownTimerText != null)
+            {
+                if (HasEffect && isEffectActive)
+                {
+                    actionButton.SetCoolDown(Timer, EffectDuration);
+                }
+                else
+                {
+                    actionButton.SetCoolDown(Timer, MaxTimer);
+                }
+            }
 
             // Trigger OnClickEvent if the hotkey is being pressed down
             if (hotkey.HasValue && Input.GetKeyDown(hotkey.Value)) onClickEvent();

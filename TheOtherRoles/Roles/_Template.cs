@@ -11,7 +11,6 @@ namespace TheOtherRoles.Roles
 
         public _Template() : base()
         {
-            Role = RoleType;
             NameColor = color;
             TasksCountTowardProgress = true;
             CanUseKillButton = true;
@@ -20,19 +19,20 @@ namespace TheOtherRoles.Roles
             AffectedByLightAffectors = true;
             MaxCount = 15;
             TeamType = RoleTeamTypes.Crewmate;
-            Ability.Image = TheOtherRoles.getBlankIcon();
+            //Ability.Image = TheOtherRoles.getBlankIcon();
         }
 
         public static void Initialize()
         {
         }
 
-        // public virtual bool CanUse(IUsable console) => default;
+        /*// public virtual bool CanUse(IUsable console) => default;
         [HarmonyPatch(typeof(RoleBehaviour), nameof(RoleBehaviour.CanUse))]
         public static class CanUsePatch
         {
             public static bool Prefix(RoleBehaviour __instance, ref IUsable console, ref bool __result)
             {
+                if (__instance == null) return false;
                 if (__instance.Role == RoleType)
                 {
                     
@@ -47,6 +47,7 @@ namespace TheOtherRoles.Roles
         {
             public static bool Prefix(RoleBehaviour __instance, ref PlayerControl targetPlayer)
             {
+                if (__instance == null) return false;
                 if (__instance.Role == RoleType)
                 {
                     
@@ -59,8 +60,9 @@ namespace TheOtherRoles.Roles
         [HarmonyPatch(typeof(RoleBehaviour), nameof(RoleBehaviour.SpawnTaskHeader))]
         public static class SpawnTaskHeaderPatch
         {
-            public static bool Prefix(RoleBehaviour __instance, ref PlayerControl targetPlayer)
+            public static bool Prefix(RoleBehaviour __instance, ref PlayerControl playerControl)
             {
+                if (__instance == null) return false;
                 if (__instance.Role == RoleType)
                 {
                     
@@ -75,6 +77,7 @@ namespace TheOtherRoles.Roles
         {
             public static bool Prefix(RoleBehaviour __instance)
             {
+                if (__instance == null) return false;
                 if (__instance.Role == RoleType)
                 {
                     
@@ -89,6 +92,7 @@ namespace TheOtherRoles.Roles
         {
             public static bool Prefix(RoleBehaviour __instance)
             {
+                if (__instance == null) return false;
                 if (__instance.Role == RoleType)
                 {
                     
@@ -103,6 +107,7 @@ namespace TheOtherRoles.Roles
         {
             public static bool Prefix(RoleBehaviour __instance)
             {
+                if (__instance == null) return false;
                 if (__instance.Role == RoleType)
                 {
                     
@@ -115,8 +120,9 @@ namespace TheOtherRoles.Roles
         [HarmonyPatch(typeof(RoleBehaviour), nameof(RoleBehaviour.Initialize))]
         public static class InitializePatch
         {
-            public static bool Prefix(RoleBehaviour __instance, ref PlayerControl targetPlayer)
+            public static bool Prefix(RoleBehaviour __instance, ref PlayerControl player)
             {
+                if (__instance == null) return false;
                 if (__instance.Role == RoleType)
                 {
                     
@@ -131,6 +137,7 @@ namespace TheOtherRoles.Roles
         {
             public static bool Prefix(RoleBehaviour __instance, ref IUsable target)
             {
+                if (__instance == null) return false;
                 if (__instance.Role == RoleType)
                 {
                     
@@ -145,6 +152,7 @@ namespace TheOtherRoles.Roles
         {
             public static bool Prefix(RoleBehaviour __instance, ref PlayerControl target)
             {
+                if (__instance == null) return false;
                 if (__instance.Role == RoleType)
                 {
                     
@@ -159,13 +167,14 @@ namespace TheOtherRoles.Roles
         {
             public static bool Prefix(RoleBehaviour __instance)
             {
+                if (__instance == null) return false;
                 if (__instance.Role == RoleType)
                 {
                     
                 }
                 return true;
             }
-        }
+        }*/
 
     }
 }

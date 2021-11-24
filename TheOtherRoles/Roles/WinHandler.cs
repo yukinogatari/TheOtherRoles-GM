@@ -43,6 +43,8 @@ namespace TheOtherRoles.Roles
         {
             public static bool Prefix(RoleBehaviour __instance, ref GameOverReason gameOverReason, ref bool __result)
             {
+                if (__instance == null) return false;
+
                 switch (gameOverReason)
                 {
                     case GameOverReason.HumansByVote:

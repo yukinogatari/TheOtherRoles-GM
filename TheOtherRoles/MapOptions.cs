@@ -3,6 +3,7 @@ using System.Collections;
 using System;
 using UnityEngine;
 using static TheOtherRoles.TheOtherRoles;
+using TheOtherRoles.Roles;
 
 namespace TheOtherRoles{
     static class MapOptions {
@@ -25,9 +26,13 @@ namespace TheOtherRoles{
         public static float restrictVitalsTimeMax = 600f;
         public static bool disableVents = false;
 
-        public static bool ghostsSeeRoles = true;
-        public static bool ghostsSeeTasks = true;
-        public static bool ghostsSeeVotes = true;
+        public static bool _ghostsSeeRoles = true;
+        public static bool _ghostsSeeTasks = true;
+        public static bool _ghostsSeeVotes = true;
+
+        public static bool ghostsSeeRoles { get { return _ghostsSeeRoles && !PlayerControl.LocalPlayer.isRole(RoleTypes.GuardianAngel); } }
+        public static bool ghostsSeeTasks { get { return _ghostsSeeTasks && !PlayerControl.LocalPlayer.isRole(RoleTypes.GuardianAngel); } }
+        public static bool ghostsSeeVotes { get { return _ghostsSeeVotes && !PlayerControl.LocalPlayer.isRole(RoleTypes.GuardianAngel); } }
         public static bool showRoleSummary = true;
 
         // Updating values
@@ -58,9 +63,9 @@ namespace TheOtherRoles{
             restrictVitalsTime = restrictVitalsTimeMax = CustomOptionHolder.restrictVents.getFloat();
             disableVents = CustomOptionHolder.disableVents.getBool();
 
-            ghostsSeeRoles = TheOtherRolesPlugin.GhostsSeeRoles.Value;
-            ghostsSeeTasks = TheOtherRolesPlugin.GhostsSeeTasks.Value;
-            ghostsSeeVotes = TheOtherRolesPlugin.GhostsSeeVotes.Value;
+            _ghostsSeeRoles = TheOtherRolesPlugin.GhostsSeeRoles.Value;
+            _ghostsSeeTasks = TheOtherRolesPlugin.GhostsSeeTasks.Value;
+            _ghostsSeeVotes = TheOtherRolesPlugin.GhostsSeeVotes.Value;
             showRoleSummary = TheOtherRolesPlugin.ShowRoleSummary.Value;
         }
 

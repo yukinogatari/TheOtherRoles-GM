@@ -17,8 +17,8 @@ namespace TheOtherRoles.Patches {
         private static ToggleButtonBehaviour ghostsSeeVotesButton;
         private static ToggleButtonBehaviour showRoleSummaryButton;
 
-        public static float xOffset = 1.75f;
-        public static float yOffset = -0.5f;
+        public static float xOffset = 1.5f;
+        public static float yOffset = -0.25f;
 
         public static void updateButtons()
         {
@@ -42,6 +42,7 @@ namespace TheOtherRoles.Patches {
             if (__instance.CensorChatButton != null) {
                 var button = UnityEngine.Object.Instantiate(__instance.CensorChatButton, __instance.CensorChatButton.transform.parent);
                 button.transform.localPosition = (origin ?? Vector3.zero) + offset;
+                button.Text.autoSizeTextContainer = false;
                 PassiveButton passiveButton = button.GetComponent<PassiveButton>();
                 passiveButton.OnClick = new Button.ButtonClickedEvent();
                 passiveButton.OnClick.AddListener(onClick);
@@ -54,9 +55,9 @@ namespace TheOtherRoles.Patches {
 
         public static void Postfix(OptionsMenuBehaviour __instance) {
             if (__instance.CensorChatButton != null) {
-                if (origin == null) origin = __instance.CensorChatButton.transform.localPosition + Vector3.up * 0.25f;
+                if (origin == null) origin = __instance.CensorChatButton.transform.localPosition + Vector3.up * 0.075f;
                 __instance.CensorChatButton.transform.localPosition = origin.Value + Vector3.left * xOffset;
-                __instance.CensorChatButton.transform.localScale = Vector3.one * 2f / 3f;
+                __instance.CensorChatButton.transform.localScale = new Vector3(0.5f, 0.5f, 1f);
             }
 
             if ((streamerModeButton == null || streamerModeButton.gameObject == null)) {
@@ -73,7 +74,7 @@ namespace TheOtherRoles.Patches {
 
                 void ghostsSeeTaskToggle() {
                     TheOtherRolesPlugin.GhostsSeeTasks.Value = !TheOtherRolesPlugin.GhostsSeeTasks.Value;
-                    MapOptions.ghostsSeeTasks = TheOtherRolesPlugin.GhostsSeeTasks.Value;
+                    MapOptions._ghostsSeeTasks = TheOtherRolesPlugin.GhostsSeeTasks.Value;
                     updateButtons();
                 }
             }
@@ -83,7 +84,7 @@ namespace TheOtherRoles.Patches {
 
                 void ghostsSeeRolesToggle() {
                     TheOtherRolesPlugin.GhostsSeeRoles.Value = !TheOtherRolesPlugin.GhostsSeeRoles.Value;
-                    MapOptions.ghostsSeeRoles = TheOtherRolesPlugin.GhostsSeeRoles.Value;
+                    MapOptions._ghostsSeeRoles = TheOtherRolesPlugin.GhostsSeeRoles.Value;
                     updateButtons();
                 }
             }
@@ -93,7 +94,7 @@ namespace TheOtherRoles.Patches {
 
                 void ghostsSeeVotesToggle() {
                     TheOtherRolesPlugin.GhostsSeeVotes.Value = !TheOtherRolesPlugin.GhostsSeeVotes.Value;
-                    MapOptions.ghostsSeeVotes = TheOtherRolesPlugin.GhostsSeeVotes.Value;
+                    MapOptions._ghostsSeeVotes = TheOtherRolesPlugin.GhostsSeeVotes.Value;
                     updateButtons();
                 }
             }

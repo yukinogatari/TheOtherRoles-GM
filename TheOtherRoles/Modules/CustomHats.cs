@@ -37,12 +37,6 @@ namespace TheOtherRoles.Modules {
             public string condition { get; set;}
             public Sprite FlipImage { get; set;}
             public Sprite BackFlipImage { get; set;}
-
-            public bool isUnlocked() {
-                if (condition == null || condition.ToLower() == "none") 
-                    return true;
-                return false;
-            }
         }
 
         public class CustomHat { 
@@ -158,6 +152,7 @@ namespace TheOtherRoles.Modules {
             hat.ChipOffset = new Vector2(0f, 0.2f);
             hat.Free = true;
             hat.NotInStore = true;
+            
 
             if (ch.adaptive && hatShader != null)
                 hat.AltShader = hatShader;
@@ -319,45 +314,27 @@ namespace TheOtherRoles.Modules {
                     HatBehaviour hat = hats[i].Item1;
                     HatExtension ext = hats[i].Item2;
 
-                    if (ext != null && !ext.isUnlocked()) {
-                        // Hat is locked
-                        numHats--;
-                        continue;
-                    }
-
-
                     float xpos = __instance.XRange.Lerp((i % __instance.NumPerRow) / (__instance.NumPerRow - 1f));
                     float ypos = offset - (i / __instance.NumPerRow) * __instance.YOffset;
                     ColorChip colorChip = UnityEngine.Object.Instantiate<ColorChip>(__instance.ColorTabPrefab, __instance.scroller.Inner);
 
-                    int color = __instance.HasLocalPlayer() ? PlayerControl.LocalPlayer.CurrentOutfit.ColorId : SaveManager.BodyColor;
-
-                    void onMouseOut()
-                    {
-                        __instance.SelectHat(HatManager.Instance.GetHatById(SaveManager.lastHat));
-                    }
-
-                    void onHover()
-                    {
-                        if (colorChip.transform.position.y <= inventoryTop && colorChip.transform.position.y >= inventoryBot)
-                            __instance.SelectHat(hat);
-                        else
-                            __instance.SelectHat(HatManager.Instance.GetHatById(SaveManager.lastHat));
-                    }
-
-                    void onClick()
-                    {
-                        if (colorChip.transform.position.y < inventoryTop && colorChip.transform.position.y > inventoryBot)
-                            __instance.ClickEquip();
-                    }
+                    int color = __instance.HasLocalPlayer() ? PlayerControl.LocalPlayer.Data.DefaultOutfit.ColorId : SaveManager.BodyColor;
 
                     colorChip.transform.localPosition = new Vector3(xpos, ypos, inventoryZ);
-                    colorChip.Button.OnMouseOver.AddListener((UnityEngine.Events.UnityAction)onHover);
-                    colorChip.Button.OnMouseOut.AddListener((UnityEngine.Events.UnityAction)onMouseOut);
-                    colorChip.Button.OnClick.AddListener((UnityEngine.Events.UnityAction)onClick);
+                    if (ActiveInputManager.currentControlType == ActiveInputManager.InputType.Keyboard)
+                    {
+                        colorChip.Button.OnMouseOver.AddListener((UnityEngine.Events.UnityAction)(() => __instance.SelectHat(hat)));
+                        colorChip.Button.OnMouseOut.AddListener((UnityEngine.Events.UnityAction)(() => __instance.SelectHat(DestroyableSingleton<HatManager>.Instance.GetHatById(SaveManager.LastHat))));
+                        colorChip.Button.OnClick.AddListener((UnityEngine.Events.UnityAction)(() => __instance.ClickEquip()));
+                    } else
+                    {
+                        colorChip.Button.OnClick.AddListener((UnityEngine.Events.UnityAction)(() => __instance.SelectHat(hat)));
+                    }
+
                     colorChip.Inner.SetHat(hat, color);
                     colorChip.Inner.transform.localPosition = hat.ChipOffset;
                     colorChip.Tag = hat;
+                    colorChip.Button.ClickMask = __instance.scroller.Hitbox;
                     __instance.ColorChips.Add(colorChip);
                 }
 

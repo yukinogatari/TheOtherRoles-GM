@@ -4,6 +4,7 @@ using System.Collections;
 using UnityEngine;
 using System.Linq;
 using static TheOtherRoles.TheOtherRoles;
+using TheOtherRoles.Roles;
 
 namespace TheOtherRoles.Objects {
 
@@ -26,7 +27,7 @@ namespace TheOtherRoles.Objects {
             if (box == null) return;
             Vent vent = box.vent;
 
-            HudManager.Instance.StartCoroutine(Effects.Lerp(0.6f, new Action<float>((p) => {
+            DestroyableSingleton<HudManager>.Instance.StartCoroutine(Effects.Lerp(0.6f, new Action<float>((p) => {
                 if (vent != null && vent.myRend != null) {
                     vent.myRend.sprite = getBoxAnimationSprite((int)(p * boxAnimationSprites.Length));
                     if (p == 1f) vent.myRend.sprite = getBoxAnimationSprite(0);
@@ -68,7 +69,7 @@ namespace TheOtherRoles.Objects {
             vent.name = "JackInTheBoxVent_" + vent.Id;
 
             // Only render the box for the Trickster
-            var playerIsTrickster = PlayerControl.LocalPlayer == Trickster.trickster;
+            var playerIsTrickster = PlayerControl.LocalPlayer.isRole(CustomRoleTypes.Trickster);
             gameObject.SetActive(playerIsTrickster);
 
             AllJackInTheBoxes.Add(this);
@@ -77,7 +78,7 @@ namespace TheOtherRoles.Objects {
         public static void UpdateStates() {
             if (boxesConvertedToVents == true) return;
             foreach (var box in AllJackInTheBoxes) {
-                var playerIsTrickster = PlayerControl.LocalPlayer == Trickster.trickster;
+                var playerIsTrickster = PlayerControl.LocalPlayer.isRole(CustomRoleTypes.Trickster);
                 box.gameObject.SetActive(playerIsTrickster);
             }
         }

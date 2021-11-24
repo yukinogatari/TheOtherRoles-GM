@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using static TheOtherRoles.TheOtherRoles;
 using static TheOtherRoles.GameHistory;
+using TheOtherRoles.Roles;
 using System.Reflection;
 
 namespace TheOtherRoles.Patches
@@ -30,7 +31,11 @@ namespace TheOtherRoles.Patches
         static void UseVitalsTime()
         {
             // Don't waste network traffic if we're out of time.
-            if (MapOptions.restrictDevices > 0 && MapOptions.restrictVitalsTime > 0f && !PlayerControl.LocalPlayer.Data.IsDead)
+            if (MapOptions.restrictDevices > 0 && 
+                MapOptions.restrictVitalsTime > 0f &&
+                !PlayerControl.LocalPlayer.Data.IsDead &&
+                !PlayerControl.LocalPlayer.isGM() &&
+                !ScientistPatch.dontConsumeTime)
             {
                 MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.UseVitalsTime, Hazel.SendOption.Reliable, -1);
                 writer.Write(vitalsTimer);
@@ -47,7 +52,7 @@ namespace TheOtherRoles.Patches
             {
                 vitalsTimer = 0f;
 
-                if (Hacker.hacker != null && PlayerControl.LocalPlayer == Hacker.hacker)
+                if (PlayerControl.LocalPlayer.isRole(CustomRoleTypes.Hacker))
                 {
                     hackerTexts = new List<TMPro.TextMeshPro>();
                     foreach (VitalsPanel panel in __instance.vitals)
@@ -69,6 +74,9 @@ namespace TheOtherRoles.Patches
         {
             static bool Prefix(VitalsMinigame __instance)
             {
+                if (ScientistPatch.dontConsumeTime)
+                    return true;
+
                 vitalsTimer += Time.deltaTime;
                 if (vitalsTimer > 0.1f)
                     UseVitalsTime();
@@ -77,7 +85,7 @@ namespace TheOtherRoles.Patches
                 {
                     if (TimeRemaining == null)
                     {
-                        TimeRemaining = UnityEngine.Object.Instantiate(HudManager.Instance.TaskText, __instance.transform);
+                        TimeRemaining = UnityEngine.Object.Instantiate(DestroyableSingleton<HudManager>.Instance.TaskText, __instance.transform);
                         TimeRemaining.alignment = TMPro.TextAlignmentOptions.BottomRight;
                         TimeRemaining.transform.position = Vector3.zero;
                         TimeRemaining.transform.localPosition = new Vector3(1.7f, 4.45f);
@@ -101,9 +109,8 @@ namespace TheOtherRoles.Patches
 
             static void Postfix(VitalsMinigame __instance)
             {
-
                 // Hacker show time since death
-                if (Hacker.hacker != null && Hacker.hacker == PlayerControl.LocalPlayer && Hacker.hackerTimer > 0)
+                if (PlayerControl.LocalPlayer.isRole(CustomRoleTypes.Hacker) && PlayerControl.LocalPlayer.role<Hacker>()?.hackerTimer > 0)
                 {
                     for (int k = 0; k < __instance.vitals.Length; k++)
                     {
@@ -137,13 +144,12 @@ namespace TheOtherRoles.Patches
         {
             private static IEnumerable<MethodBase> TargetMethods()
             {
-                return typeof(Minigame).GetMethods().Where(x => x.Name == "Close");
+                return typeof(VitalsMinigame).GetMethods().Where(x => x.Name == "Close");
             }
 
-            static void Prefix(Minigame __instance)
+            static void Prefix(VitalsMinigame __instance)
             {
-                if (__instance is VitalsMinigame)
-                    UseVitalsTime();
+                UseVitalsTime();
             }
         }
     }

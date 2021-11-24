@@ -12,13 +12,12 @@ namespace TheOtherRoles.Patches {
     {
         public static void Prefix(IntroCutscene __instance) {
             // Generate and initialize player icons
-            if (PlayerControl.LocalPlayer != null && HudManager.Instance != null)
+            if (PlayerControl.LocalPlayer != null && DestroyableSingleton<HudManager>.Instance != null)
             {
-                CustomOverlays.initializeOverlays();
-                Vector3 bottomLeft = new Vector3(-HudManager.Instance.UseButton.transform.localPosition.x, HudManager.Instance.UseButton.transform.localPosition.y, HudManager.Instance.UseButton.transform.localPosition.z);
+                Vector3 bottomLeft = new Vector3(-DestroyableSingleton<HudManager>.Instance.UseButton.transform.localPosition.x, DestroyableSingleton<HudManager>.Instance.UseButton.transform.localPosition.y, DestroyableSingleton<HudManager>.Instance.UseButton.transform.localPosition.z);
                 foreach (PlayerControl p in PlayerControl.AllPlayerControls) {
                     GameData.PlayerInfo data = p.Data;
-                    PoolablePlayer player = UnityEngine.Object.Instantiate<PoolablePlayer>(__instance.PlayerPrefab, HudManager.Instance.transform);
+                    PoolablePlayer player = UnityEngine.Object.Instantiate<PoolablePlayer>(__instance.PlayerPrefab, DestroyableSingleton<HudManager>.Instance.transform);
                     PlayerControl.SetPlayerMaterialColors(p.CurrentOutfit.ColorId, player.Body);
                     player.Skin.SetSkin(p.CurrentOutfit.SkinId, true);
                     player.HatSlot.SetHat(p.CurrentOutfit.HatId, p.CurrentOutfit.ColorId);
@@ -28,13 +27,13 @@ namespace TheOtherRoles.Patches {
                     MapOptions.playerIcons[p.PlayerId] = player;
                     MorphData.morphData[p.PlayerId] = new MorphData(p);
 
-                    if (PlayerControl.LocalPlayer == BountyHunter.bountyHunter)
+                    if (PlayerControl.LocalPlayer.isRole(CustomRoleTypes.BountyHunter))
                     {
                         player.transform.localPosition = bottomLeft + new Vector3(-0.25f, 0f, 0);
                         player.transform.localScale = Vector3.one * 0.4f;
                         player.gameObject.SetActive(false);
                     }
-                    else if (PlayerControl.LocalPlayer == GM.gm)
+                    else if (PlayerControl.LocalPlayer.isRole(CustomRoleTypes.GM))
                     {
                         player.transform.localPosition = Vector3.zero;
                         player.transform.localScale = Vector3.one * 0.3f;
@@ -48,40 +47,41 @@ namespace TheOtherRoles.Patches {
                 }
             }
 
+            // TODO: fix this
             // Force Bounty Hunter to load a new Bounty when the Intro is over
-            if (BountyHunter.bounty != null && PlayerControl.LocalPlayer == BountyHunter.bountyHunter) {
-                BountyHunter.bountyUpdateTimer = 0f;
-                if (HudManager.Instance != null) {
-                    Vector3 bottomLeft = new Vector3(-HudManager.Instance.UseButton.transform.localPosition.x, HudManager.Instance.UseButton.transform.localPosition.y, HudManager.Instance.UseButton.transform.localPosition.z) + new Vector3(-0.25f, 1f, 0);
-                    BountyHunter.cooldownText = UnityEngine.Object.Instantiate<TMPro.TextMeshPro>(HudManager.Instance.KillButton.cooldownTimerText, HudManager.Instance.transform);
-                    BountyHunter.cooldownText.alignment = TMPro.TextAlignmentOptions.Center;
-                    BountyHunter.cooldownText.transform.localPosition = bottomLeft + new Vector3(0f, -1f, -1f);
-                    BountyHunter.cooldownText.gameObject.SetActive(true);
-                }
-            }
+            /*            if (BountyHunter.bounty != null && PlayerControl.LocalPlayer == BountyHunter.bountyHunter) {
+                            BountyHunter.bountyUpdateTimer = 0f;
+                            if (DestroyableSingleton<HudManager>.Instance != null) {
+                                Vector3 bottomLeft = new Vector3(-DestroyableSingleton<HudManager>.Instance.UseButton.transform.localPosition.x, DestroyableSingleton<HudManager>.Instance.UseButton.transform.localPosition.y, DestroyableSingleton<HudManager>.Instance.UseButton.transform.localPosition.z) + new Vector3(-0.25f, 1f, 0);
+                                BountyHunter.cooldownText = UnityEngine.Object.Instantiate<TMPro.TextMeshPro>(DestroyableSingleton<HudManager>.Instance.KillButton.cooldownTimerText, DestroyableSingleton<HudManager>.Instance.transform);
+                                BountyHunter.cooldownText.alignment = TMPro.TextAlignmentOptions.Center;
+                                BountyHunter.cooldownText.transform.localPosition = bottomLeft + new Vector3(0f, -1f, -1f);
+                                BountyHunter.cooldownText.gameObject.SetActive(true);
+                            }
+                        }
 
-            Arsonist.updateIcons();
+                        */
 
-            if (PlayerControl.LocalPlayer == GM.gm && !GM.hasTasks)
+            RoleHelpers.getRoles<Arsonist>().ForEach(x => x.updateIcons());
+
+            if (PlayerControl.LocalPlayer.isRole(CustomRoleTypes.GM))
             {
-                PlayerControl.LocalPlayer.clearAllTasks();
-            }
+                DestroyableSingleton<HudManager>.Instance.ShadowQuad.gameObject.SetActive(false);
+                DestroyableSingleton<HudManager>.Instance.ReportButton.gameObject.SetActiveRecursively(false);
+                DestroyableSingleton<HudManager>.Instance.ReportButton.SetActive(false);
+                DestroyableSingleton<HudManager>.Instance.ReportButton.graphic.enabled = false;
+                DestroyableSingleton<HudManager>.Instance.ReportButton.enabled = false;
+                DestroyableSingleton<HudManager>.Instance.ReportButton.graphic.sprite = null;
+                DestroyableSingleton<HudManager>.Instance.ReportButton.buttonLabelText.enabled = false;
+                DestroyableSingleton<HudManager>.Instance.ReportButton.buttonLabelText.SetText("");
 
-            if (PlayerControl.LocalPlayer.isGM())
-            {
-                HudManager.Instance.ShadowQuad.gameObject.SetActive(false);
-                HudManager.Instance.ReportButton.gameObject.SetActiveRecursively(false);
-                HudManager.Instance.ReportButton.SetActive(false);
-                HudManager.Instance.ReportButton.graphic.enabled = false;
-                HudManager.Instance.ReportButton.enabled = false;
-                HudManager.Instance.ReportButton.graphic.sprite = null;
-                HudManager.Instance.ReportButton.buttonLabelText.enabled = false;
-                HudManager.Instance.ReportButton.buttonLabelText.SetText("");
+                DestroyableSingleton<HudManager>.Instance.roomTracker.gameObject.SetActiveRecursively(false);
+                DestroyableSingleton<HudManager>.Instance.roomTracker.text.enabled = false;
+                DestroyableSingleton<HudManager>.Instance.roomTracker.text.SetText("");
+                DestroyableSingleton<HudManager>.Instance.roomTracker.enabled = false;
 
-                HudManager.Instance.roomTracker.gameObject.SetActiveRecursively(false);
-                HudManager.Instance.roomTracker.text.enabled = false;
-                HudManager.Instance.roomTracker.text.SetText("");
-                HudManager.Instance.roomTracker.enabled = false;
+                if (!GM.hasTasks)
+                    PlayerControl.LocalPlayer.clearAllTasks();
             }
         }
     }
@@ -90,30 +90,30 @@ namespace TheOtherRoles.Patches {
     class IntroPatch {
         public static void setupIntroTeam(IntroCutscene __instance, ref  Il2CppSystem.Collections.Generic.List<PlayerControl> yourTeam) {
             // Intro solo teams
-            if (PlayerControl.LocalPlayer == Jester.jester || PlayerControl.LocalPlayer == Jackal.jackal || PlayerControl.LocalPlayer == Arsonist.arsonist || PlayerControl.LocalPlayer == GM.gm || PlayerControl.LocalPlayer == Opportunist.opportunist || PlayerControl.LocalPlayer == Vulture.vulture) {
+            if (PlayerControl.LocalPlayer.isRole(CustomRoleTypes.Jester) || PlayerControl.LocalPlayer.isRole(CustomRoleTypes.Jackal) || PlayerControl.LocalPlayer.isRole(CustomRoleTypes.Arsonist) || PlayerControl.LocalPlayer.isRole(CustomRoleTypes.GM) || PlayerControl.LocalPlayer.isRole(CustomRoleTypes.Opportunist) || PlayerControl.LocalPlayer.isRole(CustomRoleTypes.Vulture)) {
                 var soloTeam = new Il2CppSystem.Collections.Generic.List<PlayerControl>();
                 soloTeam.Add(PlayerControl.LocalPlayer);
                 yourTeam = soloTeam;
             }
 
             // Don't show the GM
-            if (!PlayerControl.LocalPlayer.isGM())
+            if (!PlayerControl.LocalPlayer.isRole(CustomRoleTypes.GM))
             {
                 var newTeam = new Il2CppSystem.Collections.Generic.List<PlayerControl>();
                 foreach (PlayerControl p in yourTeam)
                 {
-                    if (p != GM.gm)
+                    if (!p.isRole(CustomRoleTypes.GM))
                         newTeam.Add(p);
                 }
                 yourTeam = newTeam;
             }
 
             // Add the Spy to the Impostor team (for the Impostors)
-            if (Spy.spy != null && PlayerControl.LocalPlayer.Data.Role.IsImpostor) {
+            if (PlayerControl.LocalPlayer.role()?.IsImpostor == true && RoleHelpers.roleExists(CustomRoleTypes.Spy)) {
                 List<PlayerControl> players = PlayerControl.AllPlayerControls.ToArray().ToList().OrderBy(x => Guid.NewGuid()).ToList();
                 var fakeImpostorTeam = new Il2CppSystem.Collections.Generic.List<PlayerControl>();
                 foreach (PlayerControl p in players) {
-                    if (p == Spy.spy || p.Data.Role.IsImpostor)
+                    if (p.isRole(CustomRoleTypes.Spy) || p.role()?.IsImpostor == true)
                         fakeImpostorTeam.Add(p);
                 }
                 yourTeam = fakeImpostorTeam;
@@ -122,28 +122,23 @@ namespace TheOtherRoles.Patches {
 
         public static void setupIntroMessage(IntroCutscene __instance, ref  Il2CppSystem.Collections.Generic.List<PlayerControl> yourTeam) {
             List<RoleInfo> infos = RoleInfo.getRoleInfoForPlayer(PlayerControl.LocalPlayer);
-            RoleInfo roleInfo = infos.Where(info => info.roleId != CustomRoleTypes.Lovers).FirstOrDefault();
+            RoleInfo roleInfo = infos.Where(info => info.type != CustomRoleTypes.Lovers).FirstOrDefault();
 
-            RoleBehaviour r = PlayerControl.LocalPlayer.Data.Role;
-            RoleInfo info = RoleInfo.getRoleInfo(PlayerControl.LocalPlayer.Data.Role.Role);
-
-            if (r != null) {
-                __instance.TeamTitle.text = r.TeamType.ToString();
-                __instance.ImpostorText.gameObject.SetActive(true);
-
-                if (r.TeamType != RoleTeamTypes.Crewmate && r.TeamType != RoleTeamTypes.Impostor) {
-                    // For native Crewmate or Impostor do not modify the colors
-                    __instance.TeamTitle.color = r.NameColor;
-                    __instance.BackgroundBar.material.color = r.NameColor;
-                }
+            RoleBehaviour r = PlayerControl.LocalPlayer.role();
+            if (r.TeamType >= (RoleTeamTypes)CustomRoleTeamTypes.Jackal) {
+                __instance.TeamTitle.text = r.NiceName;
+                __instance.TeamTitle.color = r.NameColor;
+                __instance.BackgroundBar.material.color = r.NameColor;
+                __instance.ImpostorText.gameObject.SetActive(false);
             }
 
-/*            if (infos.Any(info => info.roleId == CustomRoleTypes.Lover)) {
+            if (PlayerControl.LocalPlayer.hasModifier(RoleModifierTypes.Lovers))
+            {
                 var loversText = UnityEngine.Object.Instantiate<TMPro.TextMeshPro>(__instance.ImpostorText, __instance.ImpostorText.transform.parent);
                 loversText.transform.localPosition += Vector3.down * 3f;
-                PlayerControl otherLover = PlayerControl.LocalPlayer == Lovers.lover1 ? Lovers.lover2 : Lovers.lover1;
-                loversText.text = Helpers.cs(Lovers.color, String.Format(ModTranslation.getString("loversFlavor"), otherLover?.Data?.PlayerName ?? ""));
-            }*/
+                PlayerControl otherLover = PlayerControl.LocalPlayer.getPartner();
+                loversText.text = Helpers.cs(RoleColors.Lovers, String.Format(ModTranslation.getString("loversFlavor"), otherLover?.Data?.PlayerName ?? ""));
+            }
         }
 
         [HarmonyPatch(typeof(IntroCutscene), nameof(IntroCutscene.BeginCrewmate))]
@@ -173,7 +168,7 @@ namespace TheOtherRoles.Patches {
         {
             public static bool Prefix(IntroCutscene __instance)
             {
-                var role = PlayerControl.LocalPlayer.Data.Role;
+                RoleBehaviour role = PlayerControl.LocalPlayer.role();
                 if (role.Role >= (RoleTypes)CustomRoleTypes.Crewmate)
                 {
                     __instance.YouAreText.color = role.NameColor;
@@ -184,7 +179,6 @@ namespace TheOtherRoles.Patches {
                     __instance.RoleBlurbText.text = role.BlurbMed;
                     return false;
                 }
-
                 return true;
             }
         }

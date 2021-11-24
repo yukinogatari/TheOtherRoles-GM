@@ -13,6 +13,7 @@ using System.Reflection;
 using UnhollowerBaseLib;
 using UnityEngine;
 using TheOtherRoles.Modules;
+using TheOtherRoles.Roles;
 
 namespace TheOtherRoles
 {
@@ -81,6 +82,7 @@ namespace TheOtherRoles
             DebugMode = Config.Bind("Custom", "Enable Debug Mode", false);
             Instance = this;
             CustomOptionHolder.Load();
+            CustomRoleSettings.Load();
             CustomColors.Load();
 
             Harmony.PatchAll();
@@ -96,6 +98,25 @@ namespace TheOtherRoles
             __result = false;
         }
     }
+
+    [HarmonyPatch(typeof(StatsManager), nameof(StatsManager.BanPoints), MethodType.Getter)]
+    public static class BanPointsPatch
+    {
+        public static void Postfix(out float __result)
+        {
+            __result = 0.0f;
+        }
+    }
+
+    [HarmonyPatch(typeof(StatsManager), nameof(StatsManager.BanMinutesLeft), MethodType.Getter)]
+    public static class BanMinutesLeftPatch
+    {
+        public static void Postfix(out int __result)
+        {
+            __result = 0;
+        }
+    }
+
     [HarmonyPatch(typeof(ChatController), nameof(ChatController.Awake))]
     public static class ChatControllerAwakePatch {
         private static void Prefix() {
@@ -145,7 +166,7 @@ namespace TheOtherRoles
             }
 
             // Terminate round
-            if(Input.GetKeyDown(KeyCode.L)) {
+            if(Input.GetKeyDown(KeyCode.L) && AmongUsClient.Instance.GameState == InnerNet.InnerNetClient.GameStates.Started) {
                 MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.ForceEnd, Hazel.SendOption.Reliable, -1);
                 AmongUsClient.Instance.FinishRpcImmediately(writer);
                 RPCProcedure.forceEnd();

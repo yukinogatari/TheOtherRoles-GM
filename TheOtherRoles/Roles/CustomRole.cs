@@ -1,15 +1,18 @@
 using HarmonyLib;
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.Reflection;
 using TheOtherRoles;
 using UnityEngine;
 using static TheOtherRoles.TheOtherRoles;
+using TheOtherRoles.Patches;
+using static TheOtherRoles.Patches.PlayerControlFixedUpdatePatch;
+using TheOtherRoles.Objects;
 
 namespace TheOtherRoles.Roles
 {
-
-    enum CustomRoleTypes
+    public enum CustomRoleTypes
     {
         /*
         Crewmate = 0,
@@ -54,7 +57,8 @@ namespace TheOtherRoles.Roles
         Madmate,
 
 
-        Mini = 150,
+        Neutral = 150,
+        Mini,
         NiceMini,
         EvilMini,
         Lovers,
@@ -70,20 +74,21 @@ namespace TheOtherRoles.Roles
 
 
         GM = 200,
-
+        Husk,
 
         // don't put anything below this
         NoRole = ushort.MaxValue
     }
 
-    enum CustomRoleTeamTypes
+    public enum CustomRoleTeamTypes
     {
         /*
         Crewmate = 0,
         Impostor = 1
         */
 
-        Jackal = 100,
+        Neutral = 100,
+        Jackal,
         Jester,
         Arsonist,
         Lovers,
@@ -93,63 +98,9 @@ namespace TheOtherRoles.Roles
         None = ushort.MaxValue,
     }
 
-    /* RoleManager.SelectRoles
-     * 
-     * AssignRolesForTeam(GameData.PlayerInfo, this.RoleOptions, RoleTeamTypes.Impostor, maxImpostors, defaultRole: RoleTypes.Impostor)
-     * AssignRolesForTeam(GameData.PlayerInfo, this.RoleOptions, RoleTeamTypes.Crewmate, maxInt, defaultRole: RoleTypes.Crewmate)
-     * 
-     */
-
-    /* RoleManager.AssignRolesForTeam(List<GameData.PlayerInfo> players, RoleOptionsData opts, RoleTeamTypes team, int teamMax, RoleTypes? defaultRole)
-     * 
-     * 
-     * 
-     */
-
-    class CustomRole : RoleBehaviour
+    [HarmonyPatch]
+    public class CustomRole : RoleBehaviour
     {
-        public static List<Type> allTypes = new List<Type> {
-            typeof(Shifter),
-            typeof(Mayor),
-            typeof(Sheriff),
-            typeof(Lighter),
-            typeof(Detective),
-            typeof(TimeMaster),
-            typeof(Medic),
-            typeof(Swapper),
-            typeof(Seer),
-            typeof(Hacker),
-            typeof(Tracker),
-            typeof(Snitch),
-            typeof(Spy),
-            typeof(SecurityGuard),
-            typeof(Bait),
-            typeof(Medium),
-
-            typeof(Godfather),
-            typeof(Mafioso),
-            typeof(Janitor),
-            typeof(Camouflager),
-            typeof(Vampire),
-            typeof(Eraser),
-            typeof(Trickster),
-            typeof(Cleaner),
-            typeof(Warlock),
-            typeof(BountyHunter),
-            typeof(Madmate),
-
-            typeof(Mini),
-            typeof(Lovers),
-            typeof(Guesser),
-            typeof(Jester),
-            typeof(Arsonist),
-            typeof(Jackal),
-            typeof(Sidekick),
-            typeof(Opportunist),
-            typeof(Vulture),
-            typeof(GM),
-        };
-
         // public bool IsImpostor { get => { return TeamType == RoleTeamTypes.Impostor; } }
         // public bool IsSimpleRole { get => { return Role == RoleTypes.Crewmate || Role == RoleTypes.Impostor; } }
         // public bool IsAffectedByComms { get => { is comms active & not RoleTeamTypes.Impostor } }
@@ -170,254 +121,269 @@ namespace TheOtherRoles.Roles
             MaxCount = 0;
         }
 
-        public static void InitializeAll()
-        {
-            foreach (Type t in allTypes)
+        public virtual void Init() { 
+            if (Player != null)
             {
-                t.GetMethod("Initialize", BindingFlags.Public | BindingFlags.Static)?.Invoke(null, null);
+                Player.Data.Role.NameColor = NameColor;
+            }
+        }
+
+        public virtual bool InitButtons() { return true; }
+        public virtual void SetTarget() { }
+        public virtual void OnExiled() { }
+        public virtual void OnKilled() { }
+        public virtual void OnKill() { }
+        public virtual void OnMeeting() { }
+        public virtual void OnMeetingEnd() { }
+        public virtual new bool DidWin(GameOverReason gameOverReason)
+        {
+            return false;
+        }
+
+        public void _FixedUpdate() {
+            if (PlayerControl.LocalPlayer == Player)
+            {
+                _RoleUpdate();
+            }
+        }
+
+        public virtual void _RoleUpdate() { }
+
+        public virtual void _HandleDisconnect(PlayerControl pc, DisconnectReasons reason) { }
+
+        [HarmonyPatch(typeof(RoleBehaviour), "IsImpostor", MethodType.Getter)]
+        class RoleBehaviorIsImpostor
+        {
+            public static bool Prefix(RoleBehaviour __instance, ref bool __result)
+            {
+                RoleBehaviour role = __instance.Player.customRole() ?? __instance;
+                if (role.Role >= (RoleTypes)CustomRoleTypes.Crewmate)
+                {
+                    __result = role.TeamType == RoleTeamTypes.Impostor;
+                    return false;
+                }
+                return true;
+            }
+        }
+
+        [HarmonyPatch(typeof(RoleBehaviour), "IsSimpleRole", MethodType.Getter)]
+        class RoleBehaviorIsSimpleRole
+        {
+            public static bool Prefix(RoleBehaviour __instance, ref bool __result)
+            {
+                RoleBehaviour role = __instance.Player.customRole() ?? __instance;
+                if (role.Role >= (RoleTypes)CustomRoleTypes.Crewmate)
+                {
+                    __result = false;
+                    return false;
+                }
+                return true;
+            }
+        }
+
+        [HarmonyPatch(typeof(RoleBehaviour), "IsAffectedByComms", MethodType.Getter)]
+        class RoleBehaviorIsAffectedByComms
+        {
+            public static bool Prefix(RoleBehaviour __instance, ref bool __result)
+            {
+                RoleBehaviour role = __instance.Player.customRole() ?? __instance;
+                if (role.Role >= (RoleTypes)CustomRoleTypes.Crewmate)
+                {
+                    __result = role.IsAffectedByComms;
+                    return false;
+                }
+                return true;
+            }
+        }
+
+        // For some reason the game crashes if we try to mess with TeamColor
+        /*    [HarmonyPatch(typeof(RoleBehaviour), "TeamColor", MethodType.Getter)]
+            class RoleBehaviorTeamColor
+            {
+                public static void Postfix(RoleBehaviour __instance, ref Color __result)
+                {
+                    __result = Palette.ImpostorRed;
+                }
+            }*/
+
+
+        [HarmonyPatch(typeof(RoleBehaviour), "NiceName", MethodType.Getter)]
+        class RoleBehaviorNiceName
+        {
+            public static bool Prefix(RoleBehaviour __instance, ref string __result)
+            {
+                RoleBehaviour role = __instance.Player.customRole() ?? __instance;
+                if (role.Role >= (RoleTypes)CustomRoleTypes.Crewmate)
+                {
+                    __result = RoleInfo.getRoleInfo(role).name;
+                    return false;
+                }
+                return true;
+            }
+        }
+
+        [HarmonyPatch(typeof(RoleBehaviour), "Blurb", MethodType.Getter)]
+        class RoleBehaviorBlurb
+        {
+            public static bool Prefix(RoleBehaviour __instance, ref string __result)
+            {
+                RoleBehaviour role = __instance.Player.customRole() ?? __instance;
+                if (role.Role >= (RoleTypes)CustomRoleTypes.Crewmate)
+                {
+                    __result = RoleInfo.getRoleInfo(role).blurb;
+                    return false;
+                }
+                return true;
+            }
+        }
+
+        [HarmonyPatch(typeof(RoleBehaviour), "BlurbMed", MethodType.Getter)]
+        class RoleBehaviorBlurbMed
+        {
+            public static bool Prefix(RoleBehaviour __instance, ref string __result)
+            {
+                RoleBehaviour role = __instance.Player.customRole() ?? __instance;
+                if (role.Role >= (RoleTypes)CustomRoleTypes.Crewmate)
+                {
+                    __result = RoleInfo.getRoleInfo(role).introDescription;
+                    return false;
+                }
+                return true;
+            }
+        }
+
+        [HarmonyPatch(typeof(RoleBehaviour), "BlurbLong", MethodType.Getter)]
+        class RoleBehaviorBlurbLong
+        {
+            public static bool Prefix(RoleBehaviour __instance, ref string __result)
+            {
+                RoleBehaviour role = __instance.Player.customRole() ?? __instance;
+                if (role.Role >= (RoleTypes)CustomRoleTypes.Crewmate)
+                {
+                    __result = RoleInfo.getRoleInfo(role).fullDescription;
+                    return false;
+                }
+                return true;
             }
         }
     }
 
-    class CustomCrewRole : CustomRole
+    public static class RoleHelpers
     {
-        public CustomCrewRole() : base()
+        public static bool roleExists(RoleTypes type)
         {
-            NameColor = new Color32(0, 0, 0, byte.MaxValue);
-            TeamType = RoleTeamTypes.Crewmate;
-            Role = RoleTypes.Crewmate;
-            MaxCount = 15;
-        }
-    }
-
-    class CustomImpostorRole : CustomRole
-    {
-        public CustomImpostorRole() : base()
-        {
-            NameColor = Palette.ImpostorRed;
-            TeamType = RoleTeamTypes.Impostor;
-            Role = RoleTypes.Impostor;
-            MaxCount = 15;
-        }
-    }
-
-    [HarmonyPatch(typeof(RoleBehaviour), "IsImpostor", MethodType.Getter)]
-    class RoleBehaviorIsImpostor
-    {
-        public static bool Prefix(RoleBehaviour __instance, ref bool __result)
-        {
-            if (__instance.Role >= (RoleTypes)CustomRoleTypes.Crewmate)
+            foreach (PlayerControl p in PlayerControl.AllPlayerControls)
             {
-                __result = __instance.TeamType == RoleTeamTypes.Impostor;
-                return false;
+                if (p.isRole(type)) return true;
             }
-            return true;
+            return false;
         }
-    }
 
-    [HarmonyPatch(typeof(RoleBehaviour), "IsSimpleRole", MethodType.Getter)]
-    class RoleBehaviorIsSimpleRole
-    {
-        public static bool Prefix(RoleBehaviour __instance, ref bool __result)
-        {
-            return true;
-        }
-    }
+        public static bool roleExists(CustomRoleTypes type) { return roleExists((RoleTypes)type); }
 
-    [HarmonyPatch(typeof(RoleBehaviour), "IsAffectedByComms", MethodType.Getter)]
-    class RoleBehaviorIsAffectedByComms
-    {
-        public static bool Prefix(RoleBehaviour __instance, ref bool __result)
+        public static List<PlayerControl> getPlayersWithRole(RoleTypes type)
         {
-            if (__instance.Role >= (RoleTypes)CustomRoleTypes.Crewmate)
+            List<PlayerControl> players = new List<PlayerControl>();
+            foreach (PlayerControl p in PlayerControl.AllPlayerControls)
             {
-                //return false;
+                if (p.isRole(type)) players.Add(p);
             }
-            return true;
+            return players;
         }
-    }
 
-    // For some reason the game crashes if we try to mess with TeamColor
-/*    [HarmonyPatch(typeof(RoleBehaviour), "TeamColor", MethodType.Getter)]
-    class RoleBehaviorTeamColor
-    {
-        public static void Postfix(RoleBehaviour __instance, ref Color __result)
-        {
-            __result = Palette.ImpostorRed;
-        }
-    }*/
+        public static List<PlayerControl> getPlayersWithRole(CustomRoleTypes type) { return getPlayersWithRole((RoleTypes)type); }
 
-  
-    [HarmonyPatch(typeof(RoleBehaviour), "NiceName", MethodType.Getter)]
-    class RoleBehaviorNiceName
-    {
-        public static bool Prefix(RoleBehaviour __instance, ref string __result)
+        public static List<PlayerControl> getPlayersWithModifier(RoleModifierTypes type)
         {
-            if (__instance.Role >= (RoleTypes)CustomRoleTypes.Crewmate)
+            List<PlayerControl> players = new List<PlayerControl>();
+            foreach (PlayerControl p in PlayerControl.AllPlayerControls)
             {
-                __result = RoleInfo.getRoleInfo(__instance.Role).nameColored;
-                return false;
+                if (p.hasModifier(type)) players.Add(p);
             }
-            return true;
+            return players;
+        }
+
+        public static List<T> getRoles<T>() where T : CustomRole
+        {
+            return CustomRoleManager.allRoles.Values.Where(x => x is T).Cast<T>().ToList();
         }
     }
 
-    [HarmonyPatch(typeof(RoleBehaviour), "Blurb", MethodType.Getter)]
-    class RoleBehaviorBlurb
+    public static class RoleExtension
     {
-        public static bool Prefix(RoleBehaviour __instance, ref string __result)
+
+        public static RoleBehaviour role(this PlayerControl pc)
         {
-            if (__instance.Role >= (RoleTypes)CustomRoleTypes.Crewmate)
+            return customRole(pc) ?? pc?.Data?.Role;
+        }
+
+        public static CustomRole customRole(this PlayerControl pc)
+        {
+            if (pc == null) return null;
+            return CustomRoleManager.allRoles.ContainsKey(pc.PlayerId) ? CustomRoleManager.allRoles[pc.PlayerId] : null;
+        }
+
+        public static T role<T>(this PlayerControl pc) where T : CustomRole
+        {
+            return customRole(pc) as T;
+        }
+
+        public static CustomRole setRole(this PlayerControl pc, CustomRoleTypes type)
+        {
+            CustomRole role = CustomRoleManager.CreateRole(type, pc);
+            setRole(pc, role);
+            return role;
+        }
+
+        public static void setRole(this PlayerControl pc, CustomRole role)
+        {
+            role.Player = pc;
+
+            if (role.IsImpostor)
             {
-                __result = RoleInfo.getRoleInfo(__instance.Role).blurb;
-                return false;
+                pc.Data.Role = new ImpostorRole();
             }
-            return true;
-        }
-    }
-
-    [HarmonyPatch(typeof(RoleBehaviour), "BlurbMed", MethodType.Getter)]
-    class RoleBehaviorBlurbMed
-    {
-        public static bool Prefix(RoleBehaviour __instance, ref string __result)
-        {
-            if (__instance.Role >= (RoleTypes)CustomRoleTypes.Crewmate)
+            else
             {
-                __result = RoleInfo.getRoleInfo(__instance.Role).introDescription;
-                return false;
-            }
-            return true;
-        }
-    }
-
-    [HarmonyPatch(typeof(RoleBehaviour), "BlurbLong", MethodType.Getter)]
-    class RoleBehaviorBlurbLong
-    {
-        public static bool Prefix(RoleBehaviour __instance, ref string __result)
-        {
-            if (__instance.Role >= (RoleTypes)CustomRoleTypes.Crewmate)
-            {
-                __result = RoleInfo.getRoleInfo(__instance.Role).fullDescription;
-                return false;
-            }
-            return true;
-        }
-    }
-
-    [HarmonyPatch(typeof(RoleOptionSetting), nameof(RoleOptionSetting.ShowRoleDetails))]
-    class RoleOptionSettingShowRoleDetailsPatch
-    {
-        public static bool Prefix(RoleOptionSetting __instance)
-        {
-            if (__instance.Role.Role >= (RoleTypes)CustomRoleTypes.Crewmate)
-            {
-                GameSettingMenu parent = __instance.GetComponentInParent<GameSettingMenu>();
-                parent.RoleName.text = __instance.Role.NiceName;
-                parent.RoleBlurb.text = __instance.Role.Blurb;
-                parent.RoleIcon.sprite = TheOtherRoles.getBlankIcon();
-
-                return false;
-            }
-            return true;
-        }
-    }
-
-    [HarmonyPatch(typeof(RolesSettingsMenu), nameof(RolesSettingsMenu.ShowAdvancedSettings))]
-    class RoleOptionSettingUpdatePatch
-    {
-        public static void Postfix(RolesSettingsMenu __instance, [HarmonyArgument(0)]RoleBehaviour role)
-        {
-            if (role.Role >= (RoleTypes)CustomRoleTypes.Crewmate)
-            {
-
-                //Helpers.log($"{role.Role} ShowAdvancedSettings");
-            }
-        }
-    }
-
-    [HarmonyPatch(typeof(RolesSettingsMenu), nameof(RolesSettingsMenu.Update))]
-    class RoleSettingMenuUpdatePatch
-    {
-        public static void Postfix(RolesSettingsMenu __instance)
-        {
-            var s = __instance.GetComponentInChildren<Scroller>();
-            if (s != null)
-            {
-                //Helpers.log($"{s.transform.position.y}/{s.transform.localPosition.y} {s.Inner.localPosition.y} => {s.GetScrollPercY()}");
-            }
-        }
-    }
-
-    [HarmonyPatch(typeof(GameSettingMenu), nameof(GameSettingMenu.Update))]
-    class GameSettingMenuUpdatePatch
-    {
-        public static void Postfix(GameSettingMenu __instance)
-        {
-            //var s = __instance.Scroller;
-            //Helpers.log($"{s.YBounds.min}~{s.YBounds.max} / {s.ScrollerYRange.min}~{s.ScrollerYRange.max} / {s.Inner.localPosition.y}");
-        }
-    }
-
-    [HarmonyPatch(typeof(GameSettingMenu), nameof(GameSettingMenu.Start))]
-    class GameSettingMenuPatch
-    {
-        public static List<CustomRoleTypes> HiddenRoles = new List<CustomRoleTypes> {
-            CustomRoleTypes.Crewmate,
-            CustomRoleTypes.Impostor,
-            CustomRoleTypes.Sidekick,
-            CustomRoleTypes.Guesser,
-            CustomRoleTypes.EvilGuesser,
-            CustomRoleTypes.NiceGuesser,
-            CustomRoleTypes.Mini,
-            CustomRoleTypes.EvilMini,
-            CustomRoleTypes.NiceMini,
-            CustomRoleTypes.Mafia,
-            CustomRoleTypes.Godfather,
-            CustomRoleTypes.Mafioso,
-            CustomRoleTypes.Janitor,
-            CustomRoleTypes.NoRole
-        };
-
-        public static void Postfix(GameSettingMenu __instance)
-        {
-            var template = __instance.RolesSettings.AllRoleSettings[0];
-
-            foreach (CustomRoleTypes role in Enum.GetValues(typeof(CustomRoleTypes)))
-            {
-                if (HiddenRoles.Contains(role)) continue;
-
-                var roleSettings = UnityEngine.Object.Instantiate(template, template.transform.parent);
-                roleSettings.Role = new Sheriff();
-                __instance.RolesSettings.AllRoleSettings.Add(roleSettings);
-
-                var menuTemplate = __instance.RolesSettings.AllAdvancedSettingTabs[0];
-                var newMenu = new AdvancedRoleSettingsButton();
-                newMenu.Type = roleSettings.Role.Role;
-                newMenu.Tab = UnityEngine.Object.Instantiate(menuTemplate.Tab, menuTemplate.Tab.transform.parent);
-                __instance.RolesSettings.AllAdvancedSettingTabs.Add(newMenu);
-
-                foreach (var c in newMenu.Tab.GetComponentsInChildren<Component>())
-                    UnityEngine.Object.Destroy(c);
+                pc.Data.Role = new CrewmateRole();
             }
 
-            float yoff = __instance.RolesSettings.YOffset;
-            var s = __instance.RolesSettings.GetComponentInChildren<Scroller>();
-            s.ScrollerY = __instance.RolesSettings.GetComponentInChildren<Scrollbar>();
-            s.ScrollerYRange = new FloatRange(-1.5f, 1.5f);
-            s.YBounds = new FloatRange(0.0f, -4.0f + yoff * __instance.RolesSettings.AllRoleSettings.Count);
+            pc.Data.Role.Initialize(pc);
+            pc.roleAssigned = true;
+            CustomRoleManager.allRoles[pc.PlayerId] = role;
+        }
 
-            // check -> ToggleOption
-            // numbers -> NumberOption
-            // other -> KeyValueOption
-            /*                if (tp != null && tp.name == "Role Name")
-                                foreach (UnityEngine.Object sub in tp.GetComponentsInChildren<GameObject>()) Helpers.log($"{sub.name}");*/
+        public static bool isRole(this PlayerControl pc, RoleTypes type)
+        {
+            return role(pc)?.Role == type;
+        }
 
-            //__instance.GetComponentInChildren<Scroller>().YBounds.max = yoff * __instance.AllRoleSettings.Count + yoff + yoff;
-            //Helpers.log($"{__instance.Scroller.YBounds.max}");
-            /*            var sc = __instance.GetComponentInChildren<Scroller>();
-                        sc.enabled = true;
-                        Helpers.log($"{sc.YBounds.max} {sc.allowX} {sc.allowY} {sc.active} {sc.AtTop} {sc.AtBottom} {sc.HandleDrag}");*/
+        public static bool isRole(this PlayerControl pc, CustomRoleTypes type)
+        {
+            if (pc == null || role(pc) == null) return false;
+
+            CustomRoleTypes playerRole = (CustomRoleTypes)role(pc).Role;
+
+            // Handle some special cases where we're looking for a class of roles that have more specific types.
+            if (type == CustomRoleTypes.Mini && (playerRole == CustomRoleTypes.EvilMini || playerRole == CustomRoleTypes.NiceMini))
+                return true;
+
+            if (type == CustomRoleTypes.Guesser && (playerRole == CustomRoleTypes.EvilGuesser || playerRole == CustomRoleTypes.NiceGuesser))
+                return true;
+
+            if (type == CustomRoleTypes.Mafia && (playerRole == CustomRoleTypes.Godfather || playerRole == CustomRoleTypes.Mafioso || playerRole == CustomRoleTypes.Janitor))
+                return true;
+
+            if (type == CustomRoleTypes.Lovers && pc.hasModifier(RoleModifierTypes.Lovers))
+                return true;
+
+            return playerRole == type;
+        }
+
+        public static bool isRelated(this PlayerControl pc, PlayerControl target)
+        {
+            return (pc.hasModifier(RoleModifierTypes.Lovers) && (target == pc.getPartner())) ||
+                   ((pc.isRole(CustomRoleTypes.Jackal) || pc.isRole(CustomRoleTypes.Sidekick)) && (pc.role<Jackal>().getFamily().Contains(target)));
         }
     }
-
 }

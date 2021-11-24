@@ -21,14 +21,16 @@ namespace TheOtherRoles {
         }
 
         public static Tuple<int, int> taskInfo(GameData.PlayerInfo playerInfo) {
+            if (playerInfo == null) return Tuple.Create(0, 0);
+
             int TotalTasks = 0;
             int CompletedTasks = 0;
             if (!playerInfo.Disconnected && playerInfo.Tasks != null &&
                 playerInfo.Object &&
-                (PlayerControl.GameOptions.GhostsDoTasks || !playerInfo.IsDead) &&
-                !playerInfo.Role.IsImpostor &&
-                !(playerInfo.Object.isGM() && !GM.hasTasks) &&
-                !(playerInfo.Object.isLovers() && !Lovers.hasTasks) &&
+                (PlayerControl.GameOptions?.GhostsDoTasks == true || !playerInfo.IsDead) &&
+                !playerInfo.Object.role()?.IsImpostor == true &&
+                !(playerInfo.Object.isRole(CustomRoleTypes.GM) && !GM.hasTasks) &&
+                !(playerInfo.Object.isLovers() && !LoversMod.hasTasks) &&
                 !playerInfo.Object.hasFakeTasks()
                 ) {
 
@@ -45,19 +47,21 @@ namespace TheOtherRoles {
         [HarmonyPatch(typeof(GameData), nameof(GameData.RecomputeTaskCounts))]
         private static class GameDataRecomputeTaskCountsPatch {
             private static bool Prefix(GameData __instance) {
-                return true;
+                if (__instance == null) return false;
+
                 // TODO: fix?
-/*                __instance.TotalTasks = 0;
+                __instance.TotalTasks = 0;
                 __instance.CompletedTasks = 0;
-                for (int i = 0; i < __instance.AllPlayers.Count; i++) {
+                for (int i = 0; i < __instance.AllPlayers?.Count; i++)
+                {
                     GameData.PlayerInfo playerInfo = __instance.AllPlayers[i];
-                    if (playerInfo.Object?.isLovers() == true && !Lovers.hasTasks)
+                    if (playerInfo.Object?.isLovers() == true && !LoversMod.hasTasks)
                         continue;
                     var (playerCompleted, playerTotal) = taskInfo(playerInfo);
                     __instance.TotalTasks += playerTotal;
                     __instance.CompletedTasks += playerCompleted;
                 }
-                return false;*/
+                return false;
             }
         }
 

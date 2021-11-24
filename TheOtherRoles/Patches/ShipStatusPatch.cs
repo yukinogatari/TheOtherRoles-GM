@@ -1,43 +1,69 @@
 using HarmonyLib;
 using static TheOtherRoles.TheOtherRoles;
+using TheOtherRoles.Roles;
 using UnityEngine;
 using System.Collections.Generic;
 using System.Linq;
+using TheOtherRoles.Objects;
 
 namespace TheOtherRoles.Patches {
 
     [HarmonyPatch(typeof(ShipStatus))]
     public class ShipStatusPatch {
 
+        [HarmonyPatch(typeof(ShipStatus), nameof(ShipStatus.FixedUpdate))]
+        public class ShipStatusFixedUpdate
+        {
+            public static void Postfix(ShipStatus __instance)
+            {
+                if (AmongUsClient.Instance.GameState != InnerNet.InnerNetClient.GameStates.Started) return;
+                Helpers.setBasePlayerOutlines();
+                Helpers.refreshRoleDescription(PlayerControl.LocalPlayer);
+                Helpers.updatePlayerInfo();
+                Helpers.bendTimeUpdate();
+                CustomRoleManager.FixedUpdate();
+                Garlic.UpdateAll();
+            }
+        }
+
         [HarmonyPostfix]
         [HarmonyPatch(typeof(ShipStatus), nameof(ShipStatus.CalculateLightRadius))]
-        public static bool Prefix(ref float __result, ShipStatus __instance, [HarmonyArgument(0)] GameData.PlayerInfo player) {
+        public static bool Prefix(ref float __result, ShipStatus __instance, [HarmonyArgument(0)] GameData.PlayerInfo player)
+        {
             ISystemType systemType = __instance.Systems.ContainsKey(SystemTypes.Electrical) ? __instance.Systems[SystemTypes.Electrical] : null;
             if (systemType == null) return true;
             SwitchSystem switchSystem = systemType.TryCast<SwitchSystem>();
             if (switchSystem == null) return true;
 
             float num = (float)switchSystem.Value / 255f;
-            
-            if (player == null || player.IsDead || player.PlayerId == GM.gm?.PlayerId) // IsDead
+            var pc = player.Object;
+
+            if (player == null || player.IsDead || pc.isRole(CustomRoleTypes.GM)) // IsDead
                 __result = __instance.MaxLightRadius;
-            else if (player.Role.IsImpostor
-                || (Jackal.jackal != null && Jackal.jackal.PlayerId == player.PlayerId && Jackal.hasImpostorVision)
-                || (Sidekick.sidekick != null && Sidekick.sidekick.PlayerId == player.PlayerId && Sidekick.hasImpostorVision)
-                || (Spy.spy != null && Spy.spy.PlayerId == player.PlayerId && Spy.hasImpostorVision)
-                || (Madmate.madmate != null && Madmate.madmate.PlayerId == player.PlayerId && Madmate.hasImpostorVision) // Impostor, Jackal/Sidekick, Spy, or Madmate with Impostor vision
+
+            else if (player.Object.role()?.IsImpostor == true
+                || (pc.isRole(CustomRoleTypes.Jackal) && Jackal.hasImpostorVision)
+                || (pc.isRole(CustomRoleTypes.Sidekick) && Sidekick.hasImpostorVision)
+                || (pc.isRole(CustomRoleTypes.Spy) && Spy.hasImpostorVision)
+                || (pc.isRole(CustomRoleTypes.Madmate) && Madmate.hasImpostorVision) // Impostor, Jackal/Sidekick, Spy, or Madmate with Impostor vision
                 )
                 __result = __instance.MaxLightRadius * PlayerControl.GameOptions.ImpostorLightMod;
-            else if (Lighter.lighter != null && Lighter.lighter.PlayerId == player.PlayerId && Lighter.lighterTimer > 0f) // if player is Lighter and Lighter has his ability active
-                __result = Mathf.Lerp(__instance.MaxLightRadius * Lighter.lighterModeLightsOffVision, __instance.MaxLightRadius * Lighter.lighterModeLightsOnVision, num);
-            else if (Trickster.trickster != null && Trickster.lightsOutTimer > 0f) {
+
+            else if (pc.hasModifier(RoleModifierTypes.LighterLight)) // if player is Lighter and Lighter has his ability active
+                __result = Mathf.Lerp(__instance.MaxLightRadius * Lighter.lightsOffVision, __instance.MaxLightRadius * Lighter.lightsOnVision, num);
+
+            else if (RoleHelpers.roleExists(CustomRoleTypes.Trickster) && Trickster.lightsOutTimer > 0f)
+            {
                 float lerpValue = 1f;
                 if (Trickster.lightsOutDuration - Trickster.lightsOutTimer < 0.5f) lerpValue = Mathf.Clamp01((Trickster.lightsOutDuration - Trickster.lightsOutTimer) * 2);
-                else if (Trickster.lightsOutTimer < 0.5) lerpValue = Mathf.Clamp01(Trickster.lightsOutTimer*2);
+                else if (Trickster.lightsOutTimer < 0.5) lerpValue = Mathf.Clamp01(Trickster.lightsOutTimer * 2);
                 __result = Mathf.Lerp(__instance.MinLightRadius, __instance.MaxLightRadius, 1 - lerpValue) * PlayerControl.GameOptions.CrewLightMod; // Instant lights out? Maybe add a smooth transition?
             }
             else
+            {
                 __result = Mathf.Lerp(__instance.MinLightRadius, __instance.MaxLightRadius, num) * PlayerControl.GameOptions.CrewLightMod;
+            }
+
             return false;
         }
 

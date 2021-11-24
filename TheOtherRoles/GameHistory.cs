@@ -23,10 +23,16 @@ namespace TheOtherRoles {
     static class GameHistory {
         public static List<Tuple<Vector3, bool>> localPlayerPositions = new List<Tuple<Vector3, bool>>();
         public static List<DeadPlayer> deadPlayers = new List<DeadPlayer>();
+        public static List<int> exiledPlayers = new List<int>();
+        public static List<int> suicidedPlayers = new List<int>();
+        public static List<int> misfiredPlayers = new List<int>();
 
         public static void clearGameHistory() {
-            localPlayerPositions = new List<Tuple<Vector3, bool>>();
-            deadPlayers = new List<DeadPlayer>();
+            localPlayerPositions.Clear();
+            deadPlayers.Clear();
+            exiledPlayers.Clear();
+            suicidedPlayers.Clear();
+            misfiredPlayers.Clear();
         }
     }
 }

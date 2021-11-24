@@ -10,11 +10,11 @@ namespace TheOtherRoles.Objects {
         private static List<CustomMessage> customMessages = new List<CustomMessage>();
 
         public CustomMessage(string message, float duration) {
-            RoomTracker roomTracker =  HudManager.Instance?.roomTracker;
+            RoomTracker roomTracker =  DestroyableSingleton<HudManager>.Instance?.roomTracker;
             if (roomTracker != null) {
                 GameObject gameObject = UnityEngine.Object.Instantiate(roomTracker.gameObject);
                 
-                gameObject.transform.SetParent(HudManager.Instance.transform);
+                gameObject.transform.SetParent(DestroyableSingleton<HudManager>.Instance.transform);
                 UnityEngine.Object.DestroyImmediate(gameObject.GetComponent<RoomTracker>());
                 text = gameObject.GetComponent<TMPro.TMP_Text>();
                 text.text = message;
@@ -23,7 +23,7 @@ namespace TheOtherRoles.Objects {
                 gameObject.transform.localPosition = new Vector3(0, -1.8f, gameObject.transform.localPosition.z);
                 customMessages.Add(this);
 
-                HudManager.Instance.StartCoroutine(Effects.Lerp(duration, new Action<float>((p) => {
+                DestroyableSingleton<HudManager>.Instance.StartCoroutine(Effects.Lerp(duration, new Action<float>((p) => {
                     bool even = ((int)(p * duration / 0.25f)) % 2 == 0; // Bool flips every 0.25 seconds
                     string prefix = (even ? "<color=#FCBA03FF>" : "<color=#FF0000FF>");
                     text.text = prefix + message + "</color>";

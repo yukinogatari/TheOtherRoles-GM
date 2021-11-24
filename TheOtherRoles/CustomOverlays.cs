@@ -99,9 +99,9 @@ namespace TheOtherRoles {
             meetingUnderlay.sprite = colorBG;
             meetingUnderlay.color = Palette.Black;
             meetingUnderlay.transform.localScale = new Vector3(20f, 20f, 1f);
-            if (HudManager.Instance == null) return;
+            if (DestroyableSingleton<HudManager>.Instance == null) return;
 
-            HudManager.Instance.StartCoroutine(Effects.Lerp(5f, new Action<float>(t =>
+            DestroyableSingleton<HudManager>.Instance.StartCoroutine(Effects.Lerp(5f, new Action<float>(t =>
             {
                 meetingUnderlay.enabled = t > 0.2f && t < 1f;
             })));
@@ -118,7 +118,7 @@ namespace TheOtherRoles {
             if (overlayShown || MapOptions.hideSettings) return;
 
             HudManager hudManager = DestroyableSingleton<HudManager>.Instance;
-            if (ShipStatus.Instance == null || PlayerControl.LocalPlayer == null || hudManager == null || HudManager.Instance.isIntroDisplayed || (!PlayerControl.LocalPlayer.CanMove && MeetingHud.Instance == null))
+            if (ShipStatus.Instance == null || PlayerControl.LocalPlayer == null || hudManager == null || DestroyableSingleton<HudManager>.Instance.isIntroDisplayed || (!PlayerControl.LocalPlayer.CanMove && MeetingHud.Instance == null))
                 return;
 
             if (MapBehaviour.Instance != null)
@@ -146,7 +146,7 @@ namespace TheOtherRoles {
             TheOtherRolesPlugin.optionsPage = 0;
             GameOptionsData o = PlayerControl.GameOptions;
             List<string> gameOptions = o.ToString().Split("\n", StringSplitOptions.RemoveEmptyEntries).ToList().GetRange(2, 17);
-            infoOverlayRules.text = string.Join("\n", gameOptions) + "\n\n" + GameOptionsDataPatch.optionsToString(CustomOptionHolder.specialOptions);
+            infoOverlayRules.text = gameOptions.Join(delimiter: "\n") + "\n\n" + GameOptionsDataPatch.optionsToString(CustomOptionHolder.specialOptions);
             infoOverlayRules.enabled = true;
 
             string rolesText = "";
