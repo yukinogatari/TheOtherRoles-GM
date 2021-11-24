@@ -423,7 +423,7 @@ namespace TheOtherRoles.Patches {
                     playerInfoText = $"{roleNames}";
                     if (DestroyableSingleton<TaskPanelBehaviour>.InstanceExists) {
                         TMPro.TextMeshPro tabText = DestroyableSingleton<TaskPanelBehaviour>.Instance.tab.transform.FindChild("TabText_TMP").GetComponent<TMPro.TextMeshPro>();
-                        tabText.SetText($"Tasks {taskInfo}");
+                        tabText.SetText($"{TranslationController.Instance.GetString(StringNames.Tasks)} {taskInfo}");
                     }
                     meetingInfoText = $"{roleNames} {taskInfo}".Trim();
                 }
@@ -813,7 +813,7 @@ namespace TheOtherRoles.Patches {
                         if (timeSinceDeath < Detective.reportNameDuration * 1000) {
                             msg = String.Format(ModTranslation.getString("detectiveReportName"), deadPlayer.killerIfExisting.name);
                         } else if (timeSinceDeath < Detective.reportColorDuration * 1000) {
-                            var typeOfColor = Helpers.isLighterColor(deadPlayer.killerIfExisting.Data.DefaultOutfit.ColorId) ? "lighter" : "darker";
+                            var typeOfColor = Helpers.isLighterColor(deadPlayer.killerIfExisting.Data.DefaultOutfit.ColorId) ?
                                 ModTranslation.getString("detectiveColorLight") :
                                 ModTranslation.getString("detectiveColorDark");
                             msg = String.Format(ModTranslation.getString("detectiveReportColor"), typeOfColor);
@@ -1025,7 +1025,6 @@ namespace TheOtherRoles.Patches {
                 (!DestroyableSingleton<HudManager>.InstanceExists || (!DestroyableSingleton<HudManager>.Instance.Chat.IsOpen && !DestroyableSingleton<HudManager>.Instance.KillOverlay.IsOpen && !DestroyableSingleton<HudManager>.Instance.GameMenu.IsOpen)) &&
                 (!MapBehaviour.Instance || !MapBehaviour.Instance.IsOpenStopped) &&
                 !MeetingHud.Instance &&
-                !CustomPlayerMenu.Instance &&
                 !ExileController.Instance &&
                 !IntroCutscene.Instance;
             return false;
@@ -1037,10 +1036,8 @@ namespace TheOtherRoles.Patches {
     {
         public static bool Prefix(PlayerControl __instance, [HarmonyArgument(0)]string name)
         {
-            TheOtherRolesPlugin.Instance.Log.LogInfo($"Checking name {name}.");
             if (CustomOptionHolder.uselessOptions.getBool() && CustomOptionHolder.playerNameDupes.getBool())
             {
-                TheOtherRolesPlugin.Instance.Log.LogInfo($"Dupes allowed for {name}.");
                 __instance.RpcSetName(name);
                 GameData.Instance.UpdateName(__instance.PlayerId, name, false);
                 return false;

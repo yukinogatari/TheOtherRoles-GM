@@ -14,6 +14,7 @@ namespace TheOtherRoles.Patches
         public static Dictionary<byte, SpriteRenderer> corpseIcons = null;
 
         public static Sprite corpseSprite;
+        private static Vector3 useButtonPos;
 
         public static Sprite getCorpseSprite()
         {
@@ -125,11 +126,15 @@ namespace TheOtherRoles.Patches
             }
         }
 
-        [HarmonyPatch(typeof(MapBehaviour), nameof(MapBehaviour.ShowNormalMap))]
+        [HarmonyPatch(typeof(MapBehaviour), nameof(MapBehaviour.GenericShow))]
         class MapBehaviourShowNormalMapPatch
         {
             static void Prefix(MapBehaviour __instance)
             {
+                if (PlayerControl.LocalPlayer.isGM())
+                {
+                    useButtonPos = HudManager.Instance.UseButton.transform.localPosition;
+                }
                 CustomOverlays.hideInfoOverlay();
             }
 
@@ -144,7 +149,7 @@ namespace TheOtherRoles.Patches
                     foreach (byte id in mapIcons.Keys)
                     {
                         GameData.PlayerInfo playerById = GameData.Instance.GetPlayerById(id);
-                        PlayerControl.SetPlayerMaterialColors(playerById.ColorId, mapIcons[id]);
+                        PlayerControl.SetPlayerMaterialColors(playerById.Object.CurrentOutfit.ColorId, mapIcons[id]);
                         mapIcons[id].enabled = !playerById.IsDead;
                     }
 
@@ -152,7 +157,7 @@ namespace TheOtherRoles.Patches
                     {
                         byte id = b.ParentId;
                         GameData.PlayerInfo playerById = GameData.Instance.GetPlayerById(id);
-                        PlayerControl.SetPlayerMaterialColors(playerById.ColorId, corpseIcons[id]);
+                        PlayerControl.SetPlayerMaterialColors(playerById.Object.CurrentOutfit.ColorId, corpseIcons[id]);
                         corpseIcons[id].enabled = true;
                     }
                 }
@@ -162,20 +167,11 @@ namespace TheOtherRoles.Patches
         [HarmonyPatch(typeof(MapBehaviour), nameof(MapBehaviour.Close))]
         class MapBehaviorClosePatch
         {
-            private static Vector3 oldpos;
-            static void Prefix(MapBehaviour __instance)
-            {
-                if (PlayerControl.LocalPlayer.isGM())
-                {
-                    oldpos = HudManager.Instance.UseButton.transform.localPosition;
-                }
-            }
-
             static void Postfix(MapBehaviour __instance)
             {
                 if (PlayerControl.LocalPlayer.isGM())
                 {
-                    HudManager.Instance.UseButton.transform.localPosition = oldpos;
+                    HudManager.Instance.UseButton.transform.localPosition = useButtonPos;
                 }
             }
         }

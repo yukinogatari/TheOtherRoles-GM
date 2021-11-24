@@ -12,11 +12,44 @@ using HarmonyLib;
 using Hazel;
 
 namespace TheOtherRoles {
-    public static class Helpers {
-
-        public static void setSkinWithAnim(PlayerPhysics playerPhysics, uint SkinId)
+    public static class Helpers
+    {
+        public static bool ShowButtons
         {
-            SkinData nextSkin = DestroyableSingleton<HatManager>.Instance.AllSkins[(int)SkinId];
+            get
+            {
+                return !(MapBehaviour.Instance && MapBehaviour.Instance.IsOpen) &&
+                      !MeetingHud.Instance &&
+                      !ExileController.Instance;
+            }
+        }
+
+        public static void destroyList<T>(Il2CppSystem.Collections.Generic.List<T> items) where T : UnityEngine.Object
+        {
+            if (items == null) return;
+            foreach (T item in items)
+            {
+                UnityEngine.Object.Destroy(item);
+            }
+        }
+
+        public static void destroyList<T>(List<T> items) where T : UnityEngine.Object
+        {
+            if (items == null) return;
+            foreach (T item in items)
+            {
+                UnityEngine.Object.Destroy(item);
+            }
+        }
+
+        public static void log(string msg)
+        {
+            TheOtherRolesPlugin.Instance.Log.LogInfo(msg);
+        }
+
+        public static void setSkinWithAnim(PlayerPhysics playerPhysics, string SkinId)
+        {
+            SkinData nextSkin = DestroyableSingleton<HatManager>.Instance.GetSkinById(SkinId);
             AnimationClip clip = null;
             var spriteAnim = playerPhysics.Skin.animator;
             var anim = spriteAnim.m_animator;
@@ -181,7 +214,7 @@ namespace TheOtherRoles {
 
         public static bool isCrew(this PlayerControl player)
         {
-            return player != null && !player.Data.IsImpostor && !player.isNeutral();
+            return player != null && !player.Data.Role.IsImpostor && !player.isNeutral();
         }
 
         public static bool hasFakeTasks(this PlayerControl player) {

@@ -97,6 +97,7 @@ namespace TheOtherRoles {
         public static CustomOption shifterShiftsModifiers;
 
         public static CustomOption mayorSpawnRate;
+        public static CustomOption mayorNumVotes;
 
         public static CustomOption engineerSpawnRate;
         public static CustomOption engineerNumberOfFixes;
@@ -246,8 +247,8 @@ namespace TheOtherRoles {
         public static void Load() {
 
             // Role Options
+            activateRoles = CustomOption.Create(7, cs(new Color(204f / 255f, 204f / 255f, 0, 1f), "blockOriginal"), true, null, true);
             presetSelection = CustomOption.Create(0, cs(new Color(204f / 255f, 204f / 255f, 0, 1f), "presetSelection"), presets, null, true);
-            activateRoles = CustomOption.Create(7, cs(new Color(204f / 255f, 204f / 255f, 0, 1f), "Enable Mod Roles And Block Vanilla Roles"), true, null, true);
 
             // Using new id's for the options to not break compatibilty with older versions
             crewmateRolesCountMin = CustomOption.Create(300, cs(new Color(204f / 255f, 204f / 255f, 0, 1f), "crewmateRolesCountMin"), 0f, 0f, 15f, 1f, null, true);
@@ -317,8 +318,8 @@ namespace TheOtherRoles {
 
 
             miniSpawnRate = CustomOption.Create(180, cs(Mini.color, "miniSpawnRate"), rates, null, true);
-            miniGrowingUpDuration = CustomOption.Create(181, "miniGrowingUpDuration", 400f, 100f, 1500f, 100f, miniSpawnRate, format: "unitSeconds");
             miniIsImpRate = CustomOption.Create(182, "miniIsImpRate", rates, miniSpawnRate);
+            miniGrowingUpDuration = CustomOption.Create(181, "miniGrowingUpDuration", 400f, 100f, 1500f, 100f, miniSpawnRate, format: "unitSeconds");
 
             loversSpawnRate = CustomOption.Create(50, cs(Lovers.color, "lover"), rates, null, true);
             loversImpLoverRate = CustomOption.Create(51, "loversImpLoverRate", rates, loversSpawnRate);
@@ -330,14 +331,14 @@ namespace TheOtherRoles {
             guesserSpawnRate = CustomOption.Create(310, cs(Guesser.color, "guesserSpawnRate"), rates, null, true);
             guesserIsImpGuesserRate = CustomOption.Create(311, "guesserIsImpGuesserRate", rates, guesserSpawnRate);
             guesserNumberOfShots = CustomOption.Create(312, "guesserNumberOfShots", 2f, 1f, 15f, 1f, guesserSpawnRate, format: "unitShots");
-            guesserHasMultipleShotsPerMeeting = CustomOption.Create(314, "guesserHasMultipleShotsPerMeeting", false, guesserSpawnRate);
-            guesserShowInfoInGhostChat = CustomOption.Create(314, "Guesses Visible In Ghost Chat", true, guesserSpawnRate);
             guesserOnlyAvailableRoles = CustomOption.Create(313, "guesserOnlyAvailableRoles", true, guesserSpawnRate);
-            guesserKillsThroughShield  = CustomOption.Create(315, "Guesses Ignore The Medic Shield", true, guesserSpawnRate);
+            guesserHasMultipleShotsPerMeeting = CustomOption.Create(314, "guesserHasMultipleShotsPerMeeting", false, guesserSpawnRate);
+            guesserShowInfoInGhostChat = CustomOption.Create(315, "guesserToGhostChat", true, guesserSpawnRate);
+            guesserKillsThroughShield  = CustomOption.Create(316, "guesserPierceShield", true, guesserSpawnRate);
 
             jesterSpawnRate = CustomOption.Create(60, cs(Jester.color, "jester"), rates, null, true);
             jesterCanCallEmergency = CustomOption.Create(61, "jesterCanCallEmergency", true, jesterSpawnRate);
-            jesterCanSabotage = CustomOption.Create(62, "jesterCanSabotage", true, jesterSpawnRate);
+            //jesterCanSabotage = CustomOption.Create(62, "jesterCanSabotage", true, jesterSpawnRate);
 
             arsonistSpawnRate = CustomOption.Create(290, cs(Arsonist.color, "arsonist"), rates, null, true);
             arsonistCooldown = CustomOption.Create(291, "arsonistCooldown", 12.5f, 2.5f, 60f, 2.5f, arsonistSpawnRate, format: "unitSeconds");
@@ -356,7 +357,6 @@ namespace TheOtherRoles {
             sidekickCanUseVents = CustomOption.Create(227, "sidekickCanUseVents", true, jackalCanCreateSidekick);
             jackalPromotedFromSidekickCanCreateSidekick = CustomOption.Create(228, "jackalPromotedFromSidekickCanCreateSidekick", true, jackalCanCreateSidekick);
             jackalCanCreateSidekickFromImpostor = CustomOption.Create(229, "jackalCanCreateSidekickFromImpostor", true, jackalCanCreateSidekick);
-            jackalCanSeeEngineerVent = CustomOption.Create(431, "Jackal Can See If Engineer Is In A Vent", false, jackalSpawnRate);
 
             vultureSpawnRate = CustomOption.Create(340, cs(Vulture.color, "vulture"), rates, null, true);
             vultureCooldown = CustomOption.Create(341, "vultureCooldown", 15f, 2.5f, 60f, 2.5f, vultureSpawnRate, format: "unitSeconds");
@@ -368,11 +368,12 @@ namespace TheOtherRoles {
             shifterShiftsModifiers = CustomOption.Create(71, "shifterShiftsModifiers", false, shifterSpawnRate);
 
             mayorSpawnRate = CustomOption.Create(80, cs(Mayor.color, "mayor"), rates, null, true);
+            mayorNumVotes = CustomOption.Create(81, "mayorNumVotes", 2f, 2f, 10f, 1f, mayorSpawnRate);
 
             engineerSpawnRate = CustomOption.Create(90, cs(Engineer.color, "engineer"), rates, null, true);
-            engineerNumberOfFixes = CustomOption.Create(91, "Number Of Sabotage Fixes", 1f, 0f, 3f, 1f, engineerSpawnRate);
-            engineerHighlightForImpostors = CustomOption.Create(92, "Impostors See Vents Highlighted", true, engineerSpawnRate);
-            engineerHighlightForTeamJackal = CustomOption.Create(93, "Jackal and Sidekick See Vents Highlighted ", true, engineerSpawnRate);
+            engineerNumberOfFixes = CustomOption.Create(91, "engineerNumFixes", 1f, 0f, 3f, 1f, engineerSpawnRate);
+            engineerHighlightForImpostors = CustomOption.Create(92, "engineerImpostorsSeeVent", true, engineerSpawnRate);
+            engineerHighlightForTeamJackal = CustomOption.Create(93, "engineerJackalSeeVent", true, engineerSpawnRate);
 
             sheriffSpawnRate = CustomOption.Create(100, cs(Sheriff.color, "sheriff"), rates, null, true);
             sheriffCooldown = CustomOption.Create(101, "sheriffCooldown", 30f, 2.5f, 60f, 2.5f, sheriffSpawnRate, format: "unitSeconds");
@@ -402,7 +403,7 @@ namespace TheOtherRoles {
             medicShowShielded = CustomOption.Create(143, "medicShowShielded", new string[] { "medicShowShieldedAll", "medicShowShieldedBoth", "medicShowShieldedMedic" }, medicSpawnRate);
             medicShowAttemptToShielded = CustomOption.Create(144, "medicShowAttemptToShielded", false, medicSpawnRate);
             medicSetShieldAfterMeeting = CustomOption.Create(145, "medicSetShieldAfterMeeting", false, medicSpawnRate);
-            medicShowAttemptToMedic = CustomOption.Create(146, "Medic Sees Murder Attempt On Shielded Player", false, medicSpawnRate);
+            medicShowAttemptToMedic = CustomOption.Create(146, "medicSeesMurderAttempt", false, medicSpawnRate);
 
             swapperSpawnRate = CustomOption.Create(150, cs(Swapper.color, "swapper"), rates, null, true);
             swapperCanCallEmergency = CustomOption.Create(151, "swapperCanCallEmergency", false, swapperSpawnRate);
@@ -421,9 +422,9 @@ namespace TheOtherRoles {
             trackerSpawnRate = CustomOption.Create(200, cs(Tracker.color, "tracker"), rates, null, true);
             trackerUpdateIntervall = CustomOption.Create(201, "trackerUpdateIntervall", 5f, 2.5f, 30f, 2.5f, trackerSpawnRate, format: "unitSeconds");
             trackerResetTargetAfterMeeting = CustomOption.Create(202, "trackerResetTargetAfterMeeting", false, trackerSpawnRate);
-            trackerCanTrackCorpses = CustomOption.Create(203, "Tracker Can Track Corpses", true, trackerSpawnRate);
-            trackerCorpsesTrackingCooldown = CustomOption.Create(204, "Corpses Tracking Cooldown", 30f, 0f, 120f, 5f, trackerCanTrackCorpses);
-            trackerCorpsesTrackingDuration = CustomOption.Create(205, "Corpses Tracking Duration", 5f, 2.5f, 30f, 2.5f, trackerCanTrackCorpses);
+            trackerCanTrackCorpses = CustomOption.Create(203, "trackerTrackCorpses", true, trackerSpawnRate);
+            trackerCorpsesTrackingCooldown = CustomOption.Create(204, "trackerCorpseCooldown", 30f, 0f, 120f, 5f, trackerCanTrackCorpses, format: "unitSeconds");
+            trackerCorpsesTrackingDuration = CustomOption.Create(205, "trackerCorpseDuration", 5f, 2.5f, 30f, 2.5f, trackerCanTrackCorpses, format: "unitSeconds");
                            
             snitchSpawnRate = CustomOption.Create(210, cs(Snitch.color, "snitch"), rates, null, true);
             snitchLeftTasksForReveal = CustomOption.Create(211, "snitchLeftTasksForReveal", 1f, 0f, 5f, 1f, snitchSpawnRate);
@@ -457,6 +458,7 @@ namespace TheOtherRoles {
             blockSkippingInEmergencyMeetings = CustomOption.Create(4, "blockSkippingInEmergencyMeetings", false, specialOptions);
             noVoteIsSelfVote = CustomOption.Create(5, "noVoteIsSelfVote", false, specialOptions);
             hidePlayerNames = CustomOption.Create(6, "hidePlayerNames", false, specialOptions);
+            allowParallelMedBayScans = CustomOption.Create(540, "parallelMedbayScans", false, specialOptions);
             hideSettings = CustomOption.Create(520, "hideSettings", false, specialOptions);
 
             restrictDevices = CustomOption.Create(510, "restrictDevices", new string[] { "optionOff", "restrictPerTurn", "restrictPerGame" }, specialOptions);
@@ -464,10 +466,9 @@ namespace TheOtherRoles {
             restrictCameras = CustomOption.Create(502, "disableCameras", 30f, 0f, 600f, 5f, restrictDevices, format: "unitSeconds");
             restrictVents = CustomOption.Create(503, "disableVitals", 30f, 0f, 600f, 5f, restrictDevices, format: "unitSeconds");
 
-            uselessOptions = CustomOption.Create(530, "uselessOptions", false, specialOptions, isHeader: true);
+            uselessOptions = CustomOption.Create(530, "uselessOptions", false, null, isHeader: true);
             disableVents = CustomOption.Create(504, "disableVents", false, uselessOptions);
             playerColorRandom = CustomOption.Create(521, "playerColorRandom", false, uselessOptions);
-            allowParallelMedBayScans = CustomOption.Create(7, "Allow Parallel MedBay Scans", false);
             playerNameDupes = CustomOption.Create(522, "playerNameDupes", false, uselessOptions);
 
             blockedRolePairings.Add((byte)RoleId.Vampire, new [] { (byte)RoleId.Warlock});
@@ -478,657 +479,4 @@ namespace TheOtherRoles {
         }
     }
 
-    public class CustomOption {
-        public static List<CustomOption> options = new List<CustomOption>();
-        public static int preset = 0;
-
-        public int id;
-        public string name;
-        public string format;
-        public System.Object[] selections;
-
-        public int defaultSelection;
-        public ConfigEntry<int> entry;
-        public int selection;
-        public OptionBehaviour optionBehaviour;
-        public CustomOption parent;
-        public List<CustomOption> children;
-        public bool isHeader;
-        public bool isHidden;
-
-        public virtual bool enabled
-        {
-            get
-            {
-                return this.getBool();
-            }
-        }
-
-        // Option creation
-        public CustomOption()
-        {
-
-        }
-
-        public CustomOption(int id, string name,  System.Object[] selections, System.Object defaultValue, CustomOption parent, bool isHeader, bool isHidden, string format) {
-            this.id = id;
-            this.name = name;
-            this.format = format;
-            this.selections = selections;
-            int index = Array.IndexOf(selections, defaultValue);
-            this.defaultSelection = index >= 0 ? index : 0;
-            this.parent = parent;
-            this.isHeader = isHeader;
-            this.isHidden = isHidden;
-
-            this.children = new List<CustomOption>();
-            if (parent != null) {
-                parent.children.Add(this);
-            }
-
-            selection = 0;
-            if (id > 0) {
-                entry = TheOtherRolesPlugin.Instance.Config.Bind($"Preset{preset}", id.ToString(), defaultSelection);
-                selection = Mathf.Clamp(entry.Value, 0, selections.Length - 1);
-            }
-            options.Add(this);
-        }
-
-        public static CustomOption Create(int id, string name, string[] selections, CustomOption parent = null, bool isHeader = false, bool isHidden = false, string format = "") {
-            return new CustomOption(id, name, selections, "", parent, isHeader, isHidden, format);
-        }
-
-        public static CustomOption Create(int id, string name, float defaultValue, float min, float max, float step, CustomOption parent = null, bool isHeader = false, bool isHidden = false, string format = "") {
-            List<float> selections = new List<float>();
-            for (float s = min; s <= max; s += step)
-                selections.Add(s);
-            return new CustomOption(id, name, selections.Cast<object>().ToArray(), defaultValue, parent, isHeader, isHidden, format);
-        }
-
-        public static CustomOption Create(int id, string name, bool defaultValue, CustomOption parent = null, bool isHeader = false, bool isHidden = false, string format = "") {
-            return new CustomOption(id, name, new string[]{"optionOff", "optionOn"}, defaultValue ? "optionOn" : "optionOff", parent, isHeader, isHidden, format);
-        }
-
-        // Static behaviour
-
-        public static void switchPreset(int newPreset) {
-            CustomOption.preset = newPreset;
-            foreach (CustomOption option in CustomOption.options) {
-                if (option.id <= 0) continue;
-
-                option.entry = TheOtherRolesPlugin.Instance.Config.Bind($"Preset{preset}", option.id.ToString(), option.defaultSelection);
-                option.selection = Mathf.Clamp(option.entry.Value, 0, option.selections.Length - 1);
-                if (option.optionBehaviour != null && option.optionBehaviour is StringOption stringOption) {
-                    stringOption.oldValue = stringOption.Value = option.selection;
-                    stringOption.ValueText.text = option.getString();
-                }
-            }
-        }
-
-        public static void ShareOptionSelections() {
-            if (PlayerControl.AllPlayerControls.Count <= 1 || AmongUsClient.Instance?.AmHost == false && PlayerControl.LocalPlayer == null) return;
-            foreach (CustomOption option in CustomOption.options) {
-                MessageWriter messageWriter = AmongUsClient.Instance.StartRpc(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.ShareOptionSelection, Hazel.SendOption.Reliable);
-                messageWriter.WritePacked((uint)option.id);
-                messageWriter.WritePacked((uint)Convert.ToUInt32(option.selection));
-                messageWriter.EndMessage();
-            }
-        }
-
-        // Getter
-
-        public virtual int getSelection() {
-            return selection;
-        }
-
-        public virtual bool getBool() {
-            return selection > 0;
-        }
-
-        public virtual float getFloat() {
-            return (float)selections[selection];
-        }
-
-        public virtual string getString()
-        {
-            string sel = selections[selection].ToString();
-            if (format != "")
-            {
-                return string.Format(ModTranslation.getString(format), sel);
-            }
-            return ModTranslation.getString(sel);
-        }
-
-        public virtual string getName()
-        {
-            return ModTranslation.getString(name);
-        }
-
-        // Option changes
-
-        public virtual void updateSelection(int newSelection) {
-            selection = Mathf.Clamp((newSelection + selections.Length) % selections.Length, 0, selections.Length - 1);
-            if (optionBehaviour != null && optionBehaviour is StringOption stringOption) {
-                stringOption.oldValue = stringOption.Value = selection;
-                stringOption.ValueText.text = getString();
-
-                if (AmongUsClient.Instance?.AmHost == true && PlayerControl.LocalPlayer) {
-                    if (id == 0) switchPreset(selection); // Switch presets
-                    else if (entry != null) entry.Value = selection; // Save selection to config
-
-                    ShareOptionSelections();// Share all selections
-                }
-            }
-        }
-    }
-
-    public class CustomOptionBlank : CustomOption
-    {
-        public CustomOptionBlank(CustomOption parent) {
-            this.parent = parent;
-            this.id = -1;
-            this.name = "";
-            this.isHeader = false;
-            this.isHidden = true;
-            this.children = new List<CustomOption>();
-            this.selections = new string[] { "" };
-            options.Add(this);
-        }
-
-        public override int getSelection()
-        {
-            return 0;
-        }
-
-        public override bool getBool()
-        {
-            return true;
-        }
-
-        public override float getFloat()
-        {
-            return 0f;
-        }
-
-        public override string getString()
-        {
-            return "";
-        }
-
-        public override void updateSelection(int newSelection)
-        {
-            return;
-        }
-
-    }
-
-    [HarmonyPatch(typeof(GameOptionsMenu), nameof(GameOptionsMenu.Start))]
-    class GameOptionsMenuStartPatch {
-
-        public static void Prefix(GameOptionsMenu __instance)
-        {
-        }
-
-        public static void Postfix(GameOptionsMenu __instance) {
-            var template = UnityEngine.Object.FindObjectsOfType<StringOption>().FirstOrDefault();
-            if (template == null) return;
-
-            List<OptionBehaviour> allOptions = __instance.Children.ToList();
-            for (int i = 0; i < CustomOption.options.Count; i++) {
-                CustomOption option = CustomOption.options[i];
-                if (option.optionBehaviour == null) {
-                    StringOption stringOption = UnityEngine.Object.Instantiate(template, template.transform.parent);
-                    allOptions.Add(stringOption);
-
-                    stringOption.OnValueChanged = new Action<OptionBehaviour>((o) => {});
-                    stringOption.TitleText.text = option.getName();
-                    stringOption.Value = stringOption.oldValue = option.selection;
-                    stringOption.ValueText.text = option.getString();
-
-                    option.optionBehaviour = stringOption;
-                }
-                option.optionBehaviour.gameObject.SetActive(true);
-            }
-
-            /*            var numTemplate = UnityEngine.Object.FindObjectsOfType<NumberOption>().FirstOrDefault();
-                        if (numTemplate)
-                        {
-                            NumberOption maxPlayers = UnityEngine.Object.Instantiate(numTemplate, numTemplate.transform.parent);
-                            maxPlayers.Value = maxPlayers.oldValue = PlayerControl.GameOptions.MaxPlayers;
-                            maxPlayers.ValidRange = new FloatRange(4f, 15f);
-                            allOptions.Add(maxPlayers);
-                        }*/
-
-            var numImpostorsOption = allOptions.FirstOrDefault(x => x.name == "NumImpostors").TryCast<NumberOption>();
-            if (numImpostorsOption != null) numImpostorsOption.ValidRange = new FloatRange(0f, 15f);
-
-            var killCoolOption = allOptions.FirstOrDefault(x => x.name == "KillCooldown").TryCast<NumberOption>();
-            if (killCoolOption != null) killCoolOption.ValidRange = new FloatRange(2.5f, 60f);
-
-            var commonTasksOption = allOptions.FirstOrDefault(x => x.name == "NumCommonTasks").TryCast<NumberOption>();
-            if(commonTasksOption != null) commonTasksOption.ValidRange = new FloatRange(0f, 4f);
-
-            var shortTasksOption = allOptions.FirstOrDefault(x => x.name == "NumShortTasks").TryCast<NumberOption>();
-            if(shortTasksOption != null) shortTasksOption.ValidRange = new FloatRange(0f, 23f);
-
-            var longTasksOption = allOptions.FirstOrDefault(x => x.name == "NumLongTasks").TryCast<NumberOption>();
-            if(longTasksOption != null) longTasksOption.ValidRange = new FloatRange(0f, 15f);
-            
-            __instance.Children = allOptions.ToArray();
-        }
-    }
-
-    [HarmonyPatch(typeof(NumberOption), nameof(NumberOption.OnEnable))]
-    public class NumberOptionEnablePatch
-    {
-        public static bool Prefix(NumberOption __instance)
-        {
-            if (__instance.Title == StringNames.MatchMaxPlayers)
-            {
-                __instance.TitleText.text = DestroyableSingleton<TranslationController>.Instance.GetString(__instance.Title);
-                __instance.FixedUpdate();
-                __instance.Value = (float)PlayerControl.GameOptions.MaxPlayers;
-                return false;
-            }
-            return true;
-        }
-    }
-
-    [HarmonyPatch(typeof(GameOptionsMenu), nameof(GameOptionsMenu.ValueChanged))]
-    public class GameOptionsMenuValueChangedPatch
-    {
-        public static bool Prefix(GameOptionsMenu __instance, OptionBehaviour option)
-        {
-            if (AmongUsClient.Instance && AmongUsClient.Instance.AmHost && option.Title == StringNames.MatchMaxPlayers)
-            {
-                PlayerControl.GameOptions.MaxPlayers = option.GetInt();
-                return false;
-            }
-            return true;
-        }
-    }
-
-    [HarmonyPatch(typeof(KeyValueOption), nameof(KeyValueOption.OnEnable))]
-    public class KeyValueOptionEnablePatch
-    {
-        public static void Postfix(KeyValueOption __instance)
-        {
-            GameOptionsData gameOptions = PlayerControl.GameOptions;
-            if (__instance.Title == StringNames.GameMapName)
-            {
-                __instance.Selected = gameOptions.MapId;
-            }
-            __instance.ValueText.text = __instance.Values[Mathf.Clamp(__instance.Selected, 0, __instance.Values.Count - 1)].Key;
-        }
-    }
-
-    [HarmonyPatch(typeof(StringOption), nameof(StringOption.OnEnable))]
-    public class StringOptionEnablePatch {
-        public static bool Prefix(StringOption __instance) {
-            CustomOption option = CustomOption.options.FirstOrDefault(option => option.optionBehaviour == __instance);
-            if (option == null) return true;
-
-            __instance.OnValueChanged = new Action<OptionBehaviour>((o) => {});
-            __instance.TitleText.text = option.getName();
-            __instance.Value = __instance.oldValue = option.selection;
-            __instance.ValueText.text = option.getString();
-            
-            return false;
-        }
-    }
-
-    [HarmonyPatch(typeof(StringOption), nameof(StringOption.Increase))]
-    public class StringOptionIncreasePatch
-    {
-        public static bool Prefix(StringOption __instance)
-        {
-            CustomOption option = CustomOption.options.FirstOrDefault(option => option.optionBehaviour == __instance);
-            if (option == null) return true;
-            option.updateSelection(option.selection + 1);
-            return false;
-        }
-    }
-
-    [HarmonyPatch(typeof(StringOption), nameof(StringOption.Decrease))]
-    public class StringOptionDecreasePatch
-    {
-        public static bool Prefix(StringOption __instance)
-        {
-            CustomOption option = CustomOption.options.FirstOrDefault(option => option.optionBehaviour == __instance);
-            if (option == null) return true;
-            option.updateSelection(option.selection - 1);
-            return false;
-        }
-    }
-
-    [HarmonyPatch(typeof(PlayerControl), nameof(PlayerControl.RpcSyncSettings))]
-    public class RpcSyncSettingsPatch
-    {
-        public static void Postfix()
-        {
-            CustomOption.ShareOptionSelections();
-        }
-    }
-
-
-    [HarmonyPatch(typeof(GameOptionsMenu), nameof(GameOptionsMenu.Update))]
-    class GameOptionsMenuUpdatePatch
-    {
-        private static float timer = 1f;
-        public static void Postfix(GameOptionsMenu __instance) {
-            timer += Time.deltaTime;
-            if (timer < 0.1f) return;
-            timer = 0f;
-
-            float numItems = __instance.Children.Length;
-
-            float offset = -7.85f;
-            foreach (CustomOption option in CustomOption.options) {
-                if (option?.optionBehaviour != null && option.optionBehaviour.gameObject != null) {
-                    bool enabled = true;
-                    var parent = option.parent;
-
-                    if (AmongUsClient.Instance?.AmHost == false && CustomOptionHolder.hideSettings.getBool())
-                    {
-                        enabled = false;
-                    }
-
-                    if (option.isHidden)
-                    {
-                        enabled = false;
-                    }
-
-                    while (parent != null && enabled) {
-                        enabled = parent.enabled;
-                        parent = parent.parent;
-                    }
-
-                    option.optionBehaviour.gameObject.SetActive(enabled);
-                    if (enabled) {
-                        offset -= option.isHeader ? 0.75f : 0.5f;
-                        option.optionBehaviour.transform.localPosition = new Vector3(option.optionBehaviour.transform.localPosition.x, offset, option.optionBehaviour.transform.localPosition.z);
-
-                        if (option.isHeader)
-                        {
-                            numItems += 0.5f;
-                        }
-                    } else
-                    {
-                        numItems--;
-                    }
-                }
-            }
-            __instance.GetComponentInParent<Scroller>().YBounds.max = -3.0F + numItems * 0.5F;
-        }
-    }
-
-    [HarmonyPatch(typeof(GameSettingMenu), "OnEnable")]
-    class GameSettingMenuPatch
-    {
-        public static Il2CppSystem.Collections.Generic.List<Il2CppSystem.Collections.Generic.KeyValuePair<string, int>> getMapNames()
-        {
-            var options = new Il2CppSystem.Collections.Generic.List<Il2CppSystem.Collections.Generic.KeyValuePair<string, int>>();
-            for (int i = 0; i < GameOptionsData.MapNames.Length; i++)
-            {
-                var kvp = new Il2CppSystem.Collections.Generic.KeyValuePair<string, int>();
-                kvp.key = GameOptionsData.MapNames[i];
-                kvp.value = i;
-                options.Add(kvp);
-            }
-            return options;
-        }
-
-        public static void Prefix(GameSettingMenu __instance) {
-            __instance.HideForOnline = new Transform[]{};
-        }
-
-        public static void Postfix(GameSettingMenu __instance) {
-            var mapNameTransform = __instance.AllItems.FirstOrDefault(x => x.gameObject.activeSelf && x.name.Equals("MapName", StringComparison.OrdinalIgnoreCase));
-            if (mapNameTransform == null) return;
-            mapNameTransform.GetComponent<KeyValueOption>().Values = getMapNames();
-        }
-    }
-
-    [HarmonyPatch(typeof(Constants), nameof(Constants.ShouldFlipSkeld))]
-    class ConstantsShouldFlipSkeldPatch {
-        public static bool Prefix(ref bool __result) {
-            if (PlayerControl.GameOptions == null) return true;
-            __result = PlayerControl.GameOptions.MapId == 3;
-            return false;
-        }
-
-        public static bool aprilFools
-        {
-            get
-            {
-                try
-                {
-                    DateTime utcNow = DateTime.UtcNow;
-                    DateTime t = new DateTime(utcNow.Year, 4, 1, 0, 0, 0, 0, DateTimeKind.Utc);
-                    DateTime t2 = t.AddDays(1.0);
-                    if (utcNow >= t && utcNow <= t2)
-                    {
-                        return true;
-                    }
-                }
-                catch
-                {
-                }
-                return false;
-            }
-        }
-    }
-
-    [HarmonyPatch(typeof(FreeWeekendShower), nameof(FreeWeekendShower.Start))]
-    class FreeWeekendShowerPatch
-    {
-        public static bool Prefix()
-        {
-            return ConstantsShouldFlipSkeldPatch.aprilFools;
-        }
-    }
-
-    [HarmonyPatch]
-    class GameOptionsDataPatch
-    {
-        public static string tl(string key)
-        {
-            return ModTranslation.getString(key);
-        }
-
-        private static IEnumerable<MethodBase> TargetMethods() {
-            return typeof(GameOptionsData).GetMethods().Where(x => x.ReturnType == typeof(string) && x.GetParameters().Length == 1 && x.GetParameters()[0].ParameterType == typeof(int));
-        }
-
-        public static string optionToString(CustomOption option)
-        {
-            if (option == null) return "";
-            return $"{option.getName()}: {option.getString()}";
-        }
-
-        public static string optionsToString(CustomOption option, bool skipFirst = false)
-        {
-            if (option == null) return "";
-
-            List<string> options = new List<string>();
-            if (!option.isHidden && !skipFirst) options.Add(optionToString(option));
-            if (option.enabled) { 
-                foreach (CustomOption op in option.children)
-                {
-                    string str = optionsToString(op);
-                    if (str != "") options.Add(str);
-                }
-            }
-            return string.Join("\n", options);
-        }
-
-        private static void Postfix(ref string __result)
-        {
-
-            bool hideSettings = AmongUsClient.Instance?.AmHost == false && CustomOptionHolder.hideSettings.getBool();
-            if (hideSettings)
-            {
-                return;
-            }
-
-            List<string> pages = new List<string>();
-            pages.Add(__result);
-
-            StringBuilder entry = new StringBuilder();
-            List<string> entries = new List<string>();
-
-            // First add the presets and the role counts
-            entries.Add(optionToString(CustomOptionHolder.presetSelection));
-
-            var optionName = CustomOptionHolder.cs(new Color(204f / 255f, 204f / 255f, 0, 1f), tl("crewmateRoles"));
-            var min = CustomOptionHolder.crewmateRolesCountMin.getSelection();
-            var max = CustomOptionHolder.crewmateRolesCountMax.getSelection();
-            if (min > max) min = max;
-            var optionValue = (min == max) ? $"{max}" : $"{min} - {max}";
-            entry.AppendLine($"{optionName}: {optionValue}");
-
-            optionName = CustomOptionHolder.cs(new Color(204f / 255f, 204f / 255f, 0, 1f), tl("neutralRoles"));
-            min = CustomOptionHolder.neutralRolesCountMin.getSelection();
-            max = CustomOptionHolder.neutralRolesCountMax.getSelection();
-            if (min > max) min = max;
-            optionValue = (min == max) ? $"{max}" : $"{min} - {max}";
-            entry.AppendLine($"{optionName}: {optionValue}");
-
-            optionName = CustomOptionHolder.cs(new Color(204f / 255f, 204f / 255f, 0, 1f), tl("impostorRoles"));
-            min = CustomOptionHolder.impostorRolesCountMin.getSelection();
-            max = CustomOptionHolder.impostorRolesCountMax.getSelection();
-            if (min > max) min = max;
-            optionValue = (min == max) ? $"{max}" : $"{min} - {max}";
-            entry.AppendLine($"{optionName}: {optionValue}");
-
-            entries.Add(entry.ToString().Trim('\r', '\n'));
-
-            void addChildren(CustomOption option, ref StringBuilder entry, bool indent = true)
-            {
-                if (!option.enabled) return;
-
-                foreach (var child in option.children)
-                {
-                    if (!child.isHidden)
-                        entry.AppendLine((indent ? "    " : "") + optionToString(child));
-                    addChildren(child, ref entry, indent);
-                }
-            }
-
-            foreach (CustomOption option in CustomOption.options) {
-                if ((option == CustomOptionHolder.presetSelection) ||
-                    (option == CustomOptionHolder.crewmateRolesCountMin) ||
-                    (option == CustomOptionHolder.crewmateRolesCountMax) ||
-                    (option == CustomOptionHolder.neutralRolesCountMin) ||
-                    (option == CustomOptionHolder.neutralRolesCountMax) ||
-                    (option == CustomOptionHolder.impostorRolesCountMin) ||
-                    (option == CustomOptionHolder.impostorRolesCountMax))
-                {
-                    continue;
-                }
-
-                if (option.parent == null) {
-                    if (!option.enabled)
-                    {
-                        continue;
-                    }
-
-                    entry = new StringBuilder();
-                    if (!option.isHidden)
-                        entry.AppendLine(optionToString(option));
-
-                    addChildren(option, ref entry, !option.isHidden);
-                    entries.Add(entry.ToString().Trim('\r', '\n'));
-                }
-            }
-
-            int maxLines = 37;
-            int lineCount = 0;
-            string page = "";
-            foreach (var e in entries)
-            {
-                int lines = e.Count(c => c == '\n') + 1;
-
-                if (lineCount + lines > maxLines)
-                {
-                    pages.Add(page);
-                    page = "";
-                    lineCount = 0;
-                }
-
-                page = page + e + "\n\n";
-                lineCount += lines + 1;
-            }
-
-            page = page.Trim('\r', '\n');
-            if (page != "")
-            {
-                pages.Add(page);
-            }
-
-            int numPages = pages.Count;
-            int counter = TheOtherRolesPlugin.optionsPage = TheOtherRolesPlugin.optionsPage % numPages;
-
-            __result = pages[counter].Trim('\r', '\n') + "\n\n" + tl("pressTabForMore") + $" ({counter + 1}/{numPages})";
-        }
-    }
-
-    [HarmonyPatch(typeof(GameOptionsData), nameof(GameOptionsData.GetAdjustedNumImpostors))]
-    public static class GameOptionsGetAdjustedNumImpostorsPatch
-    {
-        public static bool Prefix(GameOptionsData __instance, ref int __result)
-        {
-            __result = PlayerControl.GameOptions.NumImpostors;
-            return false;
-        }
-    }
-
-    [HarmonyPatch(typeof(SaveManager), "GameHostOptions", MethodType.Getter)]
-    public static class SaveManagerGameHostOptionsPatch
-    {
-        private static int numImpostors;
-        public static void Prefix()
-        {
-            if (SaveManager.hostOptionsData == null)
-            {
-                SaveManager.hostOptionsData = SaveManager.LoadGameOptions("gameHostOptions");
-            }
-
-            numImpostors = SaveManager.hostOptionsData.NumImpostors;
-        }
-
-        public static void Postfix(ref GameOptionsData __result)
-        {
-            __result.NumImpostors = numImpostors;
-        }
-    }
-
-    [HarmonyPatch(typeof(KeyboardJoystick), nameof(KeyboardJoystick.Update))]
-    public static class GameOptionsNextPagePatch
-    {
-        public static void Postfix(KeyboardJoystick __instance)
-        {
-            if(Input.GetKeyDown(KeyCode.Tab) && AmongUsClient.Instance.GameState != InnerNet.InnerNetClient.GameStates.Started) {
-                TheOtherRolesPlugin.optionsPage = TheOtherRolesPlugin.optionsPage + 1;
-            }
-        }
-    }
-
-    
-    [HarmonyPatch(typeof(HudManager), nameof(HudManager.Update))]
-    public class GameSettingsScalePatch {
-        public static void Prefix(HudManager __instance) {
-            if (__instance.GameSettings != null) __instance.GameSettings.fontSize = 1.2f; 
-        }
-    }
-
-    [HarmonyPatch(typeof(CreateOptionsPicker), nameof(CreateOptionsPicker.Start))]
-    public class CreateOptionsPickerPatch
-    {
-        public static void Postfix(CreateOptionsPicker __instance)
-        {
-            int numImpostors = Math.Clamp(__instance.GetTargetOptions().NumImpostors, 1, 3);
-            __instance.SetImpostorButtons(numImpostors);
-        }
-    }
 }

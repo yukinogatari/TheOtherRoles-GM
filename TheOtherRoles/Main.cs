@@ -131,15 +131,22 @@ namespace TheOtherRoles
                 bots.Add(playerControl);
                 GameData.Instance.AddPlayer(playerControl);
                 AmongUsClient.Instance.Spawn(playerControl, -2, InnerNet.SpawnFlags.None);
-                
+
+                int hat = random.Next(HatManager.Instance.AllHats.Count);
+                int pet = random.Next(HatManager.Instance.AllPets.Count);
+                int skin = random.Next(HatManager.Instance.AllSkins.Count);
+                int visor = random.Next(HatManager.Instance.AllVisors.Count);
+                int color = random.Next(Palette.PlayerColors.Length);
+
                 playerControl.transform.position = PlayerControl.LocalPlayer.transform.position;
                 playerControl.GetComponent<DummyBehaviour>().enabled = true;
                 playerControl.NetTransform.enabled = false;
                 playerControl.SetName(RandomString(10));
-                playerControl.SetColor((byte) random.Next(Palette.PlayerColors.Length));
-                playerControl.SetHat((uint) random.Next(HatManager.Instance.AllHats.Count), playerControl.Data.ColorId);
-                playerControl.SetPet((uint) random.Next(HatManager.Instance.AllPets.Count));
-                playerControl.SetSkin((uint) random.Next(HatManager.Instance.AllSkins.Count));
+                playerControl.SetColor(color);
+                playerControl.SetHat(HatManager.Instance.AllHats[hat].ProductId, color);
+                playerControl.SetPet(HatManager.Instance.AllPets[pet].ProductId, color);
+                playerControl.SetVisor(HatManager.Instance.AllVisors[visor].ProductId);
+                playerControl.SetSkin(HatManager.Instance.AllSkins[skin].ProductId);
                 GameData.Instance.RpcSetTasks(playerControl.PlayerId, new byte[0]);
             }
 

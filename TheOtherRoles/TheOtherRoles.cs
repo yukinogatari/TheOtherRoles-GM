@@ -98,7 +98,7 @@ namespace TheOtherRoles
                 jester = null;
                 triggerJesterWin = false;
                 canCallEmergency = CustomOptionHolder.jesterCanCallEmergency.getBool();
-                canSabotage = CustomOptionHolder.jesterCanSabotage.getBool();
+                //canSabotage = CustomOptionHolder.jesterCanSabotage.getBool();
             }
         }
 
@@ -106,10 +106,12 @@ namespace TheOtherRoles
         {
             public static PlayerControl mayor;
             public static Color color = new Color32(32, 77, 66, byte.MaxValue);
+            public static int numVotes = 2;
 
             public static void clearAndReload()
             {
                 mayor = null;
+                numVotes = (int)CustomOptionHolder.mayorNumVotes.getFloat();
             }
         }
 
@@ -617,10 +619,11 @@ namespace TheOtherRoles
 
                 camoData = new MorphData();
                 camoData.name = "";
-                camoData.hat = 0;
+                camoData.hat = "";
                 camoData.color = 6;
-                camoData.skin = 0;
-                camoData.pet = 0;
+                camoData.skin = "";
+                camoData.pet = "";
+                camoData.visor = "";
             }
         }
 
@@ -959,8 +962,6 @@ namespace TheOtherRoles
             private static Sprite lightOutButtonSprite;
             private static Sprite tricksterVentButtonSprite;
 
-            private static UseButton tricksterVentButton;
-
             public static Sprite getPlaceBoxButtonSprite()
             {
                 if (placeBoxButtonSprite) return placeBoxButtonSprite;
@@ -980,21 +981,6 @@ namespace TheOtherRoles
                 if (tricksterVentButtonSprite) return tricksterVentButtonSprite;
                 tricksterVentButtonSprite = ModTranslation.getImage("TricksterVentButton", 115f);
                 return tricksterVentButtonSprite;
-            }
-
-            public static UseButton getTricksterVentButton()
-            {
-
-                if (tricksterVentButton == null)
-                {
-                    UseButton template = HudManager.Instance.UseButton.otherButtons[ImageNames.VentButton];
-                    tricksterVentButton = UnityEngine.Object.Instantiate(template, HudManager.Instance.UseButton.transform);
-                    tricksterVentButton.graphic.sprite = getTricksterVentButtonSprite();
-                }
-                tricksterVentButton.text.enabled = false;
-                tricksterVentButton.text.text = "";
-
-                return tricksterVentButton;
             }
 
             public static void clearAndReload()
@@ -1372,18 +1358,6 @@ namespace TheOtherRoles
                 if (zoomOutSprite) return zoomOutSprite;
                 zoomOutSprite = Helpers.loadSpriteFromResources("TheOtherRoles.Resources.GMZoomOut.png", 115f / 2f);
                 return zoomOutSprite;
-            }
-
-            public static UseButton getBlockedButton()
-            {
-                if (blockedButton == null)
-                {
-                    UseButton template = HudManager.Instance.UseButton.otherButtons[ImageNames.UseButton];
-                    blockedButton = UnityEngine.Object.Instantiate(template, HudManager.Instance.UseButton.transform);
-                }
-
-                blockedButton.text.text = ModTranslation.getString("buttonBlocked");
-                return blockedButton;
             }
 
             public static void resetZoom()

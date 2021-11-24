@@ -17,16 +17,11 @@ namespace TheOtherRoles.Patches {
             // Generate and initialize player icons
             if (PlayerControl.LocalPlayer != null && HudManager.Instance != null)
             {
-                CustomOverlays.initializeOverlays();
                 Vector3 bottomLeft = new Vector3(-HudManager.Instance.UseButton.transform.localPosition.x, HudManager.Instance.UseButton.transform.localPosition.y, HudManager.Instance.UseButton.transform.localPosition.z);
                 foreach (PlayerControl p in PlayerControl.AllPlayerControls) {
                     GameData.PlayerInfo data = p.Data;
                     PoolablePlayer player = UnityEngine.Object.Instantiate<PoolablePlayer>(__instance.PlayerPrefab, HudManager.Instance.transform);
-                    PlayerControl.SetPlayerMaterialColors(data.DefaultOutfit.ColorId, player.Body);
-                    player.Skin.SetSkin(data.SkinId, true);
-                    player.HatSlot.SetHat(data.DefaultOutfit.HatId, data.DefaultOutfit.ColorId);
-                    PlayerControl.SetPetImage(data.DefaultOutfit.PetId, data.DefaultOutfit.ColorId, player.PetSlot);
-                    player.NameText.text = data.PlayerName;
+                    player.UpdateFromPlayerData(p.Data, PlayerOutfitType.Default);
                     player.SetFlipX(true);
                     MapOptions.playerIcons[p.PlayerId] = player;
                     MorphData.morphData[p.PlayerId] = new MorphData(p);
@@ -75,11 +70,11 @@ namespace TheOtherRoles.Patches {
                 HudManager.Instance.ShadowQuad.gameObject.SetActive(false);
                 HudManager.Instance.ReportButton.gameObject.SetActiveRecursively(false);
                 HudManager.Instance.ReportButton.SetActive(false);
-                HudManager.Instance.ReportButton.renderer.enabled = false;
+                HudManager.Instance.ReportButton.graphic.enabled = false;
                 HudManager.Instance.ReportButton.enabled = false;
-                HudManager.Instance.ReportButton.renderer.sprite = null;
-                HudManager.Instance.ReportButton.text.enabled = false;
-                HudManager.Instance.ReportButton.text.SetText("");
+                HudManager.Instance.ReportButton.graphic.sprite = null;
+                HudManager.Instance.ReportButton.buttonLabelText.enabled = false;
+                HudManager.Instance.ReportButton.buttonLabelText.SetText("");
 
                 HudManager.Instance.roomTracker.gameObject.SetActiveRecursively(false);
                 HudManager.Instance.roomTracker.text.enabled = false;
@@ -128,11 +123,12 @@ namespace TheOtherRoles.Patches {
             List<RoleInfo> infos = RoleInfo.getRoleInfoForPlayer(PlayerControl.LocalPlayer);
             RoleInfo roleInfo = infos.Where(info => info.roleId != RoleId.Lover).FirstOrDefault();
             if (roleInfo == null) return;
-            if (roleInfo.isNeutral) {
-                var neutralColor = new Color32(76, 84, 78, 255);
-                __instance.BackgroundBar.material.color = neutralColor;
-                __instance.TeamTitle.text = "Neutral";
-                __instance.TeamTitle.color = neutralColor;
+            if (PlayerControl.LocalPlayer.isNeutral() || PlayerControl.LocalPlayer.isGM())
+            {
+                __instance.BackgroundBar.material.color = roleInfo.color;
+                __instance.TeamTitle.text = roleInfo.name;
+                __instance.TeamTitle.color = roleInfo.color;
+                __instance.ImpostorText.text = "";
             }
         }
 
@@ -144,7 +140,8 @@ namespace TheOtherRoles.Patches {
                 List<RoleInfo> infos = RoleInfo.getRoleInfoForPlayer(PlayerControl.LocalPlayer);
                 RoleInfo roleInfo = infos.Where(info => info.roleId != RoleId.Lover).FirstOrDefault();
 
-                if (roleInfo != null) {
+                if (roleInfo != null && roleInfo != RoleInfo.crewmate && roleInfo != RoleInfo.impostor) {
+                    __instance.YouAreText.color = roleInfo.color;
                     __instance.RoleText.text = roleInfo.name;
                     __instance.RoleText.color = roleInfo.color;
                     __instance.RoleBlurbText.text = roleInfo.introDescription;

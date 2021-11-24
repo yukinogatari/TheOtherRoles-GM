@@ -64,7 +64,7 @@ namespace TheOtherRoles.Patches {
                         if (GM.gm != null && votedFor == GM.gm.PlayerId) continue;
 
                         int currentVotes;
-                        int additionalVotes = (Mayor.mayor != null && Mayor.mayor.PlayerId == playerVoteArea.TargetPlayerId) ? 2 : 1; // Mayor vote
+                        int additionalVotes = (Mayor.mayor != null && Mayor.mayor.PlayerId == playerVoteArea.TargetPlayerId) ? Mayor.numVotes : 1; // Mayor vote
                         if (dictionary.TryGetValue(votedFor, out currentVotes))
                             dictionary[votedFor] = currentVotes + additionalVotes;
                         else
@@ -178,9 +178,13 @@ namespace TheOtherRoles.Patches {
 
                     playerVoteArea.ClearForResults();
                     int num2 = 0;
-                    bool mayorFirstVoteDisplayed = false;
+                    //bool mayorFirstVoteDisplayed = false;
+                    Dictionary<int, int> votesApplied = new Dictionary<int, int>();
                     for (int j = 0; j < states.Length; j++) {
                         MeetingHud.VoterState voterState = states[j];
+                        PlayerControl voter = Helpers.playerById(voterState.VoterId);
+                        if (voter == null) continue;
+
                         GameData.PlayerInfo playerById = GameData.Instance.GetPlayerById(voterState.VoterId);
                         if (playerById == null)
                         {
@@ -197,9 +201,13 @@ namespace TheOtherRoles.Patches {
                             num2++;
                         }
 
+                        if (!votesApplied.ContainsKey(voter.PlayerId))
+                            votesApplied[voter.PlayerId] = 0;
+
+                        votesApplied[voter.PlayerId]++;
+
                         // Major vote, redo this iteration to place a second vote
-                        if (Mayor.mayor != null && voterState.VoterId == (sbyte)Mayor.mayor.PlayerId && !mayorFirstVoteDisplayed) {
-                            mayorFirstVoteDisplayed = true;
+                        if (voter.PlayerId == Mayor.mayor.PlayerId && votesApplied[voter.PlayerId] < Mayor.numVotes) {
                             j--;    
                         }
                     }

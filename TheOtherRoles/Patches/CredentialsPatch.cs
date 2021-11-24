@@ -22,7 +22,7 @@ namespace TheOtherRoles.Patches {
                 if (amongUsLogo == null) return;
 
                 var credentials = UnityEngine.Object.Instantiate<TMPro.TextMeshPro>(__instance.text);
-                credentials.transform.position = new Vector3(0, 0, 0);
+                credentials.transform.position = new Vector3(0, 0.15f, 0);
                 credentials.SetText(ModTranslation.getString("creditsMain"));
                 credentials.alignment = TMPro.TextAlignmentOptions.Center;
                 credentials.fontSize *= 0.75f;

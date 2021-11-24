@@ -79,6 +79,7 @@ namespace TheOtherRoles
         UseUncheckedVent,
         UncheckedMurderPlayer,
         UncheckedCmdReportDeadBody,
+        OverrideNativeRole,
 
         // Role functionality
 
@@ -293,6 +294,13 @@ namespace TheOtherRoles
             {
                 unassignedRoles.Add((roleId, playerId, flag));
             }
+        }
+
+        public static void overrideNativeRole(byte playerId, byte roleType)
+        {
+            var player = Helpers.playerById(playerId);
+            player.roleAssigned = false;
+            player.SetRole((RoleTypes)roleType);
         }
 
         public static void setUnassignedRoles()
@@ -827,7 +835,7 @@ namespace TheOtherRoles
             
             var mainRoleInfo = RoleInfo.getRoleInfoForPlayer(target).FirstOrDefault();
             if (Guesser.showInfoInGhostChat && mainRoleInfo != null && PlayerControl.LocalPlayer.Data.IsDead) {
-                string msg = $"Guesser guessed the role {mainRoleInfo.name} for {target.Data.PlayerName}!";
+                string msg = string.Format(ModTranslation.getString("guesserGuessChat"), mainRoleInfo.name, target.Data.PlayerName);
                 if (AmongUsClient.Instance.AmClient && DestroyableSingleton<HudManager>.Instance)
                     DestroyableSingleton<HudManager>.Instance.Chat.AddChat(Guesser.guesser, msg);
                 if (msg.IndexOf("who", StringComparison.OrdinalIgnoreCase) >= 0)
@@ -910,6 +918,9 @@ namespace TheOtherRoles
                     byte playerId = reader.ReadByte();
                     byte flag = reader.ReadByte();
                     RPCProcedure.setRole(roleId, playerId, flag);
+                    break;
+                case (byte)CustomRPC.OverrideNativeRole:
+                    RPCProcedure.overrideNativeRole(reader.ReadByte(), reader.ReadByte());
                     break;
                 case (byte)CustomRPC.VersionHandshake:
                     byte major = reader.ReadByte();
