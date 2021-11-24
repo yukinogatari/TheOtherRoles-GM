@@ -16,6 +16,7 @@ namespace TheOtherRoles {
         public static string[] presets = new string[]{"preset1", "preset2", "preset3", "preset4", "preset5" };
 
         public static CustomOption presetSelection;
+        public static CustomOption activateRoles;
         public static CustomOption crewmateRolesCountMin;
         public static CustomOption crewmateRolesCountMax;
         public static CustomOption neutralRolesCountMin;
@@ -61,6 +62,8 @@ namespace TheOtherRoles {
         public static CustomOption guesserNumberOfShots;
         public static CustomOption guesserOnlyAvailableRoles;
         public static CustomOption guesserHasMultipleShotsPerMeeting;
+        public static CustomOption guesserShowInfoInGhostChat;
+        public static CustomOption guesserKillsThroughShield;
 
         public static CustomOption jesterSpawnRate;
         public static CustomOption jesterCanCallEmergency;
@@ -96,6 +99,9 @@ namespace TheOtherRoles {
         public static CustomOption mayorSpawnRate;
 
         public static CustomOption engineerSpawnRate;
+        public static CustomOption engineerNumberOfFixes;
+        public static CustomOption engineerHighlightForImpostors;
+        public static CustomOption engineerHighlightForTeamJackal;
 
         public static CustomOption sheriffSpawnRate;
         public static CustomOption sheriffCooldown;
@@ -125,6 +131,7 @@ namespace TheOtherRoles {
         public static CustomOption medicShowShielded;
         public static CustomOption medicShowAttemptToShielded;
         public static CustomOption medicSetShieldAfterMeeting;
+        public static CustomOption medicShowAttemptToMedic;
 
         public static CustomOption swapperSpawnRate;
         public static CustomOption swapperCanCallEmergency;
@@ -143,6 +150,9 @@ namespace TheOtherRoles {
         public static CustomOption trackerSpawnRate;
         public static CustomOption trackerUpdateIntervall;
         public static CustomOption trackerResetTargetAfterMeeting;
+        public static CustomOption trackerCanTrackCorpses;
+        public static CustomOption trackerCorpsesTrackingCooldown;
+        public static CustomOption trackerCorpsesTrackingDuration;
 
         public static CustomOption snitchSpawnRate;
         public static CustomOption snitchLeftTasksForReveal;
@@ -220,7 +230,7 @@ namespace TheOtherRoles {
         public static CustomOption playerColorRandom;
         public static CustomOption playerNameDupes;
         public static CustomOption disableVents;
-
+		public static CustomOption allowParallelMedBayScans;
 
         internal static Dictionary<byte, byte[]> blockedRolePairings = new Dictionary<byte, byte[]>();
 
@@ -237,6 +247,7 @@ namespace TheOtherRoles {
 
             // Role Options
             presetSelection = CustomOption.Create(0, cs(new Color(204f / 255f, 204f / 255f, 0, 1f), "presetSelection"), presets, null, true);
+            activateRoles = CustomOption.Create(7, cs(new Color(204f / 255f, 204f / 255f, 0, 1f), "Enable Mod Roles And Block Vanilla Roles"), true, null, true);
 
             // Using new id's for the options to not break compatibilty with older versions
             crewmateRolesCountMin = CustomOption.Create(300, cs(new Color(204f / 255f, 204f / 255f, 0, 1f), "crewmateRolesCountMin"), 0f, 0f, 15f, 1f, null, true);
@@ -320,7 +331,9 @@ namespace TheOtherRoles {
             guesserIsImpGuesserRate = CustomOption.Create(311, "guesserIsImpGuesserRate", rates, guesserSpawnRate);
             guesserNumberOfShots = CustomOption.Create(312, "guesserNumberOfShots", 2f, 1f, 15f, 1f, guesserSpawnRate, format: "unitShots");
             guesserHasMultipleShotsPerMeeting = CustomOption.Create(314, "guesserHasMultipleShotsPerMeeting", false, guesserSpawnRate);
+            guesserShowInfoInGhostChat = CustomOption.Create(314, "Guesses Visible In Ghost Chat", true, guesserSpawnRate);
             guesserOnlyAvailableRoles = CustomOption.Create(313, "guesserOnlyAvailableRoles", true, guesserSpawnRate);
+            guesserKillsThroughShield  = CustomOption.Create(315, "Guesses Ignore The Medic Shield", true, guesserSpawnRate);
 
             jesterSpawnRate = CustomOption.Create(60, cs(Jester.color, "jester"), rates, null, true);
             jesterCanCallEmergency = CustomOption.Create(61, "jesterCanCallEmergency", true, jesterSpawnRate);
@@ -343,7 +356,7 @@ namespace TheOtherRoles {
             sidekickCanUseVents = CustomOption.Create(227, "sidekickCanUseVents", true, jackalCanCreateSidekick);
             jackalPromotedFromSidekickCanCreateSidekick = CustomOption.Create(228, "jackalPromotedFromSidekickCanCreateSidekick", true, jackalCanCreateSidekick);
             jackalCanCreateSidekickFromImpostor = CustomOption.Create(229, "jackalCanCreateSidekickFromImpostor", true, jackalCanCreateSidekick);
-            jackalCanSeeEngineerVent = CustomOption.Create(431, "jackalCanSeeEngineerVent", false, jackalSpawnRate);
+            jackalCanSeeEngineerVent = CustomOption.Create(431, "Jackal Can See If Engineer Is In A Vent", false, jackalSpawnRate);
 
             vultureSpawnRate = CustomOption.Create(340, cs(Vulture.color, "vulture"), rates, null, true);
             vultureCooldown = CustomOption.Create(341, "vultureCooldown", 15f, 2.5f, 60f, 2.5f, vultureSpawnRate, format: "unitSeconds");
@@ -357,6 +370,9 @@ namespace TheOtherRoles {
             mayorSpawnRate = CustomOption.Create(80, cs(Mayor.color, "mayor"), rates, null, true);
 
             engineerSpawnRate = CustomOption.Create(90, cs(Engineer.color, "engineer"), rates, null, true);
+            engineerNumberOfFixes = CustomOption.Create(91, "Number Of Sabotage Fixes", 1f, 0f, 3f, 1f, engineerSpawnRate);
+            engineerHighlightForImpostors = CustomOption.Create(92, "Impostors See Vents Highlighted", true, engineerSpawnRate);
+            engineerHighlightForTeamJackal = CustomOption.Create(93, "Jackal and Sidekick See Vents Highlighted ", true, engineerSpawnRate);
 
             sheriffSpawnRate = CustomOption.Create(100, cs(Sheriff.color, "sheriff"), rates, null, true);
             sheriffCooldown = CustomOption.Create(101, "sheriffCooldown", 30f, 2.5f, 60f, 2.5f, sheriffSpawnRate, format: "unitSeconds");
@@ -386,6 +402,7 @@ namespace TheOtherRoles {
             medicShowShielded = CustomOption.Create(143, "medicShowShielded", new string[] { "medicShowShieldedAll", "medicShowShieldedBoth", "medicShowShieldedMedic" }, medicSpawnRate);
             medicShowAttemptToShielded = CustomOption.Create(144, "medicShowAttemptToShielded", false, medicSpawnRate);
             medicSetShieldAfterMeeting = CustomOption.Create(145, "medicSetShieldAfterMeeting", false, medicSpawnRate);
+            medicShowAttemptToMedic = CustomOption.Create(146, "Medic Sees Murder Attempt On Shielded Player", false, medicSpawnRate);
 
             swapperSpawnRate = CustomOption.Create(150, cs(Swapper.color, "swapper"), rates, null, true);
             swapperCanCallEmergency = CustomOption.Create(151, "swapperCanCallEmergency", false, swapperSpawnRate);
@@ -404,7 +421,10 @@ namespace TheOtherRoles {
             trackerSpawnRate = CustomOption.Create(200, cs(Tracker.color, "tracker"), rates, null, true);
             trackerUpdateIntervall = CustomOption.Create(201, "trackerUpdateIntervall", 5f, 2.5f, 30f, 2.5f, trackerSpawnRate, format: "unitSeconds");
             trackerResetTargetAfterMeeting = CustomOption.Create(202, "trackerResetTargetAfterMeeting", false, trackerSpawnRate);
-
+            trackerCanTrackCorpses = CustomOption.Create(203, "Tracker Can Track Corpses", true, trackerSpawnRate);
+            trackerCorpsesTrackingCooldown = CustomOption.Create(204, "Corpses Tracking Cooldown", 30f, 0f, 120f, 5f, trackerCanTrackCorpses);
+            trackerCorpsesTrackingDuration = CustomOption.Create(205, "Corpses Tracking Duration", 5f, 2.5f, 30f, 2.5f, trackerCanTrackCorpses);
+                           
             snitchSpawnRate = CustomOption.Create(210, cs(Snitch.color, "snitch"), rates, null, true);
             snitchLeftTasksForReveal = CustomOption.Create(211, "snitchLeftTasksForReveal", 1f, 0f, 5f, 1f, snitchSpawnRate);
             snitchIncludeTeamJackal = CustomOption.Create(212, "snitchIncludeTeamJackal", false, snitchSpawnRate);
@@ -447,6 +467,7 @@ namespace TheOtherRoles {
             uselessOptions = CustomOption.Create(530, "uselessOptions", false, specialOptions, isHeader: true);
             disableVents = CustomOption.Create(504, "disableVents", false, uselessOptions);
             playerColorRandom = CustomOption.Create(521, "playerColorRandom", false, uselessOptions);
+            allowParallelMedBayScans = CustomOption.Create(7, "Allow Parallel MedBay Scans", false);
             playerNameDupes = CustomOption.Create(522, "playerNameDupes", false, uselessOptions);
 
             blockedRolePairings.Add((byte)RoleId.Vampire, new [] { (byte)RoleId.Warlock});

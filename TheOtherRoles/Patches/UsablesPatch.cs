@@ -83,7 +83,7 @@ namespace TheOtherRoles.Patches
             return false;
         }
 
-        [HarmonyPatch(typeof(Vent), "CanUse")]
+    [HarmonyPatch(typeof(Vent), nameof(Vent.CanUse))]
         public static class VentCanUsePatch
         {
             public static bool Prefix(Vent __instance, ref float __result, [HarmonyArgument(0)] GameData.PlayerInfo pc, [HarmonyArgument(1)] out bool canUse, [HarmonyArgument(2)] out bool couldUse)
@@ -97,31 +97,7 @@ namespace TheOtherRoles.Patches
                     __result = num;
                     return false;
                 }
-
-                bool roleCouldUse = false;
-                if (Engineer.engineer != null && Engineer.engineer == @object)
-                    roleCouldUse = true;
-                else if (GM.gm != null && GM.gm == @object)
-                    roleCouldUse = true;
-                else if (Jackal.canUseVents && Jackal.jackal != null && Jackal.jackal == @object)
-                    roleCouldUse = true;
-                else if (Sidekick.canUseVents && Sidekick.sidekick != null && Sidekick.sidekick == @object)
-                    roleCouldUse = true;
-                else if (Spy.canEnterVents && Spy.spy != null && Spy.spy == @object)
-                    roleCouldUse = true;
-                else if (Madmate.canEnterVents && Madmate.madmate != null && Madmate.madmate == @object)
-                    roleCouldUse = true;
-            	else if (Vulture.canUseVents && Vulture.vulture != null && Vulture.vulture == @object)
-                	roleCouldUse = true;
-                else if (pc.IsImpostor)
-                {
-                    if (Janitor.janitor != null && Janitor.janitor == PlayerControl.LocalPlayer)
-                        roleCouldUse = false;
-                    else if (Mafioso.mafioso != null && Mafioso.mafioso == PlayerControl.LocalPlayer && Godfather.godfather != null && !Godfather.godfather.Data.IsDead)
-                        roleCouldUse = false;
-                    else
-                        roleCouldUse = true;
-                }
+            bool roleCouldUse = @object.roleCanUseVents();
 
                 var usableDistance = __instance.UsableDistance;
                 if (__instance.name.StartsWith("JackInTheBoxVent_"))
@@ -162,7 +138,16 @@ namespace TheOtherRoles.Patches
             }
         }
 
-        [HarmonyPatch(typeof(Vent), "Use")]
+    [HarmonyPatch(typeof(VentButton), nameof(VentButton.DoClick))]
+    class VentButtonDoClickPatch {
+        static  bool Prefix(VentButton __instance) {
+            // Manually modifying the VentButton to use Vent.Use again in order to trigger the Vent.Use prefix patch
+		    if (__instance.currentTarget != null) __instance.currentTarget.Use();
+            return false;
+        }
+    }
+
+    [HarmonyPatch(typeof(Vent), nameof(Vent.Use))]
         public static class VentUsePatch
         {
             public static bool Prefix(Vent __instance)
@@ -170,12 +155,9 @@ namespace TheOtherRoles.Patches
                 bool canUse;
                 bool couldUse;
                 __instance.CanUse(PlayerControl.LocalPlayer.Data, out canUse, out couldUse);
-                bool canMoveInVents = true;
-                if (!canUse) return false; // No need to execute the native method as using is disallowed anyways
-                if (Spy.spy == PlayerControl.LocalPlayer || Madmate.madmate == PlayerControl.LocalPlayer)
-                {
-                    canMoveInVents = false;
-                }
+            bool canMoveInVents = PlayerControl.LocalPlayer != Spy.spy || || Madmate.madmate == PlayerControl.LocalPlayer;
+            if (!canUse) return false; // No need to execute the native method as using is disallowed anyways
+
                 bool isEnter = !PlayerControl.LocalPlayer.inVent;
 
                 if (__instance.name.StartsWith("JackInTheBoxVent_"))
@@ -203,10 +185,10 @@ namespace TheOtherRoles.Patches
             }
         }
 
-        [HarmonyPatch(typeof(UseButtonManager), nameof(UseButtonManager.SetTarget))]
-        class UseButtonSetTargetPatch
+    [HarmonyPatch(typeof(PlayerControl), nameof(PlayerControl.FixedUpdate))]
+    class UseButtonSetTargetPatch {
         {
-            static bool Prefix(UseButtonManager __instance, [HarmonyArgument(0)] IUsable target)
+        static void Postfix(UseButtonManager __instance) {
             {
                 __instance.currentTarget = target;
 
@@ -214,50 +196,53 @@ namespace TheOtherRoles.Patches
                 UseButton newButton = null;
                 PlayerControl pc = PlayerControl.LocalPlayer;
 
-                // Trickster render special vent button
-                if (__instance.currentTarget != null && Trickster.trickster != null && Trickster.trickster == pc)
+            // Trickster render special vent button
+            if (__instance.currentTarget != null && Trickster.trickster != null && Trickster.trickster == PlayerControl.LocalPlayer) {
                 {
-                    Vent possibleVent = __instance.currentTarget.TryCast<Vent>();
-                    if (possibleVent != null && possibleVent.gameObject != null)
+                if (possibleVent != null && possibleVent.gameObject != null) {
                     {
-                        var useButton = __instance.currentButtonShown;
-                        if (possibleVent.gameObject.name.StartsWith("JackInTheBoxVent_"))
+                HudManager.Instance.ImpostorVentButton.Show();
+                    if (possibleVent.gameObject.name.StartsWith("JackInTheBoxVent_")) {
                         {
-                            newButton = Trickster.getTricksterVentButton();
-                        }
+                        useButton.graphic.sprite = Trickster.getTricksterVentButtonSprite();
                     }
                 }
+            }
 
-                // Jester sabotage
-                if (Jester.canSabotage && Jester.jester != null && Jester.jester == pc && pc.CanMove)
-                {
-                    if (!Jester.jester.Data.IsDead && __instance.currentTarget == null)
-                    { // no target, so sabotage
-                        newButton = __instance.otherButtons[ImageNames.SabotageButton];
+    [HarmonyPatch(typeof(VentButton), nameof(VentButton.SetTarget))]
+    class VentButtonSetTargetPatch {
+        static Sprite defaultVentSprite = null;
+        static void Postfix(VentButton __instance) {
+            // Jester sabotage
+            if (Jester.canSabotage && Jester.jester != null && Jester.jester == PlayerControl.LocalPlayer && PlayerControl.LocalPlayer.CanMove) {
+                var useButton = __instance.currentButtonShown;
+                if (!Jester.jester.Data.IsDead && __instance.currentTarget == null) { // no target, so sabotage
+                    useButton.graphic.sprite = DestroyableSingleton<TranslationController>.Instance.GetImage(ImageNames.SabotageButton);
+                    useButton.graphic.color = UseButtonManager.EnabledColor;
                     }
                 }
 
                 // Madmate sabotage
                 if (Madmate.canSabotage && Madmate.madmate != null && Madmate.madmate == pc && pc.CanMove)
-                {
+                } else {
                     if (!Madmate.madmate.Data.IsDead && __instance.currentTarget == null)
                     { // no target, so sabotage
-                        newButton = __instance.otherButtons[ImageNames.SabotageButton];
-                    }
+                    useButton.graphic.sprite = DestroyableSingleton<TranslationController>.Instance.GetImage(ImageNames.UseButton);
+                    useButton.text.enabled = false;
                 }
-
-                // Mafia sabotage button render patch
-                bool blockSabotageJanitor = (Janitor.janitor != null && Janitor.janitor == pc);
-                bool blockSabotageMafioso = (Mafioso.mafioso != null && Mafioso.mafioso == pc && Godfather.godfather != null && !Godfather.godfather.Data.IsDead);
-                if (__instance.currentTarget == null && (blockSabotageJanitor || blockSabotageMafioso))
+            }
+            // Mafia sabotage button render patch
+            bool blockSabotageJanitor = (Janitor.janitor != null && Janitor.janitor == PlayerControl.LocalPlayer);
+            bool blockSabotageMafioso = (Mafioso.mafioso != null && Mafioso.mafioso == PlayerControl.LocalPlayer && Godfather.godfather != null && !Godfather.godfather.Data.IsDead);
+            if (__instance.currentTarget == null && (blockSabotageJanitor || blockSabotageMafioso)) {
                 {
                     /*                var useButton = __instance.currentButtonShown;
                                     useButton.graphic.sprite = DestroyableSingleton<TranslationController>.Instance.GetImage(ImageNames.UseButton);
                                     useButton.graphic.color = UseButtonManager.DisabledColor;
                                     useButton.text.enabled = false;*/
                     newButton = __instance.otherButtons[ImageNames.UseButton];
-                    enabled = false;
-                }
+                useButton.text.enabled = false;
+            }
 
                 
                 if (IsBlocked(target, pc))
@@ -283,23 +268,30 @@ namespace TheOtherRoles.Patches
 
             }
         }
+		
+    [HarmonyPatch(typeof(KillButton), nameof(KillButton.DoClick))]
+    class KillButtonDoClickPatch {
+        public static bool Prefix(KillButton __instance) {
+            if (__instance.isActiveAndEnabled && __instance.currentTarget && !__instance.isCoolingDown && !PlayerControl.LocalPlayer.Data.IsDead && PlayerControl.LocalPlayer.CanMove) {
+                // Use an unchecked kill command, to allow shorter kill cooldowns etc. without getting kicked
+                Helpers.checkMuderAttemptAndKill(PlayerControl.LocalPlayer, __instance.currentTarget);
+                __instance.SetTarget(null);
+            }
+		}
+		}
 
-        [HarmonyPatch(typeof(UseButtonManager), nameof(UseButtonManager.DoClick))]
-        class UseButtonDoClickPatch
+    class UseButtonDoClickPatch {
         {
-            static bool Prefix(UseButtonManager __instance)
+        static bool Prefix(UseButtonManager __instance) { 
             {
-                if (__instance.currentTarget != null) return true;
 
                 if (IsBlocked(__instance.currentTarget, PlayerControl.LocalPlayer)) return false;
 
-                // Jester sabotage
-                if (Jester.canSabotage && Jester.jester != null && Jester.jester == PlayerControl.LocalPlayer && !PlayerControl.LocalPlayer.Data.IsDead)
+            // Jester sabotage
+            if (Jester.canSabotage && Jester.jester != null && Jester.jester == PlayerControl.LocalPlayer && !PlayerControl.LocalPlayer.Data.IsDead) {
                 {
-                    Action<MapBehaviour> action = m => m.ShowInfectedMap();
-                    DestroyableSingleton<HudManager>.Instance.ShowMap(action);
-                    return false;
-                }
+                return false;
+            }
                 // Madmate sabotage
                 if (Madmate.canSabotage && Madmate.madmate != null && Madmate.madmate == PlayerControl.LocalPlayer && !PlayerControl.LocalPlayer.Data.IsDead)
                 {
@@ -307,12 +299,17 @@ namespace TheOtherRoles.Patches
                     DestroyableSingleton<HudManager>.Instance.ShowMap(action);
                     return false;
                 }
-                // Mafia sabotage button click patch
+            // Mafia sabotage button click patch
+
+    [HarmonyPatch(typeof(SabotageButton), nameof(SabotageButton.Refresh))]
+    class SabotageButtonRefreshPatch {
+        static void Postfix() {
+            // Mafia disable sabotage button for Janitor and sometimes for Mafioso
                 bool blockSabotageJanitor = (Janitor.janitor != null && Janitor.janitor == PlayerControl.LocalPlayer);
                 bool blockSabotageMafioso = (Mafioso.mafioso != null && Mafioso.mafioso == PlayerControl.LocalPlayer && Godfather.godfather != null && !Godfather.godfather.Data.IsDead);
-                if (blockSabotageJanitor || blockSabotageMafioso) return false;
-
-                return true;
+            if (blockSabotageJanitor || blockSabotageMafioso) {
+                HudManager.Instance.SabotageButton.SetDisabled();
+            }
             }
         }
 
@@ -427,4 +424,15 @@ namespace TheOtherRoles.Patches
 
 
     }
+
+    [HarmonyPatch(typeof(MedScanMinigame), nameof(MedScanMinigame.FixedUpdate))]
+    class MedScanMinigameFixedUpdatePatch {
+        static void Prefix(MedScanMinigame __instance) {
+            if (MapOptions.allowParallelMedBayScans) {
+                __instance.medscan.CurrentUser = PlayerControl.LocalPlayer.PlayerId;
+                __instance.medscan.UsersList.Clear();
+            }
+        }
+    }
+
 }

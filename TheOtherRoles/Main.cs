@@ -21,8 +21,9 @@ namespace TheOtherRoles
     public class TheOtherRolesPlugin : BasePlugin
     {
         public const string Id = "me.eisbison.theotherroles";
-        public const string VersionString = "2.9.2.1";
+        public const string VersionString = "3.1.2";
         public static System.Version Version = System.Version.Parse(VersionString);
+        internal static BepInEx.Logging.ManualLogSource Logger;
 
         public Harmony Harmony { get; } = new Harmony(Id);
         public static TheOtherRolesPlugin Instance;
@@ -57,7 +58,7 @@ namespace TheOtherRoles
         public override void Load()
         {
             ModTranslation.Load();
-
+            Logger = Log;
             DebugMode = Config.Bind("Custom", "Enable Debug Mode", false);
             StreamerMode = Config.Bind("Custom", "Enable Streamer Mode", false);
             GhostsSeeTasks = Config.Bind("Custom", "Ghosts See Remaining Tasks", true);

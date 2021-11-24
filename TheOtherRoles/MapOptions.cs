@@ -29,6 +29,7 @@ namespace TheOtherRoles{
         public static bool ghostsSeeTasks = true;
         public static bool ghostsSeeVotes = true;
         public static bool showRoleSummary = true;
+        public static bool allowParallelMedBayScans = false;
 
         // Updating values
         public static int meetingsCount = 0;
@@ -58,6 +59,7 @@ namespace TheOtherRoles{
             restrictVitalsTime = restrictVitalsTimeMax = CustomOptionHolder.restrictVents.getFloat();
             disableVents = CustomOptionHolder.disableVents.getBool();
 
+            allowParallelMedBayScans = CustomOptionHolder.allowParallelMedBayScans.getBool();
             ghostsSeeRoles = TheOtherRolesPlugin.GhostsSeeRoles.Value;
             ghostsSeeTasks = TheOtherRolesPlugin.GhostsSeeTasks.Value;
             ghostsSeeVotes = TheOtherRolesPlugin.GhostsSeeVotes.Value;

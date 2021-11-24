@@ -71,15 +71,15 @@ namespace TheOtherRoles.Patches {
     [HarmonyPatch(typeof(AmongUsClient), nameof(AmongUsClient.OnGameEnd))]
     public class OnGameEndPatch {
         
-        public static void Prefix(AmongUsClient __instance, [HarmonyArgument(0)]ref GameOverReason reason, [HarmonyArgument(1)]bool showAd) {
+        public static void Prefix(AmongUsClient __instance, [HarmonyArgument(0)]ref EndGameResult endGameResult) {
             Camouflager.resetCamouflage();
             Morphling.resetMorph();
 
-            AdditionalTempData.gameOverReason = reason;
-            if ((int)reason >= 10) reason = GameOverReason.ImpostorByKill;
+            AdditionalTempData.gameOverReason = endGameResult.GameOverReason;
+            if ((int)endGameResult.GameOverReason >= 10) endGameResult.GameOverReason = GameOverReason.ImpostorByKill;
         }
 
-        public static void Postfix(AmongUsClient __instance, [HarmonyArgument(0)]ref GameOverReason reason, [HarmonyArgument(1)]bool showAd) {
+        public static void Postfix(AmongUsClient __instance, [HarmonyArgument(0)]ref EndGameResult endGameResult) {
             var gameOverReason = AdditionalTempData.gameOverReason;
 
             AdditionalTempData.clear();
@@ -134,7 +134,7 @@ namespace TheOtherRoles.Patches {
 
             List<WinningPlayerData> winnersToRemove = new List<WinningPlayerData>();
             foreach (WinningPlayerData winner in TempData.winners) {
-                if (notWinners.Any(x => x.Data.PlayerName == winner.Name)) winnersToRemove.Add(winner);
+                if (notWinners.Any(x => x.Data.PlayerName == winner.PlayerName)) winnersToRemove.Add(winner);
             }
             foreach (var winner in winnersToRemove) TempData.winners.Remove(winner);
 
@@ -354,7 +354,7 @@ namespace TheOtherRoles.Patches {
             if (MapOptions.showRoleSummary) {
                 var position = Camera.main.ViewportToWorldPoint(new Vector3(0f, 1f, Camera.main.nearClipPlane));
                 GameObject roleSummary = UnityEngine.Object.Instantiate(__instance.WinText.gameObject);
-                roleSummary.transform.position = new Vector3(__instance.ExitButton.transform.position.x + 0.1f, position.y - 0.1f, -14f); 
+                roleSummary.transform.position = new Vector3(__instance.Navigation.ExitButton.transform.position.x + 0.1f, position.y - 0.1f, -14f); 
                 roleSummary.transform.localScale = new Vector3(1f, 1f, 1f);
 
                 var roleSummaryText = new StringBuilder();
@@ -598,7 +598,7 @@ namespace TheOtherRoles.Patches {
                         bool lover = isLover(playerInfo);
                         if (lover) numLoversAlive++;
 
-                        if (playerInfo.IsImpostor) {
+                        if (playerInfo.Role.IsImpostor) {
                             numImpostorsAlive++;
                             if (lover) impLovers++;
                         }

@@ -25,7 +25,7 @@ namespace TheOtherRoles {
             if (!playerInfo.Disconnected && playerInfo.Tasks != null &&
                 playerInfo.Object &&
                 (PlayerControl.GameOptions.GhostsDoTasks || !playerInfo.IsDead) &&
-                !playerInfo.IsImpostor &&
+                playerInfo.Role && playerInfo.Role.TasksCountTowardProgress &&
                 !(playerInfo.Object.isGM() && !GM.hasTasks) &&
                 !(playerInfo.Object.isLovers() && !Lovers.hasTasks) &&
                 !playerInfo.Object.hasFakeTasks()

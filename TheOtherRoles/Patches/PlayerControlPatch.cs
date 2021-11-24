@@ -39,7 +39,7 @@ namespace TheOtherRoles.Patches {
             for (int i = 0; i < allPlayers.Count; i++)
             {
                 GameData.PlayerInfo playerInfo = allPlayers[i];
-                if (!playerInfo.Disconnected && playerInfo.PlayerId != targetingPlayer.PlayerId && !playerInfo.IsDead && (!onlyCrewmates || !playerInfo.IsImpostor))
+                if (!playerInfo.Disconnected && playerInfo.PlayerId != targetingPlayer.PlayerId && !playerInfo.IsDead && (!onlyCrewmates || !playerInfo.Role.IsImpostor))
                 {
                     PlayerControl @object = playerInfo.Object;
                     if(untargetablePlayers != null && untargetablePlayers.Any(x => x == @object)) {
@@ -243,7 +243,9 @@ namespace TheOtherRoles.Patches {
         }
 
         static void engineerUpdate() {
-            if ((Jackal.canSeeEngineerVent && (PlayerControl.LocalPlayer == Jackal.jackal || PlayerControl.LocalPlayer == Sidekick.sidekick)) || PlayerControl.LocalPlayer.Data.IsImpostor && ShipStatus.Instance?.AllVents != null) {
+            bool jackalHighlight = Engineer.highlightForTeamJackal && (PlayerControl.LocalPlayer == Jackal.jackal || PlayerControl.LocalPlayer == Sidekick.sidekick);
+            bool impostorHighlight = Engineer.highlightForImpostors && PlayerControl.LocalPlayer.Data.Role.IsImpostor;
+            if ((jackalHighlight || impostorHighlight) && ShipStatus.Instance?.AllVents != null) {
                 foreach (Vent vent in ShipStatus.Instance.AllVents) {
                     try {
                         if (vent?.myRend?.material != null) {
@@ -260,7 +262,7 @@ namespace TheOtherRoles.Patches {
         }
 
         static void impostorSetTarget() {
-            if (!PlayerControl.LocalPlayer.Data.IsImpostor ||!PlayerControl.LocalPlayer.CanMove || PlayerControl.LocalPlayer.Data.IsDead) { // !isImpostor || !canMove || isDead
+            if (!PlayerControl.LocalPlayer.Data.Role.IsImpostor ||!PlayerControl.LocalPlayer.CanMove || PlayerControl.LocalPlayer.Data.IsDead) { // !isImpostor || !canMove || isDead
                 HudManager.Instance.KillButton.SetTarget(null);
                 return;
             }
@@ -295,33 +297,56 @@ namespace TheOtherRoles.Patches {
         }
 
         static void trackerUpdate() {
-            if (Tracker.arrow?.arrow == null) return;
+            // Handle player tracking
+            if (Tracker.arrow?.arrow != null) {
+                if (Tracker.tracker == null || PlayerControl.LocalPlayer != Tracker.tracker) {
+                    Tracker.arrow.arrow.SetActive(false);
+                    return;
+                }
 
-            if (Tracker.tracker == null || PlayerControl.LocalPlayer != Tracker.tracker) {
-                Tracker.arrow.arrow.SetActive(false);
-                return;
+                if (Tracker.tracker != null && Tracker.tracked != null && PlayerControl.LocalPlayer == Tracker.tracker && !Tracker.tracker.Data.IsDead) {
+                    Tracker.timeUntilUpdate -= Time.fixedDeltaTime;
+
+                    if (Tracker.timeUntilUpdate <= 0f) {
+                        bool trackedOnMap = !Tracker.tracked.Data.IsDead;
+                        Vector3 position = Tracker.tracked.transform.position;
+                        if (!trackedOnMap) { // Check for dead body
+                            DeadBody body = UnityEngine.Object.FindObjectsOfType<DeadBody>().FirstOrDefault(b => b.ParentId == Tracker.tracked.PlayerId);
+                            if (body != null) {
+                                trackedOnMap = true;
+                                position = body.transform.position;
+                            }
+                        }
+
+                        Tracker.arrow.Update(position);
+                        Tracker.arrow.arrow.SetActive(trackedOnMap);
+                        Tracker.timeUntilUpdate = Tracker.updateIntervall;
+                    } else {
+                        Tracker.arrow.Update();
+                    }
+                }
             }
 
-            if (Tracker.tracker != null && Tracker.tracked != null && PlayerControl.LocalPlayer == Tracker.tracker && !Tracker.tracker.Data.IsDead) {
-                Tracker.timeUntilUpdate -= Time.fixedDeltaTime;
+            // Handle corpses tracking
+            if (Tracker.tracker != null && Tracker.tracker == PlayerControl.LocalPlayer && Tracker.corpsesTrackingTimer >= 0f && !Tracker.tracker.Data.IsDead) {
+                bool arrowsCountChanged = Tracker.localArrows.Count != Tracker.deadBodyPositions.Count();
+                int index = 0;
 
-                if (Tracker.timeUntilUpdate <= 0f) {
-                    bool trackedOnMap = !Tracker.tracked.Data.IsDead;
-                    Vector3 position = Tracker.tracked.transform.position;
-                    if (!trackedOnMap) { // Check for dead body
-                        DeadBody body = UnityEngine.Object.FindObjectsOfType<DeadBody>().FirstOrDefault(b => b.ParentId == Tracker.tracked.PlayerId);
-                        if (body != null) {
-                            trackedOnMap = true;
-                            position = body.transform.position;
-                        }
-                    }
-
-                    Tracker.arrow.Update(position);
-                    Tracker.arrow.arrow.SetActive(trackedOnMap);
-                    Tracker.timeUntilUpdate = Tracker.updateIntervall;
-                } else {
-                    Tracker.arrow.Update();
+                if (arrowsCountChanged) {
+                    foreach (Arrow arrow in Tracker.localArrows) UnityEngine.Object.Destroy(arrow.arrow);
+                    Tracker.localArrows = new List<Arrow>();
                 }
+                foreach (Vector3 position in Tracker.deadBodyPositions) {
+                    if (arrowsCountChanged) {
+                        Tracker.localArrows.Add(new Arrow(Tracker.color));
+                        Tracker.localArrows[index].arrow.SetActive(true);
+                    }
+                    if (Tracker.localArrows[index] != null) Tracker.localArrows[index].Update(position);
+                    index++;
+                }
+            } else if (Tracker.localArrows.Count > 0) { 
+                foreach (Arrow arrow in Tracker.localArrows) UnityEngine.Object.Destroy(arrow.arrow);
+                Tracker.localArrows = new List<Arrow>();
             }
         }
 
@@ -466,7 +491,7 @@ namespace TheOtherRoles.Patches {
             var (playerCompleted, playerTotal) = TasksHandler.taskInfo(Snitch.snitch.Data);
             int numberOfTasks = playerTotal - playerCompleted;
 
-            if (numberOfTasks <= Snitch.taskCountForReveal && (PlayerControl.LocalPlayer.Data.IsImpostor || (Snitch.includeTeamJackal && (PlayerControl.LocalPlayer == Jackal.jackal || PlayerControl.LocalPlayer == Sidekick.sidekick)))) {
+            if (numberOfTasks <= Snitch.taskCountForReveal && (PlayerControl.LocalPlayer.Data.Role.IsImpostor || (Snitch.includeTeamJackal && (PlayerControl.LocalPlayer == Jackal.jackal || PlayerControl.LocalPlayer == Sidekick.sidekick)))) {
                 if (Snitch.localArrows.Count == 0) Snitch.localArrows.Add(new Arrow(Color.blue));
                 if (Snitch.localArrows.Count != 0 && Snitch.localArrows[0] != null)
                 {
@@ -480,17 +505,18 @@ namespace TheOtherRoles.Patches {
                 int arrowIndex = 0;
                 foreach (PlayerControl p in PlayerControl.AllPlayerControls)
                 {
-                    if (!p.Data.IsDead && (p.Data.IsImpostor || (Snitch.includeTeamJackal && (p == Jackal.jackal || p == Sidekick.sidekick)))) {
+                    bool arrowForImp = p.Data.Role.IsImpostor;
+                    bool arrowForTeamJackal = Snitch.includeTeamJackal && (p == Jackal.jackal || p == Sidekick.sidekick);
                         // Update the arrows' color every time bc things go weird when you add a sidekick or someone dies
-                        Color c = Snitch.teamJackalUseDifferentArrowColor && (p == Jackal.jackal || p == Sidekick.sidekick) ? Jackal.color : Palette.ImpostorRed;
-
+                        Color c = arrowForTeamJackal ? Jackal.color : Palette.ImpostorRed;
+                    if (!p.Data.IsDead && (arrowForImp || arrowForTeamJackal)) {
                         if (arrowIndex >= Snitch.localArrows.Count) {
                             Snitch.localArrows.Add(new Arrow(c));
                         }
                         if (arrowIndex < Snitch.localArrows.Count && Snitch.localArrows[arrowIndex] != null) {
                             Snitch.localArrows[arrowIndex].image.color = c;
                             Snitch.localArrows[arrowIndex].arrow.SetActive(true);
-                            Snitch.localArrows[arrowIndex].Update(p.transform.position);
+                            Snitch.localArrows[arrowIndex].Update(p.transform.position, c);
                         }
                         arrowIndex++;
                     }
@@ -523,7 +549,7 @@ namespace TheOtherRoles.Patches {
                 BountyHunter.bountyUpdateTimer = BountyHunter.bountyDuration;
                 var possibleTargets = new List<PlayerControl>();
                 foreach (PlayerControl p in PlayerControl.AllPlayerControls) {
-                    if (!p.Data.IsDead && !p.Data.Disconnected && !p.Data.IsImpostor && p != Spy.spy && (p != Mini.mini || Mini.isGrownUp()) && !p.isGM()) possibleTargets.Add(p);
+                    if (!p.Data.IsDead && !p.Data.Disconnected && !p.Data.Role.IsImpostor && p != Spy.spy && (p != Mini.mini || Mini.isGrownUp()) && !p.isGM()) possibleTargets.Add(p);
                 }
                 BountyHunter.bounty = possibleTargets[TheOtherRoles.rnd.Next(0, possibleTargets.Count)];
                 if (BountyHunter.bounty == null) return;
@@ -593,6 +619,7 @@ namespace TheOtherRoles.Patches {
                 }
             }
         }
+
         static void vultureUpdate() {
             if (Vulture.vulture == null || PlayerControl.LocalPlayer != Vulture.vulture || Vulture.localArrows == null || !Vulture.showArrows) return;
             if (Vulture.vulture.Data.IsDead) {
@@ -763,23 +790,6 @@ namespace TheOtherRoles.Patches {
             return true;
         }
     }
-    [HarmonyPatch(typeof(PlayerControl), nameof(PlayerControl.RpcMurderPlayer))]
-    class RpcMurderPlayer {
-        public static bool Prefix([HarmonyArgument(0)]PlayerControl target) {
-            if (Helpers.handleMurderAttempt(target)) { // Custom checks
-                if (Mini.mini != null && PlayerControl.LocalPlayer == Mini.mini || BountyHunter.bountyHunter != null && PlayerControl.LocalPlayer == BountyHunter.bountyHunter) { // Not checked by official servers
-                    MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.UncheckedMurderPlayer, Hazel.SendOption.Reliable, -1);
-                    writer.Write(PlayerControl.LocalPlayer.PlayerId);
-                    writer.Write(target.PlayerId);
-                    AmongUsClient.Instance.FinishRpcImmediately(writer);
-                    RPCProcedure.uncheckedMurderPlayer(PlayerControl.LocalPlayer.PlayerId, target.PlayerId);
-                } else { // Checked by official servers
-                    return true;
-                }
-            }
-            return false;
-        }
-    }
 
     [HarmonyPatch(typeof(PlayerControl), nameof(PlayerControl.LocalPlayer.CmdReportDeadBody))]
     class BodyReportPatch
@@ -803,7 +813,7 @@ namespace TheOtherRoles.Patches {
                         if (timeSinceDeath < Detective.reportNameDuration * 1000) {
                             msg = String.Format(ModTranslation.getString("detectiveReportName"), deadPlayer.killerIfExisting.name);
                         } else if (timeSinceDeath < Detective.reportColorDuration * 1000) {
-                            var typeOfColor = Helpers.isLighterColor(deadPlayer.killerIfExisting.Data.ColorId) ? 
+                            var typeOfColor = Helpers.isLighterColor(deadPlayer.killerIfExisting.Data.DefaultOutfit.ColorId) ? "lighter" : "darker";
                                 ModTranslation.getString("detectiveColorLight") :
                                 ModTranslation.getString("detectiveColorDark");
                             msg = String.Format(ModTranslation.getString("detectiveReportColor"), typeOfColor);
@@ -837,9 +847,9 @@ namespace TheOtherRoles.Patches {
         public static void Prefix(PlayerControl __instance, [HarmonyArgument(0)]PlayerControl target)
         {
             // Allow everyone to murder players
-            resetToCrewmate = !__instance.Data.IsImpostor;
+            resetToCrewmate = !__instance.Data.Role.IsImpostor;
             resetToDead = __instance.Data.IsDead;
-            __instance.Data.IsImpostor = true;
+            __instance.Data.Role.TeamType = RoleTeamTypes.Impostor;
             __instance.Data.IsDead = false;
 
             if (Morphling.morphling != null && target == Morphling.morphling)
@@ -860,7 +870,7 @@ namespace TheOtherRoles.Patches {
             GameHistory.deadPlayers.Add(deadPlayer);
 
             // Reset killer to crewmate if resetToCrewmate
-            if (resetToCrewmate) __instance.Data.IsImpostor = false;
+            if (resetToCrewmate) __instance.Data.Role.TeamType = RoleTeamTypes.Crewmate;
             if (resetToDead) __instance.Data.IsDead = true;
 
             // Remove fake tasks when player dies
@@ -914,13 +924,16 @@ namespace TheOtherRoles.Patches {
             }
             if (Seer.deadBodyPositions != null) Seer.deadBodyPositions.Add(target.transform.position);
 
+            // Tracker store body positions
+            if (Tracker.deadBodyPositions != null) Tracker.deadBodyPositions.Add(target.transform.position);
+
             // Medium add body
             if (Medium.deadBodies != null) {
                 Medium.featureDeadBodies.Add(new Tuple<DeadPlayer, Vector3>(deadPlayer, target.transform.position));
             }
 
             // Mini set adapted kill cooldown
-            if (Mini.mini != null && PlayerControl.LocalPlayer == Mini.mini && Mini.mini.Data.IsImpostor && Mini.mini == __instance) {
+            if (Mini.mini != null && PlayerControl.LocalPlayer == Mini.mini && Mini.mini.Data.Role.IsImpostor && Mini.mini == __instance) {
                 var multiplier = Mini.isGrownUp() ? 0.66f : 2f;
                 Mini.mini.SetKillTimer(PlayerControl.GameOptions.KillCooldown * multiplier);
             }
@@ -946,7 +959,7 @@ namespace TheOtherRoles.Patches {
             if (PlayerControl.GameOptions.KillCooldown <= 0f) return false;
             float multiplier = 1f;
             float addition = 0f;
-            if (Mini.mini != null && PlayerControl.LocalPlayer == Mini.mini && Mini.mini.Data.IsImpostor) multiplier = Mini.isGrownUp() ? 0.66f : 2f;
+            if (Mini.mini != null && PlayerControl.LocalPlayer == Mini.mini && Mini.mini.Data.Role.IsImpostor) multiplier = Mini.isGrownUp() ? 0.66f : 2f;
             if (BountyHunter.bountyHunter != null && PlayerControl.LocalPlayer == BountyHunter.bountyHunter) addition = BountyHunter.punishmentTime;
 
             __instance.killTimer = Mathf.Clamp(time, 0f, PlayerControl.GameOptions.KillCooldown * multiplier + addition);
