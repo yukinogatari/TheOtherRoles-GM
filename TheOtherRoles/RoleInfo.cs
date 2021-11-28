@@ -76,7 +76,7 @@ namespace TheOtherRoles
         public static RoleInfo madmate = new RoleInfo("madmate", Madmate.color, "madmateIntroDesc", "madmateShortDesc", "madmateFullDesc", CustomOptionHolder.madmateSpawnRate, RoleId.Madmate);
         public static RoleInfo impostor = new RoleInfo("impostor", Palette.ImpostorRed, Helpers.cs(Palette.ImpostorRed, "impostorIntroDesc"), "impostorShortDesc", "impostorFullDesc", null, RoleId.Impostor);
         public static RoleInfo crewmate = new RoleInfo("crewmate", Color.white, "crewmateIntroDesc", "crewmateShortDesc", "crewmateFullDesc", null, RoleId.Crewmate);
-        public static RoleInfo lover = new RoleInfo("lover", Lovers.color, "loverIntroDesc", "loverShortDesc", "loverFullDesc", CustomOptionHolder.loversSpawnRate, RoleId.Lover);
+        public static RoleInfo lovers = new RoleInfo("lovers", Lovers.color, "loversIntroDesc", "loversShortDesc", "loversFullDesc", CustomOptionHolder.loversSpawnRate, RoleId.Lover);
         public static RoleInfo gm = new RoleInfo("gm", GM.color, "gmIntroDesc", "gmShortDesc", "gmFullDesc", CustomOptionHolder.gmEnabled, RoleId.GM);
         public static RoleInfo opportunist = new RoleInfo("opportunist", Opportunist.color, "oppIntroDesc", "oppShortDesc", "oppFullDesc", CustomOptionHolder.opportunistSpawnRate, RoleId.Opportunist);
         public static RoleInfo vulture = new RoleInfo("vulture", Vulture.color, "vultureIntroDesc", "vultureShortDesc", "vultureFullDesc", CustomOptionHolder.vultureSpawnRate, RoleId.Vulture);
@@ -99,7 +99,7 @@ namespace TheOtherRoles
                 evilMini,
                 goodGuesser,
                 badGuesser,
-                lover,
+                lovers,
                 jester,
                 arsonist,
                 jackal,
@@ -182,7 +182,7 @@ namespace TheOtherRoles
             if (infos.Count == 0 && !p.Data.Role.IsImpostor) infos.Add(crewmate); // Just Crewmate
 
             // Modifier
-            if (p == Lovers.lover1|| p == Lovers.lover2) infos.Add(lover);
+            if (p == Lovers.lover1|| p == Lovers.lover2) infos.Add(lovers);
 
             if (excludeRoles != null)
                 infos.RemoveAll(x => excludeRoles.Contains(x.roleId));
