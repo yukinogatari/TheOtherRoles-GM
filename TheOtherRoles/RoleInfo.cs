@@ -75,10 +75,13 @@ namespace TheOtherRoles
         public static RoleInfo bait = new RoleInfo("bait", Bait.color, "baitIntroDesc", "baitShortDesc", "baitFullDesc", CustomOptionHolder.baitSpawnRate, RoleId.Bait);
         public static RoleInfo madmate = new RoleInfo("madmate", Madmate.color, "madmateIntroDesc", "madmateShortDesc", "madmateFullDesc", CustomOptionHolder.madmateSpawnRate, RoleId.Madmate);
         public static RoleInfo impostor = new RoleInfo("impostor", Palette.ImpostorRed, Helpers.cs(Palette.ImpostorRed, "impostorIntroDesc"), "impostorShortDesc", "impostorFullDesc", null, RoleId.Impostor);
+        public static RoleInfo lawyer = new RoleInfo("Lawyer", Lawyer.color, "Defend your client", "Defend your client", RoleId.Lawyer, true);
+        public static RoleInfo pursuer = new RoleInfo("Pursuer", Pursuer.color, "Blank the Impostors", "Blank the Impostors", RoleId.Pursuer);
         public static RoleInfo crewmate = new RoleInfo("crewmate", Color.white, "crewmateIntroDesc", "crewmateShortDesc", "crewmateFullDesc", null, RoleId.Crewmate);
         public static RoleInfo lovers = new RoleInfo("lovers", Lovers.color, "loversIntroDesc", "loversShortDesc", "loversFullDesc", CustomOptionHolder.loversSpawnRate, RoleId.Lover);
         public static RoleInfo gm = new RoleInfo("gm", GM.color, "gmIntroDesc", "gmShortDesc", "gmFullDesc", CustomOptionHolder.gmEnabled, RoleId.GM);
         public static RoleInfo opportunist = new RoleInfo("opportunist", Opportunist.color, "oppIntroDesc", "oppShortDesc", "oppFullDesc", CustomOptionHolder.opportunistSpawnRate, RoleId.Opportunist);
+        public static RoleInfo witch = new RoleInfo("Witch", Witch.color, "Cast a spell upon your foes", "Cast a spell upon your foes", RoleId.Witch);
         public static RoleInfo vulture = new RoleInfo("vulture", Vulture.color, "vultureIntroDesc", "vultureShortDesc", "vultureFullDesc", CustomOptionHolder.vultureSpawnRate, RoleId.Vulture);
         public static RoleInfo medium = new RoleInfo("medium", Medium.color, "mediumIntroDesc", "mediumShortDesc", "mediumFullDesc", CustomOptionHolder.mediumSpawnRate, RoleId.Medium);
 
@@ -95,6 +98,7 @@ namespace TheOtherRoles
                 cleaner,
                 warlock,
                 bountyHunter,
+            witch,
                 niceMini,
                 evilMini,
                 goodGuesser,
@@ -105,6 +109,8 @@ namespace TheOtherRoles
                 jackal,
                 sidekick,
             	vulture,
+            pursuer,
+            lawyer,
                 crewmate,
                 shifter,
                 mayor,
@@ -153,6 +159,7 @@ namespace TheOtherRoles
             if (p == Trickster.trickster) infos.Add(trickster);
             if (p == Cleaner.cleaner) infos.Add(cleaner);
             if (p == Warlock.warlock) infos.Add(warlock);
+            if (p == Witch.witch) infos.Add(witch);
             if (p == Detective.detective) infos.Add(detective);
             if (p == TimeMaster.timeMaster) infos.Add(timeMaster);
             if (p == Medic.medic) infos.Add(medic);
@@ -176,6 +183,8 @@ namespace TheOtherRoles
             if (p == Opportunist.opportunist) infos.Add(opportunist);
             if (p == Vulture.vulture) infos.Add(vulture);
             if (p == Medium.medium) infos.Add(medium);
+            if (p == Lawyer.lawyer) infos.Add(lawyer);
+            if (p == Pursuer.pursuer) infos.Add(pursuer);
 
             // Default roles
             if (infos.Count == 0 && p.Data.Role.IsImpostor) infos.Add(impostor); // Just Impostor
@@ -190,9 +199,10 @@ namespace TheOtherRoles
             return infos;
         }
 
-        public static String GetRole(PlayerControl p) {
+        public static String GetRolesString(PlayerControl p, bool useColors) {
             string roleName;
-            roleName = String.Join("", getRoleInfoForPlayer(p, new RoleId[] { RoleId.Lover }).Select(x => x.name).ToArray());
+            roleName = String.Join(" ", getRoleInfoForPlayer(p, new RoleId[] { RoleId.Lover }).Select(x => useColors ? Helpers.cs(x.color, x.name) : x.name).ToArray());
+            if (Lawyer.target != null && p.PlayerId == Lawyer.target.PlayerId && PlayerControl.LocalPlayer != Lawyer.target) roleName += (useColors ? Helpers.cs(Pursuer.color, " §") : " §");
             return roleName;
         }
     }

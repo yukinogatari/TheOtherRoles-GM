@@ -81,6 +81,7 @@ namespace TheOtherRoles.Patches
             selectFactionForFactionIndependentRoles(data);
             assignEnsuredRoles(data); // Assign roles that should always be in the game next
             assignChanceRoles(data); // Assign roles that may or may not be in the game last
+            assignRoleTargets(data);
         }
 
         private static RoleAssignmentData getRoleAssignmentData()
@@ -126,12 +127,14 @@ namespace TheOtherRoles.Patches
             impSettings.Add((byte)RoleId.Cleaner, CustomOptionHolder.cleanerSpawnRate.getSelection());
             impSettings.Add((byte)RoleId.Warlock, CustomOptionHolder.warlockSpawnRate.getSelection());
             impSettings.Add((byte)RoleId.BountyHunter, CustomOptionHolder.bountyHunterSpawnRate.getSelection());
+            impSettings.Add((byte)RoleId.Witch, CustomOptionHolder.witchSpawnRate.getSelection());
 
             neutralSettings.Add((byte)RoleId.Jester, CustomOptionHolder.jesterSpawnRate.getSelection());
             neutralSettings.Add((byte)RoleId.Arsonist, CustomOptionHolder.arsonistSpawnRate.getSelection());
             neutralSettings.Add((byte)RoleId.Jackal, CustomOptionHolder.jackalSpawnRate.getSelection());
             neutralSettings.Add((byte)RoleId.Opportunist, CustomOptionHolder.opportunistSpawnRate.getSelection());
             neutralSettings.Add((byte)RoleId.Vulture, CustomOptionHolder.vultureSpawnRate.getSelection());
+            neutralSettings.Add((byte)RoleId.Lawyer, CustomOptionHolder.lawyerSpawnRate.getSelection());
 
             crewSettings.Add((byte)RoleId.Mayor, CustomOptionHolder.mayorSpawnRate.getSelection());
             crewSettings.Add((byte)RoleId.Engineer, CustomOptionHolder.engineerSpawnRate.getSelection());
@@ -386,6 +389,27 @@ namespace TheOtherRoles.Patches
             RPCProcedure.setRole(roleId, playerId, flag);
             return playerId;
         }
+		
+        private static void assignRoleTargets(RoleAssignmentData data) {
+            // Set Lawyer Target
+            if (Lawyer.lawyer != null) {
+                var possibleTargets = new List<PlayerControl>();
+                foreach (PlayerControl p in PlayerControl.AllPlayerControls) {
+                    if (!p.Data.IsDead && !p.Data.Disconnected && p != Lovers.lover1 && p != Lovers.lover2 && (p.Data.Role.IsImpostor || p == Jackal.jackal))
+                        possibleTargets.Add(p);
+                }
+                if (possibleTargets.Count == 0) {
+                    MessageWriter w = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.LawyerPromotesToPursuer, Hazel.SendOption.Reliable, -1);
+                    AmongUsClient.Instance.FinishRpcImmediately(w);
+                    RPCProcedure.lawyerPromotesToPursuer();
+                } else {
+                    var target = possibleTargets[TheOtherRoles.rnd.Next(0, possibleTargets.Count)];
+                    MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.LawyerSetTarget, Hazel.SendOption.Reliable, -1);
+                    writer.Write(target.PlayerId);
+                    AmongUsClient.Instance.FinishRpcImmediately(writer);
+                    RPCProcedure.lawyerSetTarget(target.PlayerId);
+                }
+            }
 
         private static byte setRoleToRandomPlayer(byte roleId, List<PlayerControl> playerList, byte flag = 0, bool removePlayer = true)
         {

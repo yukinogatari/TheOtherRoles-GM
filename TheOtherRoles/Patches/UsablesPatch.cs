@@ -3,6 +3,7 @@ using Hazel;
 using System;
 using UnityEngine;
 using static TheOtherRoles.MapOptions;
+using static TheOtherRoles.GameHistory;
 using static TheOtherRoles.TheOtherRoles;
 
 
@@ -228,7 +229,19 @@ namespace TheOtherRoles.Patches
                 if (__instance.isActiveAndEnabled && __instance.currentTarget && !__instance.isCoolingDown && !PlayerControl.LocalPlayer.Data.IsDead && PlayerControl.LocalPlayer.CanMove)
                 {
                     // Use an unchecked kill command, to allow shorter kill cooldowns etc. without getting kicked
-                    Helpers.checkMuderAttemptAndKill(PlayerControl.LocalPlayer, __instance.currentTarget);
+                MurderAttemptResult res = Helpers.checkMuderAttemptAndKill(PlayerControl.LocalPlayer, __instance.currentTarget);
+                // Handle blank kill
+                if (res == MurderAttemptResult.BlankKill) {
+                    PlayerControl.LocalPlayer.killTimer = PlayerControl.GameOptions.KillCooldown;
+                    if (PlayerControl.LocalPlayer == Cleaner.cleaner)
+                        Cleaner.cleaner.killTimer = HudManagerStartPatch.cleanerCleanButton.Timer = HudManagerStartPatch.cleanerCleanButton.MaxTimer;
+                    else if (PlayerControl.LocalPlayer == Warlock.warlock)
+                        Warlock.warlock.killTimer = HudManagerStartPatch.warlockCurseButton.Timer = HudManagerStartPatch.warlockCurseButton.MaxTimer;
+                    else if (PlayerControl.LocalPlayer == Mini.mini && Mini.mini.Data.Role.IsImpostor)
+                        Mini.mini.SetKillTimer(PlayerControl.GameOptions.KillCooldown * (Mini.isGrownUp() ? 0.66f : 2f));
+                    else if (PlayerControl.LocalPlayer == Witch.witch)
+                        Witch.witch.killTimer = HudManagerStartPatch.witchSpellButton.Timer = HudManagerStartPatch.witchSpellButton.MaxTimer;
+                }
                     __instance.SetTarget(null);
                 }
                 return false;
@@ -312,6 +325,11 @@ namespace TheOtherRoles.Patches
                 {
                     roleCanCallEmergency = false;
                     statusText = ModTranslation.getString("jesterMeetingButton");
+	            }
+	            // Potentially deactivate emergency button for Lawyer
+	            if (Lawyer.lawyer != null && Lawyer.lawyer == PlayerControl.LocalPlayer && Lawyer.winsAfterMeetings) {
+	                roleCanCallEmergency = false;
+	                statusText = "The Lawyer can't start an emergency meeting (" + Lawyer.meetings + "/" + Lawyer.neededMeetings + " meetings)";
                 }
 
                 if (!roleCanCallEmergency)
