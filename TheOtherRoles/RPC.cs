@@ -46,6 +46,7 @@ namespace TheOtherRoles
         Cleaner,
         Warlock,
         BountyHunter,
+        Witch,
         Madmate,
 
 
@@ -58,10 +59,9 @@ namespace TheOtherRoles
         Sidekick,
         Opportunist,
         Vulture,
-
         Lawyer,
         Pursuer,
-        Witch,
+
 
         GM = 200,
 
@@ -109,6 +109,7 @@ namespace TheOtherRoles
         SetFutureShifted,
         SetFutureShielded,
         SetFutureSpelled,
+        WitchSpellCast,
         PlaceJackInTheBox,
         LightsOut,
         WarlockCurseKill,
@@ -300,7 +301,10 @@ namespace TheOtherRoles
 	                    case RoleId.Medium:
 	                        Medium.medium = player;
 	                        break;
-	                    case RoleId.Lawyer:
+                        case RoleId.Witch:
+                            Witch.witch = player;
+                            break;
+                        case RoleId.Lawyer:
 	                        Lawyer.lawyer = player;
 	                        break;
 	                    case RoleId.Pursuer:
@@ -399,24 +403,21 @@ namespace TheOtherRoles
             }
         }
 
-        public static void sheriffKill(byte targetId, bool misfire) {
+        public static void sheriffKill(byte sheriffId, byte targetId, bool misfire) {
+            PlayerControl sheriff = Helpers.playerById(sheriffId);
+            PlayerControl target = Helpers.playerById(targetId);
+            if (sheriff == null || target == null) return;
+
             if (misfire)
             {
-                Sheriff.sheriff.MurderPlayer(Sheriff.sheriff);
-                misfiredPlayers.Add(Sheriff.sheriff.PlayerId);
+                sheriff.MurderPlayer(sheriff);
+                misfiredPlayers.Add(sheriff.PlayerId);
 
                 if (!Sheriff.misfireKillsTarget) return;
                 misfiredPlayers.Add(targetId);
             }
-            
-            foreach (PlayerControl player in PlayerControl.AllPlayerControls)
-            {
-                if (player.PlayerId == targetId)
-                {
-                    Sheriff.sheriff.MurderPlayer(player);
-                    return;
-                }
-            }
+
+            sheriff.MurderPlayer(target);
         }
 
         public static void timeMasterRewindTime() {
@@ -891,7 +892,7 @@ namespace TheOtherRoles
             PlayerControl guessedTarget = Helpers.playerById(guessedTargetId);
             if (Guesser.showInfoInGhostChat && PlayerControl.LocalPlayer.Data.IsDead && guessedTarget != null) {
                 RoleInfo roleInfo = RoleInfo.allRoleInfos.FirstOrDefault(x => (byte)x.roleId == guessedRoleId);
-                string msg = string.Format(ModTranslation.getString("guesserGuessChat"), mainRoleInfo.name, guessedTarget.Data.PlayerName);
+                string msg = string.Format(ModTranslation.getString("guesserGuessChat"), roleInfo.name, guessedTarget.Data.PlayerName);
                 if (AmongUsClient.Instance.AmClient && DestroyableSingleton<HudManager>.Instance)
                     DestroyableSingleton<HudManager>.Instance.Chat.AddChat(Guesser.guesser, msg);
                 if (msg.IndexOf("who", StringComparison.OrdinalIgnoreCase) >= 0)
@@ -952,6 +953,12 @@ namespace TheOtherRoles
             if (target == null) return;
             Pursuer.blankedList.RemoveAll(x => x.PlayerId == playerId);
             if (value > 0) Pursuer.blankedList.Add(target);            
+        }
+
+        internal static void witchSpellCast(byte playerId)
+        {
+            uncheckedExilePlayer(playerId);
+            spelledPlayers.Add(playerId);
         }
     }   
 
@@ -1033,7 +1040,7 @@ namespace TheOtherRoles
                     RPCProcedure.cleanBody(reader.ReadByte());
                     break;
                 case (byte)CustomRPC.SheriffKill:
-                    RPCProcedure.sheriffKill(reader.ReadByte(), reader.ReadBoolean());
+                    RPCProcedure.sheriffKill(reader.ReadByte(), reader.ReadByte(), reader.ReadBoolean());
                     break;
                 case (byte)CustomRPC.TimeMasterRewindTime:
                     RPCProcedure.timeMasterRewindTime();
@@ -1148,6 +1155,9 @@ namespace TheOtherRoles
                     break;
                 case (byte)CustomRPC.SetFutureSpelled:
                     RPCProcedure.setFutureSpelled(reader.ReadByte());
+                    break;
+                case (byte)CustomRPC.WitchSpellCast:
+                    RPCProcedure.witchSpellCast(reader.ReadByte());
                     break;
             }
         }

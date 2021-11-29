@@ -5,6 +5,7 @@ using System.Linq;
 using UnhollowerBaseLib;
 using static TheOtherRoles.TheOtherRoles;
 using static TheOtherRoles.MapOptions;
+using static TheOtherRoles.GameHistory;
 using System.Collections;
 using System;
 using System.Text;

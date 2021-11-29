@@ -320,16 +320,19 @@ namespace TheOtherRoles.Patches
                     roleCanCallEmergency = false;
                     statusText = ModTranslation.getString("swapperMeetingButton");
                 }
+
                 // Potentially deactivate emergency button for Jester
                 if (Jester.jester != null && Jester.jester == PlayerControl.LocalPlayer && !Jester.canCallEmergency)
                 {
                     roleCanCallEmergency = false;
                     statusText = ModTranslation.getString("jesterMeetingButton");
 	            }
+
 	            // Potentially deactivate emergency button for Lawyer
-	            if (Lawyer.lawyer != null && Lawyer.lawyer == PlayerControl.LocalPlayer && Lawyer.winsAfterMeetings) {
+	            if (Lawyer.lawyer != null && Lawyer.lawyer == PlayerControl.LocalPlayer && Lawyer.winsAfterMeetings)
+                {
 	                roleCanCallEmergency = false;
-	                statusText = "The Lawyer can't start an emergency meeting (" + Lawyer.meetings + "/" + Lawyer.neededMeetings + " meetings)";
+                    statusText = String.Format(ModTranslation.getString("lawyerMeetingButton"), Lawyer.neededMeetings - Lawyer.meetings);
                 }
 
                 if (!roleCanCallEmergency)
@@ -341,6 +344,7 @@ namespace TheOtherRoles.Patches
                     __instance.ButtonActive = false;
                     return;
                 }
+
                 // Handle max number of meetings
                 if (__instance.state == 1)
                 {

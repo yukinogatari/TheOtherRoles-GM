@@ -216,7 +216,9 @@ namespace TheOtherRoles {
                     player == Arsonist.arsonist ||
                     player == Jester.jester ||
                     player == Opportunist.opportunist) ||
-                    player == Vulture.vulture);
+                    player == Vulture.vulture || 
+                    player == Lawyer.lawyer ||
+                    player == Pursuer.pursuer);
         }
 
         public static bool isCrew(this PlayerControl player)
@@ -225,7 +227,14 @@ namespace TheOtherRoles {
         }
 
         public static bool hasFakeTasks(this PlayerControl player) {
-            return player.isNeutral() || player == Madmate.madmate || (player.isLovers() && Lovers.separateTeam && !Lovers.tasksCount);
+            return (player.isNeutral() && !player.neutralHasTasks()) || 
+                    player == Madmate.madmate || 
+                   (player.isLovers() && Lovers.separateTeam && !Lovers.tasksCount);
+        }
+
+        public static bool neutralHasTasks(this PlayerControl player)
+        {
+            return player.isNeutral() && (player == Lawyer.lawyer || player == Pursuer.pursuer);
         }
 
         public static bool isGM(this PlayerControl player)

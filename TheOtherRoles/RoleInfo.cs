@@ -9,13 +9,16 @@ namespace TheOtherRoles
 {
     class RoleInfo {
         public Color color;
-        public string name { get { return ModTranslation.getString(nameKey); } }
-        public string nameColored { get { return Helpers.cs(color, name); } }
-        public string introDescription { get { return ModTranslation.getString(introDescriptionKey); } }
-        public string shortDescription { get { return ModTranslation.getString(shortDescriptionKey); } }
-        public string fullDescription { get { return ModTranslation.getString(fullDescriptionKey); } }
-        public string roleOptions { 
-            get {
+        public virtual string name { get { return ModTranslation.getString(nameKey); } }
+        public virtual string nameColored { get { return Helpers.cs(color, name); } }
+        public virtual string introDescription { get { return ModTranslation.getString(nameKey + "IntroDesc"); } }
+        public virtual string shortDescription { get { return ModTranslation.getString(nameKey + "ShortDesc"); } }
+        public virtual string fullDescription { get { return ModTranslation.getString(nameKey + "FullDesc"); } }
+        public virtual string blurb { get { return ModTranslation.getString(nameKey + "Blurb"); } }
+        public virtual string roleOptions
+        {
+            get
+            {
                 return GameOptionsDataPatch.optionsToString(baseOption, true);
             }
         }
@@ -23,67 +26,61 @@ namespace TheOtherRoles
         public RoleId roleId;
 
         private string nameKey;
-        private string introDescriptionKey;
-        private string shortDescriptionKey;
-        private string fullDescriptionKey;
         private CustomOption baseOption;
 
-        RoleInfo(string name, Color color, string introDescription, string shortDescription, string fullDescription, CustomOption baseOption, RoleId roleId) {
+        RoleInfo(string name, Color color, CustomOption baseOption, RoleId roleId) {
             this.color = color;
             this.nameKey = name;
-            this.introDescriptionKey = introDescription;
-            this.shortDescriptionKey = shortDescription;
-            this.fullDescriptionKey = fullDescription;
             this.baseOption = baseOption;
             this.roleId = roleId;
         }
 
-        public static RoleInfo jester = new RoleInfo("jester", Jester.color, "jesterIntroDesc", "jesterShortDesc", "jesterFullDesc", CustomOptionHolder.jesterSpawnRate, RoleId.Jester);
-        public static RoleInfo mayor = new RoleInfo("mayor", Mayor.color, "mayorIntroDesc", "mayorShortDesc", "mayorFullDesc", CustomOptionHolder.mayorSpawnRate, RoleId.Mayor);
-        public static RoleInfo engineer = new RoleInfo("engineer", Engineer.color, "engineerIntroDesc", "engineerShortDesc", "engineerFullDesc", CustomOptionHolder.engineerSpawnRate, RoleId.Engineer);
-        public static RoleInfo sheriff = new RoleInfo("sheriff", Sheriff.color, "sheriffIntroDesc", "sheriffShortDesc", "sheriffFullDesc", CustomOptionHolder.sheriffSpawnRate, RoleId.Sheriff);
-        public static RoleInfo lighter = new RoleInfo("lighter", Lighter.color, "lighterIntroDesc", "lighterShortDesc", "lighterFullDesc", CustomOptionHolder.lighterSpawnRate, RoleId.Lighter);
-        public static RoleInfo godfather = new RoleInfo("godfather", Godfather.color, "godfatherIntroDesc", "godfatherShortDesc", "godfatherFullDesc", CustomOptionHolder.mafiaSpawnRate, RoleId.Godfather);
-        public static RoleInfo mafioso = new RoleInfo("mafioso", Mafioso.color, "mafiosoIntroDesc", "mafiosoShortDesc", "mafiosoFullDesc", CustomOptionHolder.mafiaSpawnRate, RoleId.Mafioso);
-        public static RoleInfo janitor = new RoleInfo("janitor", Janitor.color, "janitorIntroDesc", "janitorShortDesc", "janitorFullDesc", CustomOptionHolder.mafiaSpawnRate, RoleId.Janitor);
-        public static RoleInfo morphling = new RoleInfo("morphling", Morphling.color, "morphlingIntroDesc", "morphlingShortDesc", "morphlingFullDesc", CustomOptionHolder.morphlingSpawnRate, RoleId.Morphling);
-        public static RoleInfo camouflager = new RoleInfo("camouflager", Camouflager.color, "camouflagerIntroDesc", "camouflagerShortDesc", "camouflagerFullDesc", CustomOptionHolder.camouflagerSpawnRate, RoleId.Camouflager);
-        public static RoleInfo vampire = new RoleInfo("vampire", Vampire.color, "vampireIntroDesc", "vampireShortDesc", "vampireFullDesc", CustomOptionHolder.vampireSpawnRate, RoleId.Vampire);
-        public static RoleInfo eraser = new RoleInfo("eraser", Eraser.color, "eraserIntroDesc", "eraserShortDesc", "eraserFullDesc", CustomOptionHolder.eraserSpawnRate, RoleId.Eraser);
-        public static RoleInfo trickster = new RoleInfo("trickster", Trickster.color, "tricksterIntroDesc", "tricksterShortDesc", "tricksterFullDesc", CustomOptionHolder.tricksterSpawnRate, RoleId.Trickster);
-        public static RoleInfo cleaner = new RoleInfo("cleaner", Cleaner.color, "cleanerIntroDesc", "cleanerShortDesc", "cleanerFullDesc", CustomOptionHolder.cleanerSpawnRate, RoleId.Cleaner);
-        public static RoleInfo warlock = new RoleInfo("warlock", Warlock.color, "warlockIntroDesc", "warlockShortDesc", "warlockFullDesc", CustomOptionHolder.warlockSpawnRate, RoleId.Warlock);
-        public static RoleInfo bountyHunter = new RoleInfo("bountyHunter", BountyHunter.color, "bountyHunterIntroDesc", "bountyHunterShortDesc", "bountyHunterFullDesc", CustomOptionHolder.bountyHunterSpawnRate, RoleId.BountyHunter);
-        public static RoleInfo detective = new RoleInfo("detective", Detective.color, "detectiveIntroDesc", "detectiveShortDesc", "detectiveFullDesc", CustomOptionHolder.detectiveSpawnRate, RoleId.Detective);
-        public static RoleInfo timeMaster = new RoleInfo("timeMaster", TimeMaster.color, "timeMasterIntroDesc", "timeMasterShortDesc", "timeMasterFullDesc", CustomOptionHolder.timeMasterSpawnRate, RoleId.TimeMaster);
-        public static RoleInfo medic = new RoleInfo("medic", Medic.color, "medicIntroDesc", "medicShortDesc", "medicFullDesc", CustomOptionHolder.medicSpawnRate, RoleId.Medic);
-        public static RoleInfo shifter = new RoleInfo("shifter", Shifter.color, "shifterIntroDesc", "shifterShortDesc", "shifterFullDesc", CustomOptionHolder.shifterSpawnRate, RoleId.Shifter);
-        public static RoleInfo swapper = new RoleInfo("swapper", Swapper.color, "swapperIntroDesc", "swapperShortDesc", "swapperFullDesc", CustomOptionHolder.swapperSpawnRate, RoleId.Swapper);
-        public static RoleInfo seer = new RoleInfo("seer", Seer.color, "seerIntroDesc", "seerShortDesc", "seerFullDesc", CustomOptionHolder.seerSpawnRate, RoleId.Seer);
-        public static RoleInfo hacker = new RoleInfo("hacker", Hacker.color, "hackerIntroDesc", "hackerShortDesc", "hackerFullDesc", CustomOptionHolder.hackerSpawnRate, RoleId.Hacker);
-        public static RoleInfo niceMini = new RoleInfo("niceMini", Mini.color, "niceMiniIntroDesc", "niceMiniShortDesc", "niceMiniFullDesc", CustomOptionHolder.miniSpawnRate, RoleId.Mini);
-        public static RoleInfo evilMini = new RoleInfo("evilMini", Palette.ImpostorRed, "evilMiniIntroDesc", "evilMiniShortDesc", "evilMiniFullDesc", CustomOptionHolder.miniSpawnRate, RoleId.Mini);
-        public static RoleInfo tracker = new RoleInfo("tracker", Tracker.color, "trackerIntroDesc", "trackerShortDesc", "trackerFullDesc", CustomOptionHolder.trackerSpawnRate, RoleId.Tracker);
-        public static RoleInfo snitch = new RoleInfo("snitch", Snitch.color, "snitchIntroDesc", "snitchShortDesc", "snitchFullDesc", CustomOptionHolder.snitchSpawnRate, RoleId.Snitch);
-        public static RoleInfo jackal = new RoleInfo("jackal", Jackal.color, "jackalIntroDesc", "jackalShortDesc", "jackalFullDesc", CustomOptionHolder.jackalSpawnRate, RoleId.Jackal);
-        public static RoleInfo sidekick = new RoleInfo("sidekick", Sidekick.color, "sidekickIntroDesc", "sidekickShortDesc", "sidekickFullDesc", CustomOptionHolder.jackalSpawnRate, RoleId.Sidekick);
-        public static RoleInfo spy = new RoleInfo("spy", Spy.color, "spyIntroDesc", "spyShortDesc", "spyFullDesc", CustomOptionHolder.spySpawnRate, RoleId.Spy);
-        public static RoleInfo securityGuard = new RoleInfo("securityGuard", SecurityGuard.color, "securityGuardIntroDesc", "securityGuardShortDesc", "securityGuardFullDesc", CustomOptionHolder.securityGuardSpawnRate, RoleId.SecurityGuard);
-        public static RoleInfo arsonist = new RoleInfo("arsonist", Arsonist.color, "arsonistIntroDesc", "arsonistShortDesc", "arsonistFullDesc", CustomOptionHolder.arsonistSpawnRate, RoleId.Arsonist);
-        public static RoleInfo goodGuesser = new RoleInfo("goodGuesser", Guesser.color, "goodGuesserIntroDesc", "goodGuesserShortDesc", "goodGuesserFullDesc", CustomOptionHolder.guesserSpawnRate, RoleId.Guesser);
-        public static RoleInfo badGuesser = new RoleInfo("badGuesser", Palette.ImpostorRed, "badGuesserIntroDesc", "badGuesserShortDesc", "badGuesserFullDesc", CustomOptionHolder.guesserSpawnRate, RoleId.Guesser);
-        public static RoleInfo bait = new RoleInfo("bait", Bait.color, "baitIntroDesc", "baitShortDesc", "baitFullDesc", CustomOptionHolder.baitSpawnRate, RoleId.Bait);
-        public static RoleInfo madmate = new RoleInfo("madmate", Madmate.color, "madmateIntroDesc", "madmateShortDesc", "madmateFullDesc", CustomOptionHolder.madmateSpawnRate, RoleId.Madmate);
-        public static RoleInfo impostor = new RoleInfo("impostor", Palette.ImpostorRed, Helpers.cs(Palette.ImpostorRed, "impostorIntroDesc"), "impostorShortDesc", "impostorFullDesc", null, RoleId.Impostor);
-        public static RoleInfo lawyer = new RoleInfo("Lawyer", Lawyer.color, "Defend your client", "Defend your client", RoleId.Lawyer, true);
-        public static RoleInfo pursuer = new RoleInfo("Pursuer", Pursuer.color, "Blank the Impostors", "Blank the Impostors", RoleId.Pursuer);
-        public static RoleInfo crewmate = new RoleInfo("crewmate", Color.white, "crewmateIntroDesc", "crewmateShortDesc", "crewmateFullDesc", null, RoleId.Crewmate);
-        public static RoleInfo lovers = new RoleInfo("lovers", Lovers.color, "loversIntroDesc", "loversShortDesc", "loversFullDesc", CustomOptionHolder.loversSpawnRate, RoleId.Lover);
-        public static RoleInfo gm = new RoleInfo("gm", GM.color, "gmIntroDesc", "gmShortDesc", "gmFullDesc", CustomOptionHolder.gmEnabled, RoleId.GM);
-        public static RoleInfo opportunist = new RoleInfo("opportunist", Opportunist.color, "oppIntroDesc", "oppShortDesc", "oppFullDesc", CustomOptionHolder.opportunistSpawnRate, RoleId.Opportunist);
-        public static RoleInfo witch = new RoleInfo("Witch", Witch.color, "Cast a spell upon your foes", "Cast a spell upon your foes", RoleId.Witch);
-        public static RoleInfo vulture = new RoleInfo("vulture", Vulture.color, "vultureIntroDesc", "vultureShortDesc", "vultureFullDesc", CustomOptionHolder.vultureSpawnRate, RoleId.Vulture);
-        public static RoleInfo medium = new RoleInfo("medium", Medium.color, "mediumIntroDesc", "mediumShortDesc", "mediumFullDesc", CustomOptionHolder.mediumSpawnRate, RoleId.Medium);
+        public static RoleInfo jester = new RoleInfo("jester", Jester.color, CustomOptionHolder.jesterSpawnRate, RoleId.Jester);
+        public static RoleInfo mayor = new RoleInfo("mayor", Mayor.color, CustomOptionHolder.mayorSpawnRate, RoleId.Mayor);
+        public static RoleInfo engineer = new RoleInfo("engineer", Engineer.color, CustomOptionHolder.engineerSpawnRate, RoleId.Engineer);
+        public static RoleInfo sheriff = new RoleInfo("sheriff", Sheriff.color, CustomOptionHolder.sheriffSpawnRate, RoleId.Sheriff);
+        public static RoleInfo lighter = new RoleInfo("lighter", Lighter.color, CustomOptionHolder.lighterSpawnRate, RoleId.Lighter);
+        public static RoleInfo godfather = new RoleInfo("godfather", Godfather.color, CustomOptionHolder.mafiaSpawnRate, RoleId.Godfather);
+        public static RoleInfo mafioso = new RoleInfo("mafioso", Mafioso.color, CustomOptionHolder.mafiaSpawnRate, RoleId.Mafioso);
+        public static RoleInfo janitor = new RoleInfo("janitor", Janitor.color, CustomOptionHolder.mafiaSpawnRate, RoleId.Janitor);
+        public static RoleInfo morphling = new RoleInfo("morphling", Morphling.color, CustomOptionHolder.morphlingSpawnRate, RoleId.Morphling);
+        public static RoleInfo camouflager = new RoleInfo("camouflager", Camouflager.color, CustomOptionHolder.camouflagerSpawnRate, RoleId.Camouflager);
+        public static RoleInfo vampire = new RoleInfo("vampire", Vampire.color, CustomOptionHolder.vampireSpawnRate, RoleId.Vampire);
+        public static RoleInfo eraser = new RoleInfo("eraser", Eraser.color, CustomOptionHolder.eraserSpawnRate, RoleId.Eraser);
+        public static RoleInfo trickster = new RoleInfo("trickster", Trickster.color, CustomOptionHolder.tricksterSpawnRate, RoleId.Trickster);
+        public static RoleInfo cleaner = new RoleInfo("cleaner", Cleaner.color, CustomOptionHolder.cleanerSpawnRate, RoleId.Cleaner);
+        public static RoleInfo warlock = new RoleInfo("warlock", Warlock.color, CustomOptionHolder.warlockSpawnRate, RoleId.Warlock);
+        public static RoleInfo bountyHunter = new RoleInfo("bountyHunter", BountyHunter.color, CustomOptionHolder.bountyHunterSpawnRate, RoleId.BountyHunter);
+        public static RoleInfo detective = new RoleInfo("detective", Detective.color, CustomOptionHolder.detectiveSpawnRate, RoleId.Detective);
+        public static RoleInfo timeMaster = new RoleInfo("timeMaster", TimeMaster.color, CustomOptionHolder.timeMasterSpawnRate, RoleId.TimeMaster);
+        public static RoleInfo medic = new RoleInfo("medic", Medic.color, CustomOptionHolder.medicSpawnRate, RoleId.Medic);
+        public static RoleInfo shifter = new RoleInfo("shifter", Shifter.color, CustomOptionHolder.shifterSpawnRate, RoleId.Shifter);
+        public static RoleInfo swapper = new RoleInfo("swapper", Swapper.color, CustomOptionHolder.swapperSpawnRate, RoleId.Swapper);
+        public static RoleInfo seer = new RoleInfo("seer", Seer.color, CustomOptionHolder.seerSpawnRate, RoleId.Seer);
+        public static RoleInfo hacker = new RoleInfo("hacker", Hacker.color, CustomOptionHolder.hackerSpawnRate, RoleId.Hacker);
+        public static RoleInfo niceMini = new RoleInfo("niceMini", Mini.color, CustomOptionHolder.miniSpawnRate, RoleId.Mini);
+        public static RoleInfo evilMini = new RoleInfo("evilMini", Palette.ImpostorRed, CustomOptionHolder.miniSpawnRate, RoleId.Mini);
+        public static RoleInfo tracker = new RoleInfo("tracker", Tracker.color, CustomOptionHolder.trackerSpawnRate, RoleId.Tracker);
+        public static RoleInfo snitch = new RoleInfo("snitch", Snitch.color, CustomOptionHolder.snitchSpawnRate, RoleId.Snitch);
+        public static RoleInfo jackal = new RoleInfo("jackal", Jackal.color, CustomOptionHolder.jackalSpawnRate, RoleId.Jackal);
+        public static RoleInfo sidekick = new RoleInfo("sidekick", Sidekick.color, CustomOptionHolder.jackalSpawnRate, RoleId.Sidekick);
+        public static RoleInfo spy = new RoleInfo("spy", Spy.color, CustomOptionHolder.spySpawnRate, RoleId.Spy);
+        public static RoleInfo securityGuard = new RoleInfo("securityGuard", SecurityGuard.color, CustomOptionHolder.securityGuardSpawnRate, RoleId.SecurityGuard);
+        public static RoleInfo arsonist = new RoleInfo("arsonist", Arsonist.color, CustomOptionHolder.arsonistSpawnRate, RoleId.Arsonist);
+        public static RoleInfo goodGuesser = new RoleInfo("goodGuesser", Guesser.color, CustomOptionHolder.guesserSpawnRate, RoleId.Guesser);
+        public static RoleInfo badGuesser = new RoleInfo("badGuesser", Palette.ImpostorRed, CustomOptionHolder.guesserSpawnRate, RoleId.Guesser);
+        public static RoleInfo bait = new RoleInfo("bait", Bait.color, CustomOptionHolder.baitSpawnRate, RoleId.Bait);
+        public static RoleInfo madmate = new RoleInfo("madmate", Madmate.color, CustomOptionHolder.madmateSpawnRate, RoleId.Madmate);
+        public static RoleInfo impostor = new RoleInfo("impostor", Palette.ImpostorRed,null, RoleId.Impostor);
+        public static RoleInfo lawyer = new RoleInfo("lawyer", Lawyer.color, CustomOptionHolder.lawyerSpawnRate, RoleId.Lawyer);
+        public static RoleInfo pursuer = new RoleInfo("pursuer", Pursuer.color, CustomOptionHolder.lawyerSpawnRate, RoleId.Pursuer);
+        public static RoleInfo crewmate = new RoleInfo("crewmate", Color.white, null, RoleId.Crewmate);
+        public static RoleInfo lovers = new RoleInfo("lovers", Lovers.color, CustomOptionHolder.loversSpawnRate, RoleId.Lover);
+        public static RoleInfo gm = new RoleInfo("gm", GM.color, CustomOptionHolder.gmEnabled, RoleId.GM);
+        public static RoleInfo opportunist = new RoleInfo("opportunist", Opportunist.color, CustomOptionHolder.opportunistSpawnRate, RoleId.Opportunist);
+        public static RoleInfo witch = new RoleInfo("witch", Witch.color, CustomOptionHolder.witchSpawnRate, RoleId.Witch);
+        public static RoleInfo vulture = new RoleInfo("vulture", Vulture.color, CustomOptionHolder.vultureSpawnRate, RoleId.Vulture);
+        public static RoleInfo medium = new RoleInfo("medium", Medium.color, CustomOptionHolder.mediumSpawnRate, RoleId.Medium);
 
         public static List<RoleInfo> allRoleInfos = new List<RoleInfo>() {
                 impostor,
@@ -98,7 +95,7 @@ namespace TheOtherRoles
                 cleaner,
                 warlock,
                 bountyHunter,
-            witch,
+                witch,
                 niceMini,
                 evilMini,
                 goodGuesser,
@@ -109,8 +106,8 @@ namespace TheOtherRoles
                 jackal,
                 sidekick,
             	vulture,
-            pursuer,
-            lawyer,
+                pursuer,
+                lawyer,
                 crewmate,
                 shifter,
                 mayor,
@@ -201,7 +198,7 @@ namespace TheOtherRoles
 
         public static String GetRolesString(PlayerControl p, bool useColors) {
             string roleName;
-            roleName = String.Join(" ", getRoleInfoForPlayer(p, new RoleId[] { RoleId.Lover }).Select(x => useColors ? Helpers.cs(x.color, x.name) : x.name).ToArray());
+            roleName = String.Join(" ", getRoleInfoForPlayer(p).Select(x => useColors ? Helpers.cs(x.color, x.name) : x.name).ToArray());
             if (Lawyer.target != null && p.PlayerId == Lawyer.target.PlayerId && PlayerControl.LocalPlayer != Lawyer.target) roleName += (useColors ? Helpers.cs(Pursuer.color, " §") : " §");
             return roleName;
         }

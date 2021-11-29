@@ -29,35 +29,43 @@
     },
     "crewmateRolesCountMin": {
         "0": "Minimum Crewmate Roles",
-        "11": "\u30af\u30eb\u30fc\u5f79\u8077\u3000\u6700\u5c11"
+        "11": "\u30af\u30eb\u30fc\u30ed\u30fc\u30eb\u3000\u6700\u5c11"
     },
     "crewmateRolesCountMax": {
         "0": "Maximum Crewmate Roles",
-        "11": "\u30af\u30eb\u30fc\u5f79\u8077\u3000\u6700\u5927"
+        "11": "\u30af\u30eb\u30fc\u30ed\u30fc\u30eb\u3000\u6700\u5927"
     },
     "neutralRolesCountMin": {
         "0": "Minimum Neutral Roles",
-        "11": "\u305d\u306e\u4ed6\u9663\u55b6\u5f79\u8077\u3000\u6700\u5c11"
+        "11": "\u305d\u306e\u4ed6\u9663\u55b6\u30ed\u30fc\u30eb\u3000\u6700\u5c11"
     },
     "neutralRolesCountMax": {
         "0": "Maximum Neutral Roles",
-        "11": "\u305d\u306e\u4ed6\u9663\u55b6\u5f79\u8077\u3000\u6700\u5927"
+        "11": "\u305d\u306e\u4ed6\u9663\u55b6\u30ed\u30fc\u30eb\u3000\u6700\u5927"
     },
     "impostorRolesCountMin": {
         "0": "Minimum Impostor Roles",
-        "11": "\u30a4\u30f3\u30dd\u30b9\u30bf\u30fc\u5f79\u8077\u3000\u6700\u5c11"
+        "11": "\u30a4\u30f3\u30dd\u30b9\u30bf\u30fc\u30ed\u30fc\u30eb\u3000\u6700\u5c11"
     },
     "impostorRolesCountMax": {
         "0": "Maximum Impostor Roles",
-        "11": "\u30a4\u30f3\u30dd\u30b9\u30bf\u30fc\u5f79\u8077\u3000\u6700\u5927"
+        "11": "\u30a4\u30f3\u30dd\u30b9\u30bf\u30fc\u30ed\u30fc\u30eb\u3000\u6700\u5927"
     },
     "blockOriginal": {
         "0": "Enable Mod Roles And Block Vanilla Roles",
-        "11": "MOD\u5f79\u8077\u3092\u6709\u52b9\u306b\u3059\u308b"
+        "11": "MOD\u30ed\u30fc\u30eb\u3092\u6709\u52b9\u306b\u3059\u308b"
     },
-    "gmEnabled": {
+    "gm": {
         "0": "GM",
         "11": "GM"
+    },
+    "gmIntroDesc": {
+        "0": "You're the Game Master",
+        "11": "\u30b2\u30fc\u30e0\u30de\u30b9\u30bf\u30fc\u3060"
+    },
+    "gmShortDesc": {
+        "0": "You're the Game Master",
+        "11": "\u30b2\u30fc\u30e0\u30de\u30b9\u30bf\u30fc\u3060"
     },
     "gmIsHost": {
         "0": "Always The Host",
@@ -79,7 +87,15 @@
         "0": "Dies At Start Of Game",
         "11": "\u30b2\u30fc\u30e0\u958b\u59cb\u6642\u306b\u6b7b\u4ea1\u3059\u308b"
     },
-    "mafiaSpawnRate": {
+    "gmKill": {
+        "0": "KILL",
+        "11": "KILL"
+    },
+    "gmRevive": {
+        "0": "REVIVE",
+        "11": "REVIVE"
+    },
+    "mafia": {
         "0": "Mafia",
         "11": "\u30de\u30d5\u30a3\u30a2"
     },
@@ -87,9 +103,53 @@
         "0": "Janitor Cooldown",
         "11": "\u6383\u9664\u30af\u30fc\u30eb\u30c0\u30a6\u30f3"
     },
-    "morphlingSpawnRate": {
+    "godfather": {
+        "0": "Godfather",
+        "11": "\u30b4\u30c3\u30c9\u30d5\u30a1\u30fc\u30b6\u30fc"
+    },
+    "godfatherIntroDesc": {
+        "0": "Kill all Crewmates",
+        "11": "\u30af\u30eb\u30fc\u3092\u5168\u6ec5\u3055\u305b\u3088\u3046"
+    },
+    "godfatherShortDesc": {
+        "0": "Kill all Crewmates",
+        "11": "\u30af\u30eb\u30fc\u3092\u5168\u6ec5\u3055\u305b\u3088\u3046"
+    },
+    "mafioso": {
+        "0": "Mafioso",
+        "11": "\u30de\u30d5\u30a3\u30aa\u30bd"
+    },
+    "mafiosoIntroDesc": {
+        "0": "Work with the <color=#FF1919FF>Mafia</color> to kill the Crewmates",
+        "11": "<color=#FF1919FF>\u30de\u30d5\u30a3\u30a2</color>\u3068\u5354\u529b\u3057\u3066\u30af\u30eb\u30fc\u3092\u5168\u6ec5\u3055\u305b\u3088\u3046"
+    },
+    "mafiosoShortDesc": {
+        "0": "Kill all Crewmates",
+        "11": "\u30af\u30eb\u30fc\u3092\u5168\u6ec5\u3055\u305b\u3088\u3046"
+    },
+    "janitor": {
+        "0": "Janitor",
+        "11": "\u30b8\u30e3\u30cb\u30bf\u30fc"
+    },
+    "janitorIntroDesc": {
+        "0": "Work with the <color=#FF1919FF>Mafia</color> by hiding dead bodies",
+        "11": "<color=#FF1919FF>\u30de\u30d5\u30a3\u30a2</color>\u3068\u5354\u529b\u3057\u3066\u6b7b\u4f53\u3092\u96a0\u305d\u3046"
+    },
+    "janitorShortDesc": {
+        "0": "Hide dead bodies",
+        "11": "\u6b7b\u4f53\u3092\u96a0\u305d\u3046"
+    },
+    "morphling": {
         "0": "Morphling",
         "11": "\u30e2\u30fc\u30d5\u30a3\u30f3\u30b0"
+    },
+    "morphlingIntroDesc": {
+        "0": "Change your look to not get caught",
+        "11": "\u6355\u307e\u3089\u306a\u3044\u305f\u3081\u306b\u59ff\u3092\u5909\u3048\u3088\u3046"
+    },
+    "morphlingShortDesc": {
+        "0": "Change your look",
+        "11": "\u59ff\u3092\u5909\u3048\u3088\u3046"
     },
     "morphlingCooldown": {
         "0": "Morph Cooldown",
@@ -99,9 +159,17 @@
         "0": "Morph Duration",
         "11": "\u5909\u8eab\u6301\u7d9a\u6642\u9593"
     },
-    "camouflagerSpawnRate": {
+    "camouflager": {
         "0": "Camouflager",
         "11": "\u30ab\u30e2\u30d5\u30e9\u30fc\u30b8\u30e3\u30fc"
+    },
+    "camouflagerIntroDesc": {
+        "0": "Camouflage and kill the Crewmates",
+        "11": "\u4eba\u6df7\u307f\u306b\u96a0\u308c\u3088\u3046"
+    },
+    "camouflagerShortDesc": {
+        "0": "Hide among others",
+        "11": "\u4eba\u6df7\u307f\u306b\u96a0\u308c\u3088\u3046"
     },
     "camouflagerCooldown": {
         "0": "Camo Cooldown",
@@ -115,9 +183,17 @@
         "0": "Randomize Colors",
         "11": "\u8272\u304c\u30e9\u30f3\u30c0\u30e0"
     },
-    "vampireSpawnRate": {
+    "vampire": {
         "0": "Vampire",
         "11": "\u30f4\u30a1\u30f3\u30d1\u30a4\u30a2"
+    },
+    "vampireIntroDesc": {
+        "0": "Kill the Crewmates with your bites",
+        "11": "\u30af\u30eb\u30fc\u3092\u565b\u3093\u3067\u5168\u6ec5\u3055\u305b\u3088\u3046"
+    },
+    "vampireShortDesc": {
+        "0": "Bite your enemies",
+        "11": "\u30af\u30eb\u30fc\u3092\u565b\u3093\u3067\u5168\u6ec5\u3055\u305b\u3088\u3046"
     },
     "vampireKillDelay": {
         "0": "Kill Delay",
@@ -131,9 +207,17 @@
         "0": "Can Kill Near Garlic",
         "11": "\u30cb\u30f3\u30cb\u30af\u5185\u3001\u30ad\u30eb\u304c\u3067\u304d\u308b"
     },
-    "eraserSpawnRate": {
+    "eraser": {
         "0": "Eraser",
         "11": "\u30a4\u30ec\u30a4\u30b5\u30fc"
+    },
+    "eraserIntroDesc": {
+        "0": "Kill the Crewmates and erase their roles",
+        "11": "\u30af\u30eb\u30fc\u306e\u30ed\u30fc\u30eb\u3092\u524a\u9664\u3057\u3088\u3046"
+    },
+    "eraserShortDesc": {
+        "0": "Erase the roles of your enemies",
+        "11": "\u30af\u30eb\u30fc\u306e\u30ed\u30fc\u30eb\u3092\u524a\u9664\u3057\u3088\u3046"
     },
     "eraserCooldown": {
         "0": "Erase Cooldown",
@@ -141,15 +225,23 @@
     },
     "eraserCooldownIncrease": {
         "0": "Erase Cooldown Penalty",
-        "11": "\u524a\u9664\u3059\u308b\u5ea6\u306b\u8ffd\u52a0\u3055\u308c\u308b\u30af\u30fc\u30eb\u30c0\u30a6\u30f3"
+        "11": "\u524a\u9664\u3059\u308b\u5ea6\u306b\u8ffd\u52a0\u30af\u30fc\u30eb\u30c0\u30a6\u30f3"
     },
     "eraserCanEraseAnyone": {
         "0": "Can Erase Anyone",
         "11": "\u3060\u308c\u3067\u3082\u524a\u9664\u3067\u304d\u308b"
     },
-    "tricksterSpawnRate": {
+    "trickster": {
         "0": "Trickster",
         "11": "\u30c8\u30ea\u30c3\u30af\u30b9\u30bf\u30fc"
+    },
+    "tricksterIntroDesc": {
+        "0": "Use your jack-in-the-boxes to surprise others",
+        "11": "\u3073\u3063\u304f\u308a\u7bb1\u3092\u4f7f\u3063\u3066\u307f\u3093\u306a\u3092\u9a5a\u304b\u305b\u3088\u3046"
+    },
+    "tricksterShortDesc": {
+        "0": "Surprise your enemies",
+        "11": "\u307f\u3093\u306a\u3092\u9a5a\u304b\u305b\u3088\u3046"
     },
     "tricksterPlaceBoxCooldown": {
         "0": "Place Box Cooldown",
@@ -163,17 +255,33 @@
         "0": "Lights Out Duration",
         "11": "\u5f37\u5236\u505c\u96fb\u6301\u7d9a\u6642\u9593"
     },
-    "cleanerSpawnRate": {
+    "cleaner": {
         "0": "Cleaner",
         "11": "\u30af\u30ea\u30fc\u30ca\u30fc"
+    },
+    "cleanerIntroDesc": {
+        "0": "Kill everyone and leave no traces",
+        "11": "\u30af\u30eb\u30fc\u3092\u6bba\u3057\u3066\u6b7b\u4f53\u3092\u96a0\u305d\u3046"
+    },
+    "cleanerShortDesc": {
+        "0": "Clean up dead bodies",
+        "11": "\u6b7b\u4f53\u3092\u96a0\u305d\u3046"
     },
     "cleanerCooldown": {
         "0": "Clean Cooldown",
         "11": "\u6383\u9664\u30af\u30fc\u30eb\u30c0\u30a6\u30f3"
     },
-    "warlockSpawnRate": {
+    "warlock": {
         "0": "Warlock",
         "11": "\u30a6\u30a9\u30fc\u30ed\u30c3\u30af"
+    },
+    "warlockIntroDesc": {
+        "0": "Curse other players and kill everyone",
+        "11": "\u307f\u3093\u306a\u3092\u546a\u3044\u6bba\u305d\u3046"
+    },
+    "warlockShortDesc": {
+        "0": "Curse and kill everyone",
+        "11": "\u307f\u3093\u306a\u3092\u546a\u3044\u6bba\u305d\u3046"
     },
     "warlockCooldown": {
         "0": "Curse Cooldown",
@@ -183,9 +291,17 @@
         "0": "Root Time",
         "11": "\u546a\u6bba\u5f8c\u3001\u79fb\u52d5\u4e0d\u80fd\u6642\u9593"
     },
-    "bountyHunterSpawnRate": {
+    "bountyHunter": {
         "0": "Bounty Hunter",
         "11": "\u30d0\u30a6\u30f3\u30c6\u30a3\u30cf\u30f3\u30bf\u30fc"
+    },
+    "bountyHunterIntroDesc": {
+        "0": "Hunt your Bounty down",
+        "11": "\u6a19\u7684\u3092\u78ba\u5b9f\u306b\u4ed5\u7559\u3081\u3088\u3046"
+    },
+    "bountyHunterShortDesc": {
+        "0": "Hunt your Bounty down",
+        "11": "\u6a19\u7684\u3092\u78ba\u5b9f\u306b\u4ed5\u7559\u3081\u3088\u3046"
     },
     "bountyHunterBountyDuration": {
         "0": "Duration After Which Bounty Changes",
@@ -207,9 +323,33 @@
         "0": "Arrow Update Interval",
         "11": "\u77e2\u5370\u66f4\u65b0\u9593\u9694"
     },
-    "miniSpawnRate": {
+    "mini": {
         "0": "Mini",
         "11": "\u30df\u30cb"
+    },
+    "niceMini": {
+        "0": "Nice Mini",
+        "11": "\u30ca\u30a4\u30b9\u30df\u30cb"
+    },
+    "niceMiniIntroDesc": {
+        "0": "No one will harm you until you grow up",
+        "11": "\u5927\u4eba\u306b\u306a\u308b\u307e\u3067\u8ab0\u306b\u3082\u653b\u6483\u3055\u308c\u306a\u3044"
+    },
+    "niceMiniShortDesc": {
+        "0": "No one will harm you",
+        "11": "\u8ab0\u306b\u3082\u653b\u6483\u3055\u308c\u306a\u3044"
+    },
+    "evilMini": {
+        "0": "Evil Mini",
+        "11": "\u30a4\u30d3\u30eb\u30df\u30cb"
+    },
+    "evilMiniIntroDesc": {
+        "0": "No one will harm you until you grow up",
+        "11": "\u5927\u4eba\u306b\u306a\u308b\u307e\u3067\u8ab0\u306b\u3082\u653b\u6483\u3055\u308c\u306a\u3044"
+    },
+    "evilMiniShortDesc": {
+        "0": "No one will harm you",
+        "11": "\u8ab0\u306b\u3082\u653b\u6483\u3055\u308c\u306a\u3044"
     },
     "miniIsImpRate": {
         "0": "Chance Mini Is Impostor",
@@ -219,9 +359,21 @@
         "0": "Growing Up Duration",
         "11": "\u6210\u9577\u306b\u8981\u3059\u308b\u6642\u9593"
     },
-    "loversSpawnRate": {
+    "lovers": {
         "0": "Lovers",
         "11": "\u30e9\u30d0\u30fc\u30ba"
+    },
+    "loversIntroDesc": {
+        "0": "You are in love",
+        "11": "\u604b\u306b\u843d\u3061\u3066\u3057\u307e\u3063\u305f"
+    },
+    "loversShortDesc": {
+        "0": "You are in love",
+        "11": "\u604b\u306b\u843d\u3061\u3066\u3057\u307e\u3063\u305f"
+    },
+    "loversFlavor": {
+        "0": "\u2665 You are in love with {0} \u2665",
+        "11": "\u2665 {0} \u3068\u604b\u4eba\u306b\u306a\u308a\u307e\u3057\u305f \u2665"
     },
     "loversImpLoverRate": {
         "0": "Chance One Lover Is Impostor",
@@ -233,7 +385,7 @@
     },
     "loversCanHaveAnotherRole": {
         "0": "Can Have Another Role",
-        "11": "\u4ed6\u306e\u5f79\u8077\u3068\u91cd\u8907\u3059\u308b"
+        "11": "\u4ed6\u306e\u30ed\u30fc\u30eb\u3068\u91cd\u8907\u3059\u308b"
     },
     "loversWinWithCrew": {
         "0": "Can Win With Crew",
@@ -247,9 +399,33 @@
         "0": "Tasks Are Counted While Alive",
         "11": "\u751f\u5b58\u6642\u3001\u30bf\u30b9\u30af\u304c\u30ab\u30a6\u30f3\u30c8\u3055\u308c\u308b"
     },
-    "guesserSpawnRate": {
+    "guesser": {
         "0": "Guesser",
         "11": "\u30b2\u30c3\u30b5\u30fc"
+    },
+    "goodGuesser": {
+        "0": "Nice Guesser",
+        "11": "\u30ca\u30a4\u30b9\u30b2\u30c3\u30b5\u30fc"
+    },
+    "goodGuesserIntroDesc": {
+        "0": "Guess and shoot",
+        "11": "\u63a8\u6e2c\u3057\u3066\u6483\u3061\u629c\u3051\u3088\u3046"
+    },
+    "goodGuesserShortDesc": {
+        "0": "Guess and shoot",
+        "11": "\u63a8\u6e2c\u3057\u3066\u6483\u3061\u629c\u3051\u3088\u3046"
+    },
+    "badGuesser": {
+        "0": "Evil Guesser",
+        "11": "\u30a4\u30d3\u30eb\u30b2\u30c3\u30b5\u30fc"
+    },
+    "badGuesserIntroDesc": {
+        "0": "Guess and shoot",
+        "11": "\u63a8\u6e2c\u3057\u3066\u6483\u3061\u629c\u3051\u3088\u3046"
+    },
+    "badGuesserShortDesc": {
+        "0": "Guess and shoot",
+        "11": "\u63a8\u6e2c\u3057\u3066\u6483\u3061\u629c\u3051\u3088\u3046"
     },
     "guesserIsImpGuesserRate": {
         "0": "Chance Guesser Is Impostor",
@@ -261,7 +437,7 @@
     },
     "guesserOnlyAvailableRoles": {
         "0": "Only Show Enabled Roles",
-        "11": "\u51fa\u73fe\u53ef\u80fd\u306a\u5f79\u8077\u306e\u307f\u8868\u793a"
+        "11": "\u51fa\u73fe\u53ef\u80fd\u306a\u30ed\u30fc\u30eb\u306e\u307f\u8868\u793a"
     },
     "guesserHasMultipleShotsPerMeeting": {
         "0": "Can Shoot Multiple Times Per Meeting",
@@ -275,9 +451,21 @@
         "0": "Guesses Ignore The Medic Shield",
         "11": "\u30e1\u30c7\u30a3\u30c3\u30af\u306e\u30b7\u30fc\u30eb\u30c9\u3092\u7121\u8996\u3059\u308b"
     },
-    "jesterSpawnRate": {
+    "guesserGuessChat": {
+        "0": "Guesser guessed the role {0} for {1}!",
+        "11": "\u30b2\u30c3\u30b5\u30fc\u306f\u300c{1}\u300d\u306e\u30ed\u30fc\u30eb\u304c\u300c{0}\u300d\u3060\u3068\u63a8\u6e2c\u3057\u305f\uff01"
+    },
+    "jester": {
         "0": "Jester",
         "11": "\u30b8\u30a7\u30b9\u30bf\u30fc"
+    },
+    "jesterIntroDesc": {
+        "0": "Get voted out",
+        "11": "\u8ffd\u653e\u3055\u308c\u3088\u3046"
+    },
+    "jesterShortDesc": {
+        "0": "Get voted out",
+        "11": "\u8ffd\u653e\u3055\u308c\u3088\u3046"
     },
     "jesterCanCallEmergency": {
         "0": "Can Call Emergency Meetings",
@@ -287,9 +475,17 @@
         "0": "Can Sabotage",
         "11": "\u30b5\u30dc\u30bf\u30fc\u30b8\u30e5\u3067\u304d\u308b"
     },
-    "arsonistSpawnRate": {
+    "arsonist": {
         "0": "Arsonist",
         "11": "\u30a2\u30fc\u30bd\u30cb\u30b9\u30c8"
+    },
+    "arsonistIntroDesc": {
+        "0": "Let them burn",
+        "11": "\u71c3\u3084\u305b"
+    },
+    "arsonistShortDesc": {
+        "0": "Let them burn",
+        "11": "\u71c3\u3084\u305b"
     },
     "arsonistCooldown": {
         "0": "Douse Cooldown",
@@ -299,9 +495,33 @@
         "0": "Douse Duration",
         "11": "\u706f\u6cb9\u304b\u3051\u6642\u9593"
     },
-    "jackalSpawnRate": {
+    "jackal": {
         "0": "Jackal",
         "11": "\u30b8\u30e3\u30c3\u30ab\u30eb"
+    },
+    "jackalIntroDesc": {
+        "0": "Kill all Crewmates and <color=#FF1919FF>Impostors</color> to win",
+        "11": "\u307f\u3093\u306a\u3092\u3076\u3061\u6bba\u305d\u3046"
+    },
+    "jackalShortDesc": {
+        "0": "Kill everyone",
+        "11": "\u307f\u3093\u306a\u3092\u3076\u3061\u6bba\u305d\u3046"
+    },
+    "jackalWithSidekick": {
+        "0": "Kill everyone and recruit a Sidekick",
+        "11": "\u307f\u3093\u306a\u3092\u3076\u3061\u6bba\u3057\u3066\u30b5\u30a4\u30c9\u30ad\u30c3\u30af\u3092\u6307\u540d\u3057\u3088\u3046"
+    },
+    "sidekick": {
+        "0": "Sidekick",
+        "11": "\u30b5\u30a4\u30c9\u30ad\u30c3\u30af"
+    },
+    "sidekickIntroDesc": {
+        "0": "Help your Jackal to kill everyone",
+        "11": "\u30b8\u30e3\u30c3\u30ab\u30eb\u306e\u63f4\u52a9\u3092\u3057\u3088\u3046"
+    },
+    "sidekickShortDesc": {
+        "0": "Help your Jackal to kill everyone",
+        "11": "\u30b8\u30e3\u30c3\u30ab\u30eb\u306e\u63f4\u52a9\u3092\u3057\u3088\u3046"
     },
     "jackalKillCooldown": {
         "0": "Kill Cooldown",
@@ -314,6 +534,14 @@
     "jackalCanUseVents": {
         "0": "Can Use Vents",
         "11": "\u30d9\u30f3\u30c8\u306b\u5165\u308c\u308b"
+    },
+    "jackalAndSidekickHaveImpostorVision": {
+        "0": "Has Impostor Vision",
+        "11": "\u30a4\u30f3\u30dd\u30b9\u30bf\u30fc\u3068\u540c\u3058\u8996\u91ce"
+    },
+    "jackalCanSeeEngineerVent": {
+        "0": "Can See If Engineer Is In A Vent",
+        "11": "\u30d9\u30f3\u30c8\u5185\u306e\u30a8\u30f3\u30b8\u30cb\u30a2\u304c\u898b\u3048\u308b"
     },
     "jackalCanCreateSidekick": {
         "0": "Can Create A Sidekick",
@@ -339,33 +567,49 @@
         "0": "Can Make An Impostor To His Sidekick",
         "11": "\u30a4\u30f3\u30dd\u30b9\u30bf\u30fc\u3092\u30b5\u30a4\u30c9\u30ad\u30c3\u30af\u306b\u6307\u540d\u3067\u304d\u308b"
     },
-    "jackalAndSidekickHaveImpostorVision": {
-        "0": "Has Impostor Vision",
-        "11": "\u30a4\u30f3\u30dd\u30b9\u30bf\u30fc\u3068\u540c\u3058\u8996\u91ce"
-    },
-    "jackalCanSeeEngineerVent": {
-        "0": "Can See If Engineer Is In A Vent",
-        "11": "\u30d9\u30f3\u30c8\u5185\u306e\u30a8\u30f3\u30b8\u30cb\u30a2\u304c\u898b\u3048\u308b"
-    },
-    "shifterSpawnRate": {
+    "shifter": {
         "0": "Shifter",
         "11": "\u30b7\u30d5\u30bf\u30fc"
+    },
+    "shifterIntroDesc": {
+        "0": "Shift your role",
+        "11": "\u30ed\u30fc\u30eb\u3092\u596a\u304a\u3046"
+    },
+    "shifterShortDesc": {
+        "0": "Shift your role",
+        "11": "\u30ed\u30fc\u30eb\u3092\u596a\u304a\u3046"
     },
     "shifterShiftsModifiers": {
         "0": "Shifts Modifiers",
         "11": "\u5bfe\u8c61\u306e\u30b9\u30c6\u30fc\u30bf\u30b9\u3082\u30b7\u30d5\u30c8\u3055\u308c\u308b"
     },
-    "mayorSpawnRate": {
+    "mayor": {
         "0": "Mayor",
         "11": "\u30e1\u30a4\u30e4\u30fc"
+    },
+    "mayorIntroDesc": {
+        "0": "Your vote counts multiple times",
+        "11": "\u81ea\u5206\u306e\u7968\u304c\u4f55\u500d\u3082\u306e\u529b\u3092\u6301\u3063\u3066\u3044\u308b"
+    },
+    "mayorShortDesc": {
+        "0": "Your vote counts multiple times",
+        "11": "\u81ea\u5206\u306e\u7968\u304c\u4f55\u500d\u3082\u306e\u529b\u3092\u6301\u3063\u3066\u3044\u308b"
     },
     "mayorNumVotes": {
         "0": "Number of Votes",
         "11": "\u6295\u7968\u6570"
     },
-    "engineerSpawnRate": {
+    "engineer": {
         "0": "Engineer",
         "11": "\u30a8\u30f3\u30b8\u30cb\u30a2"
+    },
+    "engineerIntroDesc": {
+        "0": "Maintain important systems on the ship",
+        "11": "\u304a\u8239\u306e\u30e1\u30f3\u30c6\u306f\u5fd8\u308c\u305a\u306b"
+    },
+    "engineerShortDesc": {
+        "0": "Repair the ship",
+        "11": "\u304a\u8239\u306e\u30e1\u30f3\u30c6\u306f\u5fd8\u308c\u305a\u306b"
     },
     "engineerNumFixes": {
         "0": "Number Of Sabotage Fixes",
@@ -379,9 +623,17 @@
         "0": "Jackal and Sidekick See Vents Highlighted",
         "11": "\u30d9\u30f3\u30c8\u4f7f\u7528\u6642\u3001\u30b8\u30e3\u30c3\u30ab\u30eb\u9663\u55b6\u306b\u898b\u3048\u308b"
     },
-    "sheriffSpawnRate": {
+    "sheriff": {
         "0": "Sheriff",
         "11": "\u30b7\u30a7\u30ea\u30d5"
+    },
+    "sheriffIntroDesc": {
+        "0": "Shoot the <color=#FF1919FF>Impostors</color>",
+        "11": "<color=#FF1919FF>\u4eba\u5916</color>\u3092\u6483\u3061\u629c\u3051"
+    },
+    "sheriffShortDesc": {
+        "0": "Shoot the Impostors",
+        "11": "\u4eba\u5916\u3092\u6483\u3061\u629c\u3051"
     },
     "sheriffCooldown": {
         "0": "Kill Cooldown",
@@ -399,9 +651,21 @@
         "0": "Misfire Kills Target",
         "11": "\u8aa4\u7206\u6642\u3001\u30bf\u30fc\u30b2\u30c3\u30c8\u3082\u6b7b\u306c"
     },
-    "lighterSpawnRate": {
+    "sheriffShots": {
+        "0": "Shots: {0}",
+        "11": "\u6b8b\u308a {0}\u767a"
+    },
+    "lighter": {
         "0": "Lighter",
         "11": "\u30e9\u30a4\u30bf\u30fc"
+    },
+    "lighterIntroDesc": {
+        "0": "Your light never goes out",
+        "11": "\u3044\u3064\u3067\u3082\u3069\u3053\u3067\u3082\u660e\u308b\u3044"
+    },
+    "lighterShortDesc": {
+        "0": "Your light never goes out",
+        "11": "\u3044\u3064\u3067\u3082\u3069\u3053\u3067\u3082\u660e\u308b\u3044"
     },
     "lighterModeLightsOnVision": {
         "0": "Vision On, Lights On",
@@ -419,9 +683,17 @@
         "0": "Light Duration",
         "11": "\u30e9\u30a4\u30c8\u6301\u7d9a\u6642\u9593"
     },
-    "detectiveSpawnRate": {
+    "detective": {
         "0": "Detective",
         "11": "\u30c7\u30a3\u30c6\u30af\u30c6\u30a3\u30d6"
+    },
+    "detectiveIntroDesc": {
+        "0": "Find the <color=#FF1919FF>Impostors</color> by examining footprints",
+        "11": "\u8db3\u8de1\u3092\u305f\u3069\u3063\u3066<color=#FF1919FF>\u30a4\u30f3\u30dd\u30b9\u30bf\u30fc</color>\u3092\u898b\u3064\u3051\u3088\u3046"
+    },
+    "detectiveShortDesc": {
+        "0": "Examine footprints",
+        "11": "\u8db3\u8de1\u3092\u305f\u3069\u308d\u3046"
     },
     "detectiveAnonymousFootprints": {
         "0": "Anonymous Footprints",
@@ -443,9 +715,45 @@
         "0": "Time Where Detective Reports Will Have Color Type",
         "11": "\u6b7b\u4f53\u767a\u898b\u6642\u3001\u72af\u4eba\u306e\u8272\u8abf\u304c\u308f\u304b\u308b\u6642\u9593"
     },
-    "timeMasterSpawnRate": {
+    "detectiveReportName": {
+        "0": "Body Report: The killer appears to be {0}!",
+        "11": "\u691c\u67fb\u306e\u7d50\u679c\u3001\u72af\u4eba\u306e\u540d\u524d\u306f\u300c{0}\u300d\u307f\u305f\u3044\uff01"
+    },
+    "detectiveReportColor": {
+        "0": "Body Report: The killer appears to be a {0} color!",
+        "11": "\u691c\u67fb\u306e\u7d50\u679c\u3001\u72af\u4eba\u306f{0}\u8272\u307f\u305f\u3044\uff01"
+    },
+    "detectiveReportNone": {
+        "0": "Body Report: The corpse is too old to gain information from!",
+        "11": "\u691c\u67fb\u306e\u7d50\u679c\u3001\u6b7b\u4f53\u304c\u51b7\u3048\u3066\u3066\u4f55\u3082\u308f\u304b\u3089\u306a\u304b\u3063\u305f\uff01"
+    },
+    "detectiveColorLight": {
+        "0": "lighter",
+        "11": "\u6de1\u3044"
+    },
+    "detectiveColorDark": {
+        "0": "darker",
+        "11": "\u6fc3\u3044"
+    },
+    "detectiveLightLabel": {
+        "0": "L",
+        "11": "\u6de1\u3044"
+    },
+    "detectiveDarkLabel": {
+        "0": "D",
+        "11": "\u6fc3\u3044"
+    },
+    "timeMaster": {
         "0": "Time Master",
         "11": "\u30bf\u30a4\u30e0\u30de\u30b9\u30bf\u30fc"
+    },
+    "timeMasterIntroDesc": {
+        "0": "Save yourself with your time shield",
+        "11": "\u30bf\u30a4\u30e0\u30b7\u30fc\u30eb\u30c9\u3092\u4f7f\u3063\u3066\u751f\u304d\u5ef6\u3073\u3088\u3046"
+    },
+    "timeMasterShortDesc": {
+        "0": "Use your time shield",
+        "11": "\u30bf\u30a4\u30e0\u30b7\u30fc\u30eb\u30c9\u3092\u4f7f\u304a\u3046"
     },
     "timeMasterCooldown": {
         "0": "Shield Cooldown",
@@ -459,9 +767,17 @@
         "0": "Shield Duration",
         "11": "\u30b7\u30fc\u30eb\u30c9\u6301\u7d9a\u6642\u9593"
     },
-    "medicSpawnRate": {
+    "medic": {
         "0": "Medic",
         "11": "\u30e1\u30c7\u30a3\u30c3\u30af"
+    },
+    "medicIntroDesc": {
+        "0": "Protect someone with your shield",
+        "11": "\u30b7\u30fc\u30eb\u30c9\u3092\u5f35\u3063\u3066\u5473\u65b9\u3092\u5b88\u308d\u3046"
+    },
+    "medicShortDesc": {
+        "0": "Protect other players",
+        "11": "\u5473\u65b9\u3092\u5b88\u308d\u3046"
     },
     "medicShowShielded": {
         "0": "Can See Shield",
@@ -491,9 +807,21 @@
         "0": "Medic Sees Murder Attempt On Shielded Player",
         "11": "\u653b\u6483\u3055\u308c\u305f\u3089\u3001\u30e1\u30c7\u30a3\u30c3\u30af\u306b\u77e5\u3089\u305b\u308b"
     },
-    "swapperSpawnRate": {
+    "medicReport": {
+        "0": "Body Report: Killed {0}s ago!",
+        "11": "\u691c\u67fb\u306e\u7d50\u679c\u3001{0}\u79d2\u524d\u306b\u6bba\u3055\u308c\u305f\u307f\u305f\u3044\uff01"
+    },
+    "swapper": {
         "0": "Swapper",
         "11": "\u30b9\u30ef\u30c3\u30d1\u30fc"
+    },
+    "swapperIntroDesc": {
+        "0": "Swap votes to exile the <color=#FF1919FF>Impostors</color>",
+        "11": "\u6295\u7968\u5148\u3092\u5165\u308c\u66ff\u3048\u3066<color=#FF1919FF>\u30a4\u30f3\u30dd\u30b9\u30bf\u30fc</color>\u3092\u8ffd\u653e\u3057\u3088\u3046"
+    },
+    "swapperShortDesc": {
+        "0": "Swap votes",
+        "11": "\u6295\u7968\u5148\u3092\u5165\u308c\u66ff\u3048\u3088\u3046"
     },
     "swapperCanCallEmergency": {
         "0": "Can Call Emergency Meetings",
@@ -503,9 +831,17 @@
         "0": "Can Only Swap Others",
         "11": "\u30b9\u30ef\u30c3\u30d1\u30fc\u304c\u30b9\u30ef\u30c3\u30d7\u5bfe\u8c61\u5916"
     },
-    "seerSpawnRate": {
+    "seer": {
         "0": "Seer",
         "11": "\u30b7\u30fc\u30a2"
+    },
+    "seerIntroDesc": {
+        "0": "You will see players die",
+        "11": "\u4ed6\u4eba\u306e\u6b7b\u3093\u3060\u77ac\u9593\u304c\u308f\u304b\u308b"
+    },
+    "seerShortDesc": {
+        "0": "You will see players die",
+        "11": "\u4ed6\u4eba\u306e\u6b7b\u3093\u3060\u77ac\u9593\u304c\u308f\u304b\u308b"
     },
     "seerMode": {
         "0": "Mode",
@@ -531,9 +867,17 @@
         "0": "Soul Duration",
         "11": "\u5e7d\u970a\u304c\u898b\u3048\u308b\u6642\u9593"
     },
-    "hackerSpawnRate": {
+    "hacker": {
         "0": "Hacker",
         "11": "\u30cf\u30c3\u30ab\u30fc"
+    },
+    "hackerIntroDesc": {
+        "0": "Hack systems to find the <color=#FF1919FF>Impostors</color>",
+        "11": "\u7279\u5225\u88c5\u7f6e\u3092\u30cf\u30c3\u30ad\u30f3\u30b0\u3057\u3066<color=#FF1919FF>\u30a4\u30f3\u30dd\u30b9\u30bf\u30fc</color>\u3092\u63a2\u305d\u3046"
+    },
+    "hackerShortDesc": {
+        "0": "Hack to find the Impostors",
+        "11": "\u30cf\u30c3\u30ad\u30f3\u30b0\u3057\u3066\u30a4\u30f3\u30dd\u30b9\u30bf\u30fc\u3092\u63a2\u305d\u3046"
     },
     "hackerCooldown": {
         "0": "Hack Cooldown",
@@ -547,9 +891,17 @@
         "0": "Only Sees Color Type",
         "11": "\u8272\u8abf\u306e\u307f\u898b\u3048\u308b"
     },
-    "trackerSpawnRate": {
+    "tracker": {
         "0": "Tracker",
         "11": "\u30c8\u30e9\u30c3\u30ab\u30fc"
+    },
+    "trackerIntroDesc": {
+        "0": "Track the <color=#FF1919FF>Impostors</color> down",
+        "11": "<color=#FF1919FF>\u30a4\u30f3\u30dd\u30b9\u30bf\u30fc</color>\u3092\u8ffd\u3044\u304b\u3051\u3088\u3046"
+    },
+    "trackerShortDesc": {
+        "0": "Track the Impostors down",
+        "11": "\u30a4\u30f3\u30dd\u30b9\u30bf\u30fc\u3092\u8ffd\u3044\u304b\u3051\u3088\u3046"
     },
     "trackerUpdateIntervall": {
         "0": "Update Interval",
@@ -571,9 +923,17 @@
         "0": "Corpses Tracking Duration",
         "11": "\u6b7b\u4f53\u30c8\u30e9\u30c3\u30ad\u30f3\u30b0\u6301\u7d9a\u6642\u9593"
     },
-    "snitchSpawnRate": {
+    "snitch": {
         "0": "Snitch",
         "11": "\u30b9\u30cb\u30c3\u30c1"
+    },
+    "snitchIntroDesc": {
+        "0": "Finish your tasks to find the <color=#FF1919FF>Impostors</color>",
+        "11": "\u30bf\u30b9\u30af\u3092\u65e9\u304f\u6e08\u307e\u305b\u3066<color=#FF1919FF>\u30a4\u30f3\u30dd\u30b9\u30bf\u30fc</color>\u3092\u66b4\u3053\u3046"
+    },
+    "snitchShortDesc": {
+        "0": "Finish your tasks",
+        "11": "\u30bf\u30b9\u30af\u3092\u65e9\u304f\u6e08\u307e\u305b\u3088\u3046"
     },
     "snitchLeftTasksForReveal": {
         "0": "Task Count Where The Snitch Will Be Revealed",
@@ -587,9 +947,17 @@
         "0": "Use Different Arrow Color For Team Jackal",
         "11": "\u30b8\u30e3\u30c3\u30ab\u30eb\u9663\u55b6\u306e\u77e2\u5370\u304c\u9752\u3044"
     },
-    "spySpawnRate": {
+    "spy": {
         "0": "Spy",
         "11": "\u30b9\u30d1\u30a4"
+    },
+    "spyIntroDesc": {
+        "0": "Confuse the <color=#FF1919FF>Impostors</color>",
+        "11": "<color=#FF1919FF>\u30a4\u30f3\u30dd\u30b9\u30bf\u30fc</color>\u3092\u6df7\u4e71\u3055\u305b\u3088\u3046"
+    },
+    "spyShortDesc": {
+        "0": "Confuse the Impostors",
+        "11": "\u30a4\u30f3\u30dd\u30b9\u30bf\u30fc\u3092\u6df7\u4e71\u3055\u305b\u3088\u3046"
     },
     "spyCanDieToSheriff": {
         "0": "Can Die To Sheriff",
@@ -607,9 +975,17 @@
         "0": "Has Impostor Vision",
         "11": "\u30a4\u30f3\u30dd\u30b9\u30bf\u30fc\u3068\u540c\u3058\u8996\u91ce"
     },
-    "securityGuardSpawnRate": {
+    "securityGuard": {
         "0": "Security Guard",
         "11": "\u8b66\u5099\u54e1"
+    },
+    "securityGuardIntroDesc": {
+        "0": "Seal vents and place cameras",
+        "11": "\u30d9\u30f3\u30c8\u3092\u5c01\u9396\u3057\u3066\u65b0\u3057\u3044\u30ab\u30e1\u30e9\u3092\u8a2d\u7f6e\u3057\u3088\u3046"
+    },
+    "securityGuardShortDesc": {
+        "0": "Seal vents and place cameras",
+        "11": "\u30a4\u30f3\u30dd\u30b9\u30bf\u30fc\u306e\u59a8\u5bb3\u3092\u3057\u3088\u3046"
     },
     "securityGuardCooldown": {
         "0": "Cooldown",
@@ -627,9 +1003,21 @@
         "0": "Screws Per Vent",
         "11": "\u30d9\u30f3\u30c8\u5c01\u9396\u306b\u8981\u3059\u308b\u30cd\u30b8\u6570"
     },
-    "baitSpawnRate": {
+    "securityGuardScrews": {
+        "0": "Screws: {0}",
+        "11": "\u6b8b\u308a {0}\u672c"
+    },
+    "bait": {
         "0": "Bait",
         "11": "\u30d9\u30a4\u30c8"
+    },
+    "baitIntroDesc": {
+        "0": "Bait your enemies",
+        "11": "\u6575\u3092\u7f60\u306b\u306f\u3081\u3088\u3046"
+    },
+    "baitShortDesc": {
+        "0": "Bait your enemies",
+        "11": "\u6575\u3092\u7f60\u306b\u306f\u3081\u3088\u3046"
     },
     "baitHighlightAllVents": {
         "0": "Highlight All Vents If A Vent Is Occupied",
@@ -639,9 +1027,17 @@
         "0": "Bait Report Delay",
         "11": "\u6b7b\u4ea1\u5f8c\u3001\u5831\u544a\u3055\u308c\u308b\u307e\u3067\u306e\u9593"
     },
-    "madmateSpawnRate": {
+    "madmate": {
         "0": "Madmate",
         "11": "\u30de\u30c3\u30c9\u30e1\u30a4\u30c8"
+    },
+    "madmateIntroDesc": {
+        "0": "Help the <color=#FF1919FF>Impostors</color>",
+        "11": "<color=#FF1919FF>\u30a4\u30f3\u30dd\u30b9\u30bf\u30fc</color>\u306e\u63f4\u52a9\u3092\u3057\u3088\u3046"
+    },
+    "madmateShortDesc": {
+        "0": "Help the Impostors",
+        "11": "\u30a4\u30f3\u30dd\u30b9\u30bf\u30fc\u306e\u63f4\u52a9\u3092\u3057\u3088\u3046"
     },
     "madmateCanDieToSheriff": {
         "0": "Can Die To Sheriff",
@@ -667,9 +1063,29 @@
         "0": "Can Become Guardian Angel",
         "11": "\u5b88\u8b77\u5929\u4f7f\u306b\u306a\u308c\u308b"
     },
-    "opportunistSpawnRate": {
+    "opportunist": {
         "0": "Opportunist",
         "11": "\u30aa\u30dd\u30c1\u30e5\u30cb\u30b9\u30c8"
+    },
+    "opportunistIntroDesc": {
+        "0": "Do whatever it takes to survive",
+        "11": "\u3068\u306b\u304b\u304f\u751f\u304d\u6b8b\u308a\u307e\u3057\u3087\u3046"
+    },
+    "opportunistShortDesc": {
+        "0": "Do whatever it takes to survive",
+        "11": "\u3068\u306b\u304b\u304f\u751f\u304d\u6b8b\u308a\u307e\u3057\u3087\u3046"
+    },
+    "vulture": {
+        "0": "Vulture",
+        "11": "\u30f4\u30a1\u30eb\u30c1\u30e3\u30fc"
+    },
+    "vultureIntroDesc": {
+        "0": "Eat corpses to win",
+        "11": "\u6b7b\u9ab8\u3092\u55b0\u3089\u304a\u3046"
+    },
+    "vultureShortDesc": {
+        "0": "Eat dead bodies",
+        "11": "\u6b7b\u9ab8\u3092\u55b0\u3089\u304a\u3046"
     },
     "vultureCooldown": {
         "0": "Eat Cooldown",
@@ -691,6 +1107,18 @@
         "0": "Remaining: {0}",
         "11": "\u6b8b\u308a {0}\u4f53"
     },
+    "medium": {
+        "0": "Medium",
+        "11": "\u30df\u30c7\u30a3\u30a2\u30e0"
+    },
+    "mediumIntroDesc": {
+        "0": "Question the souls of the dead to gain information",
+        "11": "\u53d6\u308a\u6b8b\u3055\u308c\u305f\u9b42\u304b\u3089\u60c5\u5831\u3092\u805e\u304d\u51fa\u305d\u3046"
+    },
+    "mediumShortDesc": {
+        "0": "Question the souls",
+        "11": "\u9b42\u304b\u3089\u60c5\u5831\u3092\u805e\u304d\u51fa\u305d\u3046"
+    },
     "mediumCooldown": {
         "0": "Questioning Cooldown",
         "11": "\u970a\u80fd\u529b\u30af\u30fc\u30eb\u30c0\u30a6\u30f3"
@@ -702,6 +1130,160 @@
     "mediumOneTimeUse": {
         "0": "Each Soul Can Only Be Questioned Once",
         "11": "1\u4eba\u305a\u30641\u56de\u306e\u307f\u970a\u80fd\u529b\u3092\u4f7f\u3048\u308b"
+    },
+    "mediumQuestion1": {
+        "0": "What is your role? My role is {0}.",
+        "11": "\u300c\u3042\u306a\u305f\u306e\u30ed\u30fc\u30eb\u306f\u4f55\u3067\u3057\u3087\u3046\u300d\u300e\u79c1\u306f{0}\u3067\u3059\u300f"
+    },
+    "mediumQuestion2": {
+        "0": "What is your killer's color type? My killer is a {0} color.",
+        "11": "\u300c\u3042\u306a\u305f\u3092\u6bba\u3057\u305f\u4eba\u306f\u3069\u3093\u306a\u8272\u3067\u3057\u3087\u3046\u300d\u300e\u79c1\u3092\u6bba\u3057\u305f\u4eba\u306f{0}\u8272\u3092\u3057\u3066\u3044\u307e\u3057\u305f\u300f"
+    },
+    "mediumQuestion3": {
+        "0": "When did you die? I died {0}s before the meeting started.",
+        "11": "\u300c\u3042\u306a\u305f\u306f\u3044\u3064\u6b7b\u3093\u3060\u3093\u3067\u3057\u3087\u3046\u300d\u300e\u79c1\u306f\u4f1a\u8b70\u306e{0}\u79d2\u524d\u306b\u6b7b\u306b\u307e\u3057\u305f\u300f"
+    },
+    "mediumQuestion4": {
+        "0": "What is your killer's role? My killer is {0}.",
+        "11": "\u300c\u3042\u306a\u305f\u3092\u6bba\u3057\u305f\u4eba\u306e\u30ed\u30fc\u30eb\u306f\u4f55\u3067\u3057\u3087\u3046\u300d\u300e\u79c1\u3092\u6bba\u3057\u305f\u4eba\u306f{0}\u3067\u3059\u300f"
+    },
+    "lawyer": {
+        "0": "Lawyer",
+        "11": "\u5f01\u8b77\u58eb"
+    },
+    "lawyerIntroDesc": {
+        "0": "Defend your client",
+        "11": "\u4f9d\u983c\u4eba\u306e\u5f01\u8b77\u3092\u3057\u3088\u3046"
+    },
+    "lawyerShortDesc": {
+        "0": "Defend your client",
+        "11": "\u4f9d\u983c\u4eba\u306e\u5f01\u8b77\u3092\u3057\u3088\u3046"
+    },
+    "lawyerFullDesc": {
+        "0": "The Lawyer is a neutral role that has a client.\nThe client might be an Impostor or Jackal which is no Lover.\nThe Lawyer needs their client to win in order to win the game.\nIf their client dies or gets voted out, the Lawyer changes their role and becomes the\nPursuer, which has a different goal to win the game. The main goal of the Lawyer is to\nwin as Lawyer, as it is not allowed to betray their client.",
+        "11": "\u30fb<color=#ff1919ff>\u30a4\u30f3\u30dd\u30b9\u30bf\u30fc</color>or<color=#00b4ebff>\u30b8\u30e3\u30c3\u30ab\u30eb</color>\u304c\u8ab0\u304b\u308f\u304b\u308a\u3001\n\u3000\u305d\u306e\u4eba\u306e\u52dd\u5229\u6761\u4ef6\u304c\u52dd\u5229\u6761\u4ef6\u3068\u306a\u308b\u3002\n\u30fb<color=#ff1919ff>\u4eba\u5916</color>\u306f<color=#869919>\u5f01\u8b77\u58eb</color>\u304c\u751f\u5b58\u3057\u305f\u72b6\u614b\u3067\u52dd\u5229\u3059\u308b\u3068\u3001\n\u3000<color=#869919>\u5f01\u8b77\u58eb</color>\u306e\u52dd\u5229\u3068\u306a\u308a\u4f9d\u983c\u4eba\u306f\u6557\u5317\u6271\u3044\u3068\u306a\u308b\u3002\n\u30fb\u4f9d\u983c\u4eba\u304c\u6b7b\u4ea1\u3057\u305f\u5834\u5408\u306f\u3010<color=#869919>\u8ffd\u8de1\u8005</color>\u3011\u3068\u306a\u308b\u3002"
+    },
+    "lawyerBlurb": {
+        "11": "\u3042\u306a\u305f\u306f\u3001\u30a4\u30f3\u30dd\u30b9\u30bf\u30fc\u304b\u30b8\u30e3\u30c3\u30ab\u30eb\u306e\u5f01\u8b77\u3092\u3057\u306a\u304f\u3066\u306f\u3044\u3051\u305a\u3001\u5b88\u3089\u306a\u304f\u3066\u306f\u3044\u3051\u306a\u3044\u3002\n\u4f9d\u983c\u4eba\u304c\u6b7b\u3093\u3067\u3057\u307e\u3063\u305f\u3089\u3068\u306b\u304b\u304f\u751f\u304d\u6b8b\u308c\u3002"
+    },
+    "lawyerTargetKnows": {
+        "0": "Target Knows",
+        "11": "\u4f9d\u983c\u4eba\u304c\u5f01\u8b77\u3055\u308c\u3066\u3044\u308b\u3053\u3068\u304c\u308f\u304b\u308b"
+    },
+    "lawyerWinsMeeting": {
+        "0": "Wins After Meeting",
+        "11": "\u7dca\u6025\u4f1a\u8b70\u3067\u52dd\u5229\u3059\u308b"
+    },
+    "lawyerMeetingsNeeded": {
+        "0": "Needed Meetings To Win",
+        "11": "\u5fc5\u8981\u306a\u7dca\u6025\u4f1a\u8b70\u56de\u6570"
+    },
+    "lawyerVision": {
+        "0": "Vision",
+        "11": "\u5f01\u8b77\u58eb\u30d3\u30b8\u30e7\u30f3"
+    },
+    "lawyerKnowsRole": {
+        "0": "Knows Target Role",
+        "11": "\u4f9d\u983c\u4eba\u306e\u30ed\u30fc\u30eb\u304c\u308f\u304b\u308b"
+    },
+    "pursuer": {
+        "0": "Pursuer",
+        "11": "\u8ffd\u8de1\u8005"
+    },
+    "pursuerIntroDesc": {
+        "0": "Blank the Impostors",
+        "11": "\u7a7a\u5305\u3092\u5dee\u3057\u8fbc\u3093\u3067\u90aa\u9b54\u3092\u3057\u3088\u3046"
+    },
+    "pursuerShortDesc": {
+        "0": "Blank the Impostors",
+        "11": "\u7a7a\u5305\u3092\u5dee\u3057\u8fbc\u3093\u3067\u90aa\u9b54\u3092\u3057\u3088\u3046"
+    },
+    "pursuerFullDesc": {
+        "0": "The Pursuer is still a neutral role, but has a different goal to win the game:\nThey have to be alive when the game ends (no matter who caused the win).\nIn order to achieve this goal, the Pursuer has the ability \"Blank\":\nThey can fill a killer's (this also includes the Sheriff) weapon with a blank,\nso if the killer attempts to kill someone, the killer will miss the target and all cooldowns\nwill be triggered as usual.",
+        "11": "\u30fb\u3010<color=#869919>\u8ffd\u8de1\u8005</color>\u3011\u3068\u306a\u3063\u305f\u5834\u5408\u306f\u3068\u306b\u304b\u304f\u751f\u304d\u3066\u3044\u306a\u3051\u308c\u3070\u306a\u3089\u305a\u3001\n\u3000\u6700\u5f8c\u307e\u3067\u751f\u304d\u6b8b\u308c\u3070\u8ffd\u52a0\u52dd\u5229\u3068\u306a\u308b\u3002\n\u30fb\u65b0\u305f\u306b\u300e\u7a7a\u5305\u300f\u3068\u3044\u3046\u80fd\u529b\u304c\u8eab\u306b\u4ed8\u304d\u3001\u305d\u308c\u3092\u30ad\u30eb\u53ef\u80fd\u306a\u9663\u55b6\u306b\u4ed8\u3051\u308b\u3068\n\u30001\u56de\u306e\u307f\u30ad\u30eb\u304c\u4e0d\u767a\u3068\u306a\u308b\u3002"
+    },
+    "pursuerBlankCool": {
+        "0": "Pursuer Blank Cooldown",
+        "11": "\u8ffd\u8de1\u8005\u306e\u7a7a\u5305\u30af\u30fc\u30eb\u30c0\u30a6\u30f3"
+    },
+    "pursuerNumBlanks": {
+        "0": "Pursuer Number Of Blanks",
+        "11": "\u8ffd\u8de1\u8005\u306e\u7a7a\u5305\u306e\u6570"
+    },
+    "pursuerBlanks": {
+        "0": "Blanks: {0}",
+        "11": "\u6b8b\u308a {0}\u767a"
+    },
+    "witch": {
+        "0": "Witch",
+        "11": "\u9b54\u5973"
+    },
+    "witchIntroDesc": {
+        "0": "Cast a spell upon your foes",
+        "11": "\u6575\u306b\u9b54\u8853\u3092\u304b\u3051\u3088\u3046"
+    },
+    "witchShortDesc": {
+        "0": "Cast a spell upon your foes",
+        "11": "\u6575\u306b\u9b54\u8853\u3092\u304b\u3051\u3088\u3046"
+    },
+    "witchFullDesc": {
+        "0": "The Witch is an Impostor who has the ability to cast a spell on other players.\nDuring the next meeting, the spellbound player will be highlighted and they'll die\nright after the meeting.",
+        "11": "\u30fb\u30d7\u30ec\u30a4\u30e4\u30fc\u306b\u9b54\u8853\u3092\u304b\u3051\u308b\u3053\u3068\u304c\u3067\u304d\u3001\n\u3000\u9b54\u8853\u3092\u304b\u3051\u3089\u308c\u305f\u30d7\u30ec\u30a4\u30e4\u30fc\u306f\u4f1a\u8b70\u5f8c\u306b\u6b7b\u4ea1\u3059\u308b\u3002\n\u30fb\u9b54\u8853\u306f\u4f1a\u8b70\u753b\u9762\u306b\u306a\u308c\u3070\u3001\u9b54\u8853\u306e\u30de\u30fc\u30af\u304c\n\u3000\u8868\u793a\u3055\u308c\u308b\u305f\u3081\u308f\u304b\u308b\u3002\n\u30fb\u9b54\u8853\u306f\u305d\u306e\u4f1a\u8b70\u3067<color=#ff1919ff>\u9b54\u5973</color>\u304c\u540a\u3089\u308c\u308c\u3070\u9b54\u8853\u304c\u89e3\u3051\u3066\u751f\u5b58\u3067\u304d\u3001\n\u3000\u8ffd\u653e\u3055\u308c\u306a\u3051\u308c\u3070\u6b7b\u4ea1\u3057\u3066\u3057\u307e\u3046\u3002\n\u30fb\u9b54\u8853\u3092\u304b\u3051\u308b\u3054\u3068\u306b\u30af\u30fc\u30eb\u304c\u4f38\u3073\u3066\u3044\u304f\u3002\n\u30fb1\u30bf\u30fc\u30f3\u3067\u8907\u6570\u306e\u30d7\u30ec\u30a4\u30e4\u30fc\u306b\u9b54\u8853\u306f\u304b\u3051\u3089\u308c\u308b\u3002"
+    },
+    "witchBlurb": {
+        "11": "\u9b54\u5973\u306f\u30d7\u30ec\u30a4\u30e4\u30fc\u306b\u9b54\u8853\u3092\u304b\u3051\u3066\u3001\n\u4f1a\u8b70\u5f8c\u306b\u546a\u6bba\u3067\u304d\u307e\u3059\u3002\n\u4f1a\u8b70\u753b\u9762\u3067\u9b54\u8853\u3092\u4ed8\u4e0e\u3057\u305f\u3053\u3068\u306f\u308f\u304b\u308b\u306e\u3067\u8981\u6ce8\u610f\u2026"
+    },
+    "witchSpellCooldown": {
+        "0": "Spell Casting Cooldown",
+        "11": "\u9b54\u8853\u30af\u30fc\u30eb\u30c0\u30a6\u30f3"
+    },
+    "witchAdditionalCooldown": {
+        "0": "Additional Cooldown",
+        "11": "\u304b\u3051\u308b\u5ea6\u306b\u8ffd\u52a0\u30af\u30fc\u30eb\u30c0\u30a6\u30f3"
+    },
+    "witchCanSpellAnyone": {
+        "0": "Can Spell Anyone",
+        "11": "\u8ab0\u306b\u3067\u3082\u9b54\u8853\u3092\u304b\u3051\u3089\u308c\u308b"
+    },
+    "witchSpellDuration": {
+        "0": "Casting Duration",
+        "11": "\u304b\u3051\u308b\u6642\u9593"
+    },
+    "witchTriggerBoth": {
+        "0": "Trigger Both Cooldowns",
+        "11": "\u9b54\u8853\u3068\u30ad\u30eb\u30af\u30fc\u30eb\u3092\u540c\u671f\u3055\u305b\u308b"
+    },
+    "witchSaveTargets": {
+        "0": "Voting The Witch Saves All The Targets",
+        "11": "\u8ffd\u653e\u3055\u308c\u305f\u3089\u9b54\u8853\u304c\u89e3\u3051\u308b"
+    },
+    "husk": {
+        "0": "Husk",
+        "11": "\u306a\u308c\u306e\u679c\u3066"
+    },
+    "impostor": {
+        "0": "Impostor",
+        "11": "\u30a4\u30f3\u30dd\u30b9\u30bf\u30fc"
+    },
+    "impostorIntroDesc": {
+        "0": "Sabotage and kill everyone",
+        "11": "\u30b5\u30dc\u3092\u6d3b\u7528\u3057\u3066\u7686\u6bba\u3057\u306b\u3057\u3088\u3046"
+    },
+    "impostorShortDesc": {
+        "0": "Sabotage and kill everyone",
+        "11": "\u30b5\u30dc\u3092\u6d3b\u7528\u3057\u3066\u7686\u6bba\u3057\u306b\u3057\u3088\u3046"
+    },
+    "crewmate": {
+        "0": "Crewmate",
+        "11": "\u30af\u30eb\u30fc"
+    },
+    "crewmateIntroDesc": {
+        "0": "Find the Impostors",
+        "11": "\u30a4\u30f3\u30dd\u30b9\u30bf\u30fc\u3092\u63a2\u3057\u51fa\u305b"
+    },
+    "crewmateShortDesc": {
+        "0": "Find the Impostors",
+        "11": "\u30a4\u30f3\u30dd\u30b9\u30bf\u30fc\u3092\u63a2\u3057\u51fa\u305b"
     },
     "scientistUseVitalsTime": {
         "0": "Consume Vitals Time",
@@ -787,6 +1369,10 @@
         "0": "Disable Vents",
         "11": "\u30d9\u30f3\u30c8\u306e\u4f7f\u7528\u7981\u6b62"
     },
+    "playRandomMaps": {
+        "0": "Play On A Random Map",
+        "11": "\u6bce\u56de\u30de\u30c3\u30d7\u304c\u30e9\u30f3\u30c0\u30e0\u306b"
+    },
     "optionOn": {
         "0": "On",
         "11": "\u30aa\u30f3"
@@ -797,567 +1383,19 @@
     },
     "crewmateRoles": {
         "0": "Crewmate Roles",
-        "11": "\u30af\u30eb\u30fc\u5f79\u8077"
+        "11": "\u30af\u30eb\u30fc\u30ed\u30fc\u30eb"
     },
     "neutralRoles": {
         "0": "Neutral Roles",
-        "11": "\u305d\u306e\u4ed6\u9663\u55b6\u5f79\u8077"
+        "11": "\u305d\u306e\u4ed6\u9663\u55b6\u30ed\u30fc\u30eb"
     },
     "impostorRoles": {
         "0": "Impostor Roles",
-        "11": "\u30a4\u30f3\u30dd\u30b9\u30bf\u30fc\u5f79\u8077"
+        "11": "\u30a4\u30f3\u30dd\u30b9\u30bf\u30fc\u30ed\u30fc\u30eb"
     },
     "pressTabForMore": {
         "0": "Press tab for more...",
         "11": "Tab\u30ad\u30fc\u3067\u6b21\u306e\u30da\u30fc\u30b8\u3078\u2026"
-    },
-    "jester": {
-        "0": "Jester",
-        "11": "\u30b8\u30a7\u30b9\u30bf\u30fc"
-    },
-    "jesterIntroDesc": {
-        "0": "Get voted out",
-        "11": "\u8ffd\u653e\u3055\u308c\u3088\u3046"
-    },
-    "jesterShortDesc": {
-        "0": "Get voted out",
-        "11": "\u8ffd\u653e\u3055\u308c\u3088\u3046"
-    },
-    "mayor": {
-        "0": "Mayor",
-        "11": "\u30e1\u30a4\u30e4\u30fc"
-    },
-    "mayorIntroDesc": {
-        "0": "Your vote counts multiple times",
-        "11": "\u81ea\u5206\u306e\u7968\u304c\u4f55\u500d\u3082\u306e\u529b\u3092\u6301\u3063\u3066\u3044\u308b"
-    },
-    "mayorShortDesc": {
-        "0": "Your vote counts multiple times",
-        "11": "\u81ea\u5206\u306e\u7968\u304c\u4f55\u500d\u3082\u306e\u529b\u3092\u6301\u3063\u3066\u3044\u308b"
-    },
-    "engineer": {
-        "0": "Engineer",
-        "11": "\u30a8\u30f3\u30b8\u30cb\u30a2"
-    },
-    "engineerIntroDesc": {
-        "0": "Maintain important systems on the ship",
-        "11": "\u304a\u8239\u306e\u30e1\u30f3\u30c6\u306f\u5fd8\u308c\u305a\u306b"
-    },
-    "engineerShortDesc": {
-        "0": "Repair the ship",
-        "11": "\u304a\u8239\u306e\u30e1\u30f3\u30c6\u306f\u5fd8\u308c\u305a\u306b"
-    },
-    "sheriff": {
-        "0": "Sheriff",
-        "11": "\u30b7\u30a7\u30ea\u30d5"
-    },
-    "sheriffIntroDesc": {
-        "0": "Shoot the <color=#FF1919FF>Impostors</color>",
-        "11": "<color=#FF1919FF>\u4eba\u5916</color>\u3092\u6483\u3061\u629c\u3051"
-    },
-    "sheriffShortDesc": {
-        "0": "Shoot the Impostors",
-        "11": "\u4eba\u5916\u3092\u6483\u3061\u629c\u3051"
-    },
-    "lighter": {
-        "0": "Lighter",
-        "11": "\u30e9\u30a4\u30bf\u30fc"
-    },
-    "lighterIntroDesc": {
-        "0": "Your light never goes out",
-        "11": "\u3044\u3064\u3067\u3082\u3069\u3053\u3067\u3082\u660e\u308b\u3044"
-    },
-    "lighterShortDesc": {
-        "0": "Your light never goes out",
-        "11": "\u3044\u3064\u3067\u3082\u3069\u3053\u3067\u3082\u660e\u308b\u3044"
-    },
-    "mafia": {
-        "0": "Mafia",
-        "11": "\u30de\u30d5\u30a3\u30a2"
-    },
-    "godfather": {
-        "0": "Godfather",
-        "11": "\u30b4\u30c3\u30c9\u30d5\u30a1\u30fc\u30b6\u30fc"
-    },
-    "godfatherIntroDesc": {
-        "0": "Kill all Crewmates",
-        "11": "\u30af\u30eb\u30fc\u3092\u5168\u6ec5\u3055\u305b\u3088\u3046"
-    },
-    "godfatherShortDesc": {
-        "0": "Kill all Crewmates",
-        "11": "\u30af\u30eb\u30fc\u3092\u5168\u6ec5\u3055\u305b\u3088\u3046"
-    },
-    "mafioso": {
-        "0": "Mafioso",
-        "11": "\u30de\u30d5\u30a3\u30aa\u30bd"
-    },
-    "mafiosoIntroDesc": {
-        "0": "Work with the <color=#FF1919FF>Mafia</color> to kill the Crewmates",
-        "11": "<color=#FF1919FF>\u30de\u30d5\u30a3\u30a2</color>\u3068\u5354\u529b\u3057\u3066\u30af\u30eb\u30fc\u3092\u5168\u6ec5\u3055\u305b\u3088\u3046"
-    },
-    "mafiosoShortDesc": {
-        "0": "Kill all Crewmates",
-        "11": "\u30af\u30eb\u30fc\u3092\u5168\u6ec5\u3055\u305b\u3088\u3046"
-    },
-    "janitor": {
-        "0": "Janitor",
-        "11": "\u30b8\u30e3\u30cb\u30bf\u30fc"
-    },
-    "janitorIntroDesc": {
-        "0": "Work with the <color=#FF1919FF>Mafia</color> by hiding dead bodies",
-        "11": "<color=#FF1919FF>\u30de\u30d5\u30a3\u30a2</color>\u3068\u5354\u529b\u3057\u3066\u6b7b\u4f53\u3092\u96a0\u305d\u3046"
-    },
-    "janitorShortDesc": {
-        "0": "Hide dead bodies",
-        "11": "\u6b7b\u4f53\u3092\u96a0\u305d\u3046"
-    },
-    "morphling": {
-        "0": "Morphling",
-        "11": "\u30e2\u30fc\u30d5\u30a3\u30f3\u30b0"
-    },
-    "morphlingIntroDesc": {
-        "0": "Change your look to not get caught",
-        "11": "\u6355\u307e\u3089\u306a\u3044\u305f\u3081\u306b\u59ff\u3092\u5909\u3048\u3088\u3046"
-    },
-    "morphlingShortDesc": {
-        "0": "Change your look",
-        "11": "\u59ff\u3092\u5909\u3048\u3088\u3046"
-    },
-    "camouflager": {
-        "0": "Camouflager",
-        "11": "\u30ab\u30e2\u30d5\u30e9\u30fc\u30b8\u30e3\u30fc"
-    },
-    "camouflagerIntroDesc": {
-        "0": "Camouflage and kill the Crewmates",
-        "11": "\u4eba\u6df7\u307f\u306b\u96a0\u308c\u3088\u3046"
-    },
-    "camouflagerShortDesc": {
-        "0": "Hide among others",
-        "11": "\u4eba\u6df7\u307f\u306b\u96a0\u308c\u3088\u3046"
-    },
-    "vampire": {
-        "0": "Vampire",
-        "11": "\u30f4\u30a1\u30f3\u30d1\u30a4\u30a2"
-    },
-    "vampireIntroDesc": {
-        "0": "Kill the Crewmates with your bites",
-        "11": "\u30af\u30eb\u30fc\u3092\u565b\u3093\u3067\u5168\u6ec5\u3055\u305b\u3088\u3046"
-    },
-    "vampireShortDesc": {
-        "0": "Bite your enemies",
-        "11": "\u30af\u30eb\u30fc\u3092\u565b\u3093\u3067\u5168\u6ec5\u3055\u305b\u3088\u3046"
-    },
-    "eraser": {
-        "0": "Eraser",
-        "11": "\u30a4\u30ec\u30a4\u30b5\u30fc"
-    },
-    "eraserIntroDesc": {
-        "0": "Kill the Crewmates and erase their roles",
-        "11": "\u30af\u30eb\u30fc\u306e\u5f79\u8077\u3092\u524a\u9664\u3057\u3088\u3046"
-    },
-    "eraserShortDesc": {
-        "0": "Erase the roles of your enemies",
-        "11": "\u30af\u30eb\u30fc\u306e\u5f79\u8077\u3092\u524a\u9664\u3057\u3088\u3046"
-    },
-    "trickster": {
-        "0": "Trickster",
-        "11": "\u30c8\u30ea\u30c3\u30af\u30b9\u30bf\u30fc"
-    },
-    "tricksterIntroDesc": {
-        "0": "Use your jack-in-the-boxes to surprise others",
-        "11": "\u3073\u3063\u304f\u308a\u7bb1\u3092\u4f7f\u3063\u3066\u307f\u3093\u306a\u3092\u9a5a\u304b\u305b\u3088\u3046"
-    },
-    "tricksterShortDesc": {
-        "0": "Surprise your enemies",
-        "11": "\u307f\u3093\u306a\u3092\u9a5a\u304b\u305b\u3088\u3046"
-    },
-    "cleaner": {
-        "0": "Cleaner",
-        "11": "\u30af\u30ea\u30fc\u30ca\u30fc"
-    },
-    "cleanerIntroDesc": {
-        "0": "Kill everyone and leave no traces",
-        "11": "\u30af\u30eb\u30fc\u3092\u6bba\u3057\u3066\u6b7b\u4f53\u3092\u96a0\u305d\u3046"
-    },
-    "cleanerShortDesc": {
-        "0": "Clean up dead bodies",
-        "11": "\u6b7b\u4f53\u3092\u96a0\u305d\u3046"
-    },
-    "warlock": {
-        "0": "Warlock",
-        "11": "\u30a6\u30a9\u30fc\u30ed\u30c3\u30af"
-    },
-    "warlockIntroDesc": {
-        "0": "Curse other players and kill everyone",
-        "11": "\u307f\u3093\u306a\u3092\u546a\u3044\u6bba\u305d\u3046"
-    },
-    "warlockShortDesc": {
-        "0": "Curse and kill everyone",
-        "11": "\u307f\u3093\u306a\u3092\u546a\u3044\u6bba\u305d\u3046"
-    },
-    "bountyHunter": {
-        "0": "Bounty Hunter",
-        "11": "\u30d0\u30a6\u30f3\u30c6\u30a3\u30cf\u30f3\u30bf\u30fc"
-    },
-    "bountyHunterIntroDesc": {
-        "0": "Hunt your Bounty down",
-        "11": "\u6a19\u7684\u3092\u78ba\u5b9f\u306b\u4ed5\u7559\u3081\u3088\u3046"
-    },
-    "bountyHunterShortDesc": {
-        "0": "Hunt your Bounty down",
-        "11": "\u6a19\u7684\u3092\u78ba\u5b9f\u306b\u4ed5\u7559\u3081\u3088\u3046"
-    },
-    "detective": {
-        "0": "Detective",
-        "11": "\u30c7\u30a3\u30c6\u30af\u30c6\u30a3\u30d6"
-    },
-    "detectiveIntroDesc": {
-        "0": "Find the <color=#FF1919FF>Impostors</color> by examining footprints",
-        "11": "\u8db3\u8de1\u3092\u305f\u3069\u3063\u3066<color=#FF1919FF>\u30a4\u30f3\u30dd\u30b9\u30bf\u30fc</color>\u3092\u898b\u3064\u3051\u3088\u3046"
-    },
-    "detectiveShortDesc": {
-        "0": "Examine footprints",
-        "11": "\u8db3\u8de1\u3092\u305f\u3069\u308d\u3046"
-    },
-    "timeMaster": {
-        "0": "Time Master",
-        "11": "\u30bf\u30a4\u30e0\u30de\u30b9\u30bf\u30fc"
-    },
-    "timeMasterIntroDesc": {
-        "0": "Save yourself with your time shield",
-        "11": "\u30bf\u30a4\u30e0\u30b7\u30fc\u30eb\u30c9\u3092\u4f7f\u3063\u3066\u751f\u304d\u5ef6\u3073\u3088\u3046"
-    },
-    "timeMasterShortDesc": {
-        "0": "Use your time shield",
-        "11": "\u30bf\u30a4\u30e0\u30b7\u30fc\u30eb\u30c9\u3092\u4f7f\u304a\u3046"
-    },
-    "medic": {
-        "0": "Medic",
-        "11": "\u30e1\u30c7\u30a3\u30c3\u30af"
-    },
-    "medicIntroDesc": {
-        "0": "Protect someone with your shield",
-        "11": "\u30b7\u30fc\u30eb\u30c9\u3092\u5f35\u3063\u3066\u5473\u65b9\u3092\u5b88\u308d\u3046"
-    },
-    "medicShortDesc": {
-        "0": "Protect other players",
-        "11": "\u5473\u65b9\u3092\u5b88\u308d\u3046"
-    },
-    "shifter": {
-        "0": "Shifter",
-        "11": "\u30b7\u30d5\u30bf\u30fc"
-    },
-    "shifterIntroDesc": {
-        "0": "Shift your role",
-        "11": "\u5f79\u8077\u3092\u596a\u304a\u3046"
-    },
-    "shifterShortDesc": {
-        "0": "Shift your role",
-        "11": "\u5f79\u8077\u3092\u596a\u304a\u3046"
-    },
-    "swapper": {
-        "0": "Swapper",
-        "11": "\u30b9\u30ef\u30c3\u30d1\u30fc"
-    },
-    "swapperIntroDesc": {
-        "0": "Swap votes to exile the <color=#FF1919FF>Impostors</color>",
-        "11": "\u6295\u7968\u5148\u3092\u5165\u308c\u66ff\u3048\u3066<color=#FF1919FF>\u30a4\u30f3\u30dd\u30b9\u30bf\u30fc</color>\u3092\u8ffd\u653e\u3057\u3088\u3046"
-    },
-    "swapperShortDesc": {
-        "0": "Swap votes",
-        "11": "\u6295\u7968\u5148\u3092\u5165\u308c\u66ff\u3048\u3088\u3046"
-    },
-    "seer": {
-        "0": "Seer",
-        "11": "\u30b7\u30fc\u30a2"
-    },
-    "seerIntroDesc": {
-        "0": "You will see players die",
-        "11": "\u4ed6\u4eba\u306e\u6b7b\u3093\u3060\u77ac\u9593\u304c\u308f\u304b\u308b"
-    },
-    "seerShortDesc": {
-        "0": "You will see players die",
-        "11": "\u4ed6\u4eba\u306e\u6b7b\u3093\u3060\u77ac\u9593\u304c\u308f\u304b\u308b"
-    },
-    "hacker": {
-        "0": "Hacker",
-        "11": "\u30cf\u30c3\u30ab\u30fc"
-    },
-    "hackerIntroDesc": {
-        "0": "Hack systems to find the <color=#FF1919FF>Impostors</color>",
-        "11": "\u7279\u5225\u88c5\u7f6e\u3092\u30cf\u30c3\u30ad\u30f3\u30b0\u3057\u3066<color=#FF1919FF>\u30a4\u30f3\u30dd\u30b9\u30bf\u30fc</color>\u3092\u63a2\u305d\u3046"
-    },
-    "hackerShortDesc": {
-        "0": "Hack to find the Impostors",
-        "11": "\u30cf\u30c3\u30ad\u30f3\u30b0\u3057\u3066\u30a4\u30f3\u30dd\u30b9\u30bf\u30fc\u3092\u63a2\u305d\u3046"
-    },
-    "mini": {
-        "0": "Mini",
-        "11": "\u30df\u30cb"
-    },
-    "niceMini": {
-        "0": "Nice Mini",
-        "11": "\u30ca\u30a4\u30b9\u30df\u30cb"
-    },
-    "niceMiniIntroDesc": {
-        "0": "No one will harm you until you grow up",
-        "11": "\u5927\u4eba\u306b\u306a\u308b\u307e\u3067\u8ab0\u306b\u3082\u653b\u6483\u3055\u308c\u306a\u3044"
-    },
-    "niceMiniShortDesc": {
-        "0": "No one will harm you",
-        "11": "\u8ab0\u306b\u3082\u653b\u6483\u3055\u308c\u306a\u3044"
-    },
-    "evilMini": {
-        "0": "Evil Mini",
-        "11": "\u30a4\u30d3\u30eb\u30df\u30cb"
-    },
-    "evilMiniIntroDesc": {
-        "0": "No one will harm you until you grow up",
-        "11": "\u5927\u4eba\u306b\u306a\u308b\u307e\u3067\u8ab0\u306b\u3082\u653b\u6483\u3055\u308c\u306a\u3044"
-    },
-    "evilMiniShortDesc": {
-        "0": "No one will harm you",
-        "11": "\u8ab0\u306b\u3082\u653b\u6483\u3055\u308c\u306a\u3044"
-    },
-    "tracker": {
-        "0": "Tracker",
-        "11": "\u30c8\u30e9\u30c3\u30ab\u30fc"
-    },
-    "trackerIntroDesc": {
-        "0": "Track the <color=#FF1919FF>Impostors</color> down",
-        "11": "<color=#FF1919FF>\u30a4\u30f3\u30dd\u30b9\u30bf\u30fc</color>\u3092\u8ffd\u3044\u304b\u3051\u3088\u3046"
-    },
-    "trackerShortDesc": {
-        "0": "Track the Impostors down",
-        "11": "\u30a4\u30f3\u30dd\u30b9\u30bf\u30fc\u3092\u8ffd\u3044\u304b\u3051\u3088\u3046"
-    },
-    "snitch": {
-        "0": "Snitch",
-        "11": "\u30b9\u30cb\u30c3\u30c1"
-    },
-    "snitchIntroDesc": {
-        "0": "Finish your tasks to find the <color=#FF1919FF>Impostors</color>",
-        "11": "\u30bf\u30b9\u30af\u3092\u65e9\u304f\u6e08\u307e\u305b\u3066<color=#FF1919FF>\u30a4\u30f3\u30dd\u30b9\u30bf\u30fc</color>\u3092\u66b4\u3053\u3046"
-    },
-    "snitchShortDesc": {
-        "0": "Finish your tasks",
-        "11": "\u30bf\u30b9\u30af\u3092\u65e9\u304f\u6e08\u307e\u305b\u3088\u3046"
-    },
-    "jackal": {
-        "0": "Jackal",
-        "11": "\u30b8\u30e3\u30c3\u30ab\u30eb"
-    },
-    "jackalIntroDesc": {
-        "0": "Kill all Crewmates and <color=#FF1919FF>Impostors</color> to win",
-        "11": "\u307f\u3093\u306a\u3092\u3076\u3061\u6bba\u305d\u3046"
-    },
-    "jackalShortDesc": {
-        "0": "Kill everyone",
-        "11": "\u307f\u3093\u306a\u3092\u3076\u3061\u6bba\u305d\u3046"
-    },
-    "jackalWithSidekick": {
-        "0": "Kill everyone and recruit a Sidekick",
-        "11": "\u307f\u3093\u306a\u3092\u3076\u3061\u6bba\u3057\u3066\u30b5\u30a4\u30c9\u30ad\u30c3\u30af\u3092\u6307\u540d\u3057\u3088\u3046"
-    },
-    "sidekick": {
-        "0": "Sidekick",
-        "11": "\u30b5\u30a4\u30c9\u30ad\u30c3\u30af"
-    },
-    "sidekickIntroDesc": {
-        "0": "Help your Jackal to kill everyone",
-        "11": "\u30b8\u30e3\u30c3\u30ab\u30eb\u306e\u63f4\u52a9\u3092\u3057\u3088\u3046"
-    },
-    "sidekickShortDesc": {
-        "0": "Help your Jackal to kill everyone",
-        "11": "\u30b8\u30e3\u30c3\u30ab\u30eb\u306e\u63f4\u52a9\u3092\u3057\u3088\u3046"
-    },
-    "spy": {
-        "0": "Spy",
-        "11": "\u30b9\u30d1\u30a4"
-    },
-    "spyIntroDesc": {
-        "0": "Confuse the <color=#FF1919FF>Impostors</color>",
-        "11": "<color=#FF1919FF>\u30a4\u30f3\u30dd\u30b9\u30bf\u30fc</color>\u3092\u6df7\u4e71\u3055\u305b\u3088\u3046"
-    },
-    "spyShortDesc": {
-        "0": "Confuse the Impostors",
-        "11": "\u30a4\u30f3\u30dd\u30b9\u30bf\u30fc\u3092\u6df7\u4e71\u3055\u305b\u3088\u3046"
-    },
-    "securityGuard": {
-        "0": "Security Guard",
-        "11": "\u8b66\u5099\u54e1"
-    },
-    "securityGuardIntroDesc": {
-        "0": "Seal vents and place cameras",
-        "11": "\u30d9\u30f3\u30c8\u3092\u5c01\u9396\u3057\u3066\u65b0\u3057\u3044\u30ab\u30e1\u30e9\u3092\u8a2d\u7f6e\u3057\u3088\u3046"
-    },
-    "securityGuardShortDesc": {
-        "0": "Seal vents and place cameras",
-        "11": "\u30a4\u30f3\u30dd\u30b9\u30bf\u30fc\u306e\u59a8\u5bb3\u3092\u3057\u3088\u3046"
-    },
-    "arsonist": {
-        "0": "Arsonist",
-        "11": "\u30a2\u30fc\u30bd\u30cb\u30b9\u30c8"
-    },
-    "arsonistIntroDesc": {
-        "0": "Let them burn",
-        "11": "\u71c3\u3084\u305b"
-    },
-    "arsonistShortDesc": {
-        "0": "Let them burn",
-        "11": "\u71c3\u3084\u305b"
-    },
-    "guesser": {
-        "0": "Guesser",
-        "11": "\u30b2\u30c3\u30b5\u30fc"
-    },
-    "goodGuesser": {
-        "0": "Nice Guesser",
-        "11": "\u30ca\u30a4\u30b9\u30b2\u30c3\u30b5\u30fc"
-    },
-    "goodGuesserIntroDesc": {
-        "0": "Guess and shoot",
-        "11": "\u63a8\u6e2c\u3057\u3066\u6483\u3061\u629c\u3051\u3088\u3046"
-    },
-    "goodGuesserShortDesc": {
-        "0": "Guess and shoot",
-        "11": "\u63a8\u6e2c\u3057\u3066\u6483\u3061\u629c\u3051\u3088\u3046"
-    },
-    "badGuesser": {
-        "0": "Evil Guesser",
-        "11": "\u30a4\u30d3\u30eb\u30b2\u30c3\u30b5\u30fc"
-    },
-    "badGuesserIntroDesc": {
-        "0": "Guess and shoot",
-        "11": "\u63a8\u6e2c\u3057\u3066\u6483\u3061\u629c\u3051\u3088\u3046"
-    },
-    "badGuesserShortDesc": {
-        "0": "Guess and shoot",
-        "11": "\u63a8\u6e2c\u3057\u3066\u6483\u3061\u629c\u3051\u3088\u3046"
-    },
-    "bait": {
-        "0": "Bait",
-        "11": "\u30d9\u30a4\u30c8"
-    },
-    "baitIntroDesc": {
-        "0": "Bait your enemies",
-        "11": "\u6575\u3092\u7f60\u306b\u306f\u3081\u3088\u3046"
-    },
-    "baitShortDesc": {
-        "0": "Bait your enemies",
-        "11": "\u6575\u3092\u7f60\u306b\u306f\u3081\u3088\u3046"
-    },
-    "madmate": {
-        "0": "Madmate",
-        "11": "\u30de\u30c3\u30c9\u30e1\u30a4\u30c8"
-    },
-    "madmateIntroDesc": {
-        "0": "Help the <color=#FF1919FF>Impostors</color>",
-        "11": "<color=#FF1919FF>\u30a4\u30f3\u30dd\u30b9\u30bf\u30fc</color>\u306e\u63f4\u52a9\u3092\u3057\u3088\u3046"
-    },
-    "madmateShortDesc": {
-        "0": "Help the Impostors",
-        "11": "\u30a4\u30f3\u30dd\u30b9\u30bf\u30fc\u306e\u63f4\u52a9\u3092\u3057\u3088\u3046"
-    },
-    "impostor": {
-        "0": "Impostor",
-        "11": "\u30a4\u30f3\u30dd\u30b9\u30bf\u30fc"
-    },
-    "impostorIntroDesc": {
-        "0": "Sabotage and kill everyone",
-        "11": "\u30b5\u30dc\u3092\u6d3b\u7528\u3057\u3066\u7686\u6bba\u3057\u306b\u3057\u3088\u3046"
-    },
-    "impostorShortDesc": {
-        "0": "Sabotage and kill everyone",
-        "11": "\u30b5\u30dc\u3092\u6d3b\u7528\u3057\u3066\u7686\u6bba\u3057\u306b\u3057\u3088\u3046"
-    },
-    "crewmate": {
-        "0": "Crewmate",
-        "11": "\u30af\u30eb\u30fc"
-    },
-    "crewmateIntroDesc": {
-        "0": "Find the Impostors",
-        "11": "\u30a4\u30f3\u30dd\u30b9\u30bf\u30fc\u3092\u63a2\u3057\u51fa\u305b"
-    },
-    "crewmateShortDesc": {
-        "0": "Find the Impostors",
-        "11": "\u30a4\u30f3\u30dd\u30b9\u30bf\u30fc\u3092\u63a2\u3057\u51fa\u305b"
-    },
-    "lover": {
-        "0": "Lover",
-        "11": "\u30e9\u30d0\u30fc\u30ba"
-    },
-    "lovers": {
-        "0": "Lovers",
-        "11": "\u30e9\u30d0\u30fc\u30ba"
-    },
-    "loversIntroDesc": {
-        "0": "You are in love",
-        "11": "\u604b\u306b\u843d\u3061\u3066\u3057\u307e\u3063\u305f"
-    },
-    "loversShortDesc": {
-        "0": "You are in love",
-        "11": "\u604b\u306b\u843d\u3061\u3066\u3057\u307e\u3063\u305f"
-    },
-    "gm": {
-        "0": "GM",
-        "11": "GM"
-    },
-    "gmIntroDesc": {
-        "0": "You're the Game Master",
-        "11": "\u30b2\u30fc\u30e0\u30de\u30b9\u30bf\u30fc\u3060"
-    },
-    "gmShortDesc": {
-        "0": "You're the Game Master",
-        "11": "\u30b2\u30fc\u30e0\u30de\u30b9\u30bf\u30fc\u3060"
-    },
-    "gmKill": {
-        "0": "KILL",
-        "11": "KILL"
-    },
-    "gmRevive": {
-        "0": "REVIVE",
-        "11": "REVIVE"
-    },
-    "opportunist": {
-        "0": "Opportunist",
-        "11": "\u30aa\u30dd\u30c1\u30e5\u30cb\u30b9\u30c8"
-    },
-    "opportunistIntroDesc": {
-        "0": "Do whatever it takes to survive",
-        "11": "\u3068\u306b\u304b\u304f\u751f\u304d\u6b8b\u308a\u307e\u3057\u3087\u3046"
-    },
-    "opportunistShortDesc": {
-        "0": "Do whatever it takes to survive",
-        "11": "\u3068\u306b\u304b\u304f\u751f\u304d\u6b8b\u308a\u307e\u3057\u3087\u3046"
-    },
-    "vulture": {
-        "0": "Vulture",
-        "11": "\u30f4\u30a1\u30eb\u30c1\u30e3\u30fc"
-    },
-    "vultureIntroDesc": {
-        "0": "Eat corpses to win",
-        "11": "\u6b7b\u9ab8\u3092\u55b0\u3089\u304a\u3046"
-    },
-    "vultureShortDesc": {
-        "0": "Eat dead bodies",
-        "11": "\u6b7b\u9ab8\u3092\u55b0\u3089\u304a\u3046"
-    },
-    "medium": {
-        "0": "Medium",
-        "11": "\u30df\u30c7\u30a3\u30a2\u30e0"
-    },
-    "mediumIntroDesc": {
-        "0": "Question the souls of the dead to gain information",
-        "11": "\u53d6\u308a\u6b8b\u3055\u308c\u305f\u9b42\u304b\u3089\u60c5\u5831\u3092\u805e\u304d\u51fa\u305d\u3046"
-    },
-    "mediumShortDesc": {
-        "0": "Question the souls",
-        "11": "\u9b42\u304b\u3089\u60c5\u5831\u3092\u805e\u304d\u51fa\u305d\u3046"
-    },
-    "husk": {
-        "0": "Husk",
-        "11": "\u306a\u308c\u306e\u679c\u3066"
     },
     "roleNoSettings": {
         "0": "No Settings For Role",
@@ -1373,7 +1411,7 @@
     },
     "ghostsSeeRolesButton": {
         "0": "Ghosts See Roles",
-        "11": "\u5e7d\u970a\u6642\u3001\u5168\u54e1\u306e\u5f79\u8077\u304c\u898b\u3048\u308b"
+        "11": "\u5e7d\u970a\u6642\u3001\u5168\u54e1\u306e\u30ed\u30fc\u30eb\u304c\u898b\u3048\u308b"
     },
     "ghostsSeeVotesButton": {
         "0": "Ghosts See Votes",
@@ -1381,10 +1419,11 @@
     },
     "showRoleSummaryButton": {
         "0": "Role Summary",
-        "11": "\u5f79\u8077\u4e00\u89a7\u3092\u8868\u793a"
+        "11": "\u6700\u7d42\u7d50\u679c\u3092\u8868\u793a"
     },
     "gmGameOver": {
-        "0": "Game Over"
+        "0": "Game Over",
+        "11": "Game Over"
     },
     "crewWin": {
         "0": "Crewmates Win",
@@ -1418,6 +1457,10 @@
         "0": "Vulture Wins",
         "11": "\u30f4\u30a1\u30eb\u30c1\u30e3\u30fc\u52dd\u5229"
     },
+    "lawyerWin": {
+        "0": "Lawyer Wins",
+        "11": "\u5f01\u8b77\u58eb\u52dd\u5229"
+    },
     "crewWinExtra": {
         "0": "Crewmates {0} Win",
         "11": "\u30af\u30eb\u30fc{0}\u52dd\u5229"
@@ -1450,13 +1493,29 @@
         "0": "Vulture {0} Win",
         "11": "\u30f4\u30a1\u30eb\u30c1\u30e3\u30fc{0}\u52dd\u5229"
     },
+    "lawyerWinExtra": {
+        "0": "Lawyer {0} Win",
+        "11": "\u5f01\u8b77\u58eb{0}\u52dd\u5229"
+    },
     "opportunistExtra": {
-        "0": "& Opportunist",
-        "11": "\uff06\u30aa\u30dd\u30c1\u30e5\u30cb\u30b9\u30c8"
+        "0": "& <color=#00FF00FF>Opportunist</color>",
+        "11": "\uff06<color=#00ff00ff>\u30aa\u30dd\u30c1\u30e5\u30cb\u30b9\u30c8</color>"
     },
     "loversExtra": {
-        "0": "& Lovers",
-        "11": "\uff06\u30e9\u30d0\u30fc\u30ba"
+        "0": "& <color=#e839b9ff>Lovers</color>",
+        "11": "\uff06<color=#e839b9ff>\u30e9\u30d0\u30fc\u30ba</color>"
+    },
+    "pursuerExtra": {
+        "0": "& <color=#869919>Pursuer</color>",
+        "11": "\uff06<color=#869919>\u8ffd\u8de1\u8005</color>"
+    },
+    "lawyerExtraStolen": {
+        "0": "The Lawyer stole the win from the client",
+        "11": "\u5f01\u8b77\u58eb\u304c\u4f9d\u983c\u4eba\u304b\u3089\u52dd\u5229\u3092\u6a2a\u53d6\u308a\u3057\u305f"
+    },
+    "lawyerExtraBonus": {
+        "0": "The Lawyer wins with the client",
+        "11": "\u5f01\u8b77\u58eb\u304c\u4f9d\u983c\u4eba\u3068\u4e00\u7dd2\u306b\u52dd\u5229\u3057\u305f"
     },
     "roleSummaryText": {
         "0": "Players and roles at the end of the game:",
@@ -1486,6 +1545,10 @@
         "0": "Misfire",
         "11": "\u8aa4\u7206"
     },
+    "roleSummarySpelled": {
+        "0": "Spelled",
+        "11": "\u546a\u6bba"
+    },
     "roleSummaryDC": {
         "0": "DC'd",
         "11": "\u5207\u65ad"
@@ -1506,9 +1569,9 @@
         "0": " has a modified version of TOR",
         "11": "TheOtherRoles\u306e\u30d0\u30fc\u30b8\u30e7\u30f3\u304c\u9055\u3046"
     },
-    "loversFlavor": {
-        "0": "\u2665 You are in love with {0} \u2665",
-        "11": "\u2665 {0} \u3068\u604b\u4eba\u306b\u306a\u308a\u307e\u3057\u305f \u2665"
+    "errorHostNoVersion": {
+        "0": "The host has no or a different version of The Other Roles\nYou will be kicked in {0}s",
+        "11": "\u30db\u30b9\u30c8\u304cTOR\u3092\u5c0e\u5165\u3057\u3066\u3044\u306a\u3044\u307e\u305f\u306f\u30d0\u30fc\u30b8\u30e7\u30f3\u304c\u9055\u3046\n\u3042\u3068{0}\u79d2\u3067\u30ad\u30c3\u30af\u3055\u308c\u307e\u3059"
     },
     "gmMeetingButton": {
         "0": "The GM can't call meetings.",
@@ -1522,9 +1585,9 @@
         "0": "The Jester can't call meetings.",
         "11": "\u30b8\u30a7\u30b9\u30bf\u30fc\u306f\u7dca\u6025\u4f1a\u8b70\u3092\u958b\u3051\u307e\u305b\u3093"
     },
-    "sheriffShots": {
-        "0": "Shots: {0}",
-        "11": "\u6b8b\u308a {0}\u767a"
+    "lawyerMeetingButton": {
+        "0": "The Lawyer can't call meetings ({0} to win).",
+        "11": "\u5f01\u8b77\u58eb\u306f\u7dca\u6025\u4f1a\u8b70\u3092\u958b\u3051\u307e\u305b\u3093\uff08\u52dd\u5229\u307e\u3067\u3042\u3068{0}\u56de\uff09"
     },
     "meetingStatus": {
         "0": "CREWMEMBER {0} HAS\n\n\nEMERGENCY MEETINGS LEFT",
@@ -1537,58 +1600,6 @@
     "buttonBlocked": {
         "0": "BLOCKED",
         "11": "\u4f7f\u7528\u7981\u6b62"
-    },
-    "medicReport": {
-        "0": "Body Report: Killed {0}s ago!",
-        "11": "\u691c\u67fb\u306e\u7d50\u679c\u3001{0}\u79d2\u524d\u306b\u6bba\u3055\u308c\u305f\u307f\u305f\u3044\uff01"
-    },
-    "detectiveReportName": {
-        "0": "Body Report: The killer appears to be {0}!",
-        "11": "\u691c\u67fb\u306e\u7d50\u679c\u3001\u72af\u4eba\u306e\u540d\u524d\u306f\u300c{0}\u300d\u307f\u305f\u3044\uff01"
-    },
-    "detectiveReportColor": {
-        "0": "Body Report: The killer appears to be a {0} color!",
-        "11": "\u691c\u67fb\u306e\u7d50\u679c\u3001\u72af\u4eba\u306f{0}\u8272\u307f\u305f\u3044\uff01"
-    },
-    "detectiveReportNone": {
-        "0": "Body Report: The corpse is too old to gain information from!",
-        "11": "\u691c\u67fb\u306e\u7d50\u679c\u3001\u6b7b\u4f53\u304c\u51b7\u3048\u3066\u3066\u4f55\u3082\u308f\u304b\u3089\u306a\u304b\u3063\u305f\uff01"
-    },
-    "detectiveColorLight": {
-        "0": "lighter",
-        "11": "\u6de1\u3044"
-    },
-    "detectiveColorDark": {
-        "0": "darker",
-        "11": "\u6fc3\u3044"
-    },
-    "detectiveLightLabel": {
-        "0": "L",
-        "11": "\u6de1\u3044"
-    },
-    "detectiveDarkLabel": {
-        "0": "D",
-        "11": "\u6fc3\u3044"
-    },
-    "mediumQuestion1": {
-        "0": "What is your role? My role is {0}.",
-        "11": "\u300c\u3042\u306a\u305f\u306e\u5f79\u8077\u306f\u4f55\u3067\u3057\u3087\u3046\u300d\u300e\u79c1\u306f{0}\u3067\u3059\u300f"
-    },
-    "mediumQuestion2": {
-        "0": "What is your killer's color type? My killer is a {0} color.",
-        "11": "\u300c\u3042\u306a\u305f\u3092\u6bba\u3057\u305f\u4eba\u306f\u3069\u3093\u306a\u8272\u3067\u3057\u3087\u3046\u300d\u300e\u79c1\u3092\u6bba\u3057\u305f\u4eba\u306f{0}\u8272\u3092\u3057\u3066\u3044\u307e\u3057\u305f\u300f"
-    },
-    "mediumQuestion3": {
-        "0": "When did you die? I died {0}s before the meeting started.",
-        "11": "\u300c\u3042\u306a\u305f\u306f\u3044\u3064\u6b7b\u3093\u3060\u3093\u3067\u3057\u3087\u3046\u300d\u300e\u79c1\u306f\u4f1a\u8b70\u306e{0}\u79d2\u524d\u306b\u6b7b\u306b\u307e\u3057\u305f\u300f"
-    },
-    "mediumQuestion4": {
-        "0": "What is your killer's role? My killer is {0}.",
-        "11": "\u300c\u3042\u306a\u305f\u3092\u6bba\u3057\u305f\u4eba\u306e\u5f79\u8077\u306f\u4f55\u3067\u3057\u3087\u3046\u300d\u300e\u79c1\u3092\u6bba\u3057\u305f\u4eba\u306f{0}\u3067\u3059\u300f"
-    },
-    "guesserGuessChat": {
-        "0": "Guesser guessed the role {0} for {1}!",
-        "11": "\u30b2\u30c3\u30b5\u30fc\u306f\u300c{1}\u300d\u306e\u30ed\u30fc\u30eb\u304c\u300c{0}\u300d\u3060\u3068\u63a8\u6e2c\u3057\u305f\uff01"
     },
     "unitSeconds": {
         "0": "{0}s",
@@ -1798,7 +1809,7 @@
         "0": "A regular Crewmate.",
         "11": "\u30fb\u901a\u5e38\u306e<color=#8cffffff>\u30af\u30eb\u30fc</color>"
     },
-    "loverFullDesc": {
+    "loversFullDesc": {
         "0": "There are always two Lovers which are linked together.\nTheir primary goal is it to stay alive together until the end of the game.\nIf one Lover dies (and the option is activated), the other Lover suicides.\nYou can select if Lovers are able to have a second role (could be a Neutral, Crewmate or\nImpostor Role).\nYou can specify the chance of one Lover being an Impostor.\nThe Lovers never know the role of their partner, they only see who their partner is.\nThe Lovers win if they are both alive when the game ends. \nIf there is no killer among the Lovers (e.g. an Arsonist Lover + Crewmate Lover) and they\nare both alive when the game ends, they can win together with the Crewmates.",
         "11": "\u30fb\u5168\u30d7\u30ec\u30a4\u30e4\u30fc\u306e\u4e2d\u304b\u3089\uff12\u4eba<color=#e839b9ff>\u604b\u4eba</color>\u306b\u9078\u3070\u308c\u308b\n\u30fb<color=#8cffffff>\u30af\u30eb\u30fc</color>\u3001<color=#ff1919ff>\u30a4\u30f3\u30dd\u30b9\u30bf\u30fc</color>\u3001<color=#ffff00ff>\u305d\u306e\u4ed6\u9663\u55b6</color>\u3069\u308c\u3067\u3082\u9078\u3070\u308c\u308b\n\u30fb<color=#e839b9ff>\u30e9\u30d0\u30fc\u30ba</color>\u306f\uff12\u4eba\u3068\u3082\u6700\u5f8c\u307e\u3067\u751f\u304d\u6b8b\u308c\u3070\u52dd\u3061\n\u30fb\u5358\u72ec\u9663\u55b6\u6271\u3044\u304c\u30aa\u30d5\u306e\u5834\u5408\u3001<color=#e839b9ff>\u30e9\u30d0\u30fc\u30ba</color>\u3082\u3057\u304f\u306f\u5143\u306e\u9663\u55b6\u3068\u52dd\u3064\u3053\u3068\u304c\u3067\u308b\n\u30fb\u30aa\u30f3\u306e\u5834\u5408\u3001<color=#e839b9ff>\u30e9\u30d0\u30fc\u30ba</color>\uff12\u4eba\u306e\u751f\u5b58\u306e\u307f\u304c\u52dd\u5229\u6761\u4ef6\u3068\u306a\u308b\n\u3000\u305f\u3060\u3072\u3068\u3064\u3060\u3051\u3001<color=#8cffffff>\u30af\u30eb\u30fc</color>\u306e\u30bf\u30b9\u30af\u52dd\u5229\u304c\u512a\u5148\u3055\u308c\u5358\u72ec\u9663\u55b6<color=#e839b9ff>\u30e9\u30d0\u30fc\u30ba</color>\u306e\u6557\u5317\u3068\u306a\u308b"
     },
@@ -1806,7 +1817,7 @@
         "0": "The GM (Game Master) is an observer role.\nTheir presence has no effect on the game itself, and all players know who the GM is\nat all times. The GM cannot be targeted by other players, cannot fix sabotages,\nand cannot vote or be voted for. They are a completely external presence,\nprovided with a range of tools at their disposal to efficiently observe the flow of\nthe game.",
         "11": "\u30fb\u30b2\u30fc\u30e0\u306b\u5f71\u97ff\u3092\u4e0e\u3048\u306a\u3044\u795e\u8996\u70b9\u306e\u5b58\u5728"
     },
-    "oppFullDesc": {
+    "opportunistFullDesc": {
         "0": "The Opportunist is a outsider role. So long as they are alive at the end of the game,\nthey win alongside the victorious team. They can choose to side with any team they\nwish to ensure their own survival.",
         "11": "\u30fb\u6700\u5f8c\u307e\u3067\u751f\u304d\u6b8b\u308c\u3070\u52dd\u5229\n\u30fb\u30ad\u30ebor\u8ffd\u653e\u3055\u308c\u305a\u306b<color=#8cffffff>\u30af\u30eb\u30fc</color>\u307e\u305f\u306f<color=#ff1919ff>\u30a4\u30f3\u30dd\u30b9\u30bf\u30fc</color>\u307e\u305f\u306f<color=#ffff00ff>\u305d\u306e\u4ed6\u9663\u55b6</color>\u304c\u52dd\u5229\u3057\u305f\u969b\u306b\n\u3000\u8ffd\u52a0\u52dd\u5229\u3068\u306a\u308b"
     },
@@ -2125,6 +2136,12 @@
     },
     "PathfindText": {
         "11": "\u63a2\u3059"
+    },
+    "PursuerText": {
+        "11": "\u7a7a\u5305"
+    },
+    "WitchText": {
+        "11": "\u9b54\u8853"
     },
     "colorSalmon": {
         "0": "Salmon",

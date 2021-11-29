@@ -18,9 +18,6 @@ namespace TheOtherRoles
     public static class TheOtherRoles
     {
         public static System.Random rnd = new System.Random((int)DateTime.Now.Ticks);
-        public static List<int> exiledPlayers = new List<int>();
-        public static List<int> suicidedPlayers = new List<int>();
-        public static List<int> misfiredPlayers = new List<int>();
 
         public enum Teams
         {
@@ -38,9 +35,6 @@ namespace TheOtherRoles
 
         public static void clearAndReloadRoles()
         {
-            exiledPlayers.Clear();
-            suicidedPlayers.Clear();
-            misfiredPlayers.Clear();
             CustomOverlays.resetOverlays();
 
             Jester.clearAndReload();

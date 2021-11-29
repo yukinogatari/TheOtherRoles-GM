@@ -41,7 +41,7 @@ namespace TheOtherRoles.Patches
                 PlayerControl host = AmongUsClient.Instance?.GetHost().Character;
                 if (host.Data.Role.IsImpostor)
                 {
-                    Helpers.log($"the host is an impostor again wtf");
+                    Helpers.log("Why are we here");
                     bool hostIsImpostor = host.Data.Role.IsImpostor;
                     if (host.Data.Role.IsImpostor)
                     {
@@ -58,7 +58,6 @@ namespace TheOtherRoles.Patches
                             break;
                         }
 
-
                         MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.OverrideNativeRole, Hazel.SendOption.Reliable, -1);
                         writer.Write(host.PlayerId);
                         writer.Write((byte)RoleTypes.Crewmate);
@@ -70,8 +69,6 @@ namespace TheOtherRoles.Patches
                         writer.Write((byte)RoleTypes.Impostor);
                         AmongUsClient.Instance.FinishRpcImmediately(writer);
                         RPCProcedure.overrideNativeRole(newImp.PlayerId, (byte)RoleTypes.Impostor);
-
-                        Helpers.log($"Host was impostor, turned {newImp.Data.PlayerName} into an impostor.");
                     }
                 }
             }
@@ -378,7 +375,6 @@ namespace TheOtherRoles.Patches
 
         private static byte setRoleToHost(byte roleId, PlayerControl host, byte flag = 0)
         {
-
             byte playerId = host.PlayerId;
 
             MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.SetRole, Hazel.SendOption.Reliable, -1);
@@ -389,20 +385,26 @@ namespace TheOtherRoles.Patches
             RPCProcedure.setRole(roleId, playerId, flag);
             return playerId;
         }
-		
-        private static void assignRoleTargets(RoleAssignmentData data) {
+
+        private static void assignRoleTargets(RoleAssignmentData data)
+        {
             // Set Lawyer Target
-            if (Lawyer.lawyer != null) {
+            if (Lawyer.lawyer != null)
+            {
                 var possibleTargets = new List<PlayerControl>();
-                foreach (PlayerControl p in PlayerControl.AllPlayerControls) {
+                foreach (PlayerControl p in PlayerControl.AllPlayerControls)
+                {
                     if (!p.Data.IsDead && !p.Data.Disconnected && p != Lovers.lover1 && p != Lovers.lover2 && (p.Data.Role.IsImpostor || p == Jackal.jackal))
                         possibleTargets.Add(p);
                 }
-                if (possibleTargets.Count == 0) {
+                if (possibleTargets.Count == 0)
+                {
                     MessageWriter w = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.LawyerPromotesToPursuer, Hazel.SendOption.Reliable, -1);
                     AmongUsClient.Instance.FinishRpcImmediately(w);
                     RPCProcedure.lawyerPromotesToPursuer();
-                } else {
+                }
+                else
+                {
                     var target = possibleTargets[TheOtherRoles.rnd.Next(0, possibleTargets.Count)];
                     MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.LawyerSetTarget, Hazel.SendOption.Reliable, -1);
                     writer.Write(target.PlayerId);
@@ -410,6 +412,7 @@ namespace TheOtherRoles.Patches
                     RPCProcedure.lawyerSetTarget(target.PlayerId);
                 }
             }
+        }
 
         private static byte setRoleToRandomPlayer(byte roleId, List<PlayerControl> playerList, byte flag = 0, bool removePlayer = true)
         {
@@ -425,8 +428,6 @@ namespace TheOtherRoles.Patches
             RPCProcedure.setRole(roleId, playerId, flag);
             return playerId;
         }
-
-
 
         private class RoleAssignmentData
         {

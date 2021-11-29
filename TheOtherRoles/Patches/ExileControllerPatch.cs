@@ -56,10 +56,10 @@ namespace TheOtherRoles.Patches {
                 if (!Witch.witchVoteSavesTargets || exiled == null || exiled.PlayerId != Witch.witch.PlayerId) {
                     foreach (PlayerControl target in Witch.futureSpelled) {
                         if (target != null && !target.Data.IsDead && Helpers.checkMuderAttempt(Witch.witch, target, true) == MurderAttemptResult.PerformKill) {
-                            MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.UncheckedExilePlayer, Hazel.SendOption.Reliable, -1);
+                            MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.WitchSpellCast, Hazel.SendOption.Reliable, -1);
                             writer.Write(target.PlayerId);
                             AmongUsClient.Instance.FinishRpcImmediately(writer);
-                            RPCProcedure.uncheckedExilePlayer(target.PlayerId);
+                            RPCProcedure.witchSpellCast(target.PlayerId);
                         }
                     }
                 }

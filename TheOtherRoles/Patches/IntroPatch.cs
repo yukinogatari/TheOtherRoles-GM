@@ -59,6 +59,8 @@ namespace TheOtherRoles.Patches {
             }
 
             Arsonist.updateIcons();
+            Morphling.resetMorph();
+            Camouflager.resetCamouflage();
 
             if (PlayerControl.LocalPlayer == GM.gm && !GM.hasTasks)
             {
@@ -88,7 +90,7 @@ namespace TheOtherRoles.Patches {
     class IntroPatch {
         public static void setupIntroTeamIcons(IntroCutscene __instance, ref  Il2CppSystem.Collections.Generic.List<PlayerControl> yourTeam) {
             // Intro solo teams
-            if (PlayerControl.LocalPlayer == Jester.jester || PlayerControl.LocalPlayer == Jackal.jackal || PlayerControl.LocalPlayer == Arsonist.arsonist || PlayerControl.LocalPlayer == GM.gm || PlayerControl.LocalPlayer == Opportunist.opportunist || PlayerControl.LocalPlayer == Vulture.vulture || PlayerControl.LocalPlayer == Lawyer.lawyer) {
+            if (PlayerControl.LocalPlayer.isNeutral() || PlayerControl.LocalPlayer == GM.gm) {
                 var soloTeam = new Il2CppSystem.Collections.Generic.List<PlayerControl>();
                 soloTeam.Add(PlayerControl.LocalPlayer);
                 yourTeam = soloTeam;

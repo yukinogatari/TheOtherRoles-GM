@@ -266,6 +266,7 @@ namespace TheOtherRoles {
 
             // Role Options
             activateRoles = CustomOption.Create(7, cs(new Color(204f / 255f, 204f / 255f, 0, 1f), "blockOriginal"), true, null, true);
+
             presetSelection = CustomOption.Create(0, cs(new Color(204f / 255f, 204f / 255f, 0, 1f), "presetSelection"), presets, null, true);
 
             // Using new id's for the options to not break compatibilty with older versions
@@ -277,7 +278,7 @@ namespace TheOtherRoles {
             impostorRolesCountMax = CustomOption.Create(305, cs(new Color(204f / 255f, 204f / 255f, 0, 1f), "impostorRolesCountMax"), 0f, 0f, 15f, 1f);
 
 
-            gmEnabled = CustomOption.Create(400, cs(GM.color, "gmEnabled"), false, null, true);
+            gmEnabled = CustomOption.Create(400, cs(GM.color, "gm"), false, null, true);
             gmIsHost = CustomOption.Create(401, "gmIsHost", true, gmEnabled);
             //gmHasTasks = CustomOption.Create(402, "gmHasTasks", false, gmEnabled);
             gmCanWarp = CustomOption.Create(405, "gmCanWarp", true, gmEnabled);
@@ -285,7 +286,7 @@ namespace TheOtherRoles {
             gmDiesAtStart = CustomOption.Create(404, "gmDiesAtStart", true, gmEnabled);
 
 
-            mafiaSpawnRate = CustomOption.Create(10, cs(Janitor.color, "mafiaSpawnRate"), rates, null, true);
+            mafiaSpawnRate = CustomOption.Create(10, cs(Janitor.color, "mafia"), rates, null, true);
             janitorCooldown = CustomOption.Create(11, "janitorCooldown", 30f, 2.5f, 60f, 2.5f, mafiaSpawnRate, format : "unitSeconds");
 
             morphlingSpawnRate = CustomOption.Create(20, cs(Morphling.color, "morphling"), rates, null, true);
@@ -326,13 +327,13 @@ namespace TheOtherRoles {
             bountyHunterShowArrow = CustomOption.Create(324, "bountyHunterShowArrow", true, bountyHunterSpawnRate);
             bountyHunterArrowUpdateIntervall = CustomOption.Create(325, "bountyHunterArrowUpdateIntervall", 15f, 2.5f, 60f, 2.5f, bountyHunterShowArrow, format: "unitSeconds");
 
-            witchSpawnRate = CustomOption.Create(370, cs(Witch.color, "Witch"), rates, null, true);
-            witchCooldown = CustomOption.Create(371, "Witch Spell Casting Cooldown", 30f, 10f, 120f, 5f, witchSpawnRate);
-            witchAdditionalCooldown = CustomOption.Create(372, "Witch Additional Cooldown", 10f, 0f, 60f, 5f, witchSpawnRate);
-            witchCanSpellAnyone = CustomOption.Create(373, "Witch Can Spell Anyone", false, witchSpawnRate);
-            witchSpellCastingDuration = CustomOption.Create(374, "Spell Casting Duration", 1f, 0f, 10f, 1f, witchSpawnRate);
-            witchTriggerBothCooldowns = CustomOption.Create(375, "Trigger Both Cooldowns", true, witchSpawnRate);
-            witchVoteSavesTargets = CustomOption.Create(376, "Voting The Witch Saves All The Targets", true, witchSpawnRate);
+            witchSpawnRate = CustomOption.Create(390, cs(Witch.color, "witch"), rates, null, true);
+            witchCooldown = CustomOption.Create(391, "witchSpellCooldown", 30f, 2.5f, 120f, 2.5f, witchSpawnRate, format: "unitSeconds");
+            witchAdditionalCooldown = CustomOption.Create(392, "witchAdditionalCooldown", 10f, 0f, 60f, 5f, witchSpawnRate, format: "unitSeconds");
+            witchCanSpellAnyone = CustomOption.Create(393, "witchCanSpellAnyone", false, witchSpawnRate);
+            witchSpellCastingDuration = CustomOption.Create(394, "witchSpellDuration", 1f, 0f, 10f, 1f, witchSpawnRate, format: "unitSeconds");
+            witchTriggerBothCooldowns = CustomOption.Create(395, "witchTriggerBoth", true, witchSpawnRate);
+            witchVoteSavesTargets = CustomOption.Create(396, "witchSaveTargets", true, witchSpawnRate);
 
             madmateSpawnRate = CustomOption.Create(360, cs(Madmate.color, "madmate"), rates, null, true);
             madmateCanDieToSheriff = CustomOption.Create(361, "madmateCanDieToSheriff", false, madmateSpawnRate);
@@ -342,18 +343,18 @@ namespace TheOtherRoles {
             madmateCanFixComm = CustomOption.Create(365, "madmateCanFixComm", true, madmateSpawnRate);
 
 
-            miniSpawnRate = CustomOption.Create(180, cs(Mini.color, "miniSpawnRate"), rates, null, true);
+            miniSpawnRate = CustomOption.Create(180, cs(Mini.color, "mini"), rates, null, true);
             miniIsImpRate = CustomOption.Create(182, "miniIsImpRate", rates, miniSpawnRate);
             miniGrowingUpDuration = CustomOption.Create(181, "miniGrowingUpDuration", 400f, 100f, 1500f, 100f, miniSpawnRate, format: "unitSeconds");
 
-            loversSpawnRate = CustomOption.Create(50, cs(Lovers.color, "lover"), rates, null, true);
+            loversSpawnRate = CustomOption.Create(50, cs(Lovers.color, "lovers"), rates, null, true);
             loversImpLoverRate = CustomOption.Create(51, "loversImpLoverRate", rates, loversSpawnRate);
             loversBothDie = CustomOption.Create(52, "loversBothDie", true, loversSpawnRate);
             loversCanHaveAnotherRole = CustomOption.Create(53, "loversCanHaveAnotherRole", true, loversSpawnRate);
             loversSeparateTeam = CustomOption.Create(56, "loversSeparateTeam", true, loversSpawnRate);
             loversTasksCount = CustomOption.Create(55, "loversTasksCount", false, loversSeparateTeam);
 
-            guesserSpawnRate = CustomOption.Create(310, cs(Guesser.color, "guesserSpawnRate"), rates, null, true);
+            guesserSpawnRate = CustomOption.Create(310, cs(Guesser.color, "guesser"), rates, null, true);
             guesserIsImpGuesserRate = CustomOption.Create(311, "guesserIsImpGuesserRate", rates, guesserSpawnRate);
             guesserNumberOfShots = CustomOption.Create(312, "guesserNumberOfShots", 2f, 1f, 15f, 1f, guesserSpawnRate, format: "unitShots");
             guesserOnlyAvailableRoles = CustomOption.Create(313, "guesserOnlyAvailableRoles", true, guesserSpawnRate);
@@ -389,14 +390,14 @@ namespace TheOtherRoles {
             vultureCanUseVents = CustomOption.Create(343, "vultureCanUseVents", true, vultureSpawnRate);
             vultureShowArrows = CustomOption.Create(344, "vultureShowArrows", true, vultureSpawnRate);
 
-            lawyerSpawnRate = CustomOption.Create(350, cs(Lawyer.color, "Lawyer"), rates, null, true);
-            lawyerTargetKnows = CustomOption.Create(351, "Lawyer Target Knows", true, lawyerSpawnRate);
-            lawyerWinsAfterMeetings = CustomOption.Create(352, "Lawyer Wins After Meetings", false, lawyerSpawnRate);
-            lawyerNeededMeetings = CustomOption.Create(353, "Lawyer Needed Meetings To Win", 5f, 1f, 15f, 1f, lawyerWinsAfterMeetings);
-            lawyerVision = CustomOption.Create(354, "Lawyer Vision", 1f, 0.25f, 3f, 0.25f, lawyerSpawnRate);
-            lawyerKnowsRole = CustomOption.Create(355, "Lawyer Knows Target Role", false, lawyerSpawnRate);
-            pursuerCooldown = CustomOption.Create(356, "Pursuer Blank Cooldown", 30f, 5f, 60f, 2.5f, lawyerSpawnRate);
-            pursuerBlanksNumber = CustomOption.Create(357, "Pursuer Number Of Blanks", 5f, 0f, 20f, 1f, lawyerSpawnRate);
+            lawyerSpawnRate = CustomOption.Create(350, cs(Lawyer.color, "lawyer"), rates, null, true);
+            lawyerTargetKnows = CustomOption.Create(351, "lawyerTargetKnows", true, lawyerSpawnRate);
+            lawyerWinsAfterMeetings = CustomOption.Create(352, "lawyerWinsMeeting", false, lawyerSpawnRate);
+            lawyerNeededMeetings = CustomOption.Create(353, "lawyerMeetingsNeeded", 5f, 1f, 15f, 1f, lawyerWinsAfterMeetings);
+            lawyerVision = CustomOption.Create(354, "lawyerVision", 1f, 0.25f, 3f, 0.25f, lawyerSpawnRate, format: "unitMultiplier");
+            lawyerKnowsRole = CustomOption.Create(355, "lawyerKnowsRole", false, lawyerSpawnRate);
+            pursuerCooldown = CustomOption.Create(356, "pursuerBlankCool", 30f, 2.5f, 60f, 2.5f, lawyerSpawnRate, format: "unitSeconds");
+            pursuerBlanksNumber = CustomOption.Create(357, "pursuerNumBlanks", 5f, 0f, 20f, 1f, lawyerSpawnRate, format: "unitShots");
 
             shifterSpawnRate = CustomOption.Create(70, cs(Shifter.color, "shifter"), rates, null, true);
             shifterShiftsModifiers = CustomOption.Create(71, "shifterShiftsModifiers", false, shifterSpawnRate);
@@ -491,9 +492,7 @@ namespace TheOtherRoles {
             maxNumberOfMeetings = CustomOption.Create(3, "maxNumberOfMeetings", 10, 0, 15, 1, specialOptions, true);
             blockSkippingInEmergencyMeetings = CustomOption.Create(4, "blockSkippingInEmergencyMeetings", false, specialOptions);
             noVoteIsSelfVote = CustomOption.Create(5, "noVoteIsSelfVote", false, specialOptions);
-            hidePlayerNames = CustomOption.Create(6, "hidePlayerNames", false, specialOptions);
             allowParallelMedBayScans = CustomOption.Create(540, "parallelMedbayScans", false, specialOptions);
-            dynamicMap = CustomOption.Create(8, "Play On A Random Map", false, null, false);
             hideSettings = CustomOption.Create(520, "hideSettings", false, specialOptions);
 
             restrictDevices = CustomOption.Create(510, "restrictDevices", new string[] { "optionOff", "restrictPerTurn", "restrictPerGame" }, specialOptions);
@@ -502,9 +501,11 @@ namespace TheOtherRoles {
             restrictVents = CustomOption.Create(503, "disableVitals", 30f, 0f, 600f, 5f, restrictDevices, format: "unitSeconds");
 
             uselessOptions = CustomOption.Create(530, "uselessOptions", false, null, isHeader: true);
-            disableVents = CustomOption.Create(504, "disableVents", false, uselessOptions);
+            hidePlayerNames = CustomOption.Create(6, "hidePlayerNames", false, uselessOptions);
             playerColorRandom = CustomOption.Create(521, "playerColorRandom", false, uselessOptions);
             playerNameDupes = CustomOption.Create(522, "playerNameDupes", false, uselessOptions);
+            disableVents = CustomOption.Create(504, "disableVents", false, uselessOptions);
+            dynamicMap = CustomOption.Create(8, "playRandomMaps", false, uselessOptions);
 
             blockedRolePairings.Add((byte)RoleId.Vampire, new [] { (byte)RoleId.Warlock});
             blockedRolePairings.Add((byte)RoleId.Warlock, new [] { (byte)RoleId.Vampire});

@@ -208,26 +208,38 @@ namespace TheOtherRoles
             // Sheriff Kill
             sheriffKillButton = new CustomButton(
                 () => {
+                    if (Sheriff.numShots <= 0)
+                    {
+                        return;
+                    }
+
                     MurderAttemptResult murderAttemptResult = Helpers.checkMuderAttempt(Sheriff.sheriff, Sheriff.currentTarget);
                     if (murderAttemptResult == MurderAttemptResult.SuppressKill) return;
 
                     if (murderAttemptResult == MurderAttemptResult.PerformKill) {
-                        byte targetId = 0;
+
+                        bool misfire = false;
+                        byte targetId = Sheriff.currentTarget.PlayerId; ;
                         if ((Sheriff.currentTarget.Data.Role.IsImpostor && (Sheriff.currentTarget != Mini.mini || Mini.isGrownUp())) ||
                             (Sheriff.spyCanDieToSheriff && Spy.spy == Sheriff.currentTarget) ||
-                            (Sheriff.canKillNeutrals && (Arsonist.arsonist == Sheriff.currentTarget || Jester.jester == Sheriff.currentTarget || Vulture.vulture == Sheriff.currentTarget || Lawyer.lawyer == Sheriff.currentTarget || Pursuer.pursuer == Sheriff.currentTarget)) ||
-                            (Jackal.jackal == Sheriff.currentTarget || Sidekick.sidekick == Sheriff.currentTarget)) {
-                            targetId = Sheriff.currentTarget.PlayerId;
+                            (Sheriff.madmateCanDieToSheriff && Madmate.madmate == Sheriff.currentTarget) ||
+                            (Sheriff.canKillNeutrals && Sheriff.currentTarget.isNeutral()) ||
+                            (Jackal.jackal == Sheriff.currentTarget || Sidekick.sidekick == Sheriff.currentTarget))
+                        {
+                            //targetId = Sheriff.currentTarget.PlayerId;
+                            misfire = false;
                         }
-                        else {
-                            targetId = PlayerControl.LocalPlayer.PlayerId;
+                        else
+                        {
+                            //targetId = PlayerControl.LocalPlayer.PlayerId;
+                            misfire = true;
                         }
-
-                        MessageWriter killWriter = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.UncheckedMurderPlayer, Hazel.SendOption.Reliable, -1);
+                        MessageWriter killWriter = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.SheriffKill, Hazel.SendOption.Reliable, -1);
                         killWriter.Write(Sheriff.sheriff.Data.PlayerId);
                         killWriter.Write(targetId);
+                        killWriter.Write(misfire);
                         AmongUsClient.Instance.FinishRpcImmediately(killWriter);
-                        RPCProcedure.uncheckedMurderPlayer(Sheriff.sheriff.Data.PlayerId, targetId);
+                        RPCProcedure.sheriffKill(Sheriff.sheriff.Data.PlayerId, targetId, misfire);
                     }
 
                     sheriffKillButton.Timer = sheriffKillButton.MaxTimer;
@@ -852,7 +864,7 @@ namespace TheOtherRoles
                         securityGuardButton.buttonText = ModTranslation.getString("CloseVentText");
                         securityGuardButton.Sprite = SecurityGuard.getCloseVentButtonSprite();
                     }
-                    if (securityGuardButtonScrewsText != null) securityGuardButtonScrewsText.text = $"{SecurityGuard.remainingScrews}/{SecurityGuard.totalScrews}";
+                    if (securityGuardButtonScrewsText != null) securityGuardButtonScrewsText.text = String.Format(ModTranslation.getString("securityGuardScrews"), SecurityGuard.remainingScrews);
 
                     if (SecurityGuard.ventTarget != null)
                     {
@@ -1364,7 +1376,7 @@ namespace TheOtherRoles
                 },
                 () => { return Pursuer.pursuer != null && Pursuer.pursuer == PlayerControl.LocalPlayer && !PlayerControl.LocalPlayer.Data.IsDead && Pursuer.blanks < Pursuer.blanksNumber; },
                 () => {
-                    if (pursuerButtonBlanksText != null) pursuerButtonBlanksText.text = $"{Pursuer.blanksNumber - Pursuer.blanks}";
+                    if (pursuerButtonBlanksText != null) pursuerButtonBlanksText.text = String.Format(ModTranslation.getString("pursuerBlanks"), Pursuer.blanksNumber - Pursuer.blanks);
 
                     return Pursuer.blanksNumber > Pursuer.blanks && PlayerControl.LocalPlayer.CanMove && Pursuer.target != null;
                 },
@@ -1372,8 +1384,10 @@ namespace TheOtherRoles
                 Pursuer.getTargetSprite(),
                 new Vector3(-1.8f, -0.06f, 0),
                 __instance,
+                __instance.UseButton,
                 KeyCode.F
             );
+            pursuerButton.buttonText = ModTranslation.getString("PursuerText");
 
             // Pursuer button blanks left
             pursuerButtonBlanksText = GameObject.Instantiate(pursuerButton.actionButton.cooldownTimerText, pursuerButton.actionButton.cooldownTimerText.transform.parent);
@@ -1407,6 +1421,7 @@ namespace TheOtherRoles
                 Witch.getButtonSprite(),
                 new Vector3(-1.8f, -0.06f, 0),
                 __instance,
+                __instance.KillButton,
                 KeyCode.F,
                 true,
                 Witch.spellCastingDuration,
@@ -1430,6 +1445,7 @@ namespace TheOtherRoles
                     Witch.spellCastingTarget = null;
                 }
             );
+            witchSpellButton.buttonText = ModTranslation.getString("WitchText");
 
             // Set the default (or settings from the previous game) timers/durations when spawning the buttons
             setCustomButtonCooldowns();
