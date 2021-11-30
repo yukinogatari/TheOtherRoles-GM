@@ -1203,18 +1203,29 @@ namespace TheOtherRoles.Patches
     }
 
     [HarmonyPatch(typeof(KillAnimation), nameof(KillAnimation.CoPerformKill))]
-    class KillAnimationCoPerformKillPatch
-    {
-        public static void Prefix(KillAnimation __instance, [HarmonyArgument(0)] ref PlayerControl source, [HarmonyArgument(1)] ref PlayerControl target)
-        {
-            if (Vampire.vampire != null && Vampire.vampire == source && Vampire.bitten != null && Vampire.bitten == target)
+    class KillAnimationCoPerformKillPatch {
+        public static bool hideNextAnimation = true;
+        public static void Prefix(KillAnimation __instance, [HarmonyArgument(0)]ref PlayerControl source, [HarmonyArgument(1)]ref PlayerControl target) {
+            if (hideNextAnimation)
                 source = target;
+            hideNextAnimation = false;
+        }
+    }
 
-            if (Warlock.warlock != null && Warlock.warlock == source && Warlock.curseKillTarget != null && Warlock.curseKillTarget == target)
-            {
-                source = target;
-                Warlock.curseKillTarget = null; // Reset here
+    [HarmonyPatch(typeof(KillAnimation), nameof(KillAnimation.SetMovement))]
+    class KillAnimationSetMovementPatch {
+        private static int? colorId = null;
+        public static void Prefix(PlayerControl source, bool canMove) {
+            Color color = source.myRend.material.GetColor("_BodyColor");
+            if (color != null && Morphling.morphling != null && source.Data.PlayerId == Morphling.morphling.PlayerId) {
+                var index = Palette.PlayerColors.IndexOf(color);
+                if (index != -1) colorId = index;
             }
+        }
+
+        public static void Postfix(PlayerControl source, bool canMove) {
+            if (colorId.HasValue) source.RawSetColor(colorId.Value);
+            colorId = null;
         }
     }
 
