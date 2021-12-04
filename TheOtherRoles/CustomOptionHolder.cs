@@ -501,11 +501,11 @@ namespace TheOtherRoles {
             restrictVents = CustomOption.Create(503, "disableVitals", 30f, 0f, 600f, 5f, restrictDevices, format: "unitSeconds");
 
             uselessOptions = CustomOption.Create(530, "uselessOptions", false, null, isHeader: true);
-            hidePlayerNames = CustomOption.Create(6, "hidePlayerNames", false, uselessOptions);
-            playerColorRandom = CustomOption.Create(521, "playerColorRandom", false, uselessOptions);
-            playerNameDupes = CustomOption.Create(522, "playerNameDupes", false, uselessOptions);
-            disableVents = CustomOption.Create(504, "disableVents", false, uselessOptions);
             dynamicMap = CustomOption.Create(8, "playRandomMaps", false, uselessOptions);
+            disableVents = CustomOption.Create(504, "disableVents", false, uselessOptions);
+            hidePlayerNames = CustomOption.Create(6, "hidePlayerNames", false, uselessOptions);
+            playerNameDupes = CustomOption.Create(522, "playerNameDupes", false, uselessOptions);
+            playerColorRandom = CustomOption.Create(521, "playerColorRandom", false, uselessOptions);
 
             blockedRolePairings.Add((byte)RoleId.Vampire, new [] { (byte)RoleId.Warlock});
             blockedRolePairings.Add((byte)RoleId.Warlock, new [] { (byte)RoleId.Vampire});

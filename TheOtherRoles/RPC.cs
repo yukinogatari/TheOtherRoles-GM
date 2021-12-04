@@ -413,10 +413,10 @@ namespace TheOtherRoles
             if (misfire)
             {
                 sheriff.MurderPlayer(sheriff);
-                misfiredPlayers.Add(sheriff.PlayerId);
+                finalStatuses[sheriffId] = FinalStatus.Misfire;
 
                 if (!Sheriff.misfireKillsTarget) return;
-                misfiredPlayers.Add(targetId);
+                finalStatuses[targetId] = FinalStatus.Misfire;
             }
 
             sheriff.MurderPlayer(target);
@@ -833,7 +833,11 @@ namespace TheOtherRoles
         public static void arsonistWin() {
             Arsonist.triggerArsonistWin = true;
             foreach (PlayerControl p in PlayerControl.AllPlayerControls) {
-                if (p != Arsonist.arsonist) p.Exiled();
+                if (p != Arsonist.arsonist && !p.Data.IsDead)
+                {
+                    p.Exiled();
+                    finalStatuses[p.PlayerId] = FinalStatus.Torched;
+                }
             }
         }
 
@@ -956,7 +960,7 @@ namespace TheOtherRoles
         internal static void witchSpellCast(byte playerId)
         {
             uncheckedExilePlayer(playerId);
-            spelledPlayers.Add(playerId);
+            finalStatuses[playerId] = FinalStatus.Spelled;
         }
     }   
 

@@ -46,6 +46,7 @@ namespace TheOtherRoles.Patches
         Alive,
         Torched,
         Spelled,
+        Sabotage,
         Exiled,
         Dead,
         Suicide,
@@ -109,13 +110,9 @@ namespace TheOtherRoles.Patches
                 var (tasksCompleted, tasksTotal) = TasksHandler.taskInfo(p);
                 var finalStatus =
                     p.Disconnected == true ? FinalStatus.Disconnected :
-                    spelledPlayers.Contains(p.PlayerId) ? FinalStatus.Spelled :
-                    suicidedPlayers.Contains(p.PlayerId) ? FinalStatus.Suicide :
-                    misfiredPlayers.Contains(p.PlayerId) ? FinalStatus.Misfire :
-                    exiledPlayers.Contains(p.PlayerId) ? FinalStatus.Exiled :
+                    finalStatuses.ContainsKey(p.PlayerId) ? finalStatuses[p.PlayerId] :
                     p.IsDead == true ? FinalStatus.Dead :
-                    gameOverReason == (GameOverReason)CustomGameOverReason.ArsonistWin && Arsonist.arsonist != p.Object ? FinalStatus.Torched :
-                    gameOverReason == GameOverReason.ImpostorBySabotage && !p.Role.IsImpostor ? FinalStatus.Dead :
+                    gameOverReason == GameOverReason.ImpostorBySabotage && !p.Role.IsImpostor ? FinalStatus.Sabotage :
                     FinalStatus.Alive;
 
                 AdditionalTempData.playerRoles.Add(new AdditionalTempData.PlayerRoleInfo()
@@ -161,6 +158,7 @@ namespace TheOtherRoles.Patches
             }
             foreach (var winner in winnersToRemove) TempData.winners.Remove(winner);
 
+            bool saboWin = gameOverReason == GameOverReason.ImpostorBySabotage;
 
             bool jesterWin = Jester.jester != null && gameOverReason == (GameOverReason)CustomGameOverReason.JesterWin;
             bool arsonistWin = Arsonist.arsonist != null && gameOverReason == (GameOverReason)CustomGameOverReason.ArsonistWin;
@@ -302,19 +300,23 @@ namespace TheOtherRoles.Patches
                 }
             }
 
-            if (Opportunist.opportunist != null && !Opportunist.opportunist.Data.IsDead)
+            // Extra win conditions for non-impostor roles
+            if (!saboWin)
             {
-                if (!TempData.winners.ToArray().Any(x => x.PlayerName == Opportunist.opportunist.Data.PlayerName))
-                    TempData.winners.Add(new WinningPlayerData(Opportunist.opportunist.Data));
-                AdditionalTempData.additionalWinConditions.Add(WinCondition.OpportunistWin);
-            }
+                if (Opportunist.opportunist != null && !Opportunist.opportunist.Data.IsDead)
+                {
+                    if (!TempData.winners.ToArray().Any(x => x.PlayerName == Opportunist.opportunist.Data.PlayerName))
+                        TempData.winners.Add(new WinningPlayerData(Opportunist.opportunist.Data));
+                    AdditionalTempData.additionalWinConditions.Add(WinCondition.OpportunistWin);
+                }
 
-            // Possible Additional winner: Pursuer
-            if (Pursuer.pursuer != null && !Pursuer.pursuer.Data.IsDead)
-            {
-                if (!TempData.winners.ToArray().Any(x => x.PlayerName == Pursuer.pursuer.Data.PlayerName))
-                    TempData.winners.Add(new WinningPlayerData(Pursuer.pursuer.Data));
-                AdditionalTempData.additionalWinConditions.Add(WinCondition.AdditionalAlivePursuerWin);
+                // Possible Additional winner: Pursuer
+                if (Pursuer.pursuer != null && !Pursuer.pursuer.Data.IsDead)
+                {
+                    if (!TempData.winners.ToArray().Any(x => x.PlayerName == Pursuer.pursuer.Data.PlayerName))
+                        TempData.winners.Add(new WinningPlayerData(Pursuer.pursuer.Data));
+                    AdditionalTempData.additionalWinConditions.Add(WinCondition.AdditionalAlivePursuerWin);
+                }
             }
 
             foreach (WinningPlayerData wpd in TempData.winners)
@@ -540,6 +542,7 @@ namespace TheOtherRoles.Patches
                             return x.Status.CompareTo(y.Status);
 
                         });
+
                         foreach (var data in AdditionalTempData.playerRoles)
                         {
                             var taskInfo = data.TasksTotal > 0 ? $"<color=#FAD934FF>{data.TasksCompleted}/{data.TasksTotal}</color>" : "";
@@ -551,6 +554,7 @@ namespace TheOtherRoles.Patches
                                 case FinalStatus.Spelled: aliveDead = ModTranslation.getString("roleSummarySpelled"); break;
                                 case FinalStatus.Exiled: aliveDead = ModTranslation.getString("roleSummaryExiled"); break;
                                 case FinalStatus.Dead: aliveDead = ModTranslation.getString("roleSummaryDead"); break;
+                                case FinalStatus.Sabotage: aliveDead = ModTranslation.getString("roleSummaryDead"); break;
                                 case FinalStatus.Suicide: aliveDead = ModTranslation.getString("roleSummarySuicide"); break;
                                 case FinalStatus.Misfire: aliveDead = ModTranslation.getString("roleSummaryMisfire"); break;
                                 case FinalStatus.Disconnected: aliveDead = ModTranslation.getString("roleSummaryDC"); break;
@@ -559,6 +563,7 @@ namespace TheOtherRoles.Patches
 
                             roleSummaryText.AppendLine($"{data.PlayerName}<pos=18.5%>{taskInfo}<pos=25%>{aliveDead}<pos=34%>{data.RoleString}");
                         }
+
                         TMPro.TMP_Text roleSummaryTextMesh = roleSummary.GetComponent<TMPro.TMP_Text>();
                         roleSummaryTextMesh.alignment = TMPro.TextAlignmentOptions.TopLeft;
                         roleSummaryTextMesh.color = Color.white;

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnhollowerBaseLib;
 using static TheOtherRoles.TheOtherRoles;
+using static TheOtherRoles.GameHistory;
 using TheOtherRoles.Objects;
 using static TheOtherRoles.MapOptions;
 using System.Collections;
@@ -113,6 +114,11 @@ namespace TheOtherRoles.Patches {
         }
 
         static void WrapUpPostfix(GameData.PlayerInfo exiled) {
+            if (exiled != null)
+            {
+                finalStatuses[exiled.PlayerId] = FinalStatus.Exiled;
+            }
+
             // Mini exile lose condition
             if (exiled != null && Mini.mini != null && Mini.mini.PlayerId == exiled.PlayerId && !Mini.isGrownUp() && !Mini.mini.Data.Role.IsImpostor) {
                 Mini.triggerMiniLose = true;

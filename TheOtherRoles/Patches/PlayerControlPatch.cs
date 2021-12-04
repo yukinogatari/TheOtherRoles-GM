@@ -1092,7 +1092,7 @@ namespace TheOtherRoles.Patches
                 if (otherLover != null && !otherLover.Data.IsDead && Lovers.bothDie)
                 {
                     otherLover.MurderPlayer(otherLover);
-                    suicidedPlayers.Add(otherLover.PlayerId);
+                    finalStatuses[otherLover.PlayerId] = FinalStatus.Suicide;
                 }
             }
 
@@ -1252,7 +1252,7 @@ namespace TheOtherRoles.Patches
                 if (otherLover != null && !otherLover.Data.IsDead && Lovers.bothDie)
                 {
                     otherLover.Exiled();
-                    suicidedPlayers.Add(otherLover.PlayerId);
+                    finalStatuses[otherLover.PlayerId] = FinalStatus.Suicide;
                 }
             }
 

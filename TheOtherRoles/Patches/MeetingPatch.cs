@@ -237,11 +237,10 @@ namespace TheOtherRoles.Patches {
                 Lovers.notAckedExiledIsLover = false;
                 if (exiled != null)
                 {
-                    exiledPlayers.Add(exiled.PlayerId);
                     bool isLovers = Lovers.notAckedExiledIsLover = exiled.Object.isLovers();
 
                     if (isLovers)
-                        suicidedPlayers.Add(exiled.Object.getPartner().PlayerId);
+                        finalStatuses[exiled.Object.getPartner().PlayerId] = FinalStatus.Suicide;
                 }
             }
         }
