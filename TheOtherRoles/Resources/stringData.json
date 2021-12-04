@@ -1027,6 +1027,10 @@
         "0": "Bait Report Delay",
         "11": "\u6b7b\u4ea1\u5f8c\u3001\u5831\u544a\u3055\u308c\u308b\u307e\u3067\u306e\u9593"
     },
+    "baitShowKillFlash": {
+        "0": "Warn The Killer With A Flash",
+        "11": "\u6b7b\u4ea1\u6642\u3001\u72af\u4eba\u306b\u8b66\u544a\u3059\u308b"
+    },
     "madmate": {
         "0": "Madmate",
         "11": "\u30de\u30c3\u30c9\u30e1\u30a4\u30c8"
@@ -1403,23 +1407,31 @@
     },
     "streamerModeButton": {
         "0": "Streamer Mode",
-        "11": "\u30b9\u30c8\u30ea\u30fc\u30de\u30fc\u30e2\u30fc\u30c9"
+        "11": "\u30b9\u30c8\u30ea\u30fc\u30de\u30fc\n\u30e2\u30fc\u30c9"
     },
     "ghostsSeeTasksButton": {
         "0": "Ghosts See Remaining Tasks",
-        "11": "\u5e7d\u970a\u6642\u3001\u5168\u54e1\u306e\u30bf\u30b9\u30af\u6b8b\u91cf\u304c\u898b\u3048\u308b"
+        "11": "\u5e7d\u970a\u6642\u3001\u5168\u54e1\u306e\n\u30bf\u30b9\u30af\u6b8b\u91cf\u304c\u898b\u3048\u308b"
     },
     "ghostsSeeRolesButton": {
         "0": "Ghosts See Roles",
-        "11": "\u5e7d\u970a\u6642\u3001\u5168\u54e1\u306e\u30ed\u30fc\u30eb\u304c\u898b\u3048\u308b"
+        "11": "\u5e7d\u970a\u6642\u3001\u5168\u54e1\u306e\n\u30ed\u30fc\u30eb\u304c\u898b\u3048\u308b"
     },
     "ghostsSeeVotesButton": {
         "0": "Ghosts See Votes",
-        "11": "\u5e7d\u970a\u6642\u3001\u5168\u54e1\u306e\u6295\u7968\u5148\u304c\u898b\u3048\u308b"
+        "11": "\u5e7d\u970a\u6642\u3001\u5168\u54e1\u306e\n\u6295\u7968\u5148\u304c\u898b\u3048\u308b"
     },
     "showRoleSummaryButton": {
-        "0": "Role Summary",
+        "0": "Show Role Summary",
         "11": "\u6700\u7d42\u7d50\u679c\u3092\u8868\u793a"
+    },
+    "modOptionsText": {
+        "0": "Mod Options...",
+        "11": "MOD\u306e\u8a2d\u5b9a"
+    },
+    "moreOptionsText": {
+        "0": "More Options...",
+        "11": "MOD\u306e\u8a2d\u5b9a"
     },
     "gmGameOver": {
         "0": "Game Over",
@@ -1548,6 +1560,10 @@
     "roleSummarySpelled": {
         "0": "Spelled",
         "11": "\u546a\u6bba"
+    },
+    "roleSummarySabotage": {
+        "0": "Sabotage",
+        "11": "\u30b5\u30dc"
     },
     "roleSummaryDC": {
         "0": "DC'd",

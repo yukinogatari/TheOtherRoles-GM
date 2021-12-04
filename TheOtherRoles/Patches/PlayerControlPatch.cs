@@ -292,6 +292,8 @@ namespace TheOtherRoles.Patches
 
         static void engineerUpdate()
         {
+            if (Engineer.engineer == null) return;
+
             bool jackalHighlight = Engineer.highlightForTeamJackal && (PlayerControl.LocalPlayer == Jackal.jackal || PlayerControl.LocalPlayer == Sidekick.sidekick);
             bool impostorHighlight = Engineer.highlightForImpostors && PlayerControl.LocalPlayer.Data.Role.IsImpostor;
             if ((jackalHighlight || impostorHighlight) && ShipStatus.Instance?.AllVents != null)
@@ -302,12 +304,12 @@ namespace TheOtherRoles.Patches
                     {
                         if (vent?.myRend?.material != null)
                         {
-                            if (Engineer.engineer != null && Engineer.engineer.inVent)
+                            if (Engineer.engineer.inVent)
                             {
                                 vent.myRend.material.SetFloat("_Outline", 1f);
                                 vent.myRend.material.SetColor("_OutlineColor", Engineer.color);
                             }
-                            else if (vent.myRend.material.GetColor("_AddColor") != Color.red)
+                            else if (vent.myRend.material.GetColor("_AddColor") != Palette.ImpostorRed)
                             {
                                 vent.myRend.material.SetFloat("_Outline", 0);
                             }
@@ -543,7 +545,6 @@ namespace TheOtherRoles.Patches
                         meetingInfoText = playerInfoText;
                     }
 
-                    meetingInfoText = meetingInfoText.Replace("ラバーズ", "♥");
                     playerInfo.text = playerInfoText;
                     playerInfo.gameObject.SetActive(p.Visible);
                     if (meetingInfo != null) meetingInfo.text = MeetingHud.Instance.state == MeetingHud.VoteStates.Results ? "" : meetingInfoText;
@@ -724,6 +725,8 @@ namespace TheOtherRoles.Patches
                 var ventsWithPlayers = new List<int>();
                 foreach (PlayerControl player in PlayerControl.AllPlayerControls)
                 {
+                    if (player == null) continue;
+
                     if (player.inVent)
                     {
                         Vent target = ShipStatus.Instance.AllVents.OrderBy(x => Vector2.Distance(x.transform.position, player.GetTruePosition())).FirstOrDefault();
@@ -1184,7 +1187,7 @@ namespace TheOtherRoles.Patches
             Arsonist.updateStatus();
 			
             // Show flash on bait kill to the killer if enabled
-            if (Bait.bait != null && target == Bait.bait && Bait.showKillFlash && __instance == PlayerControl.LocalPlayer) {
+            if (Bait.bait != null && target == Bait.bait && Bait.showKillFlash && __instance != Bait.bait && __instance == PlayerControl.LocalPlayer) {
                 HudManager.Instance.FullScreen.enabled = true;
                 HudManager.Instance.StartCoroutine(Effects.Lerp(1f, new Action<float>((p) => {
                     var renderer = HudManager.Instance.FullScreen;

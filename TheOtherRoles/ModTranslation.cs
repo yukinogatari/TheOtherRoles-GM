@@ -101,11 +101,11 @@ namespace TheOtherRoles
     }
 
     [HarmonyPatch(typeof(LanguageSetter), nameof(LanguageSetter.SetLanguage))]
-    class SetLanguagepPatch
+    class SetLanguagePatch
     {
         static void Postfix()
         {
-            OptionsMenuBehaviourStartPatch.updateButtons();
+            ClientOptionsPatch.updateTranslations();
         }
     }
 }
