@@ -1292,6 +1292,7 @@ namespace TheOtherRoles
 
             public static bool highlightAllVents = false;
             public static float reportDelay = 0f;
+        	public static bool showKillFlash = true;
 
             public static bool reported = false;
 
@@ -1301,6 +1302,7 @@ namespace TheOtherRoles
                 reported = false;
                 highlightAllVents = CustomOptionHolder.baitHighlightAllVents.getBool();
                 reportDelay = CustomOptionHolder.baitReportDelay.getFloat();
+				showKillFlash = CustomOptionHolder.baitShowKillFlash.getBool();
             }
         }
 
@@ -1372,7 +1374,6 @@ namespace TheOtherRoles
                 zoomInSprite = null;
                 zoomOutSprite = null;
                 canWarp = CustomOptionHolder.gmCanWarp.getBool();
-                canKill = CustomOptionHolder.gmCanKill.getBool();
 
                 foreach (PoolablePlayer p in MapOptions.playerIcons.Values)
                 {

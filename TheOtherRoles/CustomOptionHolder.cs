@@ -195,6 +195,7 @@ namespace TheOtherRoles {
         public static CustomOption baitSpawnRate;
         public static CustomOption baitHighlightAllVents;
         public static CustomOption baitReportDelay;
+        public static CustomOption baitShowKillFlash;
 
         public static CustomOption madmateSpawnRate;
         public static CustomOption madmateCanDieToSheriff;
@@ -481,6 +482,7 @@ namespace TheOtherRoles {
             baitSpawnRate = CustomOption.Create(330, cs(Bait.color, "bait"), rates, null, true);
             baitHighlightAllVents = CustomOption.Create(331, "baitHighlightAllVents", false, baitSpawnRate);
             baitReportDelay = CustomOption.Create(332, "baitReportDelay", 0f, 0f, 10f, 1f, baitSpawnRate, format: "unitSeconds");
+            baitShowKillFlash = CustomOption.Create(333, "Warn The Killer With A Flash", true, baitSpawnRate);
 
             mediumSpawnRate = CustomOption.Create(370, cs(Medium.color, "medium"), rates, null, true);
             mediumCooldown = CustomOption.Create(371, "mediumCooldown", 30f, 5f, 120f, 5f, mediumSpawnRate, format: "unitSeconds");

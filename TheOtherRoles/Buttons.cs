@@ -505,7 +505,7 @@ namespace TheOtherRoles
                                 if (p == 1f)
                                 {
                                     // Perform kill if possible and reset bitten (regardless whether the kill was successful or not)
-                                    Helpers.checkMuderAttemptAndKill(Vampire.vampire, Vampire.bitten);
+                                    Helpers.checkMuderAttemptAndKill(Vampire.vampire, Vampire.bitten, showAnimation: false);
                                     MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.VampireSetBitten, Hazel.SendOption.Reliable, -1);
                                     writer.Write(byte.MaxValue);
                                     writer.Write(byte.MaxValue);
@@ -775,20 +775,11 @@ namespace TheOtherRoles
                         warlockCurseButton.Timer = 1f;
                         warlockCurseButton.buttonText = ModTranslation.getString("CurseKillText");
                     } else if (Warlock.curseVictim != null && Warlock.curseVictimTarget != null) {
-                        MurderAttemptResult murder = Helpers.checkMuderAttempt(Warlock.warlock, Warlock.curseVictimTarget);
+                        MurderAttemptResult murder = Helpers.checkMuderAttemptAndKill(Warlock.warlock, Warlock.curseVictimTarget, showAnimation: false);
                         if (murder == MurderAttemptResult.SuppressKill) return; 
 
-                        // Curse Kill
-                        if (murder == MurderAttemptResult.PerformKill) {
-                            MessageWriter killWriter = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.UncheckedMurderPlayer, Hazel.SendOption.Reliable, -1);
-                            killWriter.Write(Warlock.warlock.Data.PlayerId);
-                            killWriter.Write(Warlock.curseVictimTarget.PlayerId);
-                            killWriter.Write((byte)0);
-                            AmongUsClient.Instance.FinishRpcImmediately(killWriter);
-                            RPCProcedure.uncheckedMurderPlayer(Warlock.warlock.Data.PlayerId, Warlock.curseVictimTarget.PlayerId, (byte)0);
-                        }  
+                        // If blanked or killed
                         warlockCurseButton.buttonText = ModTranslation.getString("CurseText");
-
                         if(Warlock.rootTime > 0) {
                             PlayerControl.LocalPlayer.moveable = false;
                             PlayerControl.LocalPlayer.NetTransform.Halt(); // Stop current movement so the warlock is not just running straight into the next object
