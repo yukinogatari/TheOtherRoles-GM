@@ -309,7 +309,7 @@ namespace TheOtherRoles.Patches
                                 vent.myRend.material.SetFloat("_Outline", 1f);
                                 vent.myRend.material.SetColor("_OutlineColor", Engineer.color);
                             }
-                            else if (vent.myRend.material.GetColor("_AddColor") != Palette.ImpostorRed)
+                            else if (vent.myRend.material.GetColor("_AddColor").a == 0f)
                             {
                                 vent.myRend.material.SetFloat("_Outline", 0);
                             }
