@@ -45,6 +45,7 @@ The [Role Assignment](#role-assignment) sections explains how the roles are bein
 # Releases
 | Among Us - Version | Mod Version | Link |
 |----------|-------------|-----------------|
+| 2021.11.9.5s | v3.2.5 GM | [Download](https://github.com/yukinogatari/TheOtherRoles-GM/releases/download/v3.2.5/TheOtherRoles-GM.v3.2.5.zip)
 | 2021.11.9.5s | v3.2.4 GM | [Download](https://github.com/yukinogatari/TheOtherRoles-GM/releases/download/v3.2.4/TheOtherRoles-GM.v3.2.4.zip)
 | 2021.11.9.5s | v3.2.3 GM | [Download](https://github.com/yukinogatari/TheOtherRoles-GM/releases/download/v3.2.3/TheOtherRolesGM.dll)
 | 2021.11.9.5s | v3.2.2 GM | [Download](https://github.com/yukinogatari/TheOtherRoles-GM/releases/download/3.2.2/TheOtherRoles-GM.v3.2.2.zip)
@@ -57,6 +58,14 @@ The [Role Assignment](#role-assignment) sections explains how the roles are bein
 # Changelog
 <details>
   <summary>Click to show the Changelog</summary>
+  
+**Version 3.2.5 (GM)**
+- Allow hiding nameplates on an individual basis
+- A failed Shifter is marked as a suicide now
+- Fix for the Lawyer stealing a win when they were ejected
+- Fix for players sometimes having their clothes/names swapped around
+- Hide the kill button on the meeting screen
+- Fix for non-Vampire/Warlock kills sometimes happening without a warp
 
 **Version 3.2.4**
 - Fixed a bug where the Vampire teleported when the bitten player died
