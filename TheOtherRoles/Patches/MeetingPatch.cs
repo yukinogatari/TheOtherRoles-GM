@@ -42,6 +42,7 @@ namespace TheOtherRoles.Patches {
                         }
                         pva.Background.sprite = nameplate;
                     }
+                    nameplatesChanged = false;
                 }
 
                 if (__instance.state == MeetingHud.VoteStates.Animating)
