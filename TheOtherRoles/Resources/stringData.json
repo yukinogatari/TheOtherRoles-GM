@@ -1421,6 +1421,10 @@
         "0": "Ghosts See Votes",
         "11": "\u5e7d\u970a\u6642\u3001\u5168\u54e1\u306e\n\u6295\u7968\u5148\u304c\u898b\u3048\u308b"
     },
+    "hideNameplates": {
+        "0": "Hide Nameplates",
+        "11": "\u30cd\u30fc\u30e0\u30d7\u30ec\u30fc\u30c8\u3092\n\u975e\u8868\u793a\u306b\u3059\u308b"
+    },
     "showRoleSummaryButton": {
         "0": "Show Role Summary",
         "11": "\u6700\u7d42\u7d50\u679c\u3092\u8868\u793a"
@@ -1568,6 +1572,10 @@
     "roleSummaryDC": {
         "0": "DC'd",
         "11": "\u5207\u65ad"
+    },
+    "playerInfoDC": {
+        "0": "Disconnected",
+        "11": "\u5207\u65ad\u3055\u308c\u307e\u3057\u305f"
     },
     "errorNotInstalled": {
         "0": " has a different or no version of The Other Roles",

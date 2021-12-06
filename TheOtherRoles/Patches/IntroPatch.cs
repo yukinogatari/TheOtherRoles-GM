@@ -24,7 +24,6 @@ namespace TheOtherRoles.Patches {
                     player.UpdateFromPlayerData(p.Data, PlayerOutfitType.Default);
                     player.SetFlipX(true);
                     MapOptions.playerIcons[p.PlayerId] = player;
-                    MorphData.morphData[p.PlayerId] = new MorphData(p);
 
                     if (PlayerControl.LocalPlayer == BountyHunter.bountyHunter)
                     {

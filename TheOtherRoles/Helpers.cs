@@ -7,9 +7,11 @@ using UnhollowerBaseLib;
 using UnityEngine;
 using System.Linq;
 using static TheOtherRoles.TheOtherRoles;
+using static TheOtherRoles.GameHistory;
 using TheOtherRoles.Modules;
 using HarmonyLib;
 using Hazel;
+using TheOtherRoles.Patches;
 
 namespace TheOtherRoles {
 
@@ -207,6 +209,17 @@ namespace TheOtherRoles {
             return n != StringNames.ServerNA && n != StringNames.ServerEU && n != StringNames.ServerAS;
         }
 
+        public static bool isDead(this PlayerControl player)
+        {
+            return player.Data.IsDead || player.Data.Disconnected ||
+                  (finalStatuses.ContainsKey(player.PlayerId) && finalStatuses[player.PlayerId] != FinalStatus.Alive);
+        }
+
+        public static bool isAlive(this PlayerControl player)
+        {
+            return !isDead(player);
+        }
+
         public static bool isNeutral(this PlayerControl player)
         {
             return (player != null &&
@@ -383,7 +396,7 @@ namespace TheOtherRoles {
             else if (player.Data?.Role != null && player.Data.Role.CanVent)  {
                 if (Janitor.janitor != null && Janitor.janitor == PlayerControl.LocalPlayer)
                     roleCouldUse = false;
-                else if (Mafioso.mafioso != null && Mafioso.mafioso == PlayerControl.LocalPlayer && Godfather.godfather != null && !Godfather.godfather.Data.IsDead)
+                else if (Mafioso.mafioso != null && Mafioso.mafioso == PlayerControl.LocalPlayer && Godfather.godfather != null && Godfather.godfather.isAlive())
                     roleCouldUse = false;
                 else
                     roleCouldUse = true;

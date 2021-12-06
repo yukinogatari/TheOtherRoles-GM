@@ -114,11 +114,6 @@ namespace TheOtherRoles.Patches {
         }
 
         static void WrapUpPostfix(GameData.PlayerInfo exiled) {
-            if (exiled != null)
-            {
-                finalStatuses[exiled.PlayerId] = FinalStatus.Exiled;
-            }
-
             // Mini exile lose condition
             if (exiled != null && Mini.mini != null && Mini.mini.PlayerId == exiled.PlayerId && !Mini.isGrownUp() && !Mini.mini.Data.Role.IsImpostor) {
                 Mini.triggerMiniLose = true;

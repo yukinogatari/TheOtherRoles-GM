@@ -19,33 +19,55 @@ namespace TheOtherRoles.Patches {
         static SpriteRenderer[] renderers;
         private static GameData.PlayerInfo target = null;
         private const float scale = 0.65f;
+        private static Sprite blankNameplate = null;
+        public static bool nameplatesChanged = true;
 
         [HarmonyPatch(typeof(MeetingHud), nameof(MeetingHud.Update))]
         class MeetingHudUpdatePatch
         {
             static void Postfix(MeetingHud __instance)
             {
+                if (nameplatesChanged)
+                {
+                    blankNameplate = blankNameplate ?? HatManager.Instance.AllNamePlates[0].Image;
+
+                    foreach (var pva in __instance.playerStates)
+                    {
+                        var nameplate = blankNameplate;
+                        if (!hideNameplates)
+                        {
+                            var p = Helpers.playerById(pva.TargetPlayerId);
+                            var nameplateId = p?.CurrentOutfit?.NamePlateId;
+                            nameplate = HatManager.Instance.GetNamePlateById(nameplateId)?.Image;
+                        }
+                        pva.Background.sprite = nameplate;
+                    }
+                }
+
                 if (__instance.state == MeetingHud.VoteStates.Animating)
                     return;
 
                 // Deactivate skip Button if skipping on emergency meetings is disabled
                 if (blockSkippingInEmergencyMeetings)
-                    __instance.SkipVoteButton.gameObject.SetActive(false);
+                    __instance.SkipVoteButton?.gameObject?.SetActive(false);
 
                 // This fixes a bug with the original game where pressing the button and a kill happens simultaneously
                 // results in bodies sometimes being created *after* the meeting starts, marking them as dead and
                 // removing the corpses so there's no random corpses leftover afterwards
                 foreach (DeadBody b in UnityEngine.Object.FindObjectsOfType<DeadBody>())
                 {
+                    if (b == null) continue;
+
                     foreach (PlayerVoteArea pva in __instance.playerStates)
                     {
-                        if (pva.TargetPlayerId == b.ParentId && !pva.AmDead)
+                        if (pva == null) continue;
+
+                        if (pva.TargetPlayerId == b?.ParentId && !pva.AmDead)
                         {
-                            pva.SetDead(pva.DidReport, true);
-                            pva.Overlay.gameObject.SetActive(true);
+                            pva?.SetDead(pva.DidReport, true);
+                            pva?.Overlay?.gameObject?.SetActive(true);
                         }
                     }
-                    //UnityEngine.Object.Destroy(b.gameObject);
                 }
             }
         }
@@ -237,6 +259,7 @@ namespace TheOtherRoles.Patches {
                 Lovers.notAckedExiledIsLover = false;
                 if (exiled != null)
                 {
+                    finalStatuses[exiled.PlayerId] = FinalStatus.Exiled;
                     bool isLovers = Lovers.notAckedExiledIsLover = exiled.Object.isLovers();
 
                     if (isLovers)
@@ -402,6 +425,8 @@ namespace TheOtherRoles.Patches {
 
 
         static void populateButtonsPostfix(MeetingHud __instance) {
+            nameplatesChanged = true;
+
             // Add Swapper Buttons
             if (Swapper.swapper != null && PlayerControl.LocalPlayer == Swapper.swapper && !Swapper.swapper.Data.IsDead) {
                 selections = new bool[__instance.playerStates.Length];

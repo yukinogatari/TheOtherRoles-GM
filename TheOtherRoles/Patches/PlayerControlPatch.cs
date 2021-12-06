@@ -502,7 +502,6 @@ namespace TheOtherRoles.Patches
                         meetingInfo = UnityEngine.Object.Instantiate(playerVoteArea.NameText, playerVoteArea.NameText.transform.parent);
                         meetingInfo.transform.localPosition += Vector3.down * 0.20f;
                         meetingInfo.fontSize *= 0.63f;
-                        meetingInfo.autoSizeTextContainer = true;
                         meetingInfo.gameObject.name = "Info";
                     }
 
@@ -1065,10 +1064,7 @@ namespace TheOtherRoles.Patches
                 Morphling.resetMorph();
             }
 
-            if (MorphData.morphData.ContainsKey(target.PlayerId))
-            {
-                MorphData.morphData[target.PlayerId].applyToPlayer(target);
-            }
+            target.resetMorph();
         }
 
         public static void Postfix(PlayerControl __instance, [HarmonyArgument(0)] PlayerControl target)
@@ -1224,7 +1220,8 @@ namespace TheOtherRoles.Patches
 
     [HarmonyPatch(typeof(KillAnimation), nameof(KillAnimation.CoPerformKill))]
     class KillAnimationCoPerformKillPatch {
-        public static bool hideNextAnimation = true;
+        public static bool hideNextAnimation = false;
+
         public static void Prefix(KillAnimation __instance, [HarmonyArgument(0)]ref PlayerControl source, [HarmonyArgument(1)]ref PlayerControl target) {
             if (hideNextAnimation)
                 source = target;

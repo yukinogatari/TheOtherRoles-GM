@@ -108,7 +108,7 @@ namespace TheOtherRoles.Patches
                 //var p = pc.Data;
                 var roles = RoleInfo.getRoleInfoForPlayer(p.Object);
                 var (tasksCompleted, tasksTotal) = TasksHandler.taskInfo(p);
-                var finalStatus =
+                var finalStatus = finalStatuses[p.PlayerId] =
                     p.Disconnected == true ? FinalStatus.Disconnected :
                     finalStatuses.ContainsKey(p.PlayerId) ? finalStatuses[p.PlayerId] :
                     p.IsDead == true ? FinalStatus.Dead :
@@ -168,7 +168,7 @@ namespace TheOtherRoles.Patches
                 (gameOverReason == (GameOverReason)CustomGameOverReason.LoversWin || 
                     (TempData.DidHumansWin(gameOverReason) && !Lovers.existingWithKiller() && Lovers.canWinWithCrew)
                 ); // Either they win if they are among the last 3 players, or they win if they are both Crewmates and both alive and the Crew wins (Team Imp/Jackal Lovers can only win solo wins)*/
-            bool teamJackalWin = gameOverReason == (GameOverReason)CustomGameOverReason.TeamJackalWin && ((Jackal.jackal != null && !Jackal.jackal.Data.IsDead) || (Sidekick.sidekick != null && !Sidekick.sidekick.Data.IsDead));
+            bool teamJackalWin = gameOverReason == (GameOverReason)CustomGameOverReason.TeamJackalWin && ((Jackal.jackal != null && Jackal.jackal.isAlive()) || (Sidekick.sidekick != null && !Sidekick.sidekick.isAlive()));
             bool vultureWin = Vulture.vulture != null && gameOverReason == (GameOverReason)CustomGameOverReason.VultureWin;
             bool lawyerSoloWin = Lawyer.lawyer != null && gameOverReason == (GameOverReason)CustomGameOverReason.LawyerSoloWin;
 
@@ -275,7 +275,7 @@ namespace TheOtherRoles.Patches
             }
 
             // Possible Additional winner: Lawyer
-            if (!lawyerSoloWin && Lawyer.lawyer != null && Lawyer.target != null && !Lawyer.target.Data.IsDead)
+            if (!lawyerSoloWin && Lawyer.lawyer != null && Lawyer.target != null && Lawyer.target.isAlive())
             {
                 WinningPlayerData winningClient = null;
                 foreach (WinningPlayerData winner in TempData.winners)
@@ -288,7 +288,7 @@ namespace TheOtherRoles.Patches
                 { // The Lawyer wins if the client is winning (and alive, but if he wasn't the Lawyer shouldn't exist anymore)
                     if (!TempData.winners.ToArray().Any(x => x.PlayerName == Lawyer.lawyer.Data.PlayerName))
                         TempData.winners.Add(new WinningPlayerData(Lawyer.lawyer.Data));
-                    if (!Lawyer.lawyer.Data.IsDead)
+                    if (Lawyer.lawyer.isAlive())
                     { // The Lawyer steals the clients win
                         TempData.winners.Remove(winningClient);
                         AdditionalTempData.additionalWinConditions.Add(WinCondition.AdditionalLawyerStolenWin);
@@ -303,7 +303,7 @@ namespace TheOtherRoles.Patches
             // Extra win conditions for non-impostor roles
             if (!saboWin)
             {
-                if (Opportunist.opportunist != null && !Opportunist.opportunist.Data.IsDead)
+                if (Opportunist.opportunist != null && Opportunist.opportunist.isAlive())
                 {
                     if (!TempData.winners.ToArray().Any(x => x.PlayerName == Opportunist.opportunist.Data.PlayerName))
                         TempData.winners.Add(new WinningPlayerData(Opportunist.opportunist.Data));
@@ -311,7 +311,7 @@ namespace TheOtherRoles.Patches
                 }
 
                 // Possible Additional winner: Pursuer
-                if (Pursuer.pursuer != null && !Pursuer.pursuer.Data.IsDead)
+                if (Pursuer.pursuer != null && Pursuer.pursuer.isAlive())
                 {
                     if (!TempData.winners.ToArray().Any(x => x.PlayerName == Pursuer.pursuer.Data.PlayerName))
                         TempData.winners.Add(new WinningPlayerData(Pursuer.pursuer.Data));
@@ -836,7 +836,7 @@ namespace TheOtherRoles.Patches
 
                     // In the special case of Mafia being enabled, but only the janitor's left alive,
                     // count it as zero impostors alive bc they can't actually do anything.
-                    if (Godfather.godfather?.Data.IsDead == true && Mafioso.mafioso?.Data.IsDead == true && Janitor.janitor?.Data.IsDead == false)
+                    if (Godfather.godfather?.isDead() == true && Mafioso.mafioso?.isDead() == true && Janitor.janitor?.isDead() == false)
                     {
                         numImpostorsAlive = 0;
                     }

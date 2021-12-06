@@ -29,6 +29,7 @@ namespace TheOtherRoles{
         public static bool ghostsSeeTasks = true;
         public static bool ghostsSeeVotes = true;
         public static bool showRoleSummary = true;
+        public static bool hideNameplates = false;
         public static bool allowParallelMedBayScans = false;
 
         // Updating values
@@ -64,6 +65,7 @@ namespace TheOtherRoles{
             ghostsSeeTasks = TheOtherRolesPlugin.GhostsSeeTasks.Value;
             ghostsSeeVotes = TheOtherRolesPlugin.GhostsSeeVotes.Value;
             showRoleSummary = TheOtherRolesPlugin.ShowRoleSummary.Value;
+            hideNameplates = TheOtherRolesPlugin.HideNameplates.Value;
         }
 
         public static void resetDeviceTimes()

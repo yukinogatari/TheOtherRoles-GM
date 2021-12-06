@@ -140,12 +140,14 @@ namespace TheOtherRoles
             clearAndReloadRoles();
             clearGameHistory();
             setCustomButtonCooldowns();
-            MorphData.resetMorphData();
             AdminPatch.ResetData();
             CameraPatch.ResetData();
             VitalsPatch.ResetData();
             MapBehaviorPatch.resetIcons();
+            CustomOverlays.resetOverlays();
             unassignedRoles.Clear();
+
+            KillAnimationCoPerformKillPatch.hideNextAnimation = false;
         }
 
         public static void ShareOptions(int numberOfOptions, MessageReader reader) {            
@@ -497,6 +499,7 @@ namespace TheOtherRoles
             // Suicide (exile) when impostor or impostor variants
             if (player.Data.Role.IsImpostor || player.isNeutral() || player == Madmate.madmate) {
                 oldShifter.Exiled();
+                finalStatuses[oldShifter.PlayerId] = FinalStatus.Suicide;
                 return;
             }
 

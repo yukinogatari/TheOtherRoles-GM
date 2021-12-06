@@ -237,13 +237,13 @@ namespace TheOtherRoles.Patches {
 
         static void updateImpostorKillButton(HudManager __instance) {
             if (!PlayerControl.LocalPlayer.Data.Role.IsImpostor) return;
-            bool enabled = true;
+            bool enabled = Helpers.ShowButtons;
             if (Vampire.vampire != null && Vampire.vampire == PlayerControl.LocalPlayer)
-                enabled = false;
+                enabled &= false;
             else if (Mafioso.mafioso != null && Mafioso.mafioso == PlayerControl.LocalPlayer && Godfather.godfather != null && !Godfather.godfather.Data.IsDead)
-                enabled = false;
+                enabled &= false;
             else if (Janitor.janitor != null && Janitor.janitor == PlayerControl.LocalPlayer)
-                enabled = false;
+                enabled &= false;
             
             if (enabled) __instance.KillButton.Show();
             else __instance.KillButton.Hide();

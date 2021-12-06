@@ -35,8 +35,6 @@ namespace TheOtherRoles
 
         public static void clearAndReloadRoles()
         {
-            CustomOverlays.resetOverlays();
-
             Jester.clearAndReload();
             Mayor.clearAndReload();
             Engineer.clearAndReload();
@@ -428,7 +426,7 @@ namespace TheOtherRoles
             {
                 return existing() && (lover1 == Jackal.jackal || lover2 == Jackal.jackal
                                    || lover1 == Sidekick.sidekick || lover2 == Sidekick.sidekick
-                               || lover1.Data.Role.IsImpostor      || lover2.Data.Role.IsImpostor);
+                                   || lover1.Data.Role.IsImpostor || lover2.Data.Role.IsImpostor);
             }
 
 
@@ -494,17 +492,13 @@ namespace TheOtherRoles
                 if (Camouflager.camouflager != null && Camouflager.camouflageTimer > 0f) return;
 
                 // next, if we're currently morphed, set our skin to the target
-                if (morphTimer > 0f && morphTarget != null && MorphData.morphData.ContainsKey(morphTarget.PlayerId))
+                if (morphTimer > 0f && morphTarget != null)
                 {
-                    MorphData.morphData[morphTarget.PlayerId]?.applyToPlayer(morphling);
-                }
-                else if (MorphData.morphData.ContainsKey(morphling.PlayerId))
-                {
-                    MorphData.morphData[morphling.PlayerId]?.applyToPlayer(morphling);
+                    morphling.morphToPlayer(morphTarget);
                 }
                 else
                 {
-                    TheOtherRolesPlugin.Instance.Log.LogError("handleMorphing failed?");
+                    morphling.resetMorph();
                 }
             }
 
@@ -559,7 +553,7 @@ namespace TheOtherRoles
             public static float camouflageTimer = 0f;
             public static bool randomColors = false;
 
-            public static MorphData camoData;
+            public static GameData.PlayerOutfit camoData;
 
             private static Sprite buttonSprite;
             public static Sprite getButtonSprite()
@@ -574,14 +568,14 @@ namespace TheOtherRoles
                 camouflageTimer = duration;
 
                 if (randomColors)
-                    camoData.color = (byte)TheOtherRoles.rnd.Next(0, Palette.PlayerColors.Length);
+                    camoData.ColorId = (byte)TheOtherRoles.rnd.Next(0, Palette.PlayerColors.Length);
                 else
-                    camoData.color = 6;
+                    camoData.ColorId = 6;
 
                 foreach (PlayerControl p in PlayerControl.AllPlayerControls)
                 {
                     if (p == null) continue;
-                    camoData.applyToPlayer(p);
+                    p.setOutfit(camoData);
                 }
             }
 
@@ -591,7 +585,6 @@ namespace TheOtherRoles
                 foreach (PlayerControl p in PlayerControl.AllPlayerControls)
                 {
                     if (p == null) continue;
-                    if (!MorphData.morphData.ContainsKey(p.PlayerId)) continue;
 
                     // special case for morphling
                     if (Morphling.morphling?.PlayerId == p.PlayerId)
@@ -600,7 +593,7 @@ namespace TheOtherRoles
                     }
                     else
                     {
-                        MorphData.morphData[p.PlayerId].applyToPlayer(p);
+                        p.resetMorph();
                     }
                 }
             }
@@ -614,13 +607,14 @@ namespace TheOtherRoles
                 duration = CustomOptionHolder.camouflagerDuration.getFloat();
                 randomColors = CustomOptionHolder.camouflagerRandomColors.getBool();
 
-                camoData = new MorphData();
-                camoData.name = "";
-                camoData.hat = "";
-                camoData.color = 6;
-                camoData.skin = "";
-                camoData.pet = "";
-                camoData.visor = "";
+                camoData = new GameData.PlayerOutfit();
+                camoData.PlayerName = "";
+                camoData.HatId = "";
+                camoData.ColorId = 6;
+                camoData.SkinId = "";
+                camoData.PetId = "";
+                camoData.VisorId = "";
+                camoData.NamePlateId = "";
             }
         }
 

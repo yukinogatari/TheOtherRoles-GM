@@ -21,7 +21,7 @@ namespace TheOtherRoles
     public class TheOtherRolesPlugin : BasePlugin
     {
         public const string Id = "me.eisbison.theotherroles";
-        public const string VersionString = "3.2.4";
+        public const string VersionString = "3.2.5";
         public static System.Version Version = System.Version.Parse(VersionString);
         internal static BepInEx.Logging.ManualLogSource Logger;
 
@@ -36,6 +36,7 @@ namespace TheOtherRoles
         public static ConfigEntry<bool> GhostsSeeRoles { get; set; }
         public static ConfigEntry<bool> GhostsSeeVotes{ get; set; }
         public static ConfigEntry<bool> ShowRoleSummary { get; set; }
+        public static ConfigEntry<bool> HideNameplates { get; set; }
         public static ConfigEntry<string> StreamerModeReplacementText { get; set; }
         public static ConfigEntry<string> StreamerModeReplacementColor { get; set; }
         public static ConfigEntry<string> Ip { get; set; }
@@ -65,6 +66,7 @@ namespace TheOtherRoles
             GhostsSeeRoles = Config.Bind("Custom", "Ghosts See Roles", true);
             GhostsSeeVotes = Config.Bind("Custom", "Ghosts See Votes", true);
             ShowRoleSummary = Config.Bind("Custom", "Show Role Summary", true);
+            HideNameplates = Config.Bind("Custom", "Hide Nameplates", false);
             StreamerModeReplacementText = Config.Bind("Custom", "Streamer Mode Replacement Text", "\n\nThe Other Roles");
             StreamerModeReplacementColor = Config.Bind("Custom", "Streamer Mode Replacement Text Hex Color", "#87AAF5FF");
             DebugRepo = Config.Bind("Custom", "Debug Hat Repo", "");
@@ -137,6 +139,7 @@ namespace TheOtherRoles
                 int skin = random.Next(HatManager.Instance.AllSkins.Count);
                 int visor = random.Next(HatManager.Instance.AllVisors.Count);
                 int color = random.Next(Palette.PlayerColors.Length);
+                int nameplate = random.Next(HatManager.Instance.AllNamePlates.Count);
 
                 playerControl.transform.position = PlayerControl.LocalPlayer.transform.position;
                 playerControl.GetComponent<DummyBehaviour>().enabled = true;
@@ -147,11 +150,12 @@ namespace TheOtherRoles
                 playerControl.SetPet(HatManager.Instance.AllPets[pet].ProductId, color);
                 playerControl.SetVisor(HatManager.Instance.AllVisors[visor].ProductId);
                 playerControl.SetSkin(HatManager.Instance.AllSkins[skin].ProductId);
+                playerControl.SetNamePlate(HatManager.Instance.AllNamePlates[nameplate].ProductId);
                 GameData.Instance.RpcSetTasks(playerControl.PlayerId, new byte[0]);
             }
 
             // Terminate round
-            if(Input.GetKeyDown(KeyCode.L)) {
+            if(Input.GetKeyDown(KeyCode.L) && AmongUsClient.Instance.GameState == InnerNet.InnerNetClient.GameStates.Started) {
                 MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.ForceEnd, Hazel.SendOption.Reliable, -1);
                 AmongUsClient.Instance.FinishRpcImmediately(writer);
                 RPCProcedure.forceEnd();
