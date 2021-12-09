@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using HarmonyLib;
+using System.Collections.Generic;
+using UnityEngine;
 
 namespace TheOtherRoles
 {
@@ -12,11 +14,14 @@ namespace TheOtherRoles
             var colorId = target.Data.DefaultOutfit.ColorId;
 
             if (pc.CurrentPet) UnityEngine.Object.Destroy(pc.CurrentPet.gameObject);
-            pc.CurrentPet = UnityEngine.Object.Instantiate<PetBehaviour>(DestroyableSingleton<HatManager>.Instance.GetPetById(petId).PetPrefab);
-            pc.CurrentPet.transform.position = pc.transform.position;
-            pc.CurrentPet.Source = pc;
-            pc.CurrentPet.Visible = pc.Visible;
-            PlayerControl.SetPlayerMaterialColors(colorId, pc.CurrentPet.rend);
+            if (!pc.Data.IsDead)
+            {
+                pc.CurrentPet = UnityEngine.Object.Instantiate<PetBehaviour>(DestroyableSingleton<HatManager>.Instance.GetPetById(petId).PetPrefab);
+                pc.CurrentPet.transform.position = pc.transform.position;
+                pc.CurrentPet.Source = pc;
+                pc.CurrentPet.Visible = pc.Visible;
+                PlayerControl.SetPlayerMaterialColors(colorId, pc.CurrentPet.rend);
+            }
         }
 
         public static void setOutfit(this PlayerControl pc, GameData.PlayerOutfit outfit, bool visible = true)
@@ -37,4 +42,5 @@ namespace TheOtherRoles
             pc.CurrentOutfitType = PlayerOutfitType.Default;
         }
     }
+
 }
