@@ -1080,10 +1080,6 @@ namespace TheOtherRoles
                         gmKillButtons[index].buttonText = ModTranslation.getString("gmKill");
                     }
 
-                    var buttonPos = gmKillButtons[index].actionButton.buttonLabelText.transform.localPosition;
-                    gmKillButtons[index].actionButton.buttonLabelText.transform.localPosition = new Vector3(buttonPos.x, buttonPos.y, -500f);
-                    gmKillButtons[index].actionButton.buttonLabelText.transform.localScale = new Vector3(1.5f, 1.8f, 1.0f);
-
                     //MapOptions.playerIcons[index].gameObject.SetActive(PlayerControl.LocalPlayer.CanMove);
                     return true;
                 };
@@ -1141,6 +1137,11 @@ namespace TheOtherRoles
                 gmKillButton.Timer = 0.0f;
                 gmKillButton.MaxTimer = 0.0f;
                 gmKillButton.showButtonText = true;
+
+                var buttonPos = gmKillButton.actionButton.buttonLabelText.transform.localPosition;
+                gmKillButton.actionButton.buttonLabelText.transform.localPosition = new Vector3(buttonPos.x, buttonPos.y + 0.6f, -500f);
+                gmKillButton.actionButton.buttonLabelText.transform.localScale = new Vector3(1.5f, 1.8f, 1.0f);
+
                 gmKillButtons.Add(gmKillButton);
             }
 

@@ -21,8 +21,9 @@ namespace TheOtherRoles.Patches {
                 foreach (PlayerControl p in PlayerControl.AllPlayerControls) {
                     GameData.PlayerInfo data = p.Data;
                     PoolablePlayer player = UnityEngine.Object.Instantiate<PoolablePlayer>(__instance.PlayerPrefab, HudManager.Instance.transform);
-                    player.UpdateFromPlayerData(p.Data, PlayerOutfitType.Default);
+                    player.UpdateFromPlayerOutfit(p.Data.DefaultOutfit, p.Data.IsDead);
                     player.SetFlipX(true);
+                    player.NameText.text = p.Data.DefaultOutfit.PlayerName;
                     MapOptions.playerIcons[p.PlayerId] = player;
 
                     if (PlayerControl.LocalPlayer == BountyHunter.bountyHunter)

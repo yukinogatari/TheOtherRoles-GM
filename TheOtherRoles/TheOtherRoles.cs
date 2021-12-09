@@ -1332,8 +1332,6 @@ namespace TheOtherRoles
             public static bool canWarp = true;
             public static bool canKill = false;
 
-            public static UseButton blockedButton;
-
             private static Sprite zoomInSprite;
             private static Sprite zoomOutSprite;
 
@@ -1364,10 +1362,10 @@ namespace TheOtherRoles
                 diesAtStart = CustomOptionHolder.gmDiesAtStart.getBool();
                 hasTasks = false;
                 canSabotage = false;
-                blockedButton = null;
                 zoomInSprite = null;
                 zoomOutSprite = null;
                 canWarp = CustomOptionHolder.gmCanWarp.getBool();
+                canKill = CustomOptionHolder.gmCanKill.getBool();
 
                 foreach (PoolablePlayer p in MapOptions.playerIcons.Values)
                 {
