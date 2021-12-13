@@ -2,7 +2,7 @@
     <PropertyGroup>
         <TargetFramework>netstandard2.1</TargetFramework>
         <Version>3.2.5.1</Version>
-        <Description>TheOtherRoles: GM Edition</Description>
+        <Description>TheOtherRoles: GM Edition Custom</Description>
         <Authors>Eisbison</Authors>
     </PropertyGroup>
 
@@ -11,24 +11,25 @@
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
         <ApplicationIcon />
         <Win32Resource />
-        <AssemblyName>TheOtherRolesGM</AssemblyName>
+        <AssemblyName>TheOtherRolesGMk</AssemblyName>
     </PropertyGroup>
 
     <ItemGroup>
         <EmbeddedResource Include="Resources\CustomHats\*.png" />
-		<EmbeddedResource Include="Resources\*.png" />
-		<EmbeddedResource Include="Resources\*.json" />
+        <EmbeddedResource Include="Resources\VisorTest*.png" />
+        <EmbeddedResource Include="Resources\*.png" />
+        <EmbeddedResource Include="Resources\*.json" />
         <EmbeddedResource Include="Resources\TricksterAnimation\*.png" />
     </ItemGroup>
 
     <ItemGroup>
-        <Reference Include="$(AmongUs)/BepInEx/core/*.dll" />
-        <Reference Include="$(AmongUs)/BepInEx/unhollowed/*.dll" />
+        <Reference Include="C:\Program Files\Epic Games\AmongUs/BepInEx/core/*.dll" />
+        <Reference Include="C:\Program Files\Epic Games\AmongUs/BepInEx/unhollowed/*.dll" />
     </ItemGroup>
 
     <Target Name="CopyCustomContent" AfterTargets="AfterBuild">
         <Message Text="Second occurrence" />
-        <Copy SourceFiles="$(ProjectDir)\bin\$(Configuration)\netstandard2.1\TheOtherRolesGM.dll" DestinationFolder="$(AmongUsLatest)/BepInEx/plugins/" />
+        <Copy SourceFiles="$(ProjectDir)\bin\$(Configuration)\netstandard2.1\TheOtherRolesGMk.dll" DestinationFolder="C:\Program Files\Epic Games\AmongUs/BepInEx/plugins/" />
     </Target>
 
     <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
