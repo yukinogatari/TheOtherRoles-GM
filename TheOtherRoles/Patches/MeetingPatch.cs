@@ -22,6 +22,29 @@ namespace TheOtherRoles.Patches {
         private static Sprite blankNameplate = null;
         public static bool nameplatesChanged = true;
 
+        public static void updateNameplate(PlayerVoteArea pva)
+        {
+            blankNameplate = blankNameplate ?? HatManager.Instance.AllNamePlates[0].Image;
+
+            var nameplate = blankNameplate;
+            if (!hideNameplates)
+            {
+                var p = Helpers.playerById(pva.TargetPlayerId);
+                var nameplateId = p?.CurrentOutfit?.NamePlateId;
+                nameplate = HatManager.Instance.GetNamePlateById(nameplateId)?.Image;
+            }
+            pva.Background.sprite = nameplate;
+        }
+
+        [HarmonyPatch(typeof(PlayerVoteArea), nameof(PlayerVoteArea.SetCosmetics))]
+        class PlayerVoteAreaCosmetics
+        {
+            static void Postfix(PlayerVoteArea __instance)
+            {
+                updateNameplate(__instance);
+            }
+        }
+
         [HarmonyPatch(typeof(MeetingHud), nameof(MeetingHud.Update))]
         class MeetingHudUpdatePatch
         {
@@ -29,18 +52,9 @@ namespace TheOtherRoles.Patches {
             {
                 if (nameplatesChanged)
                 {
-                    blankNameplate = blankNameplate ?? HatManager.Instance.AllNamePlates[0].Image;
-
                     foreach (var pva in __instance.playerStates)
                     {
-                        var nameplate = blankNameplate;
-                        if (!hideNameplates)
-                        {
-                            var p = Helpers.playerById(pva.TargetPlayerId);
-                            var nameplateId = p?.CurrentOutfit?.NamePlateId;
-                            nameplate = HatManager.Instance.GetNamePlateById(nameplateId)?.Image;
-                        }
-                        pva.Background.sprite = nameplate;
+                        updateNameplate(pva);
                     }
                     nameplatesChanged = false;
                 }

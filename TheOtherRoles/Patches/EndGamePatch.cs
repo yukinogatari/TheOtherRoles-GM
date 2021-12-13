@@ -546,21 +546,7 @@ namespace TheOtherRoles.Patches
                         foreach (var data in AdditionalTempData.playerRoles)
                         {
                             var taskInfo = data.TasksTotal > 0 ? $"<color=#FAD934FF>{data.TasksCompleted}/{data.TasksTotal}</color>" : "";
-                            string aliveDead = "";
-                            switch (data.Status)
-                            {
-                                case FinalStatus.Alive: aliveDead = ModTranslation.getString("roleSummaryAlive"); break;
-                                case FinalStatus.Torched: aliveDead = ModTranslation.getString("roleSummaryTorched"); break;
-                                case FinalStatus.Spelled: aliveDead = ModTranslation.getString("roleSummarySpelled"); break;
-                                case FinalStatus.Exiled: aliveDead = ModTranslation.getString("roleSummaryExiled"); break;
-                                case FinalStatus.Dead: aliveDead = ModTranslation.getString("roleSummaryDead"); break;
-                                case FinalStatus.Sabotage: aliveDead = ModTranslation.getString("roleSummaryDead"); break;
-                                case FinalStatus.Suicide: aliveDead = ModTranslation.getString("roleSummarySuicide"); break;
-                                case FinalStatus.Misfire: aliveDead = ModTranslation.getString("roleSummaryMisfire"); break;
-                                case FinalStatus.Disconnected: aliveDead = ModTranslation.getString("roleSummaryDC"); break;
-                                default: aliveDead = ""; break;
-                            }
-
+                            string aliveDead = ModTranslation.getString("roleSummary" + data.Status.ToString(), def: "-");
                             roleSummaryText.AppendLine($"{data.PlayerName}<pos=18.5%>{taskInfo}<pos=25%>{aliveDead}<pos=34%>{data.RoleString}");
                         }
 

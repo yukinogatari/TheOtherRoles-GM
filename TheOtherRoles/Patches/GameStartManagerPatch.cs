@@ -174,6 +174,23 @@ namespace TheOtherRoles.Patches {
             }
         }
 
+        [HarmonyPatch(typeof(GameStartManager), nameof(GameStartManager.SetStartCounter))]
+        public static class SetStartCounterPatch
+        {
+            public static void Postfix(GameStartManager __instance, sbyte sec)
+            {
+                if (sec > 0)
+                {
+                    __instance.startState = GameStartManager.StartingStates.Countdown;
+                }
+
+                if (sec <= 0)
+                {
+                    __instance.startState = GameStartManager.StartingStates.NotStarting;
+                }
+            }
+        }
+
         public class PlayerVersion {
             public readonly Version version;
             public readonly Guid guid;
