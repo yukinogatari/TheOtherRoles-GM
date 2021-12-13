@@ -193,7 +193,7 @@ namespace TheOtherRoles.Patches
 
                 PlayerControl p = PlayerControl.AllPlayerControls.ToArray().ToList().Find(x => x.PlayerId == gmID);
 
-                if (CustomOptionHolder.gmDiesAtStart.getBool())
+                if (p != null && CustomOptionHolder.gmDiesAtStart.getBool())
                 {
                     p.Exiled();
                 }
@@ -291,7 +291,9 @@ namespace TheOtherRoles.Patches
                 var players = roleType == RoleType.Crewmate || roleType == RoleType.Neutral ? data.crewmates : data.impostors;
                 var index = rnd.Next(0, rolesToAssign[roleType].Count);
                 var roleId = rolesToAssign[roleType][index];
-                setRoleToRandomPlayer(rolesToAssign[roleType][index], players);
+                var player = setRoleToRandomPlayer(rolesToAssign[roleType][index], players);
+                if (player == byte.MaxValue) continue;
+
                 rolesToAssign[roleType].RemoveAt(index);
 
                 if (CustomOptionHolder.blockedRolePairings.ContainsKey(roleId))
@@ -349,7 +351,9 @@ namespace TheOtherRoles.Patches
                 var players = roleType == RoleType.Crewmate || roleType == RoleType.Neutral ? data.crewmates : data.impostors;
                 var index = rnd.Next(0, rolesToAssign[roleType].Count);
                 var roleId = rolesToAssign[roleType][index];
-                setRoleToRandomPlayer(rolesToAssign[roleType][index], players);
+                var player = setRoleToRandomPlayer(rolesToAssign[roleType][index], players);
+                if (player == byte.MaxValue) continue;
+
                 rolesToAssign[roleType].RemoveAll(x => x == roleId);
 
                 if (CustomOptionHolder.blockedRolePairings.ContainsKey(roleId))
@@ -418,6 +422,15 @@ namespace TheOtherRoles.Patches
         {
             var index = rnd.Next(0, playerList.Count);
             byte playerId = playerList[index].PlayerId;
+            if (RoleInfo.lovers.enabled &&
+                CustomOptionHolder.blockLovers.Contains(roleId) &&
+                CustomOptionHolder.loversSeparateTeam.getBool() &&
+                CustomOptionHolder.loversTasksCount.getBool() &&
+                Helpers.playerById(playerId)?.isLovers() == true)
+            {
+                return byte.MaxValue;
+            }
+
             if (removePlayer) playerList.RemoveAt(index);
 
             MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.SetRole, Hazel.SendOption.Reliable, -1);

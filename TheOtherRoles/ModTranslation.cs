@@ -62,16 +62,17 @@ namespace TheOtherRoles
             //TheOtherRolesPlugin.Instance.Log.LogInfo($"Language: {stringData.Keys}");
         }
 
-        public static string getString(string key)
+        public static string getString(string key, string def = null)
         {
             // Strip out color tags.
             string keyClean = Regex.Replace(key, "<.*?>", "");
             keyClean = Regex.Replace(keyClean, "^-\\s*", "");
             keyClean = keyClean.Trim();
 
+            def = def ?? key;
             if (!stringData.ContainsKey(keyClean))
             {
-                return key;
+                return def;
             }
 
             var data = stringData[keyClean];

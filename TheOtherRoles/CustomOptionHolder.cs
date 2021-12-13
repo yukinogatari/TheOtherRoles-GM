@@ -253,6 +253,7 @@ namespace TheOtherRoles {
         public static CustomOption dynamicMap;
 
         internal static Dictionary<byte, byte[]> blockedRolePairings = new Dictionary<byte, byte[]>();
+        internal static List<byte> blockLovers = new List<byte>();
 
         public static string cs(Color c, string s) {
             return string.Format("<color=#{0:X2}{1:X2}{2:X2}{3:X2}>{4}</color>", ToByte(c.r), ToByte(c.g), ToByte(c.b), ToByte(c.a), s);
@@ -513,7 +514,8 @@ namespace TheOtherRoles {
             blockedRolePairings.Add((byte)RoleId.Warlock, new [] { (byte)RoleId.Vampire});
             blockedRolePairings.Add((byte)RoleId.Spy, new [] { (byte)RoleId.Mini});
             blockedRolePairings.Add((byte)RoleId.Mini, new [] { (byte)RoleId.Spy});
-            
+
+            blockLovers.Add((byte)RoleId.Snitch);
         }
     }
 
