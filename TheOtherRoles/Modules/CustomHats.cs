@@ -385,7 +385,7 @@ namespace TheOtherRoles.Modules {
                     YOffset = createHatPackage(value, key, YOffset, __instance);
                 }
 
-                __instance.scroller.YBounds.max = -(YOffset + 3.0f + headerSize); 
+                __instance.scroller.ContentYBounds.max = -(YOffset + 3.0f + headerSize); 
                 return false;
             }
         }
