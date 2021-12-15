@@ -16,20 +16,20 @@
 
     <ItemGroup>
         <EmbeddedResource Include="Resources\CustomHats\*.png" />
-        <EmbeddedResource Include="Resources\VisorTest*.png" />
+        <EmbeddedResource Include="Resources\VisorTest\*.png" />
         <EmbeddedResource Include="Resources\*.png" />
         <EmbeddedResource Include="Resources\*.json" />
         <EmbeddedResource Include="Resources\TricksterAnimation\*.png" />
     </ItemGroup>
 
     <ItemGroup>
-        <Reference Include="C:\Program Files\Epic Games\AmongUs/BepInEx/core/*.dll" />
-        <Reference Include="C:\Program Files\Epic Games\AmongUs/BepInEx/unhollowed/*.dll" />
+        <Reference Include="$(AmongUs)/BepInEx/core/*.dll" />
+        <Reference Include="$(AmongUs)/BepInEx/unhollowed/*.dll" />
     </ItemGroup>
 
     <Target Name="CopyCustomContent" AfterTargets="AfterBuild">
         <Message Text="Second occurrence" />
-        <Copy SourceFiles="$(ProjectDir)\bin\$(Configuration)\netstandard2.1\TheOtherRolesGMk.dll" DestinationFolder="C:\Program Files\Epic Games\AmongUs/BepInEx/plugins/" />
+        <Copy SourceFiles="$(ProjectDir)\bin\$(Configuration)\netstandard2.1\TheOtherRolesGMk.dll" DestinationFolder="$(AmongUsLatest)/BepInEx/plugins/" />
     </Target>
 
     <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
