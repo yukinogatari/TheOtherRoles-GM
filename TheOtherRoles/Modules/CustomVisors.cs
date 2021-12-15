@@ -165,7 +165,7 @@ namespace TheOtherRoles.Modules
                     FromDisk=false
                 },
                 new customVisor(){
-                    Idle ="TheOtherRoles.Resources.VisorTest.VisorClackH.png",
+                    Idle ="TheOtherRoles.Resources.VisorTest.VisorClackL.png",
 //                    Floor="TheOtherRoles.Resources.VisorTest.VisorClack.png",
                     Name ="ひび割れ",
                     Id   ="VisorClack",
