@@ -1654,8 +1654,8 @@
         "11": "<size=80%>MOD <color=#FCCE03FF>Eisbison</color>\u3001<color=#FCCE03FF>EndOfFile</color>\n<color=#FCCE03FF>Thunderstorm584</color>\u3001<color=#FCCE03FF>Mall\u00f6ris</color>\n\u30dc\u30bf\u30f3\u30c7\u30b6\u30a4\u30f3 <color=#FCCE03FF>Bavari</color>\n\u30ab\u30b9\u30bf\u30de\u30a4\u30ba\u30fb\u65e5\u672c\u8a9e\u8a33 <color=#c1a9ff>Virtual_Dusk</color></size>"
     },
     "creditsVersion": {
-        "0": "GM Edition v{0}",
-        "11": "GM\u30a8\u30c7\u30a3\u30b7\u30e7\u30f3 v{0}"
+        "0": "GM Edition Visor Custom v{0}",
+        "11": "GM\u30a8\u30c7\u30a3\u30b7\u30e7\u30f3  Visor Custom v{0}"
     },
     "updateButton": {
         "0": "Update\nThe Other Roles GM",
