@@ -30,6 +30,10 @@ namespace TheOtherRoles.Modules {
     public class ModUpdaterButton {
         private static void Prefix(MainMenuManager __instance) {
             CustomHatLoader.LaunchHatFetcher();
+            Task.Run(() => { 
+                CustomVisors.CustomVisorSetup();
+                }
+            );
             ModUpdater.LaunchUpdater();
             if (!ModUpdater.hasUpdate) return;
             var template = GameObject.Find("ExitGameButton");

@@ -84,24 +84,141 @@ namespace TheOtherRoles.Modules
             System.Console.WriteLine(basename + "\n");
 
             visor.IdleFrame = CreateVisorSprite(cv.Idle, fromDisk);
+            int order;
+            if (basename.Last()=='L')
+            {
+                order = 99;
+            }
+            else if (basename.Last() == 'H')
+            {
+                order = 99;
+            }
+            else
+            {
+                order = 99;
+            }
 
             var IdleLeft = basename  + "_Left" + ext;
-//            IdleLeft = "TheOtherRoles.Resources.VisorTest.VisorClack.png";
             System.Console.WriteLine(IdleLeft + "\n");
             if (existImage(IdleLeft, fromDisk))
             {
                 visor.LeftIdleFrame = CreateVisorSprite(IdleLeft, fromDisk);
-//                visor.LeftIdleFrame = CreateVisorSprite("TheOtherRoles.Resources.VisorTest.VisorClack_Left.png", fromDisk);
 
             }
-            visor.FloorFrame= CreateVisorSprite(cv.Floor, fromDisk);
+//            visor.FloorFrame= CreateVisorSprite(cv.Floor, fromDisk);
             visor.name = cv.Name;
             visor.ProductId = cv.Id;
             visor.ChipOffset = new Vector2(0f, 0.0f);
             visor.Free = true;
             visor.NotInStore = true;
+            visor.Order = order;
             
             return visor;
+        }
+        private static List<customVisor> visorList;
+
+        public static void CustomVisorSetup()
+        {
+            visorList = new List<customVisor>
+                {
+                new customVisor{
+                    Idle ="TheOtherRoles.Resources.VisorTest.siune_heart_galss1.png",
+//                    Floor="TheOtherRoles.Resources.VisorTest.siune_heart_galss1.png",
+                    Name ="しうねPのハートサングラス",
+                    Id   ="visor_siune_sea_glass",
+                    FromDisk=false
+                }
+                ,
+                new customVisor(){
+                    Idle ="TheOtherRoles.Resources.VisorTest.siune_sun_galss1.png",
+//                    Floor="TheOtherRoles.Resources.VisorTest.siune_sun_galss1.png",
+                    Name ="しうねPのサングラス",
+                    Id   ="visor_siune_sun_glass",
+                    FromDisk=false
+                },
+                new customVisor(){
+                    Idle ="TheOtherRoles.Resources.VisorTest.Visor_cat1.png",
+//                    Floor="TheOtherRoles.Resources.VisorTest.Visor_cat1.png",
+                    Name ="猫マズル",
+                    Id   ="visor_cat",
+                    FromDisk=false
+                },
+                new customVisor(){
+                    Idle ="TheOtherRoles.Resources.VisorTest.visor_flog1.png",
+//                    Floor="TheOtherRoles.Resources.VisorTest.visor_flog1.png",
+                    Name ="カエルお面",
+                    Id   ="visor_flog",
+                    FromDisk=false
+                },
+                new customVisor(){
+                    Idle ="TheOtherRoles.Resources.VisorTest.visorGundam1.png",
+//                    Floor="TheOtherRoles.Resources.VisorTest.visorGundam1.png",
+                    Name ="機動戦士〇ンダム",
+                    Id   ="visor_gundam",
+                    FromDisk=false
+                },
+                new customVisor(){
+                    Idle ="TheOtherRoles.Resources.VisorTest.VisorVR.png",
+//                    Floor="TheOtherRoles.Resources.VisorTest.VisorVR.png",
+                    Name ="VRゴーグル",
+                    Id   ="VisorVR",
+                    FromDisk=false
+                },
+                new customVisor(){
+                    Idle ="TheOtherRoles.Resources.VisorTest.VisorClackH.png",
+//                    Floor="TheOtherRoles.Resources.VisorTest.VisorClack.png",
+                    Name ="ひび割れ",
+                    Id   ="VisorClack",
+                    FromDisk=false
+                },
+                new customVisor(){
+                    Idle ="TheOtherRoles.Resources.VisorTest.VisorSushi.png",
+//                    Floor="TheOtherRoles.Resources.VisorTest.VisorSushi.png",
+                    Name ="寿司（サーモン）",
+                    Id   ="VisorSushi",
+                    FromDisk=false
+                },
+                new customVisor(){
+                    Idle ="TheOtherRoles.Resources.VisorTest.VisorMasamune.png",
+//                    Floor="TheOtherRoles.Resources.VisorTest.VisorTemplate.png",
+                    Name ="独眼竜",
+                    Id   ="VisorMasamune",
+                    FromDisk=false
+                },
+                new customVisor(){
+                    Idle ="TheOtherRoles.Resources.VisorTest.VisorFrontHairL.png",
+//                    Floor="TheOtherRoles.Resources.VisorTest.VisorTemplate.png",
+                    Name ="キザ髪",
+                    Id   ="VisorFrontHair",
+                    FromDisk=false
+                },
+                new customVisor(){
+                    Idle ="TheOtherRoles.Resources.VisorTest.VisorTemplate.png",
+//                    Floor="TheOtherRoles.Resources.VisorTest.VisorTemplate.png",
+                    Name ="テンプレ",
+                    Id   ="VisorTemplate",
+                    FromDisk=false
+                },
+            };
+            string filePath = Path.Combine(Path.GetDirectoryName(Application.dataPath), "VisorTest");
+            if (Directory.Exists(filePath))
+            {
+                var files = Directory.GetFiles(filePath);
+                foreach (var text in files.Where(x => x.EndsWith(".txt")))
+                {
+                    var visorSetting = File.ReadAllLines(text);
+                    var visor = new customVisor();
+                    visor.Idle = Path.Combine(filePath, visorSetting[0]);
+                    visor.Floor = Path.Combine(filePath, visorSetting[1]);
+                    visor.Name = visorSetting[2];
+                    visor.Id = visorSetting[3];
+                    visor.FromDisk = true;
+
+                    visorList.Add(visor);
+                }
+
+            }
+
         }
 
         [HarmonyPatch(typeof(HatManager), nameof(HatManager.GetVisorById))]
@@ -119,96 +236,12 @@ namespace TheOtherRoles.Modules
                 {
                     if (!LOADED)
                     {
-                        var visorList = new List<customVisor>
-                            {
-                            new customVisor{
-                                Idle ="TheOtherRoles.Resources.VisorTest.siune_heart_galss1.png",
-                                Floor="TheOtherRoles.Resources.VisorTest.siune_heart_galss1.png",
-                                Name ="しうねPのハートサングラス",
-                                Id   ="visor_siune_sea_glass",
-                                FromDisk=false
-                            }
-                            ,
-                            new customVisor(){
-                                Idle ="TheOtherRoles.Resources.VisorTest.siune_sun_galss1.png",
-                                Floor="TheOtherRoles.Resources.VisorTest.siune_sun_galss1.png",
-                                Name ="しうねPのサングラス",
-                                Id   ="visor_siune_sun_glass",
-                                FromDisk=false
-                            },
-                            new customVisor(){
-                                Idle ="TheOtherRoles.Resources.VisorTest.Visor_cat1.png",
-                                Floor="TheOtherRoles.Resources.VisorTest.Visor_cat1.png",
-                                Name ="猫マズル",
-                                Id   ="visor_cat",
-                                FromDisk=false
-                            },
-                            new customVisor(){
-                                Idle ="TheOtherRoles.Resources.VisorTest.visor_flog1.png",
-                                Floor="TheOtherRoles.Resources.VisorTest.visor_flog1.png",
-                                Name ="カエルお面",
-                                Id   ="visor_flog",
-                                FromDisk=false
-                            },
-                            new customVisor(){
-                                Idle ="TheOtherRoles.Resources.VisorTest.visorGundam1.png",
-                                Floor="TheOtherRoles.Resources.VisorTest.visorGundam1.png",
-                                Name ="機動戦士〇ンダム",
-                                Id   ="visor_gundam",
-                                FromDisk=false
-                            },
-                            new customVisor(){
-                                Idle ="TheOtherRoles.Resources.VisorTest.VisorVR.png",
-                                Floor="TheOtherRoles.Resources.VisorTest.VisorVR.png",
-                                Name ="VRゴーグル",
-                                Id   ="VisorVR",
-                                FromDisk=false
-                            },
-                            new customVisor(){
-                                Idle ="TheOtherRoles.Resources.VisorTest.VisorClack.png",
-                                Floor="TheOtherRoles.Resources.VisorTest.VisorClack.png",
-                                Name ="ひび割れ",
-                                Id   ="VisorClack",
-                                FromDisk=false
-                            },
-                            new customVisor(){
-                                Idle ="TheOtherRoles.Resources.VisorTest.VisorSushi.png",
-                                Floor="TheOtherRoles.Resources.VisorTest.VisorSushi.png",
-                                Name ="寿司（サーモン）",
-                                Id   ="VisorSushi",
-                                FromDisk=false
-                            },
-                            new customVisor(){
-                                Idle ="TheOtherRoles.Resources.VisorTest.VisorTemplate.png",
-                                Floor="TheOtherRoles.Resources.VisorTest.VisorTemplate.png",
-                                Name ="テンプレ",
-                                Id   ="VisorTemplate",
-                                FromDisk=false
-                            },
-                        };
-                        string filePath = Path.Combine(Path.GetDirectoryName(Application.dataPath) , "VisorTest");
-                        if (Directory.Exists(filePath))
+                        while (visorList.Count!=0)
                         {
-                            var files = Directory.GetFiles(filePath);
-                            foreach (var text in files.Where(x => x.EndsWith(".txt")))
-                            {
-                                var visorSetting = File.ReadAllLines(text);
-                                var visor = new customVisor();
-                                visor.Idle = Path.Combine(filePath, visorSetting[0]);
-                                visor.Floor = Path.Combine(filePath, visorSetting[1]);
-                                visor.Name = visorSetting[2];
-                                visor.Id = visorSetting[3];
-                                visor.FromDisk = true;
-
-                                visorList.Add(visor);
-                            }
-
-                        }
-                        foreach (var cv in visorList)
-                        {
+                            var cv = visorList[0];
+                            visorList.RemoveAt(0);
                             UnityEngine.Debug.Log("visor Add:" + cv.ToString() + "\n");
                             __instance.AllVisors.Add(CreateVisorData(cv,cv.FromDisk));
-
                         }
                     }
                 }
