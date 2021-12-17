@@ -22,14 +22,14 @@ namespace TheOtherRoles.Patches {
         private static Sprite blankNameplate = null;
         public static bool nameplatesChanged = true;
 
-        public static void updateNameplate(PlayerVoteArea pva)
+        public static void updateNameplate(PlayerVoteArea pva, byte playerId = Byte.MaxValue)
         {
             blankNameplate = blankNameplate ?? HatManager.Instance.AllNamePlates[0].Image;
 
             var nameplate = blankNameplate;
             if (!hideNameplates)
             {
-                var p = Helpers.playerById(pva.TargetPlayerId);
+                var p = Helpers.playerById(playerId != Byte.MaxValue ? playerId : pva.TargetPlayerId);
                 var nameplateId = p?.CurrentOutfit?.NamePlateId;
                 nameplate = HatManager.Instance.GetNamePlateById(nameplateId)?.Image;
             }
@@ -39,9 +39,9 @@ namespace TheOtherRoles.Patches {
         [HarmonyPatch(typeof(PlayerVoteArea), nameof(PlayerVoteArea.SetCosmetics))]
         class PlayerVoteAreaCosmetics
         {
-            static void Postfix(PlayerVoteArea __instance)
+            static void Postfix(PlayerVoteArea __instance, GameData.PlayerInfo playerInfo)
             {
-                updateNameplate(__instance);
+                updateNameplate(__instance, playerInfo.PlayerId);
             }
         }
 
