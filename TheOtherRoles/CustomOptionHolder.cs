@@ -64,6 +64,8 @@ namespace TheOtherRoles {
         public static CustomOption guesserHasMultipleShotsPerMeeting;
         public static CustomOption guesserShowInfoInGhostChat;
         public static CustomOption guesserKillsThroughShield;
+        public static CustomOption guesserEvilCanKillSpy;
+        public static CustomOption guesserSpawnBothRate;
 
         public static CustomOption jesterSpawnRate;
         public static CustomOption jesterCanCallEmergency;
@@ -155,6 +157,8 @@ namespace TheOtherRoles {
         public static CustomOption hackerCooldown;
         public static CustomOption hackerHackeringDuration;
         public static CustomOption hackerOnlyColorType;
+        public static CustomOption hackerToolsNumber;
+        public static CustomOption hackerRechargeTasksNumber;
 
         public static CustomOption trackerSpawnRate;
         public static CustomOption trackerUpdateIntervall;
@@ -363,6 +367,8 @@ namespace TheOtherRoles {
             guesserHasMultipleShotsPerMeeting = CustomOption.Create(314, "guesserHasMultipleShotsPerMeeting", false, guesserSpawnRate);
             guesserShowInfoInGhostChat = CustomOption.Create(315, "guesserToGhostChat", true, guesserSpawnRate);
             guesserKillsThroughShield  = CustomOption.Create(316, "guesserPierceShield", true, guesserSpawnRate);
+            guesserEvilCanKillSpy  = CustomOption.Create(316, "Evil Guesser Can Guess The Spy", true, guesserSpawnRate);
+            guesserSpawnBothRate = CustomOption.Create(317, "Other Guesser Spawn Rate", rates, guesserSpawnRate);
 
             jesterSpawnRate = CustomOption.Create(60, cs(Jester.color, "jester"), rates, null, true);
             jesterCanCallEmergency = CustomOption.Create(61, "jesterCanCallEmergency", true, jesterSpawnRate);
@@ -455,6 +461,8 @@ namespace TheOtherRoles {
             hackerCooldown = CustomOption.Create(171, "hackerCooldown", 30f, 5f, 60f, 5f, hackerSpawnRate, format: "unitSeconds");
             hackerHackeringDuration = CustomOption.Create(172, "hackerHackeringDuration", 10f, 2.5f, 60f, 2.5f, hackerSpawnRate, format: "unitSeconds");
             hackerOnlyColorType = CustomOption.Create(173, "hackerOnlyColorType", false, hackerSpawnRate);
+            hackerToolsNumber = CustomOption.Create(174, "Max Mobile Gadget Charges", 5f, 1f, 30f, 1f, hackerSpawnRate);
+            hackerRechargeTasksNumber = CustomOption.Create(175, "Number Of Tasks Needed For Recharging", 2f, 1f, 5f, 1f, hackerSpawnRate);
 
             trackerSpawnRate = CustomOption.Create(200, cs(Tracker.color, "tracker"), rates, null, true);
             trackerUpdateIntervall = CustomOption.Create(201, "trackerUpdateIntervall", 5f, 2.5f, 30f, 2.5f, trackerSpawnRate, format: "unitSeconds");

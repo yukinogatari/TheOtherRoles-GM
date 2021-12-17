@@ -67,8 +67,8 @@ namespace TheOtherRoles
         public static RoleInfo spy = new RoleInfo("spy", Spy.color, CustomOptionHolder.spySpawnRate, RoleId.Spy);
         public static RoleInfo securityGuard = new RoleInfo("securityGuard", SecurityGuard.color, CustomOptionHolder.securityGuardSpawnRate, RoleId.SecurityGuard);
         public static RoleInfo arsonist = new RoleInfo("arsonist", Arsonist.color, CustomOptionHolder.arsonistSpawnRate, RoleId.Arsonist);
-        public static RoleInfo goodGuesser = new RoleInfo("goodGuesser", Guesser.color, CustomOptionHolder.guesserSpawnRate, RoleId.Guesser);
-        public static RoleInfo badGuesser = new RoleInfo("badGuesser", Palette.ImpostorRed, CustomOptionHolder.guesserSpawnRate, RoleId.Guesser);
+        public static RoleInfo goodGuesser = new RoleInfo("Nice Guesser", Guesser.color, "Guess and shoot", "Guess and shoot", RoleId.NiceGuesser);
+        public static RoleInfo badGuesser = new RoleInfo("Evil Guesser", Palette.ImpostorRed, "Guess and shoot", "Guess and shoot", RoleId.EvilGuesser);
         public static RoleInfo bait = new RoleInfo("bait", Bait.color, CustomOptionHolder.baitSpawnRate, RoleId.Bait);
         public static RoleInfo madmate = new RoleInfo("madmate", Madmate.color, CustomOptionHolder.madmateSpawnRate, RoleId.Madmate);
         public static RoleInfo impostor = new RoleInfo("impostor", Palette.ImpostorRed,null, RoleId.Impostor);
@@ -172,7 +172,8 @@ namespace TheOtherRoles
             if (p == Spy.spy) infos.Add(spy);
             if (p == SecurityGuard.securityGuard) infos.Add(securityGuard);
             if (p == Arsonist.arsonist) infos.Add(arsonist);
-            if (p == Guesser.guesser) infos.Add(p.Data.Role.IsImpostor ? badGuesser : goodGuesser);
+            if (p == Guesser.niceGuesser) infos.Add(goodGuesser);
+            if (p == Guesser.evilGuesser) infos.Add(badGuesser);
             if (p == BountyHunter.bountyHunter) infos.Add(bountyHunter);
             if (p == Bait.bait) infos.Add(bait);
             if (p == Madmate.madmate) infos.Add(madmate);

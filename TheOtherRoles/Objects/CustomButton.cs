@@ -25,13 +25,11 @@ namespace TheOtherRoles.Objects {
         public string buttonText = null;
         public float EffectDuration;
         public Sprite Sprite;
-        public Func<Sprite> SpriteFunc;
         private HudManager hudManager;
         private bool mirror;
         private KeyCode? hotkey;
-        public int Data;
 
-        public CustomButton(Action OnClick, Func<bool> HasButton, Func<bool> CouldUse, Action OnMeetingEnds, Sprite Sprite, Vector3 PositionOffset, HudManager hudManager, ActionButton? textTemplate, KeyCode? hotkey, bool HasEffect, float EffectDuration, Action OnEffectEnds, bool mirror = false)
+        public CustomButton(Action OnClick, Func<bool> HasButton, Func<bool> CouldUse, Action OnMeetingEnds, Sprite Sprite, Vector3 PositionOffset, HudManager hudManager, KeyCode? hotkey, bool HasEffect, float EffectDuration, Action OnEffectEnds, bool mirror = false)
         {
             this.hudManager = hudManager;
             this.OnClick = OnClick;
@@ -45,7 +43,6 @@ namespace TheOtherRoles.Objects {
             this.Sprite = Sprite;
             this.mirror = mirror;
             this.hotkey = hotkey;
-            this.SpriteFunc = null;
             Timer = 16.2f;
             buttons.Add(this);
             actionButton = UnityEngine.Object.Instantiate(hudManager.KillButton, hudManager.KillButton.transform.parent);
@@ -63,8 +60,8 @@ namespace TheOtherRoles.Objects {
             setActive(false);
         }
 
-        public CustomButton(Action OnClick, Func<bool> HasButton, Func<bool> CouldUse, Action OnMeetingEnds, Sprite Sprite, Vector3 PositionOffset, HudManager hudManager, ActionButton? textTemplate, KeyCode? hotkey, bool mirror = false)
-        : this(OnClick, HasButton, CouldUse, OnMeetingEnds, Sprite, PositionOffset, hudManager, textTemplate, hotkey, false, 0f, () => {}, mirror) { }
+        public CustomButton(Action OnClick, Func<bool> HasButton, Func<bool> CouldUse, Action OnMeetingEnds, Sprite Sprite, Vector3 PositionOffset, HudManager hudManager, ActionButton? textTemplate, KeyCode? hotkey, bool mirror = false, string buttonText = "")
+        : this(OnClick, HasButton, CouldUse, OnMeetingEnds, Sprite, PositionOffset, hudManager, textTemplate, hotkey, false, 0f, () => {}, mirror, buttonText) { }
 
         void onClickEvent()
         {
@@ -148,10 +145,8 @@ namespace TheOtherRoles.Objects {
             setActive(hudManager.UseButton.isActiveAndEnabled);
 
             actionButton.graphic.sprite = Sprite;
-
-            if (buttonText != null)
-            {
-                actionButton.buttonLabelText.text = buttonText;
+            if (showButtonText && buttonText != ""){
+                actionButton.OverrideText(buttonText);
             }
             actionButton.buttonLabelText.enabled = showButtonText; // Only show the text if it's a kill button
 

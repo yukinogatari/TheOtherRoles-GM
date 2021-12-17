@@ -513,7 +513,7 @@ namespace TheOtherRoles.Modules {
                         if (info.package == "Community Hats")
                             info.package = "communityHats";
 
-                        if (info.package == "しうねコレクション")
+                        if (info.package == "窶堋ｵ窶堋､窶堙業坦ﾆ椎槌誰ﾆ歎ﾆ停｡ﾆ停�")
                             info.package = "shiuneCollection";
 
                         hatdatas.Add(info);
