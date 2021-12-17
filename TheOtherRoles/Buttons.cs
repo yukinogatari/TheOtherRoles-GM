@@ -439,6 +439,7 @@ namespace TheOtherRoles
                 0f,
                 () => { hackerButton.Timer = hackerButton.MaxTimer;}
             );
+            hackerButton.buttonText = ModTranslation.getString("HackerText");
 
             hackerAdminTableButton = new CustomButton(
                () => {
@@ -447,10 +448,11 @@ namespace TheOtherRoles
 
                    Hacker.chargesAdminTable--;
                },
-               () => { return Hacker.hacker != null && Hacker.hacker == PlayerControl.LocalPlayer && !PlayerControl.LocalPlayer.Data.IsDead;},
+               () => { return Hacker.hacker != null && Hacker.hacker == PlayerControl.LocalPlayer && MapOptions.couldUseAdmin && !PlayerControl.LocalPlayer.Data.IsDead;},
                () => {
-                   if (hackerAdminTableChargesText != null) hackerAdminTableChargesText.text = $"{Hacker.chargesAdminTable} / {Hacker.toolsNumber}";
-                   return PlayerControl.LocalPlayer.CanMove && Hacker.chargesAdminTable > 0; 
+                   if (hackerAdminTableChargesText != null)
+                       hackerAdminTableChargesText.text = hackerVitalsChargesText.text = String.Format(ModTranslation.getString("hackerChargesText"), Hacker.chargesAdminTable, Hacker.toolsNumber);
+                   return PlayerControl.LocalPlayer.CanMove && Hacker.chargesAdminTable > 0 && MapOptions.canUseAdmin; 
                },
                () => {
                    hackerAdminTableButton.Timer = hackerAdminTableButton.MaxTimer;
@@ -460,6 +462,7 @@ namespace TheOtherRoles
                Hacker.getAdminSprite(),
                new Vector3(-1.8f, -0.06f, 0),
                __instance,
+               __instance.UseButton,
                KeyCode.Q,
                true,
                0f,
@@ -468,8 +471,8 @@ namespace TheOtherRoles
                    if (MapBehaviour.Instance && MapBehaviour.Instance.isActiveAndEnabled) MapBehaviour.Instance.Close();
                },
                PlayerControl.GameOptions.MapId == 3,
-               "ADMIN"
-           );
+               DestroyableSingleton<TranslationController>.Instance.GetString(StringNames.Admin)
+            );
 
             // Hacker Admin Table Charges
             hackerAdminTableChargesText = GameObject.Instantiate(hackerAdminTableButton.actionButton.cooldownTimerText, hackerAdminTableButton.actionButton.cooldownTimerText.transform.parent);
@@ -492,10 +495,11 @@ namespace TheOtherRoles
                    }
                    Hacker.chargesVitals--;
                },
-               () => { return Hacker.hacker != null && Hacker.hacker == PlayerControl.LocalPlayer && !PlayerControl.LocalPlayer.Data.IsDead;},
+               () => { return Hacker.hacker != null && Hacker.hacker == PlayerControl.LocalPlayer && MapOptions.couldUseVitals && !PlayerControl.LocalPlayer.Data.IsDead; },
                () => {
-                   if (hackerVitalsChargesText != null) hackerVitalsChargesText.text = $"{Hacker.chargesVitals} / {Hacker.toolsNumber}";
-                   return PlayerControl.LocalPlayer.CanMove && Hacker.chargesVitals > 0;
+                   if (hackerVitalsChargesText != null)
+                       hackerVitalsChargesText.text = String.Format(ModTranslation.getString("hackerChargesText"), Hacker.chargesVitals, Hacker.toolsNumber);
+                   return PlayerControl.LocalPlayer.CanMove && Hacker.chargesVitals > 0 && MapOptions.canUseVitals;
                },
                () => {
                    hackerVitalsButton.Timer = hackerVitalsButton.MaxTimer;
@@ -505,6 +509,7 @@ namespace TheOtherRoles
                Hacker.getVitalsSprite(),
                new Vector3(-2.7f, -0.06f, 0),
                __instance,
+               __instance.UseButton,
                KeyCode.Q,
                true,
                0f,
@@ -513,9 +518,9 @@ namespace TheOtherRoles
                    if (Minigame.Instance) Hacker.vitals.ForceClose();
                },
                false,
-               "VITALS"
-           );
-            hackerButton.buttonText = ModTranslation.getString("HackerText");
+               DestroyableSingleton<TranslationController>.Instance.GetString(StringNames.VitalsLabel)
+            );
+
             // Hacker Vitals Charges
             hackerVitalsChargesText = GameObject.Instantiate(hackerVitalsButton.actionButton.cooldownTimerText, hackerVitalsButton.actionButton.cooldownTimerText.transform.parent);
             hackerVitalsChargesText.text = "";

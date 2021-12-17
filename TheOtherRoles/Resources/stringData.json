@@ -377,7 +377,11 @@
     },
     "loversImpLoverRate": {
         "0": "Chance One Lover Is Impostor",
-        "11": "\u30a4\u30f3\u30dd\u30b9\u30bf\u30fc\u306b\u306a\u308b\u78ba\u7387"
+        "11": "\u7247\u65b9\u304c\u30a4\u30f3\u30dd\u30b9\u30bf\u30fc\u306b\u306a\u308b\u78ba\u7387"
+    },
+    "loversNumCouples": {
+        "0": "Number Of Couples",
+        "11": "\u30ab\u30c3\u30d7\u30eb\u306e\u6570"
     },
     "loversBothDie": {
         "0": "Both Lovers Die",
@@ -403,27 +407,27 @@
         "0": "Guesser",
         "11": "\u30b2\u30c3\u30b5\u30fc"
     },
-    "goodGuesser": {
+    "niceGuesser": {
         "0": "Nice Guesser",
         "11": "\u30ca\u30a4\u30b9\u30b2\u30c3\u30b5\u30fc"
     },
-    "goodGuesserIntroDesc": {
+    "niceGuesserIntroDesc": {
         "0": "Guess and shoot",
         "11": "\u63a8\u6e2c\u3057\u3066\u6483\u3061\u629c\u3051\u3088\u3046"
     },
-    "goodGuesserShortDesc": {
+    "niceGuesserShortDesc": {
         "0": "Guess and shoot",
         "11": "\u63a8\u6e2c\u3057\u3066\u6483\u3061\u629c\u3051\u3088\u3046"
     },
-    "badGuesser": {
+    "evilGuesser": {
         "0": "Evil Guesser",
         "11": "\u30a4\u30d3\u30eb\u30b2\u30c3\u30b5\u30fc"
     },
-    "badGuesserIntroDesc": {
+    "evilGuesserIntroDesc": {
         "0": "Guess and shoot",
         "11": "\u63a8\u6e2c\u3057\u3066\u6483\u3061\u629c\u3051\u3088\u3046"
     },
-    "badGuesserShortDesc": {
+    "evilGuesserShortDesc": {
         "0": "Guess and shoot",
         "11": "\u63a8\u6e2c\u3057\u3066\u6483\u3061\u629c\u3051\u3088\u3046"
     },
@@ -451,9 +455,21 @@
         "0": "Guesses Ignore The Medic Shield",
         "11": "\u30e1\u30c7\u30a3\u30c3\u30af\u306e\u30b7\u30fc\u30eb\u30c9\u3092\u7121\u8996\u3059\u308b"
     },
+    "guesserEvilCanKillSpy": {
+        "0": "Evil Guesser Can Guess The Spy",
+        "11": "\u30a4\u30d3\u30eb\u304c\u30b9\u30d1\u30a4\u3092\u6483\u3066\u308b"
+    },
+    "guesserSpawnBothRate": {
+        "0": "Other Guesser Spawn Rate",
+        "11": "\u30ca\u30a4\u30b9\u30fb\u30a4\u30d3\u30eb\u4e21\u65b9\u51fa\u73fe\u7387"
+    },
     "guesserGuessChat": {
         "0": "Guesser guessed the role {0} for {1}!",
         "11": "\u30b2\u30c3\u30b5\u30fc\u306f\u300c{1}\u300d\u306e\u30ed\u30fc\u30eb\u304c\u300c{0}\u300d\u3060\u3068\u63a8\u6e2c\u3057\u305f\uff01"
+    },
+    "guesserGuessesLeft": {
+        "0": "Guesses Left: {0}",
+        "11": "\u6b8b\u308a {0}\u767a"
     },
     "jester": {
         "0": "Jester",
@@ -572,12 +588,32 @@
         "11": "\u30b7\u30d5\u30bf\u30fc"
     },
     "shifterIntroDesc": {
-        "0": "Shift your role",
-        "11": "\u30ed\u30fc\u30eb\u3092\u596a\u304a\u3046"
+        "0": "Steal someone's role",
+        "11": "\u30ed\u30fc\u30eb\u3092\u596a\u3063\u3066\u52dd\u5229\u3092\u63b4\u3081\u3088\u3046"
     },
     "shifterShortDesc": {
+        "0": "Steal someone's role",
+        "11": "\u30ed\u30fc\u30eb\u3092\u596a\u3063\u3066\u52dd\u5229\u3092\u63b4\u3081\u3088\u3046"
+    },
+    "niceShifter": {
+        "0": "Nice Shifter",
+        "11": "\u30ca\u30a4\u30b9\u30b7\u30d5\u30bf\u30fc"
+    },
+    "niceShifterIntroDesc": {
         "0": "Shift your role",
-        "11": "\u30ed\u30fc\u30eb\u3092\u596a\u304a\u3046"
+        "11": "\u30af\u30eb\u30fc\u306e\u30ed\u30fc\u30eb\u3092\u5b88\u308d\u3046"
+    },
+    "niceShifterShortDesc": {
+        "0": "Shift your role",
+        "11": "\u30af\u30eb\u30fc\u306e\u30ed\u30fc\u30eb\u3092\u5b88\u308d\u3046"
+    },
+    "twistedShifter": {
+        "0": "Twisted Shifter",
+        "11": "\u6b6a\u3093\u3060\u30b7\u30d5\u30bf\u30fc"
+    },
+    "shifterIsNeutralRate": {
+        "0": "Chance Shifter Is Neutral",
+        "11": "\u7b2c\uff13\u9663\u55b6\u306b\u306a\u308b\u78ba\u7387"
     },
     "shifterShiftsModifiers": {
         "0": "Shifts Modifiers",
@@ -815,13 +851,33 @@
         "0": "Swapper",
         "11": "\u30b9\u30ef\u30c3\u30d1\u30fc"
     },
-    "swapperIntroDesc": {
+    "niceSwapper": {
+        "0": "Nice Swapper",
+        "11": "\u30ca\u30a4\u30b9\u30b9\u30ef\u30c3\u30d1\u30fc"
+    },
+    "niceSwapperIntroDesc": {
         "0": "Swap votes to exile the <color=#FF1919FF>Impostors</color>",
         "11": "\u6295\u7968\u5148\u3092\u5165\u308c\u66ff\u3048\u3066<color=#FF1919FF>\u30a4\u30f3\u30dd\u30b9\u30bf\u30fc</color>\u3092\u8ffd\u653e\u3057\u3088\u3046"
     },
-    "swapperShortDesc": {
+    "niceSwapperShortDesc": {
         "0": "Swap votes",
         "11": "\u6295\u7968\u5148\u3092\u5165\u308c\u66ff\u3048\u3088\u3046"
+    },
+    "evilSwapper": {
+        "0": "Evil Swapper",
+        "11": "\u30a4\u30d3\u30eb\u30b9\u30ef\u30c3\u30d1\u30fc"
+    },
+    "evilSwapperIntroDesc": {
+        "0": "Swap votes to protect your allies",
+        "11": "\u6295\u7968\u5148\u3092\u5165\u308c\u66ff\u3048\u3066\u751f\u304d\u306a\u304c\u3089\u3048\u3088\u3046"
+    },
+    "evilSwapperShortDesc": {
+        "0": "Swap votes",
+        "11": "\u6295\u7968\u5148\u3092\u5165\u308c\u66ff\u3048\u3088\u3046"
+    },
+    "swapperIsImpRate": {
+        "0": "Chance Swapper Is Impostor",
+        "11": "\u30a4\u30f3\u30dd\u30b9\u30bf\u30fc\u306b\u306a\u308b\u78ba\u7387"
     },
     "swapperCanCallEmergency": {
         "0": "Can Call Emergency Meetings",
@@ -830,6 +886,14 @@
     "swapperCanOnlySwapOthers": {
         "0": "Can Only Swap Others",
         "11": "\u30b9\u30ef\u30c3\u30d1\u30fc\u304c\u30b9\u30ef\u30c3\u30d7\u5bfe\u8c61\u5916"
+    },
+    "swapperNumSwaps": {
+        "0": "Number Of Swaps",
+        "11": "\u30b9\u30ef\u30c3\u30d7\u3067\u304d\u308b\u56de\u6570"
+    },
+    "swapperSwapsLeft": {
+        "0": "Swaps Left: {0}",
+        "11": "\u30b9\u30ef\u30c3\u30d7\u306e\u6b8b\u308a\u56de\u6570: {0}\u56de"
     },
     "seer": {
         "0": "Seer",
@@ -890,6 +954,18 @@
     "hackerOnlyColorType": {
         "0": "Only Sees Color Type",
         "11": "\u8272\u8abf\u306e\u307f\u898b\u3048\u308b"
+    },
+    "hackerToolsNumber": {
+        "0": "Max Mobile Gadget Charges",
+        "11": "\u6700\u5927\u30c1\u30e3\u30fc\u30b8\u6570"
+    },
+    "hackerRechargeTasksNumber": {
+        "0": "Number Of Tasks Needed For Recharging",
+        "11": "\u5145\u96fb\u306b\u5fc5\u8981\u306a\u30bf\u30b9\u30af\u6570"
+    },
+    "hackerChargesText": {
+        "0": "Charges: {0}/{1}",
+        "11": "\u30c1\u30e3\u30fc\u30b8\u6570: {0}/{1}"
     },
     "tracker": {
         "0": "Tracker",
@@ -1569,7 +1645,7 @@
         "0": "Sabotage",
         "11": "\u30b5\u30dc"
     },
-    "roleSummaryDC": {
+    "roleSummaryDisconnected": {
         "0": "DC'd",
         "11": "\u5207\u65ad"
     },
@@ -1644,6 +1720,18 @@
     "unitMultiplier": {
         "0": "{0}x",
         "11": "{0}x"
+    },
+    "unitTimes": {
+        "0": "{0}x",
+        "11": "{0}\u56de"
+    },
+    "unitVotes": {
+        "0": "{0}",
+        "11": "{0}\u7968"
+    },
+    "unitCouples": {
+        "0": "{0} Couples",
+        "11": "{0}\u7d44"
     },
     "creditsMain": {
         "0": "Modded by <color=#FCCE03FF>Eisbison</color>, <color=#FCCE03FF>Thunderstorm584</color>, <color=#FCCE03FF>EndOfFile</color> & <color=#FCCE03FF>Mall\u00f6ris</color>\nDesign by <color=#FCCE03FF>Bavari</color>, Customization by <color=#c1a9ff>Virtual_Dusk</color>",

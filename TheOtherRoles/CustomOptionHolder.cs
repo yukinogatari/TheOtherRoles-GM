@@ -51,6 +51,7 @@ namespace TheOtherRoles {
         public static CustomOption miniIsImpRate;
 
         public static CustomOption loversSpawnRate;
+        public static CustomOption loversNumCouples;
         public static CustomOption loversImpLoverRate;
         public static CustomOption loversBothDie;
         public static CustomOption loversCanHaveAnotherRole;
@@ -104,6 +105,7 @@ namespace TheOtherRoles {
         public static CustomOption witchVoteSavesTargets;
 
         public static CustomOption shifterSpawnRate;
+        public static CustomOption shifterIsNeutralRate;
         public static CustomOption shifterShiftsModifiers;
 
         public static CustomOption mayorSpawnRate;
@@ -145,8 +147,10 @@ namespace TheOtherRoles {
         public static CustomOption medicShowAttemptToMedic;
 
         public static CustomOption swapperSpawnRate;
+        public static CustomOption swapperIsImpRate;
         public static CustomOption swapperCanCallEmergency;
         public static CustomOption swapperCanOnlySwapOthers;
+        public static CustomOption swapperNumSwaps;
 
         public static CustomOption seerSpawnRate;
         public static CustomOption seerMode;
@@ -355,6 +359,7 @@ namespace TheOtherRoles {
 
             loversSpawnRate = CustomOption.Create(50, cs(Lovers.color, "lovers"), rates, null, true);
             loversImpLoverRate = CustomOption.Create(51, "loversImpLoverRate", rates, loversSpawnRate);
+            loversNumCouples = CustomOption.Create(57, "loversNumCouples", 1f, 1f, 7f, 1f, loversSpawnRate, format: "unitCouples");
             loversBothDie = CustomOption.Create(52, "loversBothDie", true, loversSpawnRate);
             loversCanHaveAnotherRole = CustomOption.Create(53, "loversCanHaveAnotherRole", true, loversSpawnRate);
             loversSeparateTeam = CustomOption.Create(56, "loversSeparateTeam", true, loversSpawnRate);
@@ -362,13 +367,19 @@ namespace TheOtherRoles {
 
             guesserSpawnRate = CustomOption.Create(310, cs(Guesser.color, "guesser"), rates, null, true);
             guesserIsImpGuesserRate = CustomOption.Create(311, "guesserIsImpGuesserRate", rates, guesserSpawnRate);
+            guesserSpawnBothRate = CustomOption.Create(317, "guesserSpawnBothRate", rates, guesserSpawnRate);
             guesserNumberOfShots = CustomOption.Create(312, "guesserNumberOfShots", 2f, 1f, 15f, 1f, guesserSpawnRate, format: "unitShots");
             guesserOnlyAvailableRoles = CustomOption.Create(313, "guesserOnlyAvailableRoles", true, guesserSpawnRate);
             guesserHasMultipleShotsPerMeeting = CustomOption.Create(314, "guesserHasMultipleShotsPerMeeting", false, guesserSpawnRate);
             guesserShowInfoInGhostChat = CustomOption.Create(315, "guesserToGhostChat", true, guesserSpawnRate);
             guesserKillsThroughShield  = CustomOption.Create(316, "guesserPierceShield", true, guesserSpawnRate);
-            guesserEvilCanKillSpy  = CustomOption.Create(316, "Evil Guesser Can Guess The Spy", true, guesserSpawnRate);
-            guesserSpawnBothRate = CustomOption.Create(317, "Other Guesser Spawn Rate", rates, guesserSpawnRate);
+            guesserEvilCanKillSpy  = CustomOption.Create(316, "guesserEvilCanKillSpy", true, guesserSpawnRate);
+
+            swapperSpawnRate = CustomOption.Create(150, cs(Swapper.color, "swapper"), rates, null, true);
+            swapperIsImpRate = CustomOption.Create(153, "swapperIsImpRate", rates, swapperSpawnRate);
+            swapperNumSwaps = CustomOption.Create(154, "swapperNumSwaps", 2f, 1f, 15f, 1f, swapperSpawnRate, format: "unitTimes");
+            swapperCanCallEmergency = CustomOption.Create(151, "swapperCanCallEmergency", false, swapperSpawnRate);
+            swapperCanOnlySwapOthers = CustomOption.Create(152, "swapperCanOnlySwapOthers", false, swapperSpawnRate);
 
             jesterSpawnRate = CustomOption.Create(60, cs(Jester.color, "jester"), rates, null, true);
             jesterCanCallEmergency = CustomOption.Create(61, "jesterCanCallEmergency", true, jesterSpawnRate);
@@ -408,10 +419,11 @@ namespace TheOtherRoles {
             pursuerBlanksNumber = CustomOption.Create(357, "pursuerNumBlanks", 5f, 0f, 20f, 1f, lawyerSpawnRate, format: "unitShots");
 
             shifterSpawnRate = CustomOption.Create(70, cs(Shifter.color, "shifter"), rates, null, true);
+            shifterIsNeutralRate = CustomOption.Create(72, "shifterIsNeutralRate", rates, shifterSpawnRate);
             shifterShiftsModifiers = CustomOption.Create(71, "shifterShiftsModifiers", false, shifterSpawnRate);
 
             mayorSpawnRate = CustomOption.Create(80, cs(Mayor.color, "mayor"), rates, null, true);
-            mayorNumVotes = CustomOption.Create(81, "mayorNumVotes", 2f, 2f, 10f, 1f, mayorSpawnRate);
+            mayorNumVotes = CustomOption.Create(81, "mayorNumVotes", 2f, 2f, 10f, 1f, mayorSpawnRate, format: "unitVotes");
 
             engineerSpawnRate = CustomOption.Create(90, cs(Engineer.color, "engineer"), rates, null, true);
             engineerNumberOfFixes = CustomOption.Create(91, "engineerNumFixes", 1f, 0f, 3f, 1f, engineerSpawnRate);
@@ -448,10 +460,6 @@ namespace TheOtherRoles {
             medicSetShieldAfterMeeting = CustomOption.Create(145, "medicSetShieldAfterMeeting", false, medicSpawnRate);
             medicShowAttemptToMedic = CustomOption.Create(146, "medicSeesMurderAttempt", false, medicSpawnRate);
 
-            swapperSpawnRate = CustomOption.Create(150, cs(Swapper.color, "swapper"), rates, null, true);
-            swapperCanCallEmergency = CustomOption.Create(151, "swapperCanCallEmergency", false, swapperSpawnRate);
-            swapperCanOnlySwapOthers = CustomOption.Create(152, "swapperCanOnlySwapOthers", false, swapperSpawnRate);
-
             seerSpawnRate = CustomOption.Create(160, cs(Seer.color, "seer"), rates, null, true);
             seerMode = CustomOption.Create(161, "seerMode", new string[] { "seerModeBoth", "seerModeFlash", "seerModeSouls" }, seerSpawnRate);
             seerLimitSoulDuration = CustomOption.Create(163, "seerLimitSoulDuration", false, seerSpawnRate);
@@ -461,8 +469,8 @@ namespace TheOtherRoles {
             hackerCooldown = CustomOption.Create(171, "hackerCooldown", 30f, 5f, 60f, 5f, hackerSpawnRate, format: "unitSeconds");
             hackerHackeringDuration = CustomOption.Create(172, "hackerHackeringDuration", 10f, 2.5f, 60f, 2.5f, hackerSpawnRate, format: "unitSeconds");
             hackerOnlyColorType = CustomOption.Create(173, "hackerOnlyColorType", false, hackerSpawnRate);
-            hackerToolsNumber = CustomOption.Create(174, "Max Mobile Gadget Charges", 5f, 1f, 30f, 1f, hackerSpawnRate);
-            hackerRechargeTasksNumber = CustomOption.Create(175, "Number Of Tasks Needed For Recharging", 2f, 1f, 5f, 1f, hackerSpawnRate);
+            hackerToolsNumber = CustomOption.Create(174, "hackerToolsNumber", 5f, 1f, 30f, 1f, hackerSpawnRate);
+            hackerRechargeTasksNumber = CustomOption.Create(175, "hackerRechargeTasksNumber", 2f, 1f, 5f, 1f, hackerSpawnRate);
 
             trackerSpawnRate = CustomOption.Create(200, cs(Tracker.color, "tracker"), rates, null, true);
             trackerUpdateIntervall = CustomOption.Create(201, "trackerUpdateIntervall", 5f, 2.5f, 30f, 2.5f, trackerSpawnRate, format: "unitSeconds");

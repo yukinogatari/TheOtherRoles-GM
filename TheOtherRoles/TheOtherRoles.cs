@@ -1,4 +1,4 @@
-using System.Net;
+﻿using System.Net;
 using System.Linq;
 using BepInEx;
 using BepInEx.Configuration;
@@ -11,6 +11,8 @@ using System.Collections;
 using System.IO;
 using UnityEngine;
 using TheOtherRoles.Objects;
+using static TheOtherRoles.GameHistory;
+using TheOtherRoles.Patches;
 
 namespace TheOtherRoles
 {
@@ -345,6 +347,8 @@ namespace TheOtherRoles
             public static PlayerControl currentTarget;
             public static bool shiftModifiers = false;
 
+            public static bool isNeutral = false;
+
             private static Sprite buttonSprite;
             public static Sprite getButtonSprite()
             {
@@ -359,6 +363,7 @@ namespace TheOtherRoles
                 currentTarget = null;
                 futureShift = null;
                 shiftModifiers = CustomOptionHolder.shifterShiftsModifiers.getBool();
+                isNeutral = false;
             }
         }
 
@@ -369,6 +374,7 @@ namespace TheOtherRoles
             private static Sprite spriteCheck;
             public static bool canCallEmergency = false;
             public static bool canOnlySwapOthers = false;
+            public static int numSwaps = 2;
 
             public static byte playerId1 = Byte.MaxValue;
             public static byte playerId2 = Byte.MaxValue;
@@ -387,18 +393,38 @@ namespace TheOtherRoles
                 playerId2 = Byte.MaxValue;
                 canCallEmergency = CustomOptionHolder.swapperCanCallEmergency.getBool();
                 canOnlySwapOthers = CustomOptionHolder.swapperCanOnlySwapOthers.getBool();
+                numSwaps = Mathf.RoundToInt(CustomOptionHolder.swapperNumSwaps.getFloat());
             }
         }
 
         public static class Lovers
         {
-            public static PlayerControl lover1;
-            public static PlayerControl lover2;
+            public static List<Tuple<PlayerControl, PlayerControl>> couples = new List<Tuple<PlayerControl, PlayerControl>>();
             public static Color color = new Color32(232, 57, 185, byte.MaxValue);
 
+            public static List<string> loverIcons = new List<string>
+            {
+                " ♥",
+                " ♠",
+                " ♦",
+                " ♣",
+                " ★",
+                " ♡",
+                " ☆",
+            };
+
+            public static List<Color> loverIconColors = new List<Color>
+            {
+                Lovers.color,
+                Palette.ImpostorRed,
+                Palette.Orange,
+                new Color(0.0f, 1f, 1f),
+                Palette.AcceptedGreen,
+                Palette.Blue,
+                Palette.Purple,
+            };
+
             public static bool bothDie = true;
-            // Lovers save if next to be exiled is a lover, because RPC of ending game comes before RPC of exiled
-            public static bool notAckedExiledIsLover = false;
 
             // Making this closer to the au.libhalt.net version of Lovers
             public static bool separateTeam = true;
@@ -412,29 +438,171 @@ namespace TheOtherRoles
                 }
             }
 
-            public static bool existing()
+            public static string getIcon(PlayerControl player)
             {
-                return lover1 != null && lover2 != null && !lover1.Data.Disconnected && !lover2.Data.Disconnected;
+                if (isLovers(player))
+                {
+                    var coupleId = couples.FindIndex(x => x.Item1 == player || x.Item2 == player);
+                    //return Helpers.cs(Lovers.color, loverIcons[coupleId]);
+                    return Helpers.cs(loverIconColors[coupleId], " ♥");
+                }
+                return "";
             }
 
-            public static bool existingAndAlive()
+            public static void addCouple(PlayerControl player1, PlayerControl player2)
             {
-                return existing() && !lover1.Data.IsDead && !lover2.Data.IsDead && !notAckedExiledIsLover; // ADD NOT ACKED IS LOVER
+                couples.Add(new Tuple<PlayerControl, PlayerControl>(player1, player2));
             }
 
-            public static bool existingWithKiller()
+            public static void eraseCouple(PlayerControl player)
             {
-                return existing() && (lover1 == Jackal.jackal || lover2 == Jackal.jackal
-                                   || lover1 == Sidekick.sidekick || lover2 == Sidekick.sidekick
-                                   || lover1.Data.Role.IsImpostor || lover2.Data.Role.IsImpostor);
+                var coupleId = couples.FindIndex(x => x.Item1 == player || x.Item2 == player);
+                if (coupleId >= 0) couples.RemoveAt(coupleId);
+            }
+
+            public static void swapLovers(PlayerControl player1, PlayerControl player2)
+            {
+                var couple1 = couples.FindIndex(x => x.Item1 == player1 || x.Item2 == player1);
+                var couple2 = couples.FindIndex(x => x.Item1 == player2 || x.Item2 == player2);
+
+                if (couple1 >= 0)
+                {
+                    Tuple<PlayerControl, PlayerControl> newCouple = null;
+                    if (couples[couple1].Item1 == player1) newCouple = new Tuple<PlayerControl, PlayerControl>(player2, couples[couple1].Item2);
+                    if (couples[couple1].Item2 == player1) newCouple = new Tuple<PlayerControl, PlayerControl>(player2, couples[couple1].Item1);
+                    couples[couple1] = newCouple;
+                }
+
+                if (couple2 >= 0)
+                {
+                    Tuple<PlayerControl, PlayerControl> newCouple = null;
+                    if (couples[couple2].Item1 == player2) newCouple = new Tuple<PlayerControl, PlayerControl>(player1, couples[couple2].Item2);
+                    if (couples[couple2].Item2 == player2) newCouple = new Tuple<PlayerControl, PlayerControl>(player1, couples[couple2].Item1);
+                    couples[couple2] = newCouple;
+                }
+            }
+
+            public static void killLovers(PlayerControl player)
+            {
+                if (separateTeam && tasksCount)
+                    player.clearAllTasks();
+
+                if (!bothDie) return;
+
+                var partner = getPartner(player);
+                if (partner != null && bothDie)
+                {
+                    if (!partner.Data.IsDead)
+                    {
+                        partner.MurderPlayer(partner);
+                        finalStatuses[partner.PlayerId] = FinalStatus.Suicide;
+                    }
+
+                    if (separateTeam && tasksCount)
+                        partner.clearAllTasks();
+                }
+            }
+
+            public static void exileLovers(PlayerControl player)
+            {
+                if (separateTeam && tasksCount)
+                    player.clearAllTasks();
+
+                if (!bothDie) return;
+
+                var partner = getPartner(player);
+                if (partner != null && bothDie)
+                {
+                    if (!partner.Data.IsDead)
+                    {
+                        partner.Exiled();
+                        finalStatuses[partner.PlayerId] = FinalStatus.Suicide;
+                    }
+
+                    if (separateTeam && tasksCount)
+                        partner.clearAllTasks();
+                }
+            }
+
+            public static PlayerControl getPartner(PlayerControl player)
+            {
+                var couple = getCouple(player);
+                if (couple != null)
+                {
+                    return player?.PlayerId == couple?.Item1?.PlayerId ? couple?.Item2 : couple?.Item1;
+                }
+                return null;
+            }
+
+            public static bool isLovers(PlayerControl player)
+            {
+                return getCouple(player) != null;
+            }
+
+            public static Tuple<PlayerControl, PlayerControl> getCouple(PlayerControl player)
+            {
+                foreach (var pair in couples)
+                {
+                    if (pair?.Item1?.PlayerId == player?.PlayerId || pair?.Item2?.PlayerId == player?.PlayerId) return pair;
+                }
+                return null;
+            }
+
+            public static bool existing(PlayerControl player)
+            {
+                var couple = getCouple(player);
+                if (couple != null)
+                {
+                    return couple.Item1 != null && couple.Item2 != null && !couple.Item1.Data.Disconnected && !couple.Item2.Data.Disconnected;
+                }
+                return false;
+            }
+
+            public static bool anyAlive()
+            {
+                foreach (var couple in couples)
+                {
+                    if (couple.Item1.isAlive() && couple.Item2.isAlive())
+                        return true;
+                }
+                return false;
+            }
+
+            public static bool anyNonKillingCouples()
+            {
+                foreach (var couple in couples)
+                {
+                    if (!couple.Item1.hasAliveKillingLover()) return true;
+                }
+                return false;
+            }
+
+            public static bool existingAndAlive(PlayerControl player)
+            {
+                var couple = getCouple(player);
+                if (couple != null)
+                {
+                    return existing(player) && couple.Item1.isAlive() && couple.Item2.isAlive();
+                }
+                return false;
+            }
+
+            public static bool existingWithKiller(PlayerControl player)
+            {
+                var couple = getCouple(player);
+                if (couple != null)
+                {
+                    return existing(player) && (couple.Item1 == Jackal.jackal || couple.Item2 == Jackal.jackal
+                                   || couple.Item1 == Sidekick.sidekick || couple.Item2 == Sidekick.sidekick
+                                   || couple.Item1.Data.Role.IsImpostor || couple.Item2.Data.Role.IsImpostor);
+                }
+                return false;
             }
 
 
             public static void clearAndReload()
             {
-                lover1 = null;
-                lover2 = null;
-                notAckedExiledIsLover = false;
+                couples = new List<Tuple<PlayerControl, PlayerControl>>();
                 bothDie = CustomOptionHolder.loversBothDie.getBool();
                 separateTeam = CustomOptionHolder.loversSeparateTeam.getBool();
                 tasksCount = CustomOptionHolder.loversTasksCount.getBool();
@@ -621,22 +789,22 @@ namespace TheOtherRoles
         public static class Hacker
         {
             public static PlayerControl hacker;
-        public static Minigame vitals = null;
+            public static Minigame vitals = null;
             public static Color color = new Color32(117, 250, 76, byte.MaxValue);
 
             public static float cooldown = 30f;
             public static float duration = 10f;
-        public static float toolsNumber = 5f;
+            public static float toolsNumber = 5f;
             public static bool onlyColorType = false;
             public static float hackerTimer = 0f;
-        public static int rechargeTasksNumber = 2;
-        public static int rechargedTasks = 2;
-        public static int chargesVitals = 1;
-        public static int chargesAdminTable = 1;
+            public static int rechargeTasksNumber = 2;
+            public static int rechargedTasks = 2;
+            public static int chargesVitals = 1;
+            public static int chargesAdminTable = 1;
 
             private static Sprite buttonSprite;
-        private static Sprite vitalsSprite;
-        private static Sprite adminSprite;
+            private static Sprite vitalsSprite;
+            private static Sprite adminSprite;
 
             public static Sprite getButtonSprite()
             {
@@ -645,36 +813,36 @@ namespace TheOtherRoles
                 return buttonSprite;
             }
 
-        public static Sprite getVitalsSprite() {
-            if (vitalsSprite) return vitalsSprite;
-            vitalsSprite = HudManager.Instance.UseButton.fastUseSettings[ImageNames.VitalsButton].Image;
-            return vitalsSprite;
-        }
+            public static Sprite getVitalsSprite() {
+                if (vitalsSprite) return vitalsSprite;
+                vitalsSprite = HudManager.Instance.UseButton.fastUseSettings[ImageNames.VitalsButton].Image;
+                return vitalsSprite;
+            }
 
-        public static Sprite getAdminSprite() {
-            byte mapId = PlayerControl.GameOptions.MapId;
-            UseButtonSettings button = HudManager.Instance.UseButton.fastUseSettings[ImageNames.PolusAdminButton]; // Polus
-            if (mapId == 0 || mapId == 3) button = HudManager.Instance.UseButton.fastUseSettings[ImageNames.AdminMapButton]; // Skeld || Dleks
-            else if (mapId == 1) button = HudManager.Instance.UseButton.fastUseSettings[ImageNames.MIRAAdminButton]; // Mira HQ
-            else if (mapId == 4) button = HudManager.Instance.UseButton.fastUseSettings[ImageNames.AirshipAdminButton]; // Airship
-            adminSprite = button.Image;
-            return adminSprite;
-        }
+            public static Sprite getAdminSprite() {
+                byte mapId = PlayerControl.GameOptions.MapId;
+                UseButtonSettings button = HudManager.Instance.UseButton.fastUseSettings[ImageNames.PolusAdminButton]; // Polus
+                if (mapId == 0 || mapId == 3) button = HudManager.Instance.UseButton.fastUseSettings[ImageNames.AdminMapButton]; // Skeld || Dleks
+                else if (mapId == 1) button = HudManager.Instance.UseButton.fastUseSettings[ImageNames.MIRAAdminButton]; // Mira HQ
+                else if (mapId == 4) button = HudManager.Instance.UseButton.fastUseSettings[ImageNames.AirshipAdminButton]; // Airship
+                adminSprite = button.Image;
+                return adminSprite;
+            }
 
             public static void clearAndReload()
             {
                 hacker = null;
-            vitals = null;
+                vitals = null;
                 hackerTimer = 0f;
-            adminSprite = null;
+                adminSprite = null;
                 cooldown = CustomOptionHolder.hackerCooldown.getFloat();
                 duration = CustomOptionHolder.hackerHackeringDuration.getFloat();
                 onlyColorType = CustomOptionHolder.hackerOnlyColorType.getBool();
-            toolsNumber = CustomOptionHolder.hackerToolsNumber.getFloat();
-            rechargeTasksNumber = Mathf.RoundToInt(CustomOptionHolder.hackerRechargeTasksNumber.getFloat());
-            rechargedTasks = Mathf.RoundToInt(CustomOptionHolder.hackerRechargeTasksNumber.getFloat());
-            chargesVitals = Mathf.RoundToInt(CustomOptionHolder.hackerToolsNumber.getFloat()) / 2;
-            chargesAdminTable = Mathf.RoundToInt(CustomOptionHolder.hackerToolsNumber.getFloat()) / 2;
+                toolsNumber = CustomOptionHolder.hackerToolsNumber.getFloat();
+                rechargeTasksNumber = Mathf.RoundToInt(CustomOptionHolder.hackerRechargeTasksNumber.getFloat());
+                rechargedTasks = Mathf.RoundToInt(CustomOptionHolder.hackerRechargeTasksNumber.getFloat());
+                chargesVitals = Mathf.RoundToInt(CustomOptionHolder.hackerToolsNumber.getFloat()) / 2;
+                chargesAdminTable = Mathf.RoundToInt(CustomOptionHolder.hackerToolsNumber.getFloat()) / 2;
             }
         }
 
@@ -1240,19 +1408,18 @@ namespace TheOtherRoles
 
         public static class Guesser
         {
-        public static PlayerControl niceGuesser;
-        public static PlayerControl evilGuesser;
+            public static PlayerControl niceGuesser;
+            public static PlayerControl evilGuesser;
             public static Color color = new Color32(255, 255, 0, byte.MaxValue);
             private static Sprite targetSprite;
 
-        public static int remainingShotsEvilGuesser = 2;
-        public static int remainingShotsNiceGuesser = 2;
-            public static int remainingShots = 2;
+            public static int remainingShotsEvilGuesser = 2;
+            public static int remainingShotsNiceGuesser = 2;
             public static bool onlyAvailableRoles = true;
         	public static bool hasMultipleShotsPerMeeting = false;
-        public static bool showInfoInGhostChat = true;
-        public static bool killsThroughShield = true;
-        public static bool evilGuesserCanGuessSpy = true;
+            public static bool showInfoInGhostChat = true;
+            public static bool killsThroughShield = true;
+            public static bool evilGuesserCanGuessSpy = true;
 
             public static Sprite getTargetSprite()
             {
@@ -1261,39 +1428,39 @@ namespace TheOtherRoles
                 return targetSprite;
             }
 
-        public static bool isGuesser (byte playerId) {
-            if ((niceGuesser != null && niceGuesser.PlayerId == playerId) || (evilGuesser != null && evilGuesser.PlayerId == playerId)) return true;
-            return false;
-        }
-
-        public static void clear (byte playerId) {
-            if (niceGuesser != null && niceGuesser.PlayerId == playerId) niceGuesser = null;
-            else if (evilGuesser != null && evilGuesser.PlayerId == playerId) evilGuesser = null;
-        }
-
-        public static int remainingShots(byte playerId, bool shoot = false) {
-            int remainingShots = remainingShotsEvilGuesser;
-            if (niceGuesser != null && niceGuesser.PlayerId == playerId) {
-                remainingShots = remainingShotsNiceGuesser;
-                if (shoot) remainingShotsNiceGuesser = Mathf.Max(0, remainingShotsNiceGuesser - 1);
-            } else if (shoot) {
-                remainingShotsEvilGuesser = Mathf.Max(0, remainingShotsEvilGuesser - 1);
+            public static bool isGuesser (byte playerId) {
+                if ((niceGuesser != null && niceGuesser.PlayerId == playerId) || (evilGuesser != null && evilGuesser.PlayerId == playerId)) return true;
+                return false;
             }
-            return remainingShots;
-        }
+
+            public static void clear (byte playerId) {
+                if (niceGuesser != null && niceGuesser.PlayerId == playerId) niceGuesser = null;
+                else if (evilGuesser != null && evilGuesser.PlayerId == playerId) evilGuesser = null;
+            }
+
+            public static int remainingShots(byte playerId, bool shoot = false) {
+                int remainingShots = remainingShotsEvilGuesser;
+                if (niceGuesser != null && niceGuesser.PlayerId == playerId) {
+                    remainingShots = remainingShotsNiceGuesser;
+                    if (shoot) remainingShotsNiceGuesser = Mathf.Max(0, remainingShotsNiceGuesser - 1);
+                } else if (shoot) {
+                    remainingShotsEvilGuesser = Mathf.Max(0, remainingShotsEvilGuesser - 1);
+                }
+                return remainingShots;
+            }
 
             public static void clearAndReload()
             {
-            niceGuesser = null;
-            evilGuesser = null;
+                niceGuesser = null;
+                evilGuesser = null;
 
-            remainingShotsEvilGuesser = Mathf.RoundToInt(CustomOptionHolder.guesserNumberOfShots.getFloat());
-            remainingShotsNiceGuesser = Mathf.RoundToInt(CustomOptionHolder.guesserNumberOfShots.getFloat());
+                remainingShotsEvilGuesser = Mathf.RoundToInt(CustomOptionHolder.guesserNumberOfShots.getFloat());
+                remainingShotsNiceGuesser = Mathf.RoundToInt(CustomOptionHolder.guesserNumberOfShots.getFloat());
                 onlyAvailableRoles = CustomOptionHolder.guesserOnlyAvailableRoles.getBool();
             	hasMultipleShotsPerMeeting = CustomOptionHolder.guesserHasMultipleShotsPerMeeting.getBool();
-            showInfoInGhostChat = CustomOptionHolder.guesserShowInfoInGhostChat.getBool();
-            killsThroughShield = CustomOptionHolder.guesserKillsThroughShield.getBool();
-            evilGuesserCanGuessSpy = CustomOptionHolder.guesserEvilCanKillSpy.getBool();
+                showInfoInGhostChat = CustomOptionHolder.guesserShowInfoInGhostChat.getBool();
+                killsThroughShield = CustomOptionHolder.guesserKillsThroughShield.getBool();
+                evilGuesserCanGuessSpy = CustomOptionHolder.guesserEvilCanKillSpy.getBool();
             }
         }
 

@@ -1099,18 +1099,7 @@ namespace TheOtherRoles.Patches
                 target.clearAllTasks();
 
             // Lover suicide trigger on murder
-            if ((Lovers.lover1 != null && target == Lovers.lover1) || (Lovers.lover2 != null && target == Lovers.lover2))
-            {
-                if (Lovers.separateTeam && Lovers.tasksCount)
-                    target.clearAllTasks();
-
-                PlayerControl otherLover = target.getPartner();
-                if (otherLover != null && !otherLover.Data.IsDead && Lovers.bothDie)
-                {
-                    otherLover.MurderPlayer(otherLover);
-                    finalStatuses[otherLover.PlayerId] = FinalStatus.Suicide;
-                }
-            }
+            Lovers.killLovers(target);
 
             // Sidekick promotion trigger on murder
             if (Sidekick.promotesToJackal && Sidekick.sidekick != null && !Sidekick.sidekick.Data.IsDead && target == Jackal.jackal && Jackal.jackal == PlayerControl.LocalPlayer)
@@ -1277,18 +1266,7 @@ namespace TheOtherRoles.Patches
                 __instance.clearAllTasks();
 
             // Lover suicide trigger on exile
-            if ((Lovers.lover1 != null && __instance == Lovers.lover1) || (Lovers.lover2 != null && __instance == Lovers.lover2))
-            {
-                if (Lovers.separateTeam && Lovers.tasksCount)
-                    __instance.clearAllTasks();
-
-                PlayerControl otherLover = __instance.getPartner();
-                if (otherLover != null && !otherLover.Data.IsDead && Lovers.bothDie)
-                {
-                    otherLover.Exiled();
-                    finalStatuses[otherLover.PlayerId] = FinalStatus.Suicide;
-                }
-            }
+            Lovers.exileLovers(__instance);
 
             // Sidekick promotion trigger on exile
             if (Sidekick.promotesToJackal && Sidekick.sidekick != null && !Sidekick.sidekick.Data.IsDead && __instance == Jackal.jackal && Jackal.jackal == PlayerControl.LocalPlayer)

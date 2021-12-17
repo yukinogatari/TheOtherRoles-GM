@@ -167,14 +167,16 @@ namespace TheOtherRoles.Patches {
             }
 
             // Lovers
-            if (Lovers.lover1 != null && Lovers.lover2 != null && (Lovers.lover1 == PlayerControl.LocalPlayer || Lovers.lover2 == PlayerControl.LocalPlayer)) {
-                string suffix = Helpers.cs(Lovers.color, " ♥");
-                Lovers.lover1.nameText.text += suffix;
-                Lovers.lover2.nameText.text += suffix;
+            if (PlayerControl.LocalPlayer.isLovers()) {
+                string suffix = Lovers.getIcon(PlayerControl.LocalPlayer);
+                var lover1 = PlayerControl.LocalPlayer;
+                var lover2 = PlayerControl.LocalPlayer.getPartner();
+                lover1.nameText.text += suffix;
+                lover2.nameText.text += suffix;
 
                 if (MeetingHud.Instance != null)
                     foreach (PlayerVoteArea player in MeetingHud.Instance.playerStates)
-                        if (Lovers.lover1.PlayerId == player.TargetPlayerId || Lovers.lover2.PlayerId == player.TargetPlayerId)
+                        if (lover1.PlayerId == player.TargetPlayerId || lover2.PlayerId == player.TargetPlayerId)
                             player.NameText.text += suffix;
             }
 

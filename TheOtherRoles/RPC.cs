@@ -51,7 +51,7 @@ namespace TheOtherRoles
 
 
         Mini = 150,
-        Lover,
+        Lovers,
         EvilGuesser,
         NiceGuesser,
         Jester,
@@ -79,6 +79,7 @@ namespace TheOtherRoles
         ShareOptions,
         ForceEnd,
         SetRole,
+        SetLovers,
         VersionHandshake,
         UseUncheckedVent,
         UncheckedMurderPlayer,
@@ -177,12 +178,10 @@ namespace TheOtherRoles
         }
 
         public static void setRole(byte roleId, byte playerId, byte flag) {
-            bool assigned = false;
             foreach (PlayerControl player in PlayerControl.AllPlayerControls)
             {
                 if (player.PlayerId == playerId)
                 {
-                    assigned = true;
                     switch ((RoleId)roleId)
                     {
                         case RoleId.Jester:
@@ -223,10 +222,6 @@ namespace TheOtherRoles
                             break;
                         case RoleId.Swapper:
                             Swapper.swapper = player;
-                            break;
-                        case RoleId.Lover:
-                            if (flag == 0) Lovers.lover1 = player;
-                            else Lovers.lover2 = player;
                             break;
                         case RoleId.Seer:
                             Seer.seer = player;
@@ -315,17 +310,14 @@ namespace TheOtherRoles
 	                    case RoleId.Pursuer:
 	                        Pursuer.pursuer = player;
 	                        break;
-                        default:
-                            assigned = false;
-                            break;
                     }
                 }
             }
+        }
 
-            if (!assigned)
-            {
-                unassignedRoles.Add((roleId, playerId, flag));
-            }
+        public static void setLovers(byte playerId1, byte playerId2)
+        {
+            Lovers.addCouple(Helpers.playerById(playerId1), Helpers.playerById(playerId2));
         }
 
         public static void overrideNativeRole(byte playerId, byte roleType)
@@ -333,18 +325,6 @@ namespace TheOtherRoles
             var player = Helpers.playerById(playerId);
             player.roleAssigned = false;
             player.SetRole((RoleTypes)roleType);
-        }
-
-        public static void setUnassignedRoles()
-        {
-            if (unassignedRoles == null || unassignedRoles.Count == 0) return;
-            List<(byte, byte, byte)> tempRoles = new List<(byte, byte, byte)>(unassignedRoles);
-            unassignedRoles.Clear();
-
-            foreach ((byte roleId, byte playerId, byte flag) in tempRoles)
-            {
-                setRole(roleId, playerId, flag);
-            }
         }
 
         public static void versionHandshake(int major, int minor, int build, int revision, Guid guid, int clientId) {
@@ -501,7 +481,7 @@ namespace TheOtherRoles
             }
 
             // Suicide (exile) when impostor or impostor variants
-            if (player.Data.Role.IsImpostor || player.isNeutral() || player == Madmate.madmate) {
+            if (!Shifter.isNeutral && (player.Data.Role.IsImpostor || player.isNeutral() || player == Madmate.madmate)) {
                 oldShifter.Exiled();
                 finalStatuses[oldShifter.PlayerId] = FinalStatus.Suicide;
                 return;
@@ -514,12 +494,8 @@ namespace TheOtherRoles
                 } else if (Medic.shielded != null && Medic.shielded == oldShifter) {
                     Medic.shielded = player;
                 }
-                // Shift Lovers Role
-                if (Lovers.lover1 != null && oldShifter == Lovers.lover1) Lovers.lover1 = player;
-                else if (Lovers.lover1 != null && player == Lovers.lover1) Lovers.lover1 = oldShifter;
 
-                if (Lovers.lover2 != null && oldShifter == Lovers.lover2) Lovers.lover2 = player;
-                else if (Lovers.lover2 != null && player == Lovers.lover2) Lovers.lover2 = oldShifter;
+                Lovers.swapLovers(oldShifter, player);
             }
 
             // Shift role
@@ -682,8 +658,8 @@ namespace TheOtherRoles
             if (player == Jester.jester) Jester.clearAndReload();
             if (player == Arsonist.arsonist) Arsonist.clearAndReload();
             if (Guesser.isGuesser(player.PlayerId)) Guesser.clear(player.PlayerId);
-            if (!ignoreLovers && (player == Lovers.lover1 || player == Lovers.lover2)) { // The whole Lover couple is being erased
-                Lovers.clearAndReload(); 
+            if (!ignoreLovers && player.isLovers()) { // The whole Lover couple is being erased
+                Lovers.eraseCouple(player);
             }
             if (player == Jackal.jackal) { // Promote Sidekick and hence override the the Jackal or erase Jackal
                 if (Sidekick.promotesToJackal && Sidekick.sidekick != null && !Sidekick.sidekick.Data.IsDead) {
@@ -875,7 +851,7 @@ namespace TheOtherRoles
 
         public static void guesserShoot(byte killerId, byte dyingTargetId, byte guessedTargetId, byte guessedRoleId) {
             PlayerControl dyingTarget = Helpers.playerById(dyingTargetId);
-            if (dyingTarget == null ) return;
+            if (dyingTarget == null) return;
             dyingTarget.Exiled();
             PlayerControl dyingLoverPartner = Lovers.bothDie ? dyingTarget.getPartner() : null; // Lover check
             byte partnerId = dyingLoverPartner != null ? dyingLoverPartner.PlayerId : dyingTargetId;
@@ -996,6 +972,9 @@ namespace TheOtherRoles
                     byte playerId = reader.ReadByte();
                     byte flag = reader.ReadByte();
                     RPCProcedure.setRole(roleId, playerId, flag);
+                    break;
+                case (byte)CustomRPC.SetLovers:
+                    RPCProcedure.setLovers(reader.ReadByte(), reader.ReadByte());
                     break;
                 case (byte)CustomRPC.OverrideNativeRole:
                     RPCProcedure.overrideNativeRole(reader.ReadByte(), reader.ReadByte());

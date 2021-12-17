@@ -29,7 +29,7 @@ namespace TheOtherRoles.Objects {
         private bool mirror;
         private KeyCode? hotkey;
 
-        public CustomButton(Action OnClick, Func<bool> HasButton, Func<bool> CouldUse, Action OnMeetingEnds, Sprite Sprite, Vector3 PositionOffset, HudManager hudManager, KeyCode? hotkey, bool HasEffect, float EffectDuration, Action OnEffectEnds, bool mirror = false)
+        public CustomButton(Action OnClick, Func<bool> HasButton, Func<bool> CouldUse, Action OnMeetingEnds, Sprite Sprite, Vector3 PositionOffset, HudManager hudManager, ActionButton textTemplate, KeyCode? hotkey, bool HasEffect, float EffectDuration, Action OnEffectEnds, bool mirror = false, string buttonText = "")
         {
             this.hudManager = hudManager;
             this.OnClick = OnClick;
@@ -43,6 +43,7 @@ namespace TheOtherRoles.Objects {
             this.Sprite = Sprite;
             this.mirror = mirror;
             this.hotkey = hotkey;
+            this.buttonText = buttonText;
             Timer = 16.2f;
             buttons.Add(this);
             actionButton = UnityEngine.Object.Instantiate(hudManager.KillButton, hudManager.KillButton.transform.parent);

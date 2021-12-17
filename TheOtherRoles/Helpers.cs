@@ -231,7 +231,8 @@ namespace TheOtherRoles {
                     player == Opportunist.opportunist) ||
                     player == Vulture.vulture || 
                     player == Lawyer.lawyer ||
-                    player == Pursuer.pursuer);
+                    player == Pursuer.pursuer ||
+                    (player == Shifter.shifter && Shifter.isNeutral));
         }
 
         public static bool isCrew(this PlayerControl player)
@@ -257,25 +258,17 @@ namespace TheOtherRoles {
 
         public static bool isLovers(this PlayerControl player)
         {
-            return player != null &&
-                ((Lovers.lover1 != null && player == Lovers.lover1) ||
-                (Lovers.lover2 != null && player == Lovers.lover2));
+            return player != null && Lovers.isLovers(player);
         }
 
         public static bool hasAliveKillingLover(this PlayerControl player)
         {
-            return player.isLovers() && Lovers.existingAndAlive() && Lovers.existingWithKiller();
+            return player.isLovers() && Lovers.existingAndAlive(player) && Lovers.existingWithKiller(player);
         }
 
         public static PlayerControl getPartner(this PlayerControl player)
         {
-            if (player == null)
-                return null;
-            if (Lovers.lover1 == player)
-                return Lovers.lover2;
-            if (Lovers.lover2 == player)
-                return Lovers.lover1;
-            return null;
+            return Lovers.getPartner(player);
         }
 
         public static bool canBeErased(this PlayerControl player) {
@@ -339,7 +332,7 @@ namespace TheOtherRoles {
             else if (source == null || target == null) return true;
             else if (source == target) return false; // Player sees his own name
             else if (source.Data.Role.IsImpostor && (target.Data.Role.IsImpostor || target == Spy.spy)) return false; // Members of team Impostors see the names of Impostors/Spies
-            else if ((source == Lovers.lover1 || source == Lovers.lover2) && (target == Lovers.lover1 || target == Lovers.lover2)) return false; // Members of team Lovers see the names of each other
+            else if (source.getPartner() == target) return false; // Members of team Lovers see the names of each other
             else if ((source == Jackal.jackal || source == Sidekick.sidekick) && (target == Jackal.jackal || target == Sidekick.sidekick || target == Jackal.fakeSidekick)) return false; // Members of team Jackal see the names of each other
             return true;
         }

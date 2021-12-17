@@ -253,24 +253,29 @@ namespace TheOtherRoles.Modules {
             }
         }
 
-        [HarmonyPatch(typeof(HatParent), nameof(HatParent.SetHat), new System.Type[] { typeof(HatBehaviour), typeof(int) })]
-        private static class HatParentSetHatPatch {
-            static void Postfix(HatParent __instance, [HarmonyArgument(0)] HatBehaviour hat, [HarmonyArgument(1)]int color) {
-                if (DestroyableSingleton<TutorialManager>.InstanceExists) {
-                    try {
-                        string filePath = Path.GetDirectoryName(Application.dataPath) + @"\TheOtherHats\Test";
-                        DirectoryInfo d = new DirectoryInfo(filePath);
-                        string[] filePaths = d.GetFiles("*.png").Select(x => x.FullName).ToArray(); // Getting Text files
-                        List<CustomHat> hats = createCustomHatDetails(filePaths, true);
-                        if (hats.Count > 0) {
-                            __instance.Hat = CreateHatBehaviour(hats[0], true, true);
-                            __instance.SetHat(color);
+        [HarmonyPatch(typeof(ShipStatus), nameof(ShipStatus.Begin))]
+        private static class ShipStatusSetHat
+        {
+            static void Postfix(ShipStatus __instance)
+            {
+                if (DestroyableSingleton<TutorialManager>.InstanceExists)
+                {
+                    string filePath = Path.GetDirectoryName(Application.dataPath) + @"\TheOtherHats\Test";
+                    DirectoryInfo d = new DirectoryInfo(filePath);
+                    string[] filePaths = d.GetFiles("*.png").Select(x => x.FullName).ToArray(); // Getting Text files
+                    List<CustomHat> hats = createCustomHatDetails(filePaths, true);
+                    if (hats.Count > 0)
+                    {
+                        foreach (PlayerControl pc in PlayerControl.AllPlayerControls)
+                        {
+                            var color = pc.CurrentOutfit.ColorId;
+                            pc.SetHat("hat_dusk", color);
+                            pc.HatRenderer.Hat = CreateHatBehaviour(hats[0], true, true);
+                            pc.HatRenderer.SetHat(color);
                         }
-                    } catch (System.Exception e) {
-                        System.Console.WriteLine("Unable to create test hat\n" + e);
                     }
                 }
-            }     
+            }
         }
 
         private static List<TMPro.TMP_Text> hatsTabCustomTexts = new List<TMPro.TMP_Text>();
