@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections;
 using UnityEngine;
 using static TheOtherRoles.TheOtherRoles;
+using static TheOtherRoles.TheOtherRolesGM;
 
 namespace TheOtherRoles.Objects {
     class Footprint {

@@ -1,6 +1,7 @@
 using HarmonyLib;
 using System;
 using static TheOtherRoles.TheOtherRoles;
+using static TheOtherRoles.TheOtherRolesGM;
 using UnityEngine;
 using System.Collections.Generic;
 using System.Linq;

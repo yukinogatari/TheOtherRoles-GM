@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using static TheOtherRoles.TheOtherRoles;
+using static TheOtherRoles.TheOtherRolesGM;
 using static TheOtherRoles.GameHistory;
 using TheOtherRoles.Objects;
 using UnityEngine;
@@ -159,13 +160,23 @@ namespace TheOtherRoles.Patches
             if (!Medic.usedShield) setPlayerOutline(Medic.currentTarget, Medic.shieldedColor);
         }
 
-        static void shifterSetTarget()
+        static void shifterUpdate()
         {
             if (Shifter.shifter == null || Shifter.shifter != PlayerControl.LocalPlayer) return;
-            Shifter.currentTarget = setTarget();
+
+            List<PlayerControl> blockShift = null;
+            if (Shifter.isNeutral && !Shifter.shiftPastShifters)
+            {
+                blockShift = new List<PlayerControl>();
+                foreach (var playerId in Shifter.pastShifters)
+                {
+                    blockShift.Add(Helpers.playerById((byte)playerId));
+                }
+            }
+
+            Shifter.currentTarget = setTarget(untargetablePlayers: blockShift);
             if (Shifter.futureShift == null) setPlayerOutline(Shifter.currentTarget, Shifter.color);
         }
-
 
         static void morphlingSetTarget()
         {
@@ -923,7 +934,7 @@ namespace TheOtherRoles.Patches
                 // Medic
                 medicSetTarget();
                 // Shifter
-                shifterSetTarget();
+                shifterUpdate();
                 // Sheriff
                 sheriffSetTarget();
                 // Detective
@@ -973,6 +984,8 @@ namespace TheOtherRoles.Patches
                 witchSetTarget();
                 hackerUpdate();
             }
+
+            TheOtherRolesGM.FixedUpdate();
         }
     }
 
@@ -1204,6 +1217,9 @@ namespace TheOtherRoles.Patches
                     if (p == 1f && renderer != null) renderer.enabled = false;
                 })));
             }
+
+            if (PlayerControl.LocalPlayer == __instance)
+                Ninja.onKill(__instance);
         }
     }
 
@@ -1217,6 +1233,7 @@ namespace TheOtherRoles.Patches
             float addition = 0f;
             if (Mini.mini != null && PlayerControl.LocalPlayer == Mini.mini && Mini.mini.Data.Role.IsImpostor) multiplier = Mini.isGrownUp() ? 0.66f : 2f;
             if (BountyHunter.bountyHunter != null && PlayerControl.LocalPlayer == BountyHunter.bountyHunter) addition = BountyHunter.punishmentTime;
+            if (Ninja.isRole(PlayerControl.LocalPlayer) && Ninja.isPenalized(PlayerControl.LocalPlayer)) addition = Ninja.killPenalty;
 
             __instance.killTimer = Mathf.Clamp(time, 0f, PlayerControl.GameOptions.KillCooldown * multiplier + addition);
             DestroyableSingleton<HudManager>.Instance.KillButton.SetCoolDown(__instance.killTimer, PlayerControl.GameOptions.KillCooldown * multiplier + addition);

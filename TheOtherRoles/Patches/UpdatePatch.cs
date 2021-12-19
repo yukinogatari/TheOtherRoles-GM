@@ -4,6 +4,7 @@ using System.IO;
 using System.Net.Http;
 using UnityEngine;
 using static TheOtherRoles.TheOtherRoles;
+using static TheOtherRoles.TheOtherRolesGM;
 using TheOtherRoles.Objects;
 using System.Collections.Generic;
 using System.Linq;
@@ -274,21 +275,6 @@ namespace TheOtherRoles.Patches {
             }
         }
 
-        static void GMUpdate(HudManager __instance)
-        {
-            //__instance.UseButton.enabled = false;
-/*            if (PlayerControl.LocalPlayer.isGM() && PlayerControl.LocalPlayer.Data.IsDead)
-            {
-                foreach (UseButton b in HudManager.Instance.UseButton.useButtons)
-                {
-                    //b.gameObject.SetActiveRecursively(false);
-                    b.graphic.enabled = false;
-                    b.enabled = false;
-                    b.text.enabled = false;
-                }
-            }*/
-        }
-
         static void Postfix(HudManager __instance)
         {
             if (AmongUsClient.Instance.GameState != InnerNet.InnerNetClient.GameStates.Started) return;
@@ -308,8 +294,6 @@ namespace TheOtherRoles.Patches {
             timerUpdate();
             // Mini
             miniUpdate();
-            // Observer roles
-            GMUpdate(__instance);
         }
     }
 }

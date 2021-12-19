@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnhollowerBaseLib;
 using static TheOtherRoles.TheOtherRoles;
+using static TheOtherRoles.TheOtherRolesGM;
 using static TheOtherRoles.MapOptions;
 using static TheOtherRoles.GameHistory;
 using System.Collections;
@@ -567,7 +568,7 @@ namespace TheOtherRoles.Patches {
             CustomOverlays.hideInfoOverlay();
             Camouflager.resetCamouflage();
             Morphling.resetMorph();
-            GM.resetZoom();
+            TheOtherRolesGM.OnMeetingStart();
         }
 
         [HarmonyPatch(typeof(HudManager), nameof(HudManager.OpenMeetingRoom))]

@@ -1,6 +1,7 @@
 using HarmonyLib;
 using Hazel;
 using static TheOtherRoles.TheOtherRoles;
+using static TheOtherRoles.TheOtherRolesGM;
 using static TheOtherRoles.HudManagerStartPatch;
 using static TheOtherRoles.GameHistory;
 using static TheOtherRoles.MapOptions;
@@ -47,6 +48,7 @@ namespace TheOtherRoles
         Warlock,
         BountyHunter,
         Witch,
+        Ninja,
         Madmate,
 
 
@@ -118,36 +120,38 @@ namespace TheOtherRoles
         SealVent,
         ArsonistWin,
         GuesserShoot,
-        GMKill,
-        GMRevive,
-        UseAdminTime,
-        UseCameraTime,
-        UseVitalsTime,
         VultureWin,
         LawyerWin,
         LawyerSetTarget,
         LawyerPromotesToPursuer,
         SetBlanked,
+
+        // GM Edition functionality
+        NinjaStealth,
+        SetShifterType,
+        GMKill,
+        GMRevive,
+        UseAdminTime,
+        UseCameraTime,
+        UseVitalsTime,
     }
 
     public static class RPCProcedure {
 
         // Main Controls
-        public static List<(byte, byte, byte)> unassignedRoles = new List<(byte, byte, byte)>();
 
         public static void resetVariables() {
             Garlic.clearGarlics();
             JackInTheBox.clearJackInTheBoxes();
-            clearAndReloadMapOptions();
-            clearAndReloadRoles();
-            clearGameHistory();
+            MapOptions.clearAndReloadMapOptions();
+            TheOtherRoles.clearAndReloadRoles();
+            GameHistory.clearGameHistory();
             setCustomButtonCooldowns();
             AdminPatch.ResetData();
             CameraPatch.ResetData();
             VitalsPatch.ResetData();
             MapBehaviorPatch.resetIcons();
             CustomOverlays.resetOverlays();
-            unassignedRoles.Clear();
 
             KillAnimationCoPerformKillPatch.hideNextAnimation = false;
         }
@@ -274,11 +278,11 @@ namespace TheOtherRoles
                         case RoleId.Arsonist:
                             Arsonist.arsonist = player;
                             break;
-                    case RoleId.EvilGuesser:
-                        Guesser.evilGuesser = player;
-                        break;
-                    case RoleId.NiceGuesser:
-                        Guesser.niceGuesser = player;
+                        case RoleId.EvilGuesser:
+                            Guesser.evilGuesser = player;
+                            break;
+                        case RoleId.NiceGuesser:
+                            Guesser.niceGuesser = player;
                             break;
                         case RoleId.BountyHunter:
                             BountyHunter.bountyHunter = player;
@@ -310,6 +314,9 @@ namespace TheOtherRoles
 	                    case RoleId.Pursuer:
 	                        Pursuer.pursuer = player;
 	                        break;
+                        case RoleId.Ninja:
+                            Ninja.setRole(player);
+                            break;
                     }
                 }
             }
@@ -324,7 +331,7 @@ namespace TheOtherRoles
         {
             var player = Helpers.playerById(playerId);
             player.roleAssigned = false;
-            player.SetRole((RoleTypes)roleType);
+            DestroyableSingleton<RoleManager>.Instance.SetRole(player, (RoleTypes)roleType);
         }
 
         public static void versionHandshake(int major, int minor, int build, int revision, Guid guid, int clientId) {
@@ -473,7 +480,8 @@ namespace TheOtherRoles
             if (player == null || oldShifter == null) return;
 
             Shifter.futureShift = null;
-            Shifter.clearAndReload();
+            if (!Shifter.isNeutral)
+                Shifter.clearAndReload();
 
             if (player == GM.gm)
             {
@@ -499,44 +507,192 @@ namespace TheOtherRoles
             }
 
             // Shift role
-            if (Mayor.mayor != null && Mayor.mayor == player)
-                Mayor.mayor = oldShifter;
-            if (Engineer.engineer != null && Engineer.engineer == player)
-                Engineer.engineer = oldShifter;
-            if (Sheriff.sheriff != null && Sheriff.sheriff == player)
-                Sheriff.sheriff = oldShifter;
-            if (Lighter.lighter != null && Lighter.lighter == player)
-                Lighter.lighter = oldShifter;
-            if (Detective.detective != null && Detective.detective == player)
-                Detective.detective = oldShifter;
-            if (TimeMaster.timeMaster != null && TimeMaster.timeMaster == player)
-                TimeMaster.timeMaster = oldShifter;
-            if (Medic.medic != null && Medic.medic == player)
-                Medic.medic = oldShifter;
-            if (Swapper.swapper != null && Swapper.swapper == player)
-                Swapper.swapper = oldShifter;
-            if (Seer.seer != null && Seer.seer == player)
-                Seer.seer = oldShifter;
-            if (Hacker.hacker != null && Hacker.hacker == player)
-                Hacker.hacker = oldShifter;
-            if (Mini.mini != null && Mini.mini == player)
-                Mini.mini = oldShifter;
-            if (Tracker.tracker != null && Tracker.tracker == player)
-                Tracker.tracker = oldShifter;
-            if (Snitch.snitch != null && Snitch.snitch == player)
-                Snitch.snitch = oldShifter;
-            if (Spy.spy != null && Spy.spy == player)
-                Spy.spy = oldShifter;
-            if (SecurityGuard.securityGuard != null && SecurityGuard.securityGuard == player)
-                SecurityGuard.securityGuard = oldShifter;
-            if (Guesser.niceGuesser != null && Guesser.niceGuesser == player)
-                Guesser.niceGuesser = oldShifter;
-            if (Bait.bait != null && Bait.bait == player) {
-                Bait.bait = oldShifter;
-                if (Bait.bait.Data.IsDead) Bait.reported = true;
+            var targetRole = RoleInfo.getRoleInfoForPlayer(player, new RoleId[] { RoleId.Lovers });
+            if (targetRole.Count > 0)
+            {
+                switch (targetRole[0].roleId)
+                {
+                    case RoleId.Mayor:
+                        Mayor.mayor = oldShifter;
+                        break;
+
+                    case RoleId.Engineer:
+                        Engineer.engineer = oldShifter;
+                        break;
+
+                    case RoleId.Sheriff:
+                        Sheriff.sheriff = oldShifter;
+                        break;
+
+                    case RoleId.Lighter:
+                        Lighter.lighter = oldShifter;
+                        break;
+
+                    case RoleId.Detective:
+                        Detective.detective = oldShifter;
+                        break;
+
+                    case RoleId.TimeMaster:
+                        TimeMaster.timeMaster = oldShifter;
+                        break;
+
+                    case RoleId.Medic:
+                        Medic.medic = oldShifter;
+                        break;
+
+                    case RoleId.Swapper:
+                        Swapper.swapper = oldShifter;
+                        break;
+
+                    case RoleId.Seer:
+                        Seer.seer = oldShifter;
+                        break;
+
+                    case RoleId.Hacker:
+                        Hacker.hacker = oldShifter;
+                        break;
+
+                    case RoleId.Tracker:
+                        Tracker.tracker = oldShifter;
+                        break;
+
+                    case RoleId.Snitch:
+                        Snitch.snitch = oldShifter;
+                        break;
+
+                    case RoleId.Spy:
+                        Spy.spy = oldShifter;
+                        break;
+
+                    case RoleId.SecurityGuard:
+                        SecurityGuard.securityGuard = oldShifter;
+                        break;
+
+                    case RoleId.Bait:
+                        Bait.bait = oldShifter;
+                        if (Bait.bait.Data.IsDead) Bait.reported = true;
+                        break;
+
+                    case RoleId.Medium:
+                        Medium.medium = oldShifter;
+                        break;
+
+                    case RoleId.Impostor:
+                        break;
+
+                    case RoleId.Godfather:
+                        Godfather.godfather = oldShifter;
+                        break;
+
+                    case RoleId.Mafioso:
+                        Mafioso.mafioso = oldShifter;
+                        break;
+
+                    case RoleId.Janitor:
+                        Janitor.janitor = oldShifter;
+                        break;
+
+                    case RoleId.Morphling:
+                        Morphling.morphling = oldShifter;
+                        break;
+
+                    case RoleId.Camouflager:
+                        Camouflager.camouflager = oldShifter;
+                        break;
+
+                    case RoleId.Vampire:
+                        Vampire.vampire = oldShifter;
+                        break;
+
+                    case RoleId.Eraser:
+                        Eraser.eraser = oldShifter;
+                        break;
+
+                    case RoleId.Trickster:
+                        Trickster.trickster = oldShifter;
+                        break;
+
+                    case RoleId.Cleaner:
+                        Cleaner.cleaner = oldShifter;
+                        break;
+
+                    case RoleId.Warlock:
+                        Warlock.warlock = oldShifter;
+                        break;
+
+                    case RoleId.BountyHunter:
+                        BountyHunter.bountyHunter = oldShifter;
+                        break;
+
+                    case RoleId.Witch:
+                        Witch.witch = oldShifter;
+                        break;
+
+                    case RoleId.Madmate:
+                        Madmate.madmate = oldShifter;
+                        break;
+
+                    case RoleId.Mini:
+                        Mini.mini = oldShifter;
+                        break;
+
+                    case RoleId.EvilGuesser:
+                        Guesser.evilGuesser = oldShifter;
+                        break;
+
+                    case RoleId.NiceGuesser:
+                        Guesser.niceGuesser = oldShifter;
+                        break;
+
+                    case RoleId.Jester:
+                        Jester.jester = oldShifter;
+                        break;
+
+                    case RoleId.Arsonist:
+                        Arsonist.arsonist = oldShifter;
+                        break;
+
+                    case RoleId.Jackal:
+                        Jackal.jackal = oldShifter;
+                        break;
+
+                    case RoleId.Sidekick:
+                        Sidekick.sidekick = oldShifter;
+                        break;
+
+                    case RoleId.Opportunist:
+                        Opportunist.opportunist = oldShifter;
+                        break;
+
+                    case RoleId.Vulture:
+                        Vulture.vulture = oldShifter;
+                        break;
+
+                    case RoleId.Lawyer:
+                        Lawyer.lawyer = oldShifter;
+                        break;
+
+                    case RoleId.Pursuer:
+                        Pursuer.pursuer = oldShifter;
+                        break;
+
+                    case RoleId.Ninja:
+                        Ninja.swapRole(player, oldShifter);
+                        break;
+                }
             }
-            if (Medium.medium != null && Medium.medium == player)
-                Medium.medium = oldShifter;
+
+            if (Shifter.isNeutral)
+            {
+                Shifter.shifter = player;
+                Shifter.pastShifters.Add(oldShifter.PlayerId);
+
+                if (player.Data.Role.IsImpostor)
+                {
+                    DestroyableSingleton<RoleManager>.Instance.SetRole(player, RoleTypes.Crewmate);
+                    DestroyableSingleton<RoleManager>.Instance.SetRole(oldShifter, RoleTypes.Impostor);
+                }
+            }
 
             // Set cooldowns to max for both players
             if (PlayerControl.LocalPlayer == oldShifter || PlayerControl.LocalPlayer == player)
@@ -653,6 +809,7 @@ namespace TheOtherRoles
             if (player == Cleaner.cleaner) Cleaner.clearAndReload();
             if (player == Warlock.warlock) Warlock.clearAndReload();
             if (player == Witch.witch) Witch.clearAndReload();
+            if (Ninja.isRole(player)) Ninja.eraseRole(player);
 
             // Other roles
             if (player == Jester.jester) Jester.clearAndReload();
@@ -685,6 +842,8 @@ namespace TheOtherRoles
         }
 
         public static void setFutureShifted(byte playerId) {
+            if (Shifter.isNeutral && !Shifter.shiftPastShifters && Shifter.pastShifters.Contains(playerId))
+                return;
             Shifter.futureShift = Helpers.playerById(playerId);
         }
 
@@ -886,6 +1045,31 @@ namespace TheOtherRoles
             }
         }
 
+        public static void setBlanked(byte playerId, byte value)
+        {
+            PlayerControl target = Helpers.playerById(playerId);
+            if (target == null) return;
+            Pursuer.blankedList.RemoveAll(x => x.PlayerId == playerId);
+            if (value > 0) Pursuer.blankedList.Add(target);
+        }
+
+        internal static void witchSpellCast(byte playerId)
+        {
+            uncheckedExilePlayer(playerId);
+            finalStatuses[playerId] = FinalStatus.Spelled;
+        }
+
+        public static void setShifterType(bool isNeutral)
+        {
+            Shifter.isNeutral = isNeutral;
+        }
+
+        public static void ninjaStealth(byte playerId, bool stealthed)
+        {
+            PlayerControl player = Helpers.playerById(playerId);
+            Ninja.setStealthed(player, stealthed);
+        }
+
         public static void GMKill(byte targetId)
         {
             PlayerControl target = Helpers.playerById(targetId);
@@ -932,19 +1116,6 @@ namespace TheOtherRoles
         public static void UseVitalsTime(float time)
         {
             MapOptions.restrictVitalsTime -= time;
-        }
-
-        public static void setBlanked(byte playerId, byte value) {
-            PlayerControl target = Helpers.playerById(playerId);
-            if (target == null) return;
-            Pursuer.blankedList.RemoveAll(x => x.PlayerId == playerId);
-            if (value > 0) Pursuer.blankedList.Add(target);            
-        }
-
-        internal static void witchSpellCast(byte playerId)
-        {
-            uncheckedExilePlayer(playerId);
-            finalStatuses[playerId] = FinalStatus.Spelled;
         }
     }   
 
@@ -1109,21 +1280,6 @@ namespace TheOtherRoles
                     byte guessedRoleId = reader.ReadByte();
                     RPCProcedure.guesserShoot(killerId, dyingTarget, guessedTarget, guessedRoleId);
                     break;
-                case (byte)CustomRPC.GMKill:
-                    RPCProcedure.GMKill(reader.ReadByte());
-                    break;
-                case (byte)CustomRPC.GMRevive:
-                    RPCProcedure.GMRevive(reader.ReadByte());
-                    break;
-                case (byte)CustomRPC.UseAdminTime:
-                    RPCProcedure.UseAdminTime(reader.ReadSingle());
-                    break;
-                case (byte)CustomRPC.UseCameraTime:
-                    RPCProcedure.UseCameraTime(reader.ReadSingle());
-                    break;
-                case (byte)CustomRPC.UseVitalsTime:
-                    RPCProcedure.UseVitalsTime(reader.ReadSingle());
-                    break;
                 case (byte)CustomRPC.VultureWin:
                     RPCProcedure.vultureWin();
                     break;
@@ -1146,6 +1302,29 @@ namespace TheOtherRoles
                     break;
                 case (byte)CustomRPC.WitchSpellCast:
                     RPCProcedure.witchSpellCast(reader.ReadByte());
+                    break;
+
+                // GM functionality
+                case (byte)CustomRPC.SetShifterType:
+                    RPCProcedure.setShifterType(reader.ReadBoolean());
+                    break;
+                case (byte)CustomRPC.NinjaStealth:
+                    RPCProcedure.ninjaStealth(reader.ReadByte(), reader.ReadBoolean());
+                    break;
+                case (byte)CustomRPC.GMKill:
+                    RPCProcedure.GMKill(reader.ReadByte());
+                    break;
+                case (byte)CustomRPC.GMRevive:
+                    RPCProcedure.GMRevive(reader.ReadByte());
+                    break;
+                case (byte)CustomRPC.UseAdminTime:
+                    RPCProcedure.UseAdminTime(reader.ReadSingle());
+                    break;
+                case (byte)CustomRPC.UseCameraTime:
+                    RPCProcedure.UseCameraTime(reader.ReadSingle());
+                    break;
+                case (byte)CustomRPC.UseVitalsTime:
+                    RPCProcedure.UseVitalsTime(reader.ReadSingle());
                     break;
             }
         }

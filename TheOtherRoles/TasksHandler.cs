@@ -1,5 +1,6 @@
 using HarmonyLib;
 using static TheOtherRoles.TheOtherRoles;
+using static TheOtherRoles.TheOtherRolesGM;
 using System.Collections;
 using System.Collections.Generic;
 using System;
@@ -50,6 +51,7 @@ namespace TheOtherRoles {
                     GameData.PlayerInfo playerInfo = __instance.AllPlayers[i];
                     if (playerInfo.Object &&
                         ((playerInfo.Object?.isLovers() == true && !Lovers.hasTasks) ||
+                         (playerInfo.PlayerId == Shifter.shifter?.PlayerId && Shifter.isNeutral) || // Neutral shifter has tasks, but they don't count
                           playerInfo.PlayerId == Lawyer.lawyer?.PlayerId || // Tasks of the Lawyer do not count
                          (playerInfo.PlayerId == Pursuer.pursuer?.PlayerId && Pursuer.pursuer.Data.IsDead) // Tasks of the Pursuer only count, if he's alive
                         )

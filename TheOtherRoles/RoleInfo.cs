@@ -3,6 +3,7 @@ using System.Linq;
 using System;
 using System.Collections.Generic;
 using static TheOtherRoles.TheOtherRoles;
+using static TheOtherRoles.TheOtherRolesGM;
 using UnityEngine;
 
 namespace TheOtherRoles
@@ -55,7 +56,7 @@ namespace TheOtherRoles
         public static RoleInfo timeMaster = new RoleInfo("timeMaster", TimeMaster.color, CustomOptionHolder.timeMasterSpawnRate, RoleId.TimeMaster);
         public static RoleInfo medic = new RoleInfo("medic", Medic.color, CustomOptionHolder.medicSpawnRate, RoleId.Medic);
         public static RoleInfo niceShifter = new RoleInfo("niceShifter", Shifter.color, CustomOptionHolder.shifterSpawnRate, RoleId.Shifter);
-        public static RoleInfo twistedShifter = new RoleInfo("twistedShifter", Shifter.color, CustomOptionHolder.shifterSpawnRate, RoleId.Shifter);
+        public static RoleInfo corruptedShifter = new RoleInfo("corruptedShifter", Shifter.color, CustomOptionHolder.shifterSpawnRate, RoleId.Shifter);
         public static RoleInfo niceSwapper = new RoleInfo("niceSwapper", Swapper.color, CustomOptionHolder.swapperSpawnRate, RoleId.Swapper);
         public static RoleInfo evilSwapper = new RoleInfo("evilSwapper", Palette.ImpostorRed, CustomOptionHolder.swapperSpawnRate, RoleId.Swapper);
         public static RoleInfo seer = new RoleInfo("seer", Seer.color, CustomOptionHolder.seerSpawnRate, RoleId.Seer);
@@ -83,6 +84,7 @@ namespace TheOtherRoles
         public static RoleInfo witch = new RoleInfo("witch", Witch.color, CustomOptionHolder.witchSpawnRate, RoleId.Witch);
         public static RoleInfo vulture = new RoleInfo("vulture", Vulture.color, CustomOptionHolder.vultureSpawnRate, RoleId.Vulture);
         public static RoleInfo medium = new RoleInfo("medium", Medium.color, CustomOptionHolder.mediumSpawnRate, RoleId.Medium);
+        public static RoleInfo ninja = new RoleInfo("ninja", Ninja.color, CustomOptionHolder.ninjaSpawnRate, RoleId.Ninja);
 
         public static List<RoleInfo> allRoleInfos = new List<RoleInfo>() {
                 impostor,
@@ -98,6 +100,7 @@ namespace TheOtherRoles
                 warlock,
                 bountyHunter,
                 witch,
+                ninja,
                 niceMini,
                 evilMini,
                 niceGuesser,
@@ -112,7 +115,7 @@ namespace TheOtherRoles
                 lawyer,
                 crewmate,
                 niceShifter,
-                twistedShifter,
+                corruptedShifter,
                 mayor,
                 engineer,
                 sheriff,
@@ -164,7 +167,7 @@ namespace TheOtherRoles
             if (p == Detective.detective) infos.Add(detective);
             if (p == TimeMaster.timeMaster) infos.Add(timeMaster);
             if (p == Medic.medic) infos.Add(medic);
-            if (p == Shifter.shifter) infos.Add(Shifter.isNeutral ? twistedShifter : niceShifter);
+            if (p == Shifter.shifter) infos.Add(Shifter.isNeutral ? corruptedShifter : niceShifter);
             if (p == Swapper.swapper) infos.Add(p.Data.Role.IsImpostor ? evilSwapper : niceSwapper);
             if (p == Seer.seer) infos.Add(seer);
             if (p == Hacker.hacker) infos.Add(hacker);
@@ -187,6 +190,7 @@ namespace TheOtherRoles
             if (p == Medium.medium) infos.Add(medium);
             if (p == Lawyer.lawyer) infos.Add(lawyer);
             if (p == Pursuer.pursuer) infos.Add(pursuer);
+            if (Ninja.isRole(p)) infos.Add(ninja);
 
             // Default roles
             if (infos.Count == 0 && p.Data.Role.IsImpostor) infos.Add(impostor); // Just Impostor

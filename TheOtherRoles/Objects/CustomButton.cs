@@ -14,6 +14,7 @@ namespace TheOtherRoles.Objects {
         public Vector3 LocalScale = Vector3.one;
         public float MaxTimer = float.MaxValue;
         public float Timer = 0f;
+        public bool effectCancellable = false;
         private Action OnClick;
         private Action OnMeetingEnds;
         private Func<bool> HasButton;
@@ -66,7 +67,7 @@ namespace TheOtherRoles.Objects {
 
         void onClickEvent()
         {
-            if (this.Timer < 0f && HasButton() && CouldUse())
+            if ((this.Timer < 0f || (this.HasEffect && this.isEffectActive && this.effectCancellable) && HasButton() && CouldUse()))
             {
                 actionButton.graphic.color = new Color(1f, 1f, 1f, 0.3f);
                 this.OnClick();

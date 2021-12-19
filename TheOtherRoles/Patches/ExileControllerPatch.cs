@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnhollowerBaseLib;
 using static TheOtherRoles.TheOtherRoles;
+using static TheOtherRoles.TheOtherRolesGM;
 using static TheOtherRoles.GameHistory;
 using TheOtherRoles.Objects;
 using static TheOtherRoles.MapOptions;
@@ -125,6 +126,9 @@ namespace TheOtherRoles.Patches {
 
             // Reset custom button timers where necessary
             CustomButton.MeetingEndedUpdate();
+
+            // Custom role post-meeting functions
+            TheOtherRolesGM.OnMeetingEnd();
 
             // Mini set adapted cooldown
             if (Mini.mini != null && PlayerControl.LocalPlayer == Mini.mini && Mini.mini.Data.Role.IsImpostor) {

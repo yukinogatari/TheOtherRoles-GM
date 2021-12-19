@@ -5,6 +5,7 @@ using UnityEngine;
 using static TheOtherRoles.MapOptions;
 using static TheOtherRoles.GameHistory;
 using static TheOtherRoles.TheOtherRoles;
+using static TheOtherRoles.TheOtherRolesGM;
 
 
 namespace TheOtherRoles.Patches
@@ -228,8 +229,14 @@ namespace TheOtherRoles.Patches
             {
                 if (__instance.isActiveAndEnabled && __instance.currentTarget && !__instance.isCoolingDown && !PlayerControl.LocalPlayer.Data.IsDead && PlayerControl.LocalPlayer.CanMove)
                 {
+                    bool showAnimation = true;
+                    if (Ninja.isRole(PlayerControl.LocalPlayer) && Ninja.isStealthed(PlayerControl.LocalPlayer))
+                    {
+                        showAnimation = false;
+                    }
+
                     // Use an unchecked kill command, to allow shorter kill cooldowns etc. without getting kicked
-                    MurderAttemptResult res = Helpers.checkMuderAttemptAndKill(PlayerControl.LocalPlayer, __instance.currentTarget);
+                    MurderAttemptResult res = Helpers.checkMuderAttemptAndKill(PlayerControl.LocalPlayer, __instance.currentTarget, showAnimation: showAnimation);
                     // Handle blank kill
                     if (res == MurderAttemptResult.BlankKill) {
                         PlayerControl.LocalPlayer.killTimer = PlayerControl.GameOptions.KillCooldown;
@@ -242,7 +249,8 @@ namespace TheOtherRoles.Patches
                         else if (PlayerControl.LocalPlayer == Witch.witch)
                             Witch.witch.killTimer = HudManagerStartPatch.witchSpellButton.Timer = HudManagerStartPatch.witchSpellButton.MaxTimer;
                     }
-                        __instance.SetTarget(null);
+
+                    __instance.SetTarget(null);
                 }
                 return false;
             }

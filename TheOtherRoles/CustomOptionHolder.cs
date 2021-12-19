@@ -8,6 +8,7 @@ using Hazel;
 using System.Reflection;
 using System.Text;
 using static TheOtherRoles.TheOtherRoles;
+using static TheOtherRoles.TheOtherRolesGM;
 
 namespace TheOtherRoles {
 
@@ -107,6 +108,7 @@ namespace TheOtherRoles {
         public static CustomOption shifterSpawnRate;
         public static CustomOption shifterIsNeutralRate;
         public static CustomOption shifterShiftsModifiers;
+        public static CustomOption shifterPastShifters;
 
         public static CustomOption mayorSpawnRate;
         public static CustomOption mayorNumVotes;
@@ -204,22 +206,6 @@ namespace TheOtherRoles {
         public static CustomOption baitHighlightAllVents;
         public static CustomOption baitReportDelay;
         public static CustomOption baitShowKillFlash;
-
-        public static CustomOption madmateSpawnRate;
-        public static CustomOption madmateCanDieToSheriff;
-        public static CustomOption madmateCanEnterVents;
-        public static CustomOption madmateHasImpostorVision;
-        public static CustomOption madmateCanSabotage;
-        public static CustomOption madmateCanFixComm;
-
-        public static CustomOption opportunistSpawnRate;
-
-        public static CustomOption gmEnabled;
-        public static CustomOption gmIsHost;
-        public static CustomOption gmHasTasks;
-        public static CustomOption gmDiesAtStart;
-        public static CustomOption gmCanWarp;
-        public static CustomOption gmCanKill;
 		
 		public static CustomOption vultureSpawnRate;
         public static CustomOption vultureCooldown;
@@ -259,6 +245,31 @@ namespace TheOtherRoles {
         public static CustomOption disableVents;
 		public static CustomOption allowParallelMedBayScans;
         public static CustomOption dynamicMap;
+
+        // GM Edition options
+        public static CustomOption madmateSpawnRate;
+        public static CustomOption madmateCanDieToSheriff;
+        public static CustomOption madmateCanEnterVents;
+        public static CustomOption madmateHasImpostorVision;
+        public static CustomOption madmateCanSabotage;
+        public static CustomOption madmateCanFixComm;
+
+        public static CustomOption opportunistSpawnRate;
+
+        public static CustomOption ninjaSpawnRate;
+        public static CustomOption ninjaCount;
+        public static CustomOption ninjaStealthCooldown;
+        public static CustomOption ninjaStealthDuration;
+        public static CustomOption ninjaKillPenalty;
+        public static CustomOption ninjaSpeedBonus;
+        public static CustomOption ninjaFadeTime;
+
+        public static CustomOption gmEnabled;
+        public static CustomOption gmIsHost;
+        public static CustomOption gmHasTasks;
+        public static CustomOption gmDiesAtStart;
+        public static CustomOption gmCanWarp;
+        public static CustomOption gmCanKill;
 
         internal static Dictionary<byte, byte[]> blockedRolePairings = new Dictionary<byte, byte[]>();
         internal static List<byte> blockLovers = new List<byte>();
@@ -345,6 +356,16 @@ namespace TheOtherRoles {
             witchTriggerBothCooldowns = CustomOption.Create(395, "witchTriggerBoth", true, witchSpawnRate);
             witchVoteSavesTargets = CustomOption.Create(396, "witchSaveTargets", true, witchSpawnRate);
 
+
+            ninjaSpawnRate = CustomOption.Create(1000, cs(Ninja.color, "ninja"), rates, null, true);
+            ninjaCount = CustomOption.Create(1001, "roleNumAssigned", 1f, 1f, 15f, 1f, ninjaSpawnRate, format: "unitPlayers");
+            ninjaStealthCooldown = CustomOption.Create(1002, "ninjaStealthCooldown", 30f, 2.5f, 60f, 2.5f, ninjaSpawnRate, format: "unitSeconds");
+            ninjaStealthDuration = CustomOption.Create(1003, "ninjaStealthDuration", 30f, 2.5f, 60f, 2.5f, ninjaSpawnRate, format: "unitSeconds");
+            ninjaFadeTime = CustomOption.Create(1004, "ninjaFadeTime", 0.5f, 0.0f, 2.5f, 0.5f, ninjaSpawnRate, format: "unitSeconds");
+            ninjaKillPenalty = CustomOption.Create(1005, "ninjaKillPenalty", 10f, 0f, 60f, 2.5f, ninjaSpawnRate, format: "unitSeconds");
+            ninjaSpeedBonus = CustomOption.Create(1006, "ninjaSpeedBonus", 125f, 50f, 200f, 5f, ninjaSpawnRate, format: "unitPercent");
+
+
             madmateSpawnRate = CustomOption.Create(360, cs(Madmate.color, "madmate"), rates, null, true);
             madmateCanDieToSheriff = CustomOption.Create(361, "madmateCanDieToSheriff", false, madmateSpawnRate);
             madmateCanEnterVents = CustomOption.Create(362, "madmateCanEnterVents", false, madmateSpawnRate);
@@ -421,6 +442,7 @@ namespace TheOtherRoles {
             shifterSpawnRate = CustomOption.Create(70, cs(Shifter.color, "shifter"), rates, null, true);
             shifterIsNeutralRate = CustomOption.Create(72, "shifterIsNeutralRate", rates, shifterSpawnRate);
             shifterShiftsModifiers = CustomOption.Create(71, "shifterShiftsModifiers", false, shifterSpawnRate);
+            shifterPastShifters = CustomOption.Create(73, "shifterPastShifters", false, shifterSpawnRate);
 
             mayorSpawnRate = CustomOption.Create(80, cs(Mayor.color, "mayor"), rates, null, true);
             mayorNumVotes = CustomOption.Create(81, "mayorNumVotes", 2f, 2f, 10f, 1f, mayorSpawnRate, format: "unitVotes");

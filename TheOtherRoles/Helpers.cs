@@ -7,6 +7,7 @@ using UnhollowerBaseLib;
 using UnityEngine;
 using System.Linq;
 using static TheOtherRoles.TheOtherRoles;
+using static TheOtherRoles.TheOtherRolesGM;
 using static TheOtherRoles.GameHistory;
 using TheOtherRoles.Modules;
 using HarmonyLib;
@@ -248,7 +249,7 @@ namespace TheOtherRoles {
 
         public static bool neutralHasTasks(this PlayerControl player)
         {
-            return player.isNeutral() && (player == Lawyer.lawyer || player == Pursuer.pursuer);
+            return player.isNeutral() && (player == Lawyer.lawyer || player == Pursuer.pursuer || player == Shifter.shifter);
         }
 
         public static bool isGM(this PlayerControl player)
@@ -259,11 +260,6 @@ namespace TheOtherRoles {
         public static bool isLovers(this PlayerControl player)
         {
             return player != null && Lovers.isLovers(player);
-        }
-
-        public static bool hasAliveKillingLover(this PlayerControl player)
-        {
-            return player.isLovers() && Lovers.existingAndAlive(player) && Lovers.existingWithKiller(player);
         }
 
         public static PlayerControl getPartner(this PlayerControl player)
@@ -328,6 +324,7 @@ namespace TheOtherRoles {
 
         public static bool hidePlayerName(PlayerControl source, PlayerControl target) {
             if (Camouflager.camouflageTimer > 0f) return true; // No names are visible
+            else if (!source.Data.Role.IsImpostor && !source.Data.IsDead && Ninja.isStealthed(target)) return true; // Hide ninja nametags from non-impostors
             else if (!MapOptions.hidePlayerNames) return false; // All names are visible
             else if (source == null || target == null) return true;
             else if (source == target) return false; // Player sees his own name

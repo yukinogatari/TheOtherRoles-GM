@@ -1,6 +1,7 @@
   
 using HarmonyLib;
 using static TheOtherRoles.TheOtherRoles;
+using static TheOtherRoles.TheOtherRolesGM;
 using static TheOtherRoles.GameHistory;
 using System.Collections;
 using System.Collections.Generic;
@@ -144,6 +145,9 @@ namespace TheOtherRoles.Patches
 
             notWinners.AddRange(Jackal.formerJackals);
 
+            // Neutral shifter can't win
+            if (Shifter.shifter != null && Shifter.isNeutral) notWinners.Add(Shifter.shifter);
+
             // GM can't win at all, and we're treating lovers as a separate class
             if (GM.gm != null) notWinners.Add(GM.gm);
 
@@ -151,8 +155,8 @@ namespace TheOtherRoles.Patches
             {
                 foreach (var couple in Lovers.couples)
                 {
-                    notWinners.Add(couple.Item1);
-                    notWinners.Add(couple.Item2);
+                    notWinners.Add(couple.lover1);
+                    notWinners.Add(couple.lover2);
                 }
             }
 
@@ -169,10 +173,6 @@ namespace TheOtherRoles.Patches
             bool arsonistWin = Arsonist.arsonist != null && gameOverReason == (GameOverReason)CustomGameOverReason.ArsonistWin;
             bool miniLose = Mini.mini != null && gameOverReason == (GameOverReason)CustomGameOverReason.MiniLose;
             bool loversWin = Lovers.anyAlive() && !(Lovers.separateTeam && gameOverReason == GameOverReason.HumansByTask);
-            /*bool loversWin = Lovers.existingAndAlive() && 
-                (gameOverReason == (GameOverReason)CustomGameOverReason.LoversWin || 
-                    (TempData.DidHumansWin(gameOverReason) && !Lovers.existingWithKiller() && Lovers.canWinWithCrew)
-                ); // Either they win if they are among the last 3 players, or they win if they are both Crewmates and both alive and the Crew wins (Team Imp/Jackal Lovers can only win solo wins)*/
             bool teamJackalWin = gameOverReason == (GameOverReason)CustomGameOverReason.TeamJackalWin && ((Jackal.jackal != null && Jackal.jackal.isAlive()) || (Sidekick.sidekick != null && !Sidekick.sidekick.isAlive()));
             bool vultureWin = Vulture.vulture != null && gameOverReason == (GameOverReason)CustomGameOverReason.VultureWin;
             bool lawyerSoloWin = Lawyer.lawyer != null && gameOverReason == (GameOverReason)CustomGameOverReason.LawyerSoloWin;
@@ -232,10 +232,10 @@ namespace TheOtherRoles.Patches
 
                     foreach (var couple in Lovers.couples)
                     {
-                        if (couple.Item1.isAlive() && couple.Item2.isAlive())
+                        if (couple.existingAndAlive)
                         {
-                            TempData.winners.Add(new WinningPlayerData(couple.Item1.Data));
-                            TempData.winners.Add(new WinningPlayerData(couple.Item2.Data));
+                            TempData.winners.Add(new WinningPlayerData(couple.lover1.Data));
+                            TempData.winners.Add(new WinningPlayerData(couple.lover2.Data));
                         }
                     }
                 }
@@ -787,7 +787,7 @@ namespace TheOtherRoles.Patches
                 {
                     foreach (var couple in Lovers.couples)
                     {
-                        if (p.PlayerId == couple.Item1.PlayerId || p.PlayerId == couple.Item2.PlayerId) return true;
+                        if (p.PlayerId == couple.lover1.PlayerId || p.PlayerId == couple.lover2.PlayerId) return true;
                     }
                     return false;
                 }
@@ -841,7 +841,7 @@ namespace TheOtherRoles.Patches
 
                     foreach (var couple in Lovers.couples)
                     {
-                        if (couple.Item1.isAlive() && couple.Item2.isAlive()) numCouplesAlive++;
+                        if (couple.alive) numCouplesAlive++;
                     }
 
                     // In the special case of Mafia being enabled, but only the janitor's left alive,
