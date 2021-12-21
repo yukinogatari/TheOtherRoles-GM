@@ -241,7 +241,7 @@ namespace TheOtherRoles.Patches {
         }
 
         static void updateImpostorKillButton(HudManager __instance) {
-            if (!PlayerControl.LocalPlayer.Data.Role.IsImpostor) return;
+            if (!PlayerControl.LocalPlayer.Data.Role.IsImpostor || MeetingHud.Instance) return;
             bool enabled = Helpers.ShowButtons;
             if (Vampire.vampire != null && Vampire.vampire == PlayerControl.LocalPlayer)
                 enabled &= false;

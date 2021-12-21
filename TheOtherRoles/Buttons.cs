@@ -470,7 +470,7 @@ namespace TheOtherRoles
 
             hackerVitalsButton = new CustomButton(
                () => {
-                   if (!Minigame.Instance) {
+                   if (PlayerControl.GameOptions.MapId != 1) {
                        if (Hacker.vitals == null) {
                            var e = UnityEngine.Object.FindObjectsOfType<SystemConsole>().FirstOrDefault(x => x.gameObject.name.Contains("panel_vitals"));
                            if (e == null || Camera.main == null) return;
@@ -479,13 +479,24 @@ namespace TheOtherRoles
                        Hacker.vitals.transform.SetParent(Camera.main.transform, false);
                        Hacker.vitals.transform.localPosition = new Vector3(0.0f, 0.0f, -50f);
                        Hacker.vitals.Begin(null);
+                   } else {
+                       if (Hacker.doorLog == null) {
+                           var e = UnityEngine.Object.FindObjectsOfType<SystemConsole>().FirstOrDefault(x => x.gameObject.name.Contains("SurvLogConsole"));
+                           if (e == null || Camera.main == null) return;
+                           Hacker.doorLog = UnityEngine.Object.Instantiate(e.MinigamePrefab, Camera.main.transform, false);
+                       }
+                       Hacker.doorLog.transform.SetParent(Camera.main.transform, false);
+                       Hacker.doorLog.transform.localPosition = new Vector3(0.0f, 0.0f, -50f);
+                       Hacker.doorLog.Begin(null);
                    }
                    Hacker.chargesVitals--;
                },
-               () => { return Hacker.hacker != null && Hacker.hacker == PlayerControl.LocalPlayer && MapOptions.couldUseVitals && !PlayerControl.LocalPlayer.Data.IsDead; },
+               () => { return Hacker.hacker != null && Hacker.hacker == PlayerControl.LocalPlayer && MapOptions.couldUseVitals && !PlayerControl.LocalPlayer.Data.IsDead && PlayerControl.GameOptions.MapId != 0 && PlayerControl.GameOptions.MapId != 3; },
                () => {
                    if (hackerVitalsChargesText != null)
                        hackerVitalsChargesText.text = String.Format(ModTranslation.getString("hackerChargesText"), Hacker.chargesVitals, Hacker.toolsNumber);
+                   hackerVitalsButton.actionButton.graphic.sprite = PlayerControl.GameOptions.MapId == 1 ? Hacker.getLogSprite() : Hacker.getVitalsSprite();
+                   hackerVitalsButton.actionButton.OverrideText(PlayerControl.GameOptions.MapId == 1 ? "DOORLOG" : "VITALS");
                    return PlayerControl.LocalPlayer.CanMove && Hacker.chargesVitals > 0 && MapOptions.canUseVitals;
                },
                () => {
@@ -502,10 +513,13 @@ namespace TheOtherRoles
                0f,
                () => { 
                    hackerVitalsButton.Timer = hackerVitalsButton.MaxTimer;
-                   if (Minigame.Instance) Hacker.vitals.ForceClose();
+                   if (Minigame.Instance) {
+                       if (PlayerControl.GameOptions.MapId == 1) Hacker.doorLog.ForceClose();
+                       else Hacker.vitals.ForceClose();
+                   }
                },
                false,
-               DestroyableSingleton<TranslationController>.Instance.GetString(StringNames.VitalsLabel)
+               PlayerControl.GameOptions.MapId == 1 ? "DOORLOG" : "VITALS"
             );
 
             // Hacker Vitals Charges
@@ -904,6 +918,7 @@ namespace TheOtherRoles
                         writer.EndMessage();
                         RPCProcedure.sealVent(SecurityGuard.ventTarget.Id);
                         SecurityGuard.ventTarget = null;
+                        
                     } else if (PlayerControl.GameOptions.MapId != 1 && MapOptions.couldUseCameras) { // Place camera if there's no vent and it's not MiraHQ
                         var pos = PlayerControl.LocalPlayer.transform.position;
                         byte[] buff = new byte[sizeof(float) * 2];
