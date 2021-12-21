@@ -464,7 +464,7 @@
         "11": "\u30a4\u30d3\u30eb\u304c\u30b9\u30d1\u30a4\u3092\u6483\u3066\u308b"
     },
     "guesserSpawnBothRate": {
-        "0": "Other Guesser Spawn Rate",
+        "0": "Both Guesser Spawn Rate",
         "11": "\u30ca\u30a4\u30b9\u30fb\u30a4\u30d3\u30eb\u4e21\u65b9\u51fa\u73fe\u7387"
     },
     "guesserGuessChat": {
