@@ -156,7 +156,7 @@ namespace TheOtherRoles
                 foreach (PlayerControl p in PlayerControl.AllPlayerControls)
                 {
                     if (p == null) continue;
-                    p.setOutfit(camoData);
+                    p.setOutfit(camoData, visible: false);
                 }
             }
 

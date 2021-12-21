@@ -214,20 +214,25 @@ namespace TheOtherRoles
                         opacity = Math.Max(opacity, stealthFade(ninja));
                     }
 
-                    var color = Color.Lerp(Palette.ClearWhite, Palette.White, opacity);
-                    if (ninja.MyPhysics?.rend != null)
+                    // Sometimes it just doesn't work?
+                    try
                     {
-                        ninja.MyPhysics.rend.color = color;
+                        var color = Color.Lerp(Palette.ClearWhite, Palette.White, opacity);
+                        if (ninja.MyPhysics?.rend != null)
+                        {
+                            ninja.MyPhysics.rend.color = color;
+                        }
+                        ninja.MyPhysics?.Skin?.layer?.material?.SetColor("_Color", color);
+                        ninja.HatRenderer?.BackLayer?.material?.SetColor("_Color", color);
+                        ninja.HatRenderer?.FrontLayer?.material?.SetColor("_Color", color);
+                        ninja.CurrentPet?.rend?.material?.SetColor("_Color", color);
+                        ninja.CurrentPet?.shadowRend?.material?.SetColor("_Color", color);
+                        if (ninja.VisorSlot != null)
+                        {
+                            ninja.VisorSlot.color = color;
+                        }
                     }
-                    ninja.MyPhysics?.Skin?.layer?.material?.SetColor("_Color", color);
-                    ninja.HatRenderer?.BackLayer?.material?.SetColor("_Color", color);
-                    ninja.HatRenderer?.FrontLayer?.material?.SetColor("_Color", color);
-                    ninja.CurrentPet?.rend?.material?.SetColor("_Color", color);
-                    ninja.CurrentPet?.shadowRend?.material?.SetColor("_Color", color);
-                    if (ninja.VisorSlot != null)
-                    {
-                        ninja.VisorSlot.color = color;
-                    }
+                    catch { }
                 }
             }
         }

@@ -255,6 +255,10 @@
         "0": "Lights Out Duration",
         "11": "\u5f37\u5236\u505c\u96fb\u6301\u7d9a\u6642\u9593"
     },
+    "tricksterLightsOutText": {
+        "0": "Lights Are Out",
+        "11": "\u5f37\u5236\u505c\u96fb\u4e2d"
+    },
     "cleaner": {
         "0": "Cleaner",
         "11": "\u30af\u30ea\u30fc\u30ca\u30fc"
@@ -1382,7 +1386,7 @@
     },
     "ninjaFadeTime": {
         "0": "Fade Time",
-        "11": "\u900f\u660e\u5316\u6642\u9593"
+        "11": "\u900f\u660e\u5316\u306b\u304b\u304b\u308b\u6642\u9593"
     },
     "husk": {
         "0": "Husk",

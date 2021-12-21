@@ -20,6 +20,7 @@ namespace TheOtherRoles.Patches {
                     PoolablePlayer player = UnityEngine.Object.Instantiate<PoolablePlayer>(__instance.PlayerPrefab, HudManager.Instance.transform);
                     player.UpdateFromPlayerOutfit(p.Data.DefaultOutfit, p.Data.IsDead);
                     player.SetFlipX(true);
+                    player.PetSlot.gameObject.SetActive(false);
                     player.NameText.text = p.Data.DefaultOutfit.PlayerName;
                     MapOptions.playerIcons[p.PlayerId] = player;
 

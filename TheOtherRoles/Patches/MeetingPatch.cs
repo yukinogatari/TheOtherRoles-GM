@@ -566,8 +566,6 @@ namespace TheOtherRoles.Patches {
         {
             CustomOverlays.showBlackBG();
             CustomOverlays.hideInfoOverlay();
-            Camouflager.resetCamouflage();
-            Morphling.resetMorph();
             TheOtherRolesGM.OnMeetingStart();
         }
 
