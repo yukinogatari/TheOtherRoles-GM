@@ -80,7 +80,7 @@ namespace TheOtherRoles.Patches {
             else if (Shifter.shifter != null && Shifter.shifter == PlayerControl.LocalPlayer)
                 setPlayerNameColor(Shifter.shifter, Shifter.color);
             else if (Swapper.swapper != null && Swapper.swapper == PlayerControl.LocalPlayer)
-                setPlayerNameColor(Swapper.swapper, Swapper.color);
+                setPlayerNameColor(Swapper.swapper, Swapper.swapper.Data.Role.IsImpostor ? Palette.ImpostorRed : Swapper.color);
             else if (Seer.seer != null && Seer.seer == PlayerControl.LocalPlayer)
                 setPlayerNameColor(Seer.seer, Seer.color);  
             else if (Hacker.hacker != null && Hacker.hacker == PlayerControl.LocalPlayer) 
