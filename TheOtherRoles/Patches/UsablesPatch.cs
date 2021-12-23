@@ -194,7 +194,7 @@ namespace TheOtherRoles.Patches
                 if (__instance.AmOwner && Helpers.ShowButtons)
                 {
                     HudManager.Instance.ImpostorVentButton.Hide();
-                    HudManager.Instance.SabotageButton.Show();
+                    HudManager.Instance.SabotageButton.Hide();
 
                     if (Helpers.ShowButtons)
                     {

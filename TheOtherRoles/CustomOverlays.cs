@@ -103,12 +103,7 @@ namespace TheOtherRoles {
 
             HudManager.Instance.StartCoroutine(Effects.Lerp(5f, new Action<float>(t =>
             {
-                meetingUnderlay.enabled = t > 0.2f && t < 1f;
-                if (t >= 1f)
-                {
-                    Camouflager.resetCamouflage();
-                    Morphling.resetMorph();
-                }
+                meetingUnderlay.enabled = t < 1f;
             })));
         }
 

@@ -43,6 +43,8 @@ namespace TheOtherRoles
         {
             GM.resetZoom();
             Ninja.OnMeetingStart();
+            Camouflager.resetCamouflage();
+            Morphling.resetMorph();
         }
 
         public static void OnMeetingEnd()
