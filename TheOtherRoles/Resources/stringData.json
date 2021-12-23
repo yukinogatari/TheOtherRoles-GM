@@ -1388,6 +1388,14 @@
         "0": "Fade Time",
         "11": "\u900f\u660e\u5316\u306b\u304b\u304b\u308b\u6642\u9593"
     },
+    "ninjaCanVent": {
+        "0": "Can Use Vents",
+        "11": "\u30d9\u30f3\u30c8\u306b\u5165\u308c\u308b"
+    },
+    "ninjaCanBeTargeted": {
+        "0": "Can Be Targeted While Stealthed",
+        "11": "\u5fcd\u8853\u4e2d\u3001\u4ed6\u4eba\u306b\u30bf\u30fc\u30b2\u30c3\u30c8\u3055\u308c\u308b"
+    },
     "husk": {
         "0": "Husk",
         "11": "\u306a\u308c\u306e\u679c\u3066"

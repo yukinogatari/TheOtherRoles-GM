@@ -27,14 +27,24 @@ namespace TheOtherRoles.Patches
             if (targetingPlayer.Data.IsDead || targetingPlayer.inVent) return result;
             if (targetingPlayer.isGM()) return result;
 
+            if (untargetablePlayers == null)
+            {
+                untargetablePlayers = new List<PlayerControl>();
+            }
+
             // GM is untargetable by anything
             if (GM.gm != null)
             {
-                if (untargetablePlayers == null)
-                {
-                    untargetablePlayers = new List<PlayerControl>();
-                }
                 untargetablePlayers.Add(GM.gm);
+            }
+
+            // Can't target stealthed ninjas if setting on
+            if (!Ninja.canBeTargeted)
+            {
+                foreach (Ninja n in Ninja.players)
+                {
+                    if (n.stealthed) untargetablePlayers.Add(n.player);
+                }
             }
 
             Vector2 truePosition = targetingPlayer.GetTruePosition();
@@ -45,7 +55,7 @@ namespace TheOtherRoles.Patches
                 if (!playerInfo.Disconnected && playerInfo.PlayerId != targetingPlayer.PlayerId && !playerInfo.IsDead && (!onlyCrewmates || !playerInfo.Role.IsImpostor))
                 {
                     PlayerControl @object = playerInfo.Object;
-                    if (untargetablePlayers != null && untargetablePlayers.Any(x => x == @object))
+                    if (untargetablePlayers.Any(x => x == @object))
                     {
                         // if that player is not targetable: skip check
                         continue;
@@ -1233,7 +1243,7 @@ namespace TheOtherRoles.Patches
             float addition = 0f;
             if (Mini.mini != null && PlayerControl.LocalPlayer == Mini.mini && Mini.mini.Data.Role.IsImpostor) multiplier = Mini.isGrownUp() ? 0.66f : 2f;
             if (BountyHunter.bountyHunter != null && PlayerControl.LocalPlayer == BountyHunter.bountyHunter) addition = BountyHunter.punishmentTime;
-            if (Ninja.isRole(PlayerControl.LocalPlayer) && Ninja.isPenalized(PlayerControl.LocalPlayer)) addition = Ninja.killPenalty;
+            if (PlayerControl.LocalPlayer.isRole(RoleId.Ninja) && Ninja.isPenalized(PlayerControl.LocalPlayer)) addition = Ninja.killPenalty;
 
             __instance.killTimer = Mathf.Clamp(time, 0f, PlayerControl.GameOptions.KillCooldown * multiplier + addition);
             DestroyableSingleton<HudManager>.Instance.KillButton.SetCoolDown(__instance.killTimer, PlayerControl.GameOptions.KillCooldown * multiplier + addition);

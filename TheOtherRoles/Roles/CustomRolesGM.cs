@@ -27,10 +27,10 @@ namespace TheOtherRoles
             Shifter.clearAndReload();
             Swapper.clearAndReload();
             Lovers.clearAndReload();
-            Madmate.clearAndReload();
             GM.clearAndReload();
             Opportunist.clearAndReload();
             Ninja.clearAndReload();
+            Madmate.clearAndReload();
         }
 
         public static void FixedUpdate()
@@ -262,37 +262,6 @@ namespace TheOtherRoles
             }
         }
 
-
-        public static class Madmate
-        {
-            public static PlayerControl madmate;
-            public static Color color = Palette.ImpostorRed;
-
-            public static bool canEnterVents = false;
-            public static bool hasImpostorVision = false;
-            public static bool canSabotage = false;
-            public static bool canFixComm = true;
-
-            public static void clearAndReload()
-            {
-                madmate = null;
-                canEnterVents = CustomOptionHolder.madmateCanEnterVents.getBool();
-                hasImpostorVision = CustomOptionHolder.madmateHasImpostorVision.getBool();
-                canSabotage = CustomOptionHolder.madmateCanSabotage.getBool();
-                canFixComm = CustomOptionHolder.madmateCanFixComm.getBool();
-            }
-        }
-
-        public static class Opportunist
-        {
-            public static PlayerControl opportunist;
-            public static Color color = new Color32(0, 255, 00, byte.MaxValue);
-
-            public static void clearAndReload()
-            {
-                opportunist = null;
-            }
-        }
 
         public static class GM
         {

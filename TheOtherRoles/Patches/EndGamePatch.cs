@@ -137,13 +137,13 @@ namespace TheOtherRoles.Patches
             if (Sidekick.sidekick != null) notWinners.Add(Sidekick.sidekick);
             if (Jackal.jackal != null) notWinners.Add(Jackal.jackal);
             if (Arsonist.arsonist != null) notWinners.Add(Arsonist.arsonist);
-            if (Madmate.madmate != null) notWinners.Add(Madmate.madmate);
-            if (Opportunist.opportunist != null) notWinners.Add(Opportunist.opportunist);
             if (Vulture.vulture != null) notWinners.Add(Vulture.vulture);
             if (Lawyer.lawyer != null) notWinners.Add(Lawyer.lawyer);
             if (Pursuer.pursuer != null) notWinners.Add(Pursuer.pursuer);
 
             notWinners.AddRange(Jackal.formerJackals);
+            notWinners.AddRange(Madmate.allPlayers);
+            notWinners.AddRange(Opportunist.allPlayers);
 
             // Neutral shifter can't win
             if (Shifter.shifter != null && Shifter.isNeutral) notWinners.Add(Shifter.shifter);
@@ -264,15 +264,18 @@ namespace TheOtherRoles.Patches
                     TempData.winners.Add(wpdFormerJackal);
                 }
             }
-            else if (Madmate.madmate != null)
+            else if (Madmate.exists)
             {
                 // Madmate wins if team impostors wins
                 foreach (WinningPlayerData winner in TempData.winners)
                 {
                     if (winner.IsImpostor)
                     {
-                        WinningPlayerData wpd = new WinningPlayerData(Madmate.madmate.Data);
-                        TempData.winners.Add(wpd);
+                        foreach (var p in Madmate.allPlayers)
+                        {
+                            WinningPlayerData wpd = new WinningPlayerData(p.Data);
+                            TempData.winners.Add(wpd);
+                        }
                         break;
                     }
                 }
@@ -315,12 +318,15 @@ namespace TheOtherRoles.Patches
             // Extra win conditions for non-impostor roles
             if (!saboWin)
             {
-                if (Opportunist.opportunist != null && Opportunist.opportunist.isAlive())
+                bool oppWin = false;
+                foreach (var p in Opportunist.livingPlayers)
                 {
-                    if (!TempData.winners.ToArray().Any(x => x.PlayerName == Opportunist.opportunist.Data.PlayerName))
-                        TempData.winners.Add(new WinningPlayerData(Opportunist.opportunist.Data));
-                    AdditionalTempData.additionalWinConditions.Add(WinCondition.OpportunistWin);
+                    if (!TempData.winners.ToArray().Any(x => x.PlayerName == p.Data.PlayerName))
+                        TempData.winners.Add(new WinningPlayerData(p.Data));
+                    oppWin = true;
                 }
+                if (oppWin)
+                    AdditionalTempData.additionalWinConditions.Add(WinCondition.OpportunistWin);
 
                 // Possible Additional winner: Pursuer
                 if (Pursuer.pursuer != null && Pursuer.pursuer.isAlive())

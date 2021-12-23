@@ -238,7 +238,7 @@ namespace TheOtherRoles
                         byte targetId = Sheriff.currentTarget.PlayerId; ;
                         if ((Sheriff.currentTarget.Data.Role.IsImpostor && (Sheriff.currentTarget != Mini.mini || Mini.isGrownUp())) ||
                             (Sheriff.spyCanDieToSheriff && Spy.spy == Sheriff.currentTarget) ||
-                            (Sheriff.madmateCanDieToSheriff && Madmate.madmate == Sheriff.currentTarget) ||
+                            (Sheriff.madmateCanDieToSheriff && Sheriff.currentTarget.isRole(RoleId.Madmate)) ||
                             (Sheriff.canKillNeutrals && Sheriff.currentTarget.isNeutral()) ||
                             (Jackal.jackal == Sheriff.currentTarget || Sidekick.sidekick == Sheriff.currentTarget))
                         {

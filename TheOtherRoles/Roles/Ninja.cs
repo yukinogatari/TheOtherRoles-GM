@@ -19,28 +19,28 @@ using TheOtherRoles.Patches;
 namespace TheOtherRoles
 {
     [HarmonyPatch]
-    public class Ninja
-    {
-        public static List<Ninja> players = new List<Ninja>();
-        public static Color color = Palette.ImpostorRed;
+    public class Ninja : Role<Ninja> { 
 
-        public PlayerControl player;
+        public static Color color = Palette.ImpostorRed;
 
         public static float stealthCooldown = 10f;
         public static float stealthDuration = 10f;
         public static float killPenalty = 10f;
         public static float speedBonus = 1.25f;
         public static float fadeTime = 0.5f;
+        public static bool canUseVents = false;
+        public static bool canBeTargeted = true;
 
         public bool penalized = false;
         public bool stealthed = false;
         public DateTime stealthedAt = DateTime.UtcNow;
 
-        public Ninja(PlayerControl player)
+        public Ninja()
         {
-            this.player = player;
-            this.penalized = false;
-            this.stealthed = false;
+            roleType = RoleId.Ninja;
+            penalized = false;
+            stealthed = false;
+            stealthedAt = DateTime.UtcNow;
         }
 
         public static void OnMeetingStart()
@@ -68,51 +68,6 @@ namespace TheOtherRoles
 
         public static void FixedUpdate()
         {
-        }
-
-        public static Ninja local
-        {
-            get
-            {
-                return players.FirstOrDefault(x => x.player == PlayerControl.LocalPlayer);
-            }
-        }
-
-        public static Ninja getNinja(PlayerControl player = null)
-        {
-            player = player ?? PlayerControl.LocalPlayer;
-            return players.FirstOrDefault(x => x.player == player);
-        }
-
-        public static bool isRole(PlayerControl player)
-        {
-            return players.Any(x => x.player == player);
-        }
-
-        public static void setRole(PlayerControl player)
-        {
-            if (!isRole(player))
-            {
-                players.Add(new Ninja(player));
-            }
-        }
-
-        public static void eraseRole(PlayerControl player)
-        {
-            var index = players.FindIndex(x => x.player == player);
-            if (index >= 0)
-            {
-                players.RemoveAt(index);
-            }
-        }
-
-        public static void swapRole(PlayerControl p1, PlayerControl p2)
-        {
-            var index = players.FindIndex(x => x.player == p1);
-            if (index >= 0)
-            {
-                players[index].player = p2;
-            }
         }
 
         public static bool isStealthed(PlayerControl player)
@@ -164,8 +119,6 @@ namespace TheOtherRoles
 
                 float penalty = n.penalized ? killPenalty : 0f;
                 player.SetKillTimer(PlayerControl.GameOptions.KillCooldown + penalty);
-
-                Helpers.log($"Penalizing the ninja {player.CurrentOutfit.PlayerName} for {PlayerControl.GameOptions.KillCooldown + penalty}s");
             }
         }
 
@@ -185,6 +138,8 @@ namespace TheOtherRoles
             killPenalty = CustomOptionHolder.ninjaKillPenalty.getFloat();
             speedBonus = CustomOptionHolder.ninjaSpeedBonus.getFloat() / 100f;
             fadeTime = CustomOptionHolder.ninjaFadeTime.getFloat();
+            canUseVents = CustomOptionHolder.ninjaCanVent.getBool();
+            canBeTargeted = CustomOptionHolder.ninjaCanBeTargeted.getBool();
         }
 
         [HarmonyPatch(typeof(PlayerPhysics), nameof(PlayerPhysics.FixedUpdate))]

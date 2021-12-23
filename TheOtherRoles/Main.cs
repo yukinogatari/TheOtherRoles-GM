@@ -104,6 +104,7 @@ namespace TheOtherRoles
             __result = false;
         }
     }
+
     [HarmonyPatch(typeof(ChatController), nameof(ChatController.Awake))]
     public static class ChatControllerAwakePatch {
         private static void Prefix() {

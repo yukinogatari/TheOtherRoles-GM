@@ -111,10 +111,10 @@ namespace TheOtherRoles.Patches {
                 setPlayerNameColor(Guesser.evilGuesser, Palette.ImpostorRed);
             } else if (Bait.bait != null && Bait.bait == PlayerControl.LocalPlayer) {
                 setPlayerNameColor(Bait.bait, Bait.color);
-            } else if (Madmate.madmate != null && Madmate.madmate == PlayerControl.LocalPlayer) {
-                setPlayerNameColor(Madmate.madmate, Madmate.color);
-            } else if (Opportunist.opportunist != null && Opportunist.opportunist == PlayerControl.LocalPlayer) {
-                setPlayerNameColor(Opportunist.opportunist, Opportunist.color);
+            } else if (PlayerControl.LocalPlayer.isRole(RoleId.Madmate)) {
+                setPlayerNameColor(PlayerControl.LocalPlayer, Madmate.color);
+            } else if (PlayerControl.LocalPlayer.isRole(RoleId.Opportunist)) {
+                setPlayerNameColor(PlayerControl.LocalPlayer, Opportunist.color);
             } else if (Vulture.vulture != null && Vulture.vulture == PlayerControl.LocalPlayer) {
                 setPlayerNameColor(Vulture.vulture, Vulture.color);
             } else if (Medium.medium != null && Medium.medium == PlayerControl.LocalPlayer) {

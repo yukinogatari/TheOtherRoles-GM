@@ -229,11 +229,11 @@ namespace TheOtherRoles {
                     Jackal.formerJackals.Contains(player) ||
                     player == Arsonist.arsonist ||
                     player == Jester.jester ||
-                    player == Opportunist.opportunist) ||
+                    player.isRole(RoleId.Opportunist) ||
                     player == Vulture.vulture || 
                     player == Lawyer.lawyer ||
                     player == Pursuer.pursuer ||
-                    (player == Shifter.shifter && Shifter.isNeutral));
+                    (player == Shifter.shifter && Shifter.isNeutral)));
         }
 
         public static bool isCrew(this PlayerControl player)
@@ -243,7 +243,7 @@ namespace TheOtherRoles {
 
         public static bool hasFakeTasks(this PlayerControl player) {
             return (player.isNeutral() && !player.neutralHasTasks()) || 
-                    player == Madmate.madmate || 
+                    player.isRole(RoleId.Madmate) || 
                    (player.isLovers() && Lovers.separateTeam && !Lovers.tasksCount);
         }
 
@@ -379,14 +379,17 @@ namespace TheOtherRoles {
                 roleCouldUse = true;
             else if (Spy.canEnterVents && Spy.spy != null && Spy.spy == player)
                 roleCouldUse = true;
-            else if (Madmate.canEnterVents && Madmate.madmate != null && Madmate.madmate == player)
+            else if (Madmate.canEnterVents && player.isRole(RoleId.Madmate))
                 roleCouldUse = true;
             else if (Vulture.canUseVents && Vulture.vulture != null && Vulture.vulture == player)
                 roleCouldUse = true;
-            else if (player.Data?.Role != null && player.Data.Role.CanVent)  {
+            else if (player.Data?.Role != null && player.Data.Role.CanVent)
+            {
                 if (Janitor.janitor != null && Janitor.janitor == PlayerControl.LocalPlayer)
                     roleCouldUse = false;
                 else if (Mafioso.mafioso != null && Mafioso.mafioso == PlayerControl.LocalPlayer && Godfather.godfather != null && Godfather.godfather.isAlive())
+                    roleCouldUse = false;
+                else if (!Ninja.canUseVents && player.isRole(RoleId.Ninja))
                     roleCouldUse = false;
                 else
                     roleCouldUse = true;
@@ -397,7 +400,7 @@ namespace TheOtherRoles {
         public static bool roleCanSabotage(this PlayerControl player)
         {
             bool roleCouldUse = false;
-            if (Madmate.canSabotage && Madmate.madmate != null && Madmate.madmate == player)
+            if (Madmate.canSabotage && player.isRole(RoleId.Madmate))
                 roleCouldUse = true;
             else if (Jester.canSabotage && Jester.jester != null && Jester.jester == player)
                 roleCouldUse = true;

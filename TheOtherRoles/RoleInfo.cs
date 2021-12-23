@@ -183,14 +183,15 @@ namespace TheOtherRoles
             if (p == Guesser.evilGuesser) infos.Add(evilGuesser);
             if (p == BountyHunter.bountyHunter) infos.Add(bountyHunter);
             if (p == Bait.bait) infos.Add(bait);
-            if (p == Madmate.madmate) infos.Add(madmate);
+            if (p.isRole(RoleId.Madmate)) infos.Add(madmate);
             if (p == GM.gm) infos.Add(gm);
-            if (p == Opportunist.opportunist) infos.Add(opportunist);
+            if (p.isRole(RoleId.Opportunist)) infos.Add(opportunist);
             if (p == Vulture.vulture) infos.Add(vulture);
             if (p == Medium.medium) infos.Add(medium);
             if (p == Lawyer.lawyer) infos.Add(lawyer);
             if (p == Pursuer.pursuer) infos.Add(pursuer);
-            if (Ninja.isRole(p)) infos.Add(ninja);
+            if (p.isRole(RoleId.Ninja)) infos.Add(ninja);
+
 
             // Default roles
             if (infos.Count == 0 && p.Data.Role.IsImpostor) infos.Add(impostor); // Just Impostor

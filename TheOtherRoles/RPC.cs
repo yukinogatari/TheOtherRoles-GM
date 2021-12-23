@@ -14,7 +14,7 @@ using System;
 
 namespace TheOtherRoles
 {
-    enum RoleId {
+    public enum RoleId {
         Crewmate = 0,
         Shifter,
         Mayor,
@@ -186,138 +186,7 @@ namespace TheOtherRoles
             {
                 if (player.PlayerId == playerId)
                 {
-                    switch ((RoleId)roleId)
-                    {
-                        case RoleId.Jester:
-                            Jester.jester = player;
-                            break;
-                        case RoleId.Mayor:
-                            Mayor.mayor = player;
-                            break;
-                        case RoleId.Engineer:
-                            Engineer.engineer = player;
-                            break;
-                        case RoleId.Sheriff:
-                            Sheriff.sheriff = player;
-                            break;
-                        case RoleId.Lighter:
-                            Lighter.lighter = player;
-                            break;
-                        case RoleId.Godfather:
-                            Godfather.godfather = player;
-                            break;
-                        case RoleId.Mafioso:
-                            Mafioso.mafioso = player;
-                            break;
-                        case RoleId.Janitor:
-                            Janitor.janitor = player;
-                            break;
-                        case RoleId.Detective:
-                            Detective.detective = player;
-                            break;
-                        case RoleId.TimeMaster:
-                            TimeMaster.timeMaster = player;
-                            break;
-                        case RoleId.Medic:
-                            Medic.medic = player;
-                            break;
-                        case RoleId.Shifter:
-                            Shifter.shifter = player;
-                            break;
-                        case RoleId.Swapper:
-                            Swapper.swapper = player;
-                            break;
-                        case RoleId.Seer:
-                            Seer.seer = player;
-                            break;
-                        case RoleId.Morphling:
-                            Morphling.morphling = player;
-                            break;
-                        case RoleId.Camouflager:
-                            Camouflager.camouflager = player;
-                            break;
-                        case RoleId.Hacker:
-                            Hacker.hacker = player;
-                            break;
-                        case RoleId.Mini:
-                            Mini.mini = player;
-                            break;
-                        case RoleId.Tracker:
-                            Tracker.tracker = player;
-                            break;
-                        case RoleId.Vampire:
-                            Vampire.vampire = player;
-                            break;
-                        case RoleId.Snitch:
-                            Snitch.snitch = player;
-                            break;
-                        case RoleId.Jackal:
-                            Jackal.jackal = player;
-                            break;
-                        case RoleId.Sidekick:
-                            Sidekick.sidekick = player;
-                            break;
-                        case RoleId.Eraser:
-                            Eraser.eraser = player;
-                            break;
-                        case RoleId.Spy:
-                            Spy.spy = player;
-                            break;
-                        case RoleId.Trickster:
-                            Trickster.trickster = player;
-                            break;
-                        case RoleId.Cleaner:
-                            Cleaner.cleaner = player;
-                            break;
-                        case RoleId.Warlock:
-                            Warlock.warlock = player;
-                            break;
-                        case RoleId.SecurityGuard:
-                            SecurityGuard.securityGuard = player;
-                            break;
-                        case RoleId.Arsonist:
-                            Arsonist.arsonist = player;
-                            break;
-                        case RoleId.EvilGuesser:
-                            Guesser.evilGuesser = player;
-                            break;
-                        case RoleId.NiceGuesser:
-                            Guesser.niceGuesser = player;
-                            break;
-                        case RoleId.BountyHunter:
-                            BountyHunter.bountyHunter = player;
-                            break;
-                        case RoleId.Bait:
-                            Bait.bait = player;
-                            break;
-                        case RoleId.Madmate:
-                            Madmate.madmate = player;
-                            break;
-                        case RoleId.GM:
-                            GM.gm = player;
-                            break;
-                        case RoleId.Opportunist:
-                            Opportunist.opportunist = player;
-                            break;
-	                    case RoleId.Vulture:
-	                        Vulture.vulture = player;
-	                        break;
-	                    case RoleId.Medium:
-	                        Medium.medium = player;
-	                        break;
-                        case RoleId.Witch:
-                            Witch.witch = player;
-                            break;
-                        case RoleId.Lawyer:
-	                        Lawyer.lawyer = player;
-	                        break;
-	                    case RoleId.Pursuer:
-	                        Pursuer.pursuer = player;
-	                        break;
-                        case RoleId.Ninja:
-                            Ninja.setRole(player);
-                            break;
-                    }
+                    player.setRole((RoleId)roleId);
                 }
             }
         }
@@ -489,7 +358,7 @@ namespace TheOtherRoles
             }
 
             // Suicide (exile) when impostor or impostor variants
-            if (!Shifter.isNeutral && (player.Data.Role.IsImpostor || player.isNeutral() || player == Madmate.madmate)) {
+            if (!Shifter.isNeutral && (player.Data.Role.IsImpostor || player.isNeutral() || player.isRole(RoleId.Madmate))) {
                 oldShifter.Exiled();
                 finalStatuses[oldShifter.PlayerId] = FinalStatus.Suicide;
                 return;
@@ -629,7 +498,7 @@ namespace TheOtherRoles
                         break;
 
                     case RoleId.Madmate:
-                        Madmate.madmate = oldShifter;
+                        Madmate.swapRole(player, oldShifter);
                         break;
 
                     case RoleId.Mini:
@@ -661,7 +530,7 @@ namespace TheOtherRoles
                         break;
 
                     case RoleId.Opportunist:
-                        Opportunist.opportunist = oldShifter;
+                        Opportunist.swapRole(player, oldShifter);
                         break;
 
                     case RoleId.Vulture:
@@ -793,8 +662,8 @@ namespace TheOtherRoles
             if (player == Spy.spy) Spy.clearAndReload();
             if (player == SecurityGuard.securityGuard) SecurityGuard.clearAndReload();
             if (player == Bait.bait) Bait.clearAndReload();
-            if (player == Madmate.madmate) Madmate.clearAndReload();
-            if (player == Opportunist.opportunist) Opportunist.clearAndReload();
+            if (player.isRole(RoleId.Madmate)) player.eraseRole(RoleId.Madmate);
+            if (player.isRole(RoleId.Opportunist)) player.eraseRole(RoleId.Opportunist);
             if (player == Medium.medium) Medium.clearAndReload();
 
             // Impostor roles
@@ -809,7 +678,7 @@ namespace TheOtherRoles
             if (player == Cleaner.cleaner) Cleaner.clearAndReload();
             if (player == Warlock.warlock) Warlock.clearAndReload();
             if (player == Witch.witch) Witch.clearAndReload();
-            if (Ninja.isRole(player)) Ninja.eraseRole(player);
+            if (player.isRole(RoleId.Ninja)) player.eraseRole(RoleId.Ninja);
 
             // Other roles
             if (player == Jester.jester) Jester.clearAndReload();

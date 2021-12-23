@@ -120,45 +120,45 @@ namespace TheOtherRoles.Patches
             Dictionary<byte, (int rate, int count)> neutralSettings = new Dictionary<byte, (int, int)>();
             Dictionary<byte, (int rate, int count)> crewSettings = new Dictionary<byte, (int, int)>();
 
-            impSettings.Add((byte)RoleId.Morphling, (CustomOptionHolder.morphlingSpawnRate.getSelection(), 1));
-            impSettings.Add((byte)RoleId.Camouflager, (CustomOptionHolder.camouflagerSpawnRate.getSelection(), 1));
-            impSettings.Add((byte)RoleId.Vampire, (CustomOptionHolder.vampireSpawnRate.getSelection(), 1));
-            impSettings.Add((byte)RoleId.Eraser, (CustomOptionHolder.eraserSpawnRate.getSelection(), 1));
-            impSettings.Add((byte)RoleId.Trickster, (CustomOptionHolder.tricksterSpawnRate.getSelection(), 1));
-            impSettings.Add((byte)RoleId.Cleaner, (CustomOptionHolder.cleanerSpawnRate.getSelection(), 1));
-            impSettings.Add((byte)RoleId.Warlock, (CustomOptionHolder.warlockSpawnRate.getSelection(), 1));
-            impSettings.Add((byte)RoleId.BountyHunter, (CustomOptionHolder.bountyHunterSpawnRate.getSelection(), 1));
-            impSettings.Add((byte)RoleId.Witch, (CustomOptionHolder.witchSpawnRate.getSelection(), 1));
+            impSettings.Add((byte)RoleId.Morphling, CustomOptionHolder.morphlingSpawnRate.data);
+            impSettings.Add((byte)RoleId.Camouflager, CustomOptionHolder.camouflagerSpawnRate.data);
+            impSettings.Add((byte)RoleId.Vampire, CustomOptionHolder.vampireSpawnRate.data);
+            impSettings.Add((byte)RoleId.Eraser, CustomOptionHolder.eraserSpawnRate.data);
+            impSettings.Add((byte)RoleId.Trickster, CustomOptionHolder.tricksterSpawnRate.data);
+            impSettings.Add((byte)RoleId.Cleaner, CustomOptionHolder.cleanerSpawnRate.data);
+            impSettings.Add((byte)RoleId.Warlock, CustomOptionHolder.warlockSpawnRate.data);
+            impSettings.Add((byte)RoleId.BountyHunter, CustomOptionHolder.bountyHunterSpawnRate.data);
+            impSettings.Add((byte)RoleId.Witch, CustomOptionHolder.witchSpawnRate.data);
 
-            neutralSettings.Add((byte)RoleId.Jester, (CustomOptionHolder.jesterSpawnRate.getSelection(), 1));
-            neutralSettings.Add((byte)RoleId.Arsonist, (CustomOptionHolder.arsonistSpawnRate.getSelection(), 1));
-            neutralSettings.Add((byte)RoleId.Jackal, (CustomOptionHolder.jackalSpawnRate.getSelection(), 1));
-            neutralSettings.Add((byte)RoleId.Opportunist, (CustomOptionHolder.opportunistSpawnRate.getSelection(), 1));
-            neutralSettings.Add((byte)RoleId.Vulture, (CustomOptionHolder.vultureSpawnRate.getSelection(), 1));
-            neutralSettings.Add((byte)RoleId.Lawyer, (CustomOptionHolder.lawyerSpawnRate.getSelection(), 1));
+            neutralSettings.Add((byte)RoleId.Jester, CustomOptionHolder.jesterSpawnRate.data);
+            neutralSettings.Add((byte)RoleId.Arsonist, CustomOptionHolder.arsonistSpawnRate.data);
+            neutralSettings.Add((byte)RoleId.Jackal, CustomOptionHolder.jackalSpawnRate.data);
+            neutralSettings.Add((byte)RoleId.Opportunist, CustomOptionHolder.opportunistSpawnRate.data);
+            neutralSettings.Add((byte)RoleId.Vulture, CustomOptionHolder.vultureSpawnRate.data);
+            neutralSettings.Add((byte)RoleId.Lawyer, CustomOptionHolder.lawyerSpawnRate.data);
 
-            crewSettings.Add((byte)RoleId.Mayor, (CustomOptionHolder.mayorSpawnRate.getSelection(), 1));
-            crewSettings.Add((byte)RoleId.Engineer, (CustomOptionHolder.engineerSpawnRate.getSelection(), 1));
-            crewSettings.Add((byte)RoleId.Sheriff, (CustomOptionHolder.sheriffSpawnRate.getSelection(), 1));
-            crewSettings.Add((byte)RoleId.Lighter, (CustomOptionHolder.lighterSpawnRate.getSelection(), 1));
-            crewSettings.Add((byte)RoleId.Detective, (CustomOptionHolder.detectiveSpawnRate.getSelection(), 1));
-            crewSettings.Add((byte)RoleId.TimeMaster, (CustomOptionHolder.timeMasterSpawnRate.getSelection(), 1));
-            crewSettings.Add((byte)RoleId.Medic, (CustomOptionHolder.medicSpawnRate.getSelection(), 1));
-            crewSettings.Add((byte)RoleId.Seer, (CustomOptionHolder.seerSpawnRate.getSelection(), 1));
-            crewSettings.Add((byte)RoleId.Hacker, (CustomOptionHolder.hackerSpawnRate.getSelection(), 1));
-            crewSettings.Add((byte)RoleId.Tracker, (CustomOptionHolder.trackerSpawnRate.getSelection(), 1));
-            crewSettings.Add((byte)RoleId.Snitch, (CustomOptionHolder.snitchSpawnRate.getSelection(), 1));
-            crewSettings.Add((byte)RoleId.Bait, (CustomOptionHolder.baitSpawnRate.getSelection(), 1));
-            crewSettings.Add((byte)RoleId.Madmate, (CustomOptionHolder.madmateSpawnRate.getSelection(), 1));
-            crewSettings.Add((byte)RoleId.SecurityGuard, (CustomOptionHolder.securityGuardSpawnRate.getSelection(), 1));
-            crewSettings.Add((byte)RoleId.Medium, (CustomOptionHolder.mediumSpawnRate.getSelection(), 1));
+            crewSettings.Add((byte)RoleId.Mayor, CustomOptionHolder.mayorSpawnRate.data);
+            crewSettings.Add((byte)RoleId.Engineer, CustomOptionHolder.engineerSpawnRate.data);
+            crewSettings.Add((byte)RoleId.Sheriff, CustomOptionHolder.sheriffSpawnRate.data);
+            crewSettings.Add((byte)RoleId.Lighter, CustomOptionHolder.lighterSpawnRate.data);
+            crewSettings.Add((byte)RoleId.Detective, CustomOptionHolder.detectiveSpawnRate.data);
+            crewSettings.Add((byte)RoleId.TimeMaster, CustomOptionHolder.timeMasterSpawnRate.data);
+            crewSettings.Add((byte)RoleId.Medic, CustomOptionHolder.medicSpawnRate.data);
+            crewSettings.Add((byte)RoleId.Seer, CustomOptionHolder.seerSpawnRate.data);
+            crewSettings.Add((byte)RoleId.Hacker, CustomOptionHolder.hackerSpawnRate.data);
+            crewSettings.Add((byte)RoleId.Tracker, CustomOptionHolder.trackerSpawnRate.data);
+            crewSettings.Add((byte)RoleId.Snitch, CustomOptionHolder.snitchSpawnRate.data);
+            crewSettings.Add((byte)RoleId.Bait, CustomOptionHolder.baitSpawnRate.data);
+            crewSettings.Add((byte)RoleId.Madmate, CustomOptionHolder.madmateSpawnRate.data);
+            crewSettings.Add((byte)RoleId.SecurityGuard, CustomOptionHolder.securityGuardSpawnRate.data);
+            crewSettings.Add((byte)RoleId.Medium, CustomOptionHolder.mediumSpawnRate.data);
             if (impostors.Count > 1)
             {
                 // Only add Spy if more than 1 impostor as the spy role is otherwise useless
-                crewSettings.Add((byte)RoleId.Spy, (CustomOptionHolder.spySpawnRate.getSelection(), 1));
+                crewSettings.Add((byte)RoleId.Spy, CustomOptionHolder.spySpawnRate.data);
             }
 
-            impSettings.Add((byte)RoleId.Ninja, (CustomOptionHolder.ninjaSpawnRate.getSelection(), Mathf.RoundToInt(CustomOptionHolder.ninjaCount.getFloat())));
+            impSettings.Add((byte)RoleId.Ninja, CustomOptionHolder.ninjaSpawnRate.data);
 
             return new RoleAssignmentData
             {

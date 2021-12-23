@@ -175,6 +175,45 @@ namespace TheOtherRoles
         }
     }
 
+    public class CustomRoleOption : CustomOption
+    {
+        public CustomOption countOption = null;
+
+        public int rate
+        {
+            get
+            {
+                return getSelection();
+            }
+        }
+
+        public int count
+        {
+            get
+            {
+                if (countOption != null)
+                    return Mathf.RoundToInt(countOption.getFloat());
+
+                return 1;
+            }
+        }
+
+        public (int, int) data
+        {
+            get
+            {
+                return (rate, count);
+            }
+        }
+
+        public CustomRoleOption(int id, string name, Color color, int max = 15) :
+            base(id, Helpers.cs(color, name), CustomOptionHolder.rates, "", null, true, false, "")
+        {
+            if (max > 1)
+                countOption = CustomOption.Create(id + 10000, "roleNumAssigned", 1f, 1f, 15f, 1f, this, format: "unitPlayers");
+        }
+    }
+
     public class CustomOptionBlank : CustomOption
     {
         public CustomOptionBlank(CustomOption parent)
