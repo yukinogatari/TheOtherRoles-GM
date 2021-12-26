@@ -31,25 +31,35 @@ namespace TheOtherRoles
             Opportunist.clearAndReload();
             Ninja.clearAndReload();
             Madmate.clearAndReload();
+            Role.Clear();
         }
 
         public static void FixedUpdate()
         {
-            Ninja.FixedUpdate();
-            GM.FixedUpdate();
+            foreach (var role in Role.allRoles)
+            {
+                role.FixedUpdate();
+            }
         }
 
         public static void OnMeetingStart()
         {
+            foreach (var role in Role.allRoles)
+            {
+                role.OnMeetingStart();
+            }
+
             GM.resetZoom();
-            Ninja.OnMeetingStart();
             Camouflager.resetCamouflage();
             Morphling.resetMorph();
         }
 
         public static void OnMeetingEnd()
         {
-            Ninja.OnMeetingEnd();
+            foreach (var role in Role.allRoles)
+            {
+                role.OnMeetingEnd();
+            }
         }
 
         public static class Morphling

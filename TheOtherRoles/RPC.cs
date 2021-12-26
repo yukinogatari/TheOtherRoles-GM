@@ -390,7 +390,7 @@ namespace TheOtherRoles
                         break;
 
                     case RoleId.Sheriff:
-                        Sheriff.sheriff = oldShifter;
+                        Sheriff.swapRole(player, oldShifter);
                         break;
 
                     case RoleId.Lighter:
@@ -645,60 +645,65 @@ namespace TheOtherRoles
                 player.clearAllTasks();
 
             // Crewmate roles
-            if (player == Mayor.mayor) Mayor.clearAndReload();
-            if (player == Engineer.engineer) Engineer.clearAndReload();
-            if (player == Sheriff.sheriff) Sheriff.clearAndReload();
-            if (player == Lighter.lighter) Lighter.clearAndReload();
-            if (player == Detective.detective) Detective.clearAndReload();
-            if (player == TimeMaster.timeMaster) TimeMaster.clearAndReload();
-            if (player == Medic.medic) Medic.clearAndReload();
-            if (player == Shifter.shifter) Shifter.clearAndReload();
-            if (player == Seer.seer) Seer.clearAndReload();
-            if (player == Hacker.hacker) Hacker.clearAndReload();
-            if (player == Mini.mini) Mini.clearAndReload();
-            if (player == Tracker.tracker) Tracker.clearAndReload();
-            if (player == Snitch.snitch) Snitch.clearAndReload();
-            if (player == Swapper.swapper) Swapper.clearAndReload();
-            if (player == Spy.spy) Spy.clearAndReload();
-            if (player == SecurityGuard.securityGuard) SecurityGuard.clearAndReload();
-            if (player == Bait.bait) Bait.clearAndReload();
+            if (player.isRole(RoleId.Mayor)) Mayor.clearAndReload();
+            if (player.isRole(RoleId.Engineer)) Engineer.clearAndReload();
+            if (player.isRole(RoleId.Sheriff)) Sheriff.clearAndReload();
+            if (player.isRole(RoleId.Lighter)) Lighter.clearAndReload();
+            if (player.isRole(RoleId.Detective)) Detective.clearAndReload();
+            if (player.isRole(RoleId.TimeMaster)) TimeMaster.clearAndReload();
+            if (player.isRole(RoleId.Medic)) Medic.clearAndReload();
+            if (player.isRole(RoleId.Shifter)) Shifter.clearAndReload();
+            if (player.isRole(RoleId.Seer)) Seer.clearAndReload();
+            if (player.isRole(RoleId.Hacker)) Hacker.clearAndReload();
+            if (player.isRole(RoleId.Mini)) Mini.clearAndReload();
+            if (player.isRole(RoleId.Tracker)) Tracker.clearAndReload();
+            if (player.isRole(RoleId.Snitch)) Snitch.clearAndReload();
+            if (player.isRole(RoleId.Swapper)) Swapper.clearAndReload();
+            if (player.isRole(RoleId.Spy)) Spy.clearAndReload();
+            if (player.isRole(RoleId.SecurityGuard)) SecurityGuard.clearAndReload();
+            if (player.isRole(RoleId.Bait)) Bait.clearAndReload();
             if (player.isRole(RoleId.Madmate)) player.eraseRole(RoleId.Madmate);
             if (player.isRole(RoleId.Opportunist)) player.eraseRole(RoleId.Opportunist);
-            if (player == Medium.medium) Medium.clearAndReload();
+            if (player.isRole(RoleId.Medium)) Medium.clearAndReload();
 
             // Impostor roles
-            if (player == Morphling.morphling) Morphling.clearAndReload();
-            if (player == Camouflager.camouflager) Camouflager.clearAndReload();
-            if (player == Godfather.godfather) Godfather.clearAndReload();
-            if (player == Mafioso.mafioso) Mafioso.clearAndReload();
-            if (player == Janitor.janitor) Janitor.clearAndReload();
-            if (player == Vampire.vampire) Vampire.clearAndReload();
-            if (player == Eraser.eraser) Eraser.clearAndReload();
-            if (player == Trickster.trickster) Trickster.clearAndReload();
-            if (player == Cleaner.cleaner) Cleaner.clearAndReload();
-            if (player == Warlock.warlock) Warlock.clearAndReload();
-            if (player == Witch.witch) Witch.clearAndReload();
+            if (player.isRole(RoleId.Morphling)) Morphling.clearAndReload();
+            if (player.isRole(RoleId.Camouflager)) Camouflager.clearAndReload();
+            if (player.isRole(RoleId.Godfather)) Godfather.clearAndReload();
+            if (player.isRole(RoleId.Mafioso)) Mafioso.clearAndReload();
+            if (player.isRole(RoleId.Janitor)) Janitor.clearAndReload();
+            if (player.isRole(RoleId.Vampire)) Vampire.clearAndReload();
+            if (player.isRole(RoleId.Eraser)) Eraser.clearAndReload();
+            if (player.isRole(RoleId.Trickster)) Trickster.clearAndReload();
+            if (player.isRole(RoleId.Cleaner)) Cleaner.clearAndReload();
+            if (player.isRole(RoleId.Warlock)) Warlock.clearAndReload();
+            if (player.isRole(RoleId.Witch)) Witch.clearAndReload();
             if (player.isRole(RoleId.Ninja)) player.eraseRole(RoleId.Ninja);
 
             // Other roles
-            if (player == Jester.jester) Jester.clearAndReload();
-            if (player == Arsonist.arsonist) Arsonist.clearAndReload();
+            if (player.isRole(RoleId.Jester)) Jester.clearAndReload();
+            if (player.isRole(RoleId.Arsonist)) Arsonist.clearAndReload();
             if (Guesser.isGuesser(player.PlayerId)) Guesser.clear(player.PlayerId);
-            if (!ignoreLovers && player.isLovers()) { // The whole Lover couple is being erased
+            if (!ignoreLovers && player.isLovers())
+            { // The whole Lover couple is being erased
                 Lovers.eraseCouple(player);
             }
-            if (player == Jackal.jackal) { // Promote Sidekick and hence override the the Jackal or erase Jackal
-                if (Sidekick.promotesToJackal && Sidekick.sidekick != null && !Sidekick.sidekick.Data.IsDead) {
+            if (player.isRole(RoleId.Jackal))
+            { // Promote Sidekick and hence override the the Jackal or erase Jackal
+                if (Sidekick.promotesToJackal && Sidekick.sidekick != null && !Sidekick.sidekick.Data.IsDead)
+                {
                     RPCProcedure.sidekickPromotes();
-                } else {
+                }
+                else
+                {
                     Jackal.clearAndReload();
                 }
             }
-            if (player == Sidekick.sidekick) Sidekick.clearAndReload();
-            if (player == BountyHunter.bountyHunter) BountyHunter.clearAndReload();
-            if (player == Vulture.vulture) Vulture.clearAndReload();
-            if (player == Lawyer.lawyer) Lawyer.clearAndReload();
-            if (player == Pursuer.pursuer) Pursuer.clearAndReload();
+            if (player.isRole(RoleId.Sidekick)) Sidekick.clearAndReload();
+            if (player.isRole(RoleId.BountyHunter)) BountyHunter.clearAndReload();
+            if (player.isRole(RoleId.Vulture)) Vulture.clearAndReload();
+            if (player.isRole(RoleId.Lawyer)) Lawyer.clearAndReload();
+            if (player.isRole(RoleId.Pursuer)) Pursuer.clearAndReload();
         }
 
         public static void setFutureErased(byte playerId) {

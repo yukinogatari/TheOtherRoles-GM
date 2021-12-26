@@ -21,7 +21,7 @@ namespace TheOtherRoles.Patches
             bool isReactor = task.TaskType == TaskTypes.StopCharles || task.TaskType == TaskTypes.ResetSeismic || task.TaskType == TaskTypes.ResetReactor;
             bool isO2 = task.TaskType == TaskTypes.RestoreOxy;
 
-            if (Swapper.swapper != null && pc == Swapper.swapper && (isLights || isComms))
+            if (pc.isRole(RoleId.Swapper) && (isLights || isComms))
             {
                 return true;
             }

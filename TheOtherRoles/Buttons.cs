@@ -16,7 +16,6 @@ namespace TheOtherRoles
     {
         private static CustomButton engineerRepairButton;
         private static CustomButton janitorCleanButton;
-        private static CustomButton sheriffKillButton;
         private static CustomButton timeMasterShieldButton;
         private static CustomButton medicShieldButton;
         private static CustomButton shifterShiftButton;
@@ -48,7 +47,6 @@ namespace TheOtherRoles
         public static CustomButton witchSpellButton;
 
         public static TMPro.TMP_Text securityGuardButtonScrewsText;
-        public static TMPro.TMP_Text sheriffNumShotsText;
         public static TMPro.TMP_Text vultureNumCorpsesText;
         public static TMPro.TMP_Text pursuerButtonBlanksText;
         public static TMPro.TMP_Text hackerAdminTableChargesText;
@@ -58,7 +56,6 @@ namespace TheOtherRoles
         {
             engineerRepairButton.MaxTimer = 0f;
             janitorCleanButton.MaxTimer = Janitor.cooldown;
-            sheriffKillButton.MaxTimer = Sheriff.cooldown;
             timeMasterShieldButton.MaxTimer = TimeMaster.cooldown;
             medicShieldButton.MaxTimer = 0f;
             shifterShiftButton.MaxTimer = 0f;
@@ -219,74 +216,6 @@ namespace TheOtherRoles
             );
             janitorCleanButton.buttonText = ModTranslation.getString("CleanText");
 
-            // Sheriff Kill
-            sheriffKillButton = new CustomButton(
-                () =>
-                {
-                    if (Sheriff.numShots <= 0)
-                    {
-                        return;
-                    }
-
-                    MurderAttemptResult murderAttemptResult = Helpers.checkMuderAttempt(Sheriff.sheriff, Sheriff.currentTarget);
-                    if (murderAttemptResult == MurderAttemptResult.SuppressKill) return;
-
-                    if (murderAttemptResult == MurderAttemptResult.PerformKill)
-                    {
-
-                        bool misfire = false;
-                        byte targetId = Sheriff.currentTarget.PlayerId; ;
-                        if ((Sheriff.currentTarget.Data.Role.IsImpostor && (Sheriff.currentTarget != Mini.mini || Mini.isGrownUp())) ||
-                            (Sheriff.spyCanDieToSheriff && Spy.spy == Sheriff.currentTarget) ||
-                            (Sheriff.madmateCanDieToSheriff && Sheriff.currentTarget.isRole(RoleId.Madmate)) ||
-                            (Sheriff.canKillNeutrals && Sheriff.currentTarget.isNeutral()) ||
-                            (Jackal.jackal == Sheriff.currentTarget || Sidekick.sidekick == Sheriff.currentTarget))
-                        {
-                            //targetId = Sheriff.currentTarget.PlayerId;
-                            misfire = false;
-                        }
-                        else
-                        {
-                            //targetId = PlayerControl.LocalPlayer.PlayerId;
-                            misfire = true;
-                        }
-                        MessageWriter killWriter = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.SheriffKill, Hazel.SendOption.Reliable, -1);
-                        killWriter.Write(Sheriff.sheriff.Data.PlayerId);
-                        killWriter.Write(targetId);
-                        killWriter.Write(misfire);
-                        AmongUsClient.Instance.FinishRpcImmediately(killWriter);
-                        RPCProcedure.sheriffKill(Sheriff.sheriff.Data.PlayerId, targetId, misfire);
-                    }
-
-                    sheriffKillButton.Timer = sheriffKillButton.MaxTimer;
-                    Sheriff.currentTarget = null;
-                    Sheriff.numShots--;
-                },
-                () => { return Sheriff.sheriff != null && Sheriff.sheriff == PlayerControl.LocalPlayer && Sheriff.numShots > 0 && !PlayerControl.LocalPlayer.Data.IsDead; },
-                () =>
-                {
-                    if (sheriffNumShotsText != null)
-                    {
-                        if (Sheriff.numShots > 0)
-                            sheriffNumShotsText.text = String.Format(ModTranslation.getString("sheriffShots"), Sheriff.numShots);
-                        else
-                            sheriffNumShotsText.text = "";
-                    }
-                    return Sheriff.currentTarget && PlayerControl.LocalPlayer.CanMove;
-                },
-                () => { sheriffKillButton.Timer = sheriffKillButton.MaxTimer; },
-                __instance.KillButton.graphic.sprite,
-                new Vector3(0f, 1f, 0),
-                __instance,
-                __instance.KillButton,
-                KeyCode.Q
-            );
-
-            sheriffNumShotsText = GameObject.Instantiate(sheriffKillButton.actionButton.cooldownTimerText, sheriffKillButton.actionButton.cooldownTimerText.transform.parent);
-            sheriffNumShotsText.text = "";
-            sheriffNumShotsText.enableWordWrapping = false;
-            sheriffNumShotsText.transform.localScale = Vector3.one * 0.5f;
-            sheriffNumShotsText.transform.localPosition += new Vector3(-0.05f, 0.7f, 0);
 
             // Time Master Rewind Time
             timeMasterShieldButton = new CustomButton(

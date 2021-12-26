@@ -18,7 +18,7 @@ namespace TheOtherRoles.Patches
     {
         // Helpers
 
-        static PlayerControl setTarget(bool onlyCrewmates = false, bool targetPlayersInVents = false, List<PlayerControl> untargetablePlayers = null, PlayerControl targetingPlayer = null)
+        public static PlayerControl setTarget(bool onlyCrewmates = false, bool targetPlayersInVents = false, List<PlayerControl> untargetablePlayers = null, PlayerControl targetingPlayer = null)
         {
             PlayerControl result = null;
             float num = GameOptionsData.KillDistances[Mathf.Clamp(PlayerControl.GameOptions.KillDistance, 0, 2)];
@@ -76,7 +76,7 @@ namespace TheOtherRoles.Patches
             return result;
         }
 
-        static void setPlayerOutline(PlayerControl target, Color color)
+        public static void setPlayerOutline(PlayerControl target, Color color)
         {
             if (target == null || target.myRend == null) return;
 
@@ -193,13 +193,6 @@ namespace TheOtherRoles.Patches
             if (Morphling.morphling == null || Morphling.morphling != PlayerControl.LocalPlayer) return;
             Morphling.currentTarget = setTarget();
             setPlayerOutline(Morphling.currentTarget, Morphling.color);
-        }
-
-        static void sheriffSetTarget()
-        {
-            if (Sheriff.sheriff == null || Sheriff.sheriff != PlayerControl.LocalPlayer || Sheriff.numShots <= 0) return;
-            Sheriff.currentTarget = setTarget();
-            setPlayerOutline(Sheriff.currentTarget, Sheriff.color);
         }
 
         static void trackerSetTarget()
@@ -533,7 +526,7 @@ namespace TheOtherRoles.Patches
                     }
 
                     var (tasksCompleted, tasksTotal) = TasksHandler.taskInfo(p.Data);
-                    string roleNames = RoleInfo.GetRolesString(p, true);
+                    string roleNames = RoleInfo.GetRolesString(p, true, new RoleId[] { RoleId.Lovers });
 
                     var completedStr = commsActive ? "?" : tasksCompleted.ToString();
                     string taskInfo = tasksTotal > 0 ? $"<color=#FAD934FF>({completedStr}/{tasksTotal})</color>" : "";
@@ -945,8 +938,6 @@ namespace TheOtherRoles.Patches
                 medicSetTarget();
                 // Shifter
                 shifterUpdate();
-                // Sheriff
-                sheriffSetTarget();
                 // Detective
                 detectiveUpdateFootPrints();
                 // Tracker
@@ -1228,13 +1219,13 @@ namespace TheOtherRoles.Patches
                 })));
             }
 
-            if (PlayerControl.LocalPlayer == __instance)
-                Ninja.onKill(__instance);
+            __instance.OnKill();
+            target.OnDeath();
         }
     }
 
     [HarmonyPatch(typeof(PlayerControl), nameof(PlayerControl.SetKillTimer))]
-    class PlayerControlSetCoolDownPatch
+    static class PlayerControlSetCoolDownPatch
     {
         public static bool Prefix(PlayerControl __instance, [HarmonyArgument(0)] float time)
         {
@@ -1245,9 +1236,17 @@ namespace TheOtherRoles.Patches
             if (BountyHunter.bountyHunter != null && PlayerControl.LocalPlayer == BountyHunter.bountyHunter) addition = BountyHunter.punishmentTime;
             if (PlayerControl.LocalPlayer.isRole(RoleId.Ninja) && Ninja.isPenalized(PlayerControl.LocalPlayer)) addition = Ninja.killPenalty;
 
-            __instance.killTimer = Mathf.Clamp(time, 0f, PlayerControl.GameOptions.KillCooldown * multiplier + addition);
-            DestroyableSingleton<HudManager>.Instance.KillButton.SetCoolDown(__instance.killTimer, PlayerControl.GameOptions.KillCooldown * multiplier + addition);
+            float max = Mathf.Max(PlayerControl.GameOptions.KillCooldown * multiplier + addition, __instance.killTimer);
+            __instance.SetKillTimerUnchecked(Mathf.Clamp(time, 0f, max), max);
             return false;
+        }
+
+        public static void SetKillTimerUnchecked(this PlayerControl player, float time, float max = float.MinValue)
+        {
+            if (max == float.MinValue) max = time;
+
+            player.killTimer = time;
+            DestroyableSingleton<HudManager>.Instance.KillButton.SetCoolDown(time, max);
         }
     }
 

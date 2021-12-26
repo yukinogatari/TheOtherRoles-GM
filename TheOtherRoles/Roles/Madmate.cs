@@ -1,25 +1,11 @@
-using System.Net;
-using System.Linq;
-using BepInEx;
-using BepInEx.Configuration;
-using BepInEx.IL2CPP;
 using HarmonyLib;
-using Hazel;
-using System;
 using System.Collections.Generic;
-using System.Collections;
-using System.IO;
 using UnityEngine;
-using TheOtherRoles.Objects;
-using static TheOtherRoles.GameHistory;
-using static TheOtherRoles.TheOtherRoles;
-using static TheOtherRoles.TheOtherRolesGM;
-using TheOtherRoles.Patches;
 
 namespace TheOtherRoles
 {
     [HarmonyPatch]
-    public class Madmate : Role<Madmate>
+    public class Madmate : RoleBase<Madmate>
     {
         public static Color color = Palette.ImpostorRed;
 
@@ -28,8 +14,9 @@ namespace TheOtherRoles
         public static bool canSabotage = false;
         public static bool canFixComm = true;
 
-        public Madmate() {
-            roleType = RoleId.Madmate;
+        public Madmate()
+        {
+            RoleType = roleId = RoleId.Madmate;
         }
 
         public static void clearAndReload()

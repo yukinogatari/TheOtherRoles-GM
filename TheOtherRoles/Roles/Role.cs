@@ -24,29 +24,43 @@ namespace TheOtherRoles
     {
         public static Dictionary<Type, RoleId> allRoleTypes = new Dictionary<Type, RoleId>
         {
-            { typeof(Role<Ninja>), RoleId.Ninja },
-            { typeof(Role<Madmate>), RoleId.Madmate },
-            { typeof(Role<Opportunist>), RoleId.Opportunist },
+            { typeof(RoleBase<Sheriff>), RoleId.Sheriff },
+            { typeof(RoleBase<Ninja>), RoleId.Ninja },
+            { typeof(RoleBase<Madmate>), RoleId.Madmate },
+            { typeof(RoleBase<Opportunist>), RoleId.Opportunist },
         };
     }
 
+    public abstract class Role
+    {
+        public static List<Role> allRoles = new List<Role>();
+        public PlayerControl player;
+        public RoleId roleId;
+
+        public virtual void OnMeetingStart() { }
+        public virtual void OnMeetingEnd() { }
+        public virtual void FixedUpdate() { }
+        public virtual void OnKill() { }
+        public virtual void OnDeath() { }
+
+        public static void Clear()
+        {
+            allRoles = new List<Role>();
+        }
+    }
+
     [HarmonyPatch]
-    public abstract class Role<T> where T : Role<T>, new()
+    public abstract class RoleBase<T> : Role where T : RoleBase<T>, new()
     {
         public static List<T> players = new List<T>();
-        public PlayerControl player;
-        public RoleId roleType;
+        public static RoleId RoleType;
 
         public void Init(PlayerControl player)
         {
             this.player = player;
             players.Add((T)this);
+            allRoles.Add(this);
         }
-
-        //public abstract void OnMeetingStart();
-        //public abstract void OnMeetingEnd();
-        //public abstract void FixedUpdate();
-        //public abstract void onKill();
 
         public static T local
         {
@@ -85,6 +99,11 @@ namespace TheOtherRoles
             get { return players.Count > 0; }
         }
 
+        public static void _OnKill(PlayerControl player)
+        {
+
+        }
+
         public static T getRole(PlayerControl player = null)
         {
             player = player ?? PlayerControl.LocalPlayer;
@@ -107,11 +126,8 @@ namespace TheOtherRoles
 
         public static void eraseRole(PlayerControl player)
         {
-            var index = players.FindIndex(x => x.player == player);
-            if (index >= 0)
-            {
-                players.RemoveAt(index);
-            }
+            players.RemoveAll(x => x.player == player && x.roleId == RoleType);
+            allRoles.RemoveAll(x => x.player == player && x.roleId == RoleType);
         }
 
         public static void swapRole(PlayerControl p1, PlayerControl p2)
@@ -124,7 +140,7 @@ namespace TheOtherRoles
         }
     }
 
-    public static class RoleExtensions
+    public static class RoleHelpers
     {
         public static bool isRole(this PlayerControl player, RoleId role)
         {
@@ -144,8 +160,6 @@ namespace TheOtherRoles
                     return Mayor.mayor == player;
                 case RoleId.Engineer:
                     return Engineer.engineer == player;
-                case RoleId.Sheriff:
-                    return Sheriff.sheriff == player;
                 case RoleId.Lighter:
                     return Lighter.lighter == player;
                 case RoleId.Godfather:
@@ -247,9 +261,6 @@ namespace TheOtherRoles
                         break;
                     case RoleId.Engineer:
                         Engineer.engineer = player;
-                        break;
-                    case RoleId.Sheriff:
-                        Sheriff.sheriff = player;
                         break;
                     case RoleId.Lighter:
                         Lighter.lighter = player;
@@ -379,6 +390,28 @@ namespace TheOtherRoles
                     }
                 }
                 TheOtherRolesPlugin.Logger.LogError($"eraseRole: no method found for role type {role}");
+            }
+        }
+
+        public static void OnKill(this PlayerControl player)
+        {
+            foreach (var r in Role.allRoles)
+            {
+                if (r.player == player)
+                {
+                    r.OnKill();
+                }
+            }
+        }
+
+        public static void OnDeath(this PlayerControl player)
+        {
+            foreach (var r in Role.allRoles)
+            {
+                if (r.player == player)
+                {
+                    r.OnDeath();
+                }
             }
         }
     }

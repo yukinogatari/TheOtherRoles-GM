@@ -128,6 +128,9 @@ namespace TheOtherRoles
             var couple1 = couples.FindIndex(x => x.lover1 == player1 || x.lover2 == player1);
             var couple2 = couples.FindIndex(x => x.lover1 == player2 || x.lover2 == player2);
 
+            // trying to swap within the same couple, just ignore
+            if (couple1 == couple2) return;
+
             if (couple1 >= 0)
             {
                 if (couples[couple1].lover1 == player1) couples[couple1].lover1 = player2;

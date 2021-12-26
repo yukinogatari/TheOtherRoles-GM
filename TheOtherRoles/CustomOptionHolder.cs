@@ -454,7 +454,7 @@ namespace TheOtherRoles {
             engineerHighlightForImpostors = CustomOption.Create(92, "engineerImpostorsSeeVent", true, engineerSpawnRate);
             engineerHighlightForTeamJackal = CustomOption.Create(93, "engineerJackalSeeVent", true, engineerSpawnRate);
 
-            sheriffSpawnRate = new CustomRoleOption(100, "sheriff", Sheriff.color, 1);
+            sheriffSpawnRate = new CustomRoleOption(100, "sheriff", Sheriff.color, 15);
             sheriffCooldown = CustomOption.Create(101, "sheriffCooldown", 30f, 2.5f, 60f, 2.5f, sheriffSpawnRate, format: "unitSeconds");
             sheriffNumShots = CustomOption.Create(103, "sheriffNumShots", 2f, 1f, 15f, 1f, sheriffSpawnRate, format: "unitShots");
             sheriffMisfireKillsTarget = CustomOption.Create(104, "sheriffMisfireKillsTarget", false, sheriffSpawnRate);

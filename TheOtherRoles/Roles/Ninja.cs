@@ -1,25 +1,18 @@
-using System.Net;
 using System.Linq;
-using BepInEx;
-using BepInEx.Configuration;
-using BepInEx.IL2CPP;
 using HarmonyLib;
 using Hazel;
 using System;
 using System.Collections.Generic;
-using System.Collections;
-using System.IO;
 using UnityEngine;
 using TheOtherRoles.Objects;
-using static TheOtherRoles.GameHistory;
-using static TheOtherRoles.TheOtherRoles;
-using static TheOtherRoles.TheOtherRolesGM;
 using TheOtherRoles.Patches;
 
 namespace TheOtherRoles
 {
     [HarmonyPatch]
-    public class Ninja : Role<Ninja> { 
+    public class Ninja : RoleBase<Ninja> {
+
+        private static CustomButton ninjaButton;
 
         public static Color color = Palette.ImpostorRed;
 
@@ -37,37 +30,29 @@ namespace TheOtherRoles
 
         public Ninja()
         {
-            roleType = RoleId.Ninja;
+            RoleType = roleId = RoleId.Ninja;
             penalized = false;
             stealthed = false;
             stealthedAt = DateTime.UtcNow;
         }
 
-        public static void OnMeetingStart()
+        public override void OnMeetingStart()
         {
-            foreach (var ninja in players)
-            {
-                ninja.stealthed = false;
-            }
+            stealthed = false;
         }
 
-        public static void OnMeetingEnd()
+        public override void OnMeetingEnd()
         {
-            foreach (var ninja in players)
+            if (player == PlayerControl.LocalPlayer)
             {
-                if (ninja.player == PlayerControl.LocalPlayer && ninja.penalized)
+                if (penalized)
                 {
-                    ninja.player.SetKillTimer(PlayerControl.GameOptions.KillCooldown + killPenalty);
-                }
-                else
+                    player.SetKillTimerUnchecked(PlayerControl.GameOptions.KillCooldown + killPenalty);
+                } else
                 {
-                    ninja.player.SetKillTimer(PlayerControl.GameOptions.KillCooldown);
+                    player.SetKillTimer(PlayerControl.GameOptions.KillCooldown);
                 }
             }
-        }
-
-        public static void FixedUpdate()
-        {
         }
 
         public static bool isStealthed(PlayerControl player)
@@ -85,7 +70,7 @@ namespace TheOtherRoles
             if (isRole(player) && fadeTime > 0f)
             {
                 Ninja n = players.First(x => x.player == player);
-                return Math.Min(1.0f, (float)(DateTime.UtcNow - n.stealthedAt).TotalSeconds / fadeTime);
+                return Mathf.Min(1.0f, (float)(DateTime.UtcNow - n.stealthedAt).TotalSeconds / fadeTime);
             }
             return 1.0f;
         }
@@ -110,16 +95,11 @@ namespace TheOtherRoles
             }
         }
 
-        public static void onKill(PlayerControl player)
+        public override void OnKill()
         {
-            if (isRole(player))
-            {
-                Ninja n = players.First(x => x.player == player);
-                n.penalized = n.stealthed;
-
-                float penalty = n.penalized ? killPenalty : 0f;
-                player.SetKillTimer(PlayerControl.GameOptions.KillCooldown + penalty);
-            }
+            penalized = stealthed;
+            float penalty = penalized ? killPenalty : 0f;
+            player.SetKillTimerUnchecked(PlayerControl.GameOptions.KillCooldown + penalty);
         }
 
         private static Sprite buttonSprite;
@@ -128,6 +108,66 @@ namespace TheOtherRoles
             if (buttonSprite) return buttonSprite;
             buttonSprite = Helpers.loadSpriteFromResources("TheOtherRoles.Resources.NinjaButton.png", 115f);
             return buttonSprite;
+        }
+
+        public static void MakeButtons(HudManager hm)
+        {
+            // Ninja stealth
+            ninjaButton = new CustomButton(
+                () => {
+                    if (ninjaButton.isEffectActive)
+                    {
+                        ninjaButton.Timer = 0;
+                        return;
+                    }
+
+                    MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.NinjaStealth, Hazel.SendOption.Reliable, -1);
+                    writer.Write(PlayerControl.LocalPlayer.PlayerId);
+                    writer.Write(true);
+                    AmongUsClient.Instance.FinishRpcImmediately(writer);
+                    RPCProcedure.ninjaStealth(PlayerControl.LocalPlayer.PlayerId, true);
+                },
+                () => { return PlayerControl.LocalPlayer.isRole(RoleId.Ninja) && !PlayerControl.LocalPlayer.Data.IsDead; },
+                () => {
+                    if (ninjaButton.isEffectActive)
+                    {
+                        ninjaButton.buttonText = ModTranslation.getString("NinjaUnstealthText");
+                    }
+                    else
+                    {
+                        ninjaButton.buttonText = ModTranslation.getString("NinjaText");
+                    }
+                    return PlayerControl.LocalPlayer.CanMove;
+                },
+                () => {
+                    ninjaButton.Timer = ninjaButton.MaxTimer = Ninja.stealthCooldown;
+                },
+                Ninja.getButtonSprite(),
+                new Vector3(-1.8f, -0.06f, 0),
+                hm,
+                hm.KillButton,
+                KeyCode.F,
+                true,
+                Ninja.stealthDuration,
+                () => {
+                    ninjaButton.Timer = ninjaButton.MaxTimer = Ninja.stealthCooldown;
+
+                    MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.NinjaStealth, Hazel.SendOption.Reliable, -1);
+                    writer.Write(PlayerControl.LocalPlayer.PlayerId);
+                    writer.Write(false);
+                    AmongUsClient.Instance.FinishRpcImmediately(writer);
+                    RPCProcedure.ninjaStealth(PlayerControl.LocalPlayer.PlayerId, false);
+
+                    PlayerControl.LocalPlayer.SetKillTimerUnchecked(Math.Max(PlayerControl.LocalPlayer.killTimer, Ninja.killPenalty));
+                }
+            );
+            ninjaButton.buttonText = ModTranslation.getString("NinjaText");
+            ninjaButton.effectCancellable = true;
+        }
+
+        public static void SetButtonCooldowns()
+        {
+            ninjaButton.MaxTimer = Ninja.stealthCooldown;
         }
 
         public static void clearAndReload()

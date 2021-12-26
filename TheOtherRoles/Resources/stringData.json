@@ -624,8 +624,8 @@
         "11": "\u30ed\u30fc\u30eb\u3092\u596a\u3063\u3066\u52dd\u5229\u3092\u63b4\u3081\u3088\u3046"
     },
     "shifterIsNeutralRate": {
-        "0": "Chance Shifter Is Neutral",
-        "11": "\u7b2c\uff13\u9663\u55b6\u306b\u306a\u308b\u78ba\u7387"
+        "0": "Chance Shifter Is Chain Shifter",
+        "11": "\u30c1\u30a7\u30a4\u30f3\u30b7\u30d5\u30bf\u30fc\u306b\u306a\u308b\u78ba\u7387"
     },
     "shifterShiftsModifiers": {
         "0": "Shifts Modifiers",

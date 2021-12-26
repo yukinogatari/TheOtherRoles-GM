@@ -518,9 +518,6 @@ namespace TheOtherRoles.Modules {
                         if (info.package == "Community Hats")
                             info.package = "communityHats";
 
-                        if (info.package == "‚µ‚¤‚ËƒRƒŒƒNƒVƒ‡ƒ“")
-                            info.package = "shiuneCollection";
-
                         hatdatas.Add(info);
                     }
                 }

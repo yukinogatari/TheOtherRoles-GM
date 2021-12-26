@@ -176,34 +176,6 @@ namespace TheOtherRoles
             }
         }
 
-        public static class Sheriff
-        {
-            public static PlayerControl sheriff;
-            public static Color color = new Color32(248, 205, 70, byte.MaxValue);
-
-            public static float cooldown = 30f;
-            public static int numShots = 2;
-            public static int maxShots = 2;
-            public static bool canKillNeutrals = false;
-            public static bool misfireKillsTarget = false;
-            public static bool spyCanDieToSheriff = false;
-            public static bool madmateCanDieToSheriff = false;
-
-            public static PlayerControl currentTarget;
-
-            public static void clearAndReload()
-            {
-                sheriff = null;
-                currentTarget = null;
-                cooldown = CustomOptionHolder.sheriffCooldown.getFloat();
-                maxShots = numShots = (int)CustomOptionHolder.sheriffNumShots.getFloat();
-                canKillNeutrals = CustomOptionHolder.sheriffCanKillNeutrals.getBool();
-                spyCanDieToSheriff = CustomOptionHolder.spyCanDieToSheriff.getBool();
-                madmateCanDieToSheriff = CustomOptionHolder.madmateCanDieToSheriff.getBool();
-                misfireKillsTarget = CustomOptionHolder.sheriffMisfireKillsTarget.getBool();
-            }
-        }
-
         public static class Lighter
         {
             public static PlayerControl lighter;

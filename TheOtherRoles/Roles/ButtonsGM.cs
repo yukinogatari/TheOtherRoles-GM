@@ -8,14 +8,13 @@ using TheOtherRoles.Modules;
 using TheOtherRoles.Objects;
 using System.Collections.Generic;
 using System.Linq;
+using TheOtherRoles.Patches;
 
 namespace TheOtherRoles
 {
     [HarmonyPatch]
     public static class ButtonsGM
     {
-        private static CustomButton ninjaButton;
-
         private static List<CustomButton> gmButtons;
         private static List<CustomButton> gmKillButtons;
         private static CustomButton gmZoomIn;
@@ -23,7 +22,8 @@ namespace TheOtherRoles
 
         public static void setCustomButtonCooldowns()
         {
-            ninjaButton.MaxTimer = Ninja.stealthCooldown;
+            Ninja.SetButtonCooldowns();
+            Sheriff.SetButtonCooldowns();
 
             foreach (CustomButton gmButton in gmButtons)
             {
@@ -38,57 +38,10 @@ namespace TheOtherRoles
             gmZoomOut.MaxTimer = 0.0f;
         }
 
-        public static void makeButtons(HudManager __instance)
+        public static void makeButtons(HudManager hm)
         {
-            // Ninja stealth
-            ninjaButton = new CustomButton(
-                () => {
-                    if (ninjaButton.isEffectActive)
-                    {
-                        ninjaButton.Timer = 0;
-                        return;
-                    }
-
-                    MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.NinjaStealth, Hazel.SendOption.Reliable, -1);
-                    writer.Write(Ninja.local.player.PlayerId);
-                    writer.Write(true);
-                    AmongUsClient.Instance.FinishRpcImmediately(writer);
-                    RPCProcedure.ninjaStealth(Ninja.local.player.PlayerId, true);
-                },
-                () => { return PlayerControl.LocalPlayer.isRole(RoleId.Ninja) && !PlayerControl.LocalPlayer.Data.IsDead; },
-                () => {
-                    if (ninjaButton.isEffectActive)
-                    {
-                        ninjaButton.buttonText = ModTranslation.getString("NinjaUnstealthText");
-                    }
-                    else
-                    {
-                        ninjaButton.buttonText = ModTranslation.getString("NinjaText");
-                    }
-                    return PlayerControl.LocalPlayer.CanMove;
-                },
-                () => {
-                    ninjaButton.Timer = ninjaButton.MaxTimer = Ninja.stealthCooldown;
-                },
-                Ninja.getButtonSprite(),
-                new Vector3(-1.8f, -0.06f, 0),
-                __instance,
-                __instance.KillButton,
-                KeyCode.F,
-                true,
-                Ninja.stealthDuration,
-                () => {
-                    ninjaButton.Timer = ninjaButton.MaxTimer = Ninja.stealthCooldown;
-
-                    MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.NinjaStealth, Hazel.SendOption.Reliable, -1);
-                    writer.Write(Ninja.local.player.PlayerId);
-                    writer.Write(false);
-                    AmongUsClient.Instance.FinishRpcImmediately(writer);
-                    RPCProcedure.ninjaStealth(Ninja.local.player.PlayerId, false);
-                }
-            );
-            ninjaButton.buttonText = ModTranslation.getString("NinjaText");
-            ninjaButton.effectCancellable = true;
+            Ninja.MakeButtons(hm);
+            Sheriff.MakeButtons(hm);
 
             gmButtons = new List<CustomButton>();
             gmKillButtons = new List<CustomButton>();
@@ -184,7 +137,7 @@ namespace TheOtherRoles
                     Vector3 pos = gmCalcPos(index);
                     Vector3 scale = new Vector3(0.4f, 0.8f, 1.0f);
 
-                    Vector3 iconBase = __instance.UseButton.transform.localPosition;
+                    Vector3 iconBase = hm.UseButton.transform.localPosition;
                     iconBase.x *= -1;
                     if (gmButtons[index].PositionOffset != pos)
                     {
@@ -249,8 +202,8 @@ namespace TheOtherRoles
                     // position
                     Vector3.zero,
                     // hudmanager
-                    __instance,
-                    __instance.UseButton,
+                    hm,
+                    hm.UseButton,
                     // keyboard shortcut
                     null,
                     true
@@ -274,8 +227,8 @@ namespace TheOtherRoles
                     // position
                     Vector3.zero,
                     // hudmanager
-                    __instance,
-                    __instance.KillButton,
+                    hm,
+                    hm.KillButton,
                     // keyboard shortcut
                     null,
                     true
@@ -297,12 +250,12 @@ namespace TheOtherRoles
                     if (Camera.main.orthographicSize < 18.0f)
                     {
                         Camera.main.orthographicSize *= 1.5f;
-                        __instance.UICamera.orthographicSize *= 1.5f;
+                        hm.UICamera.orthographicSize *= 1.5f;
                     }
 
-                    if (__instance.transform.localScale.x < 6.0f)
+                    if (hm.transform.localScale.x < 6.0f)
                     {
-                        __instance.transform.localScale *= 1.5f;
+                        hm.transform.localScale *= 1.5f;
                     }
 
                     /*TheOtherRolesPlugin.Instance.Log.LogInfo($"Camera zoom {Camera.main.orthographicSize} / {TaskPanelBehaviour.Instance.transform.localPosition.x}");*/
@@ -314,8 +267,8 @@ namespace TheOtherRoles
                 // position
                 Vector3.zero + Vector3.up * 3.75f + Vector3.right * 0.55f,
                 // hudmanager
-                __instance,
-                __instance.UseButton,
+                hm,
+                hm.UseButton,
                 // keyboard shortcut
                 KeyCode.PageDown,
                 false
@@ -331,12 +284,12 @@ namespace TheOtherRoles
                     if (Camera.main.orthographicSize > 3.0f)
                     {
                         Camera.main.orthographicSize /= 1.5f;
-                        __instance.UICamera.orthographicSize /= 1.5f;
+                        hm.UICamera.orthographicSize /= 1.5f;
                     }
 
-                    if (__instance.transform.localScale.x > 1.0f)
+                    if (hm.transform.localScale.x > 1.0f)
                     {
-                        __instance.transform.localScale /= 1.5f;
+                        hm.transform.localScale /= 1.5f;
                     }
 
                     /*TheOtherRolesPlugin.Instance.Log.LogInfo($"Camera zoom {Camera.main.orthographicSize} / {TaskPanelBehaviour.Instance.transform.localPosition.x}");*/
@@ -348,8 +301,8 @@ namespace TheOtherRoles
                 // position
                 Vector3.zero + Vector3.up * 3.75f + Vector3.right * 0.2f,
                 // hudmanager
-                __instance,
-                __instance.UseButton,
+                hm,
+                hm.UseButton,
                 // keyboard shortcut
                 KeyCode.PageUp,
                 false
