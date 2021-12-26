@@ -3,12 +3,12 @@
 This fork introduces a number of changes to [The Other Roles](https://github.com/Eisbison/TheOtherRoles).
 
 * New Roles
-  * [GM](#gm)
-  * [Madmate](#madmate)
-  * [Opportunist](#opportunist)
-  * [Ninja](#ninja)
-  * [Evil Swapper](#swapper)
-  * [Chain-Shifter](#shifter)
+  * [GM](#gm) by [Virtual_Dusk](https://twitter.com/Virtual_Dusk)
+  * [Madmate](#madmate) by [tomarai](https://github.com/tomarai)
+  * [Opportunist](#opportunist) by [libhalt](https://twitter.com/libhalt)
+  * [Ninja](#ninja) by [Virtual_Dusk](https://twitter.com/Virtual_Dusk)
+  * [Evil Swapper](#swapper) by [Virtual_Dusk](https://twitter.com/Virtual_Dusk)
+  * [Chain-Shifter](#shifter) by [Virtual_Dusk](https://twitter.com/Virtual_Dusk)
 * Pluralized Roles
   * Lovers (up to 7 couples)
   * Sheriff
@@ -16,13 +16,7 @@ This fork introduces a number of changes to [The Other Roles](https://github.com
 * Custom Hats
   * Almost 90 new hats drawn by members of the Japanese Among Us community
 
-# The Other Roles
-![eisbison banner](./Images/TOR_logo.png)
-<p align="center">
-This mod is not affiliated with Among Us or Innersloth LLC, and the content contained therein is not endorsed or otherwise sponsored by Innersloth LLC. Portions of the materials contained herein are property of Innersloth LLC. © Innersloth LLC.</p>
-
-![eisbison infographic](./Images/TOR_roles.jpg)
-
+This mod is not affiliated with Among Us or Innersloth LLC, and the content contained therein is not endorsed or otherwise sponsored by Innersloth LLC. Portions of the materials contained herein are property of Innersloth LLC. © Innersloth LLC.
 
 # The Other Roles
 
@@ -834,6 +828,8 @@ Depending on the options you can choose whether voting the Witch out will save a
 
 ## Ninja
 ### **Team: Impostors**
+Created by [Virtual_Dusk](https://twitter.com/Virtual_Dusk)
+Original Idea by [うるさくてすみま船](https://twitter.com/nakanocchi2)
 
 The Ninja is an Impostor that can turn invisible. While stealthed, the Ninja moves faster than a normal Crewmate, and kills don't cause them to warp. However, using their stealth ability increases their kill cooldown--a penalty for killing while invisible, and a short penalty applied after unstealthing.
 
@@ -1104,7 +1100,7 @@ This works especially well against the Eraser, but also gives the Eraser the pos
 The **special interactions** with the Shifter are noted in the chapters of the respective roles.\
 
 A Neutral version of the Shifter, known as the Chain-Shifter, is able to steal roles from any player, regardless of their team. The shifted player then inherits the role of Chain-Shifter, and must steal another player's role. The player who retains the Chain-Shifter role at the end of the game automatically loses.
-\
+
 **NOTE:**
 - The Shifter shift will always be triggered before the Erase (hence either the new role of the Shifter will be erased or the Shifter saves the role of their target, depending on whom the Eraser erased)
 - If the Shifter takes over a role, their new cooldowns will start at the maximum cooldown of the ability
