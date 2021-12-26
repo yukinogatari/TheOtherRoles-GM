@@ -1,8 +1,20 @@
-
 # The Other Roles: GM Edition
 
-This fork introduces a number of changes to [The Other Roles v2.8.1](https://github.com/Eisbison/TheOtherRoles). The most significant of which is the [GM](#gm) and [Madmate](#madmate) roles. It also adds support for [translating](#translation) the mod into any language currently supported by Among Us.
+This fork introduces a number of changes to [The Other Roles](https://github.com/Eisbison/TheOtherRoles).
 
+* New Roles
+  * [GM](#gm)
+  * [Madmate](#madmate)
+  * [Opportunist](#opportunist)
+  * [Ninja](#ninja)
+  * [Evil Swapper](#swapper)
+  * [Chain-Shifter](#shifter)
+* Pluralized Roles
+  * Lovers (up to 7 couples)
+  * Sheriff
+* [Translation](#translation) into any language supported by Among Us
+* Custom Hats
+  * Almost 90 new hats drawn by members of the Japanese Among Us community
 
 # The Other Roles
 ![eisbison banner](./Images/TOR_logo.png)
@@ -27,14 +39,14 @@ Even more roles are coming soon :)
 | [Eraser](#eraser) | [Lighter](#lighter) | [Opportunist](#opportunist) |  |
 | [Godfather (Mafia)](#mafia) | [Mayor](#mayor) | [Vulture](#vulture)  |  |
 | [Mafioso (Mafia)](#mafia) | [Medic](#medic) | [Lawyer](#lawyer) |  |
-| [Janitor (Mafia)](#mafia)  | [Security Guard](#security-guard) |  |  |
+| [Janitor (Mafia)](#mafia)  | [Security Guard](#security-guard) | [Chain-Shifter](#shifter) |  |
 | [Morphling](#morphling) | [Seer](#seer) |  |  |
 | [Trickster](#trickster) | [Sheriff](#sheriff) |  |  |
 | [Vampire](#vampire) | [Shifter](#shifter) |  |  |
 | [Warlock](#warlock) | [Snitch](#snitch) |  |  |
 | [Witch](#witch) | [Spy](#spy) |  |  |
-|  | [Swapper](#swapper) |  |  |
-|  | [Time Master](#time-master) |  |  |
+| [Ninja](#ninja) | [Nice Swapper](#swapper) |  |  |
+| [Evil Swapper](#swapper) | [Time Master](#time-master) |  |  |
 |  |  [Tracker](#tracker) |  |  |
 |  |  [Bait](#bait) |  |  |
 |  |  [Madmate](#madmate)  |  |  |
@@ -45,6 +57,7 @@ The [Role Assignment](#role-assignment) sections explains how the roles are bein
 # Releases
 | Among Us - Version | Mod Version | Link |
 |----------|-------------|-----------------|
+| 2021.12.15s (build num: 1421) | v3.3.0 GM | [Download](https://github.com/yukinogatari/TheOtherRoles-GM/releases/download/v3.3.0/TheOtherRoles-GM.v3.3.0.zip)
 | 2021.12.15s (build num: 1421) | v3.2.6 GM | [Download](https://github.com/yukinogatari/TheOtherRoles-GM/releases/download/v3.2.6/TheOtherRoles-GM.v3.2.6.zip)
 | 2021.12.14s (build num: 1402) | v3.2.5.3 GM | [Download](https://github.com/yukinogatari/TheOtherRoles-GM/releases/download/v3.2.5.3/TheOtherRoles-GM.v3.2.5.3.zip)
 | 2021.11.9.5s | v3.2.5.2 GM | [Download](https://github.com/yukinogatari/TheOtherRoles-GM/releases/download/v3.2.5.2/TheOtherRoles-GM.v3.2.5.2.zip)
@@ -474,77 +487,6 @@ The [Role Assignment](#role-assignment) sections explains how the roles are bein
 - A bug was removed where the game of the Lovers crashed if they were the last players killed by the host of the lobby.
 </details>
 
-# Installation
-## Windows Auto Installation/Updating Using The AmongUsModUpdater
-This tool was made by [Narua](https://github.com/Narua2010) and [Jolle](https://github.com/joelweih). It automatically installs/updates the TheOtherRoles mod to the newest version, runs the game and
-syncs your game options automatically.
-
-1. Simply get the newest [release](https://github.com/Narua2010/AmongUsModUpdater/releases/latest) of the [AmongUsModUpdater](https://github.com/Narua2010/AmongUsModUpdater)
-2. Unzip the folder and run the **setup.exe**
-
-If you have problems with the AmongUsModUpdater, make sure to [contact us](https://discord.gg/csa3pHYdPU).
-
-## Windows Manual Installation
-1. Download and unzip the newest [release](https://twitter.com/Virtual_Dusk/TheOtherRoles-GM/releases/latest)
-2. Find the folder of your game, for Steam players you can right click in Steam, on the game, a menu will appear proposing you to go to the folders.
-3. Make a copy of your game, it's not obligatory but advised, put it where you want.
-4. Drag or extract the files from the zip into your game, at the `.exe` level.
-5. Run the game (the first launch might take a while)
-
-Not working? You might want to install the dependency [vc_redist](https://aka.ms/vs/16/release/vc_redist.x86.exe)
-
-![Install](https://i.imgur.com/pvBAyZN.png)
-
-**Linux Manual**
-1. Install Among Us via Steam
-2. Download newest [release](https://github.com/Eisbison/TheOtherRoles/releases/latest) and extract it to ~/.steam/steam/steamapps/common/Among Us
-3. Enable `winhttp.dll` via the proton winecfg (https://docs.bepinex.dev/articles/advanced/steam_interop.html#open-winecfg-for-the-target-game)
-4. Launch the game via Steam
-
-# Custom Servers and 10+ Players
-We always recommend you to play on custom servers rather than on the official ones. If you want to play with more than 10 players in one lobby, you're required to use a custom server. Credits for the original implementation that allowed 10+ player lobbies go to the creators of the [CrowdedMod](https://github.com/CrowdedMods/CrowdedMod).
-
-**Setup the Clients:**
-1. Open the region menu where you can choose between the different regions
-2. Select the region *Custom*
-3. Enter the ip/domain and the port of your custom server in the corresponding text fields
-
-**Setup the Server:**
-1. Get the [Impostor](https://github.com/Impostor/Impostor) release for the Among Us version **2021.3.31 - 2021.4.2**
-2. Follow the steps (using the server release you just downloaded) on the official [Impostor-Documentation](https://github.com/Impostor/Impostor/wiki/Running-the-server)
-3. Make sure to set the following values to false in the `config.json` file:
-```
-    ...
-    "AntiCheat": {
-      "Enabled": false,
-      "BanIpFromGame": false
-    }
-```
-4. Make sure to forward the right ports on the hosting machine
-5. Run the server and setup the client
-
-**Setting up Server as Docker Container:** \
-If you want to run the server as a docker container you'll need to use the image
-```
-aeonlucid/impostor:nightly
-```
-(Currently only the "nightly" tag is starting a server supporting 2021.3.31 or later)
-
-In addition to running it, the environment variables to disable the AntiCheat feature need to be set.
-```
-IMPOSTOR_AntiCheat__Enabled=false
-IMPOSTOR_AntiCheat__BanIpFromGame=false
-```
-
-Example to docker run command:
-```
-docker run -p 22023:22023/udp --env IMPOSTOR_AntiCheat__Enabled=false --env IMPOSTOR_AntiCheat__BanIpFromGame=false aeonlucid/impostor:nightly
-```
-
-Or use to run it in the background
-```
-docker run -d -p 22023:22023/udp --env IMPOSTOR_AntiCheat__Enabled=false --env IMPOSTOR_AntiCheat__BanIpFromGame=false aeonlucid/impostor:nightly
-```
 
 
 # Credits & Resources
@@ -890,6 +832,10 @@ Depending on the options you can choose whether voting the Witch out will save a
 | Voting The Witch Saves All The Targets | If set to true, all the cursed targets will survive at the end of the meeting
 -----------------------
 
+## Ninja
+### **Team: Impostors**
+
+The Ninja is an Impostor that can turn invisible. While stealthed, the Ninja moves faster than a normal Crewmate, and kills don't cause them to warp. However, using their stealth ability increases their kill cooldown--a penalty for killing while invisible, and a short penalty applied after unstealthing.
 
 ## Guesser
 ### **Team: Crewmates or Impostors**
@@ -1148,7 +1094,7 @@ The Hacker can access his mobile gadgets (vitals & admin table), with a maximum 
 
 
 ## Shifter
-### **Team: Crewmates**
+### **Team: Crewmates or Neutral**
 The Shifter can take over the role of another Crewmate, the other player will transform into a Crewmate.\
 The Shift will always be performed at the end of the next meeting right before a player is exiled. The target needs to be chosen during the round.\
 Even if the Shifter or the target dies before the meeting, the Shift will still be performed.\
@@ -1156,6 +1102,8 @@ Swapping roles with an Impostor or Neutral fails and the Shifter commits suicide
 The Shifter aims to save roles from leaving the game, by e.g. taking over a Sheriff or Medic that is known to the Impostors.\
 This works especially well against the Eraser, but also gives the Eraser the possibility to act like a Shifter.\
 The **special interactions** with the Shifter are noted in the chapters of the respective roles.\
+
+A Neutral version of the Shifter, known as the Chain-Shifter, is able to steal roles from any player, regardless of their team. The shifted player then inherits the role of Chain-Shifter, and must steal another player's role. The player who retains the Chain-Shifter role at the end of the game automatically loses.
 \
 **NOTE:**
 - The Shifter shift will always be triggered before the Erase (hence either the new role of the Shifter will be erased or the Shifter saves the role of their target, depending on whom the Eraser erased)
@@ -1196,7 +1144,7 @@ The Time Master won't be affected by the rewind.\
 -----------------------
 
 ## Swapper
-### **Team: Crewmates**
+### **Team: Crewmates or Impostor**
 During meetings the Swapper can exchange votes that two people get (i.e. all votes
 that player A got will be given to player B and vice versa).\
 Because of the Swapper's strength in meetings, they might not start emergency meetings
