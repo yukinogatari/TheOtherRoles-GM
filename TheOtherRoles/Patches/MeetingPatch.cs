@@ -23,7 +23,7 @@ namespace TheOtherRoles.Patches {
         private static Sprite blankNameplate = null;
         public static bool nameplatesChanged = true;
 
-        static TMPro.TextMeshPro usesRemaining;
+        static TMPro.TextMeshPro meetingInfoText;
 
         public static void updateNameplate(PlayerVoteArea pva, byte playerId = Byte.MaxValue)
         {
@@ -267,8 +267,8 @@ namespace TheOtherRoles.Patches {
                 Swapper.playerId1 = Byte.MaxValue;
                 Swapper.playerId2 = Byte.MaxValue;
 
-                if (usesRemaining != null)
-                    usesRemaining.gameObject.SetActive(false);
+                if (meetingInfoText != null)
+                    meetingInfoText.gameObject.SetActive(false);
 
                 CustomOverlays.hideInfoOverlay();
 
@@ -422,13 +422,13 @@ namespace TheOtherRoles.Patches {
                         if (Guesser.hasMultipleShotsPerMeeting && Guesser.remainingShots(PlayerControl.LocalPlayer.PlayerId) > 1 && dyingTarget != PlayerControl.LocalPlayer)
                         {
                             __instance.playerStates.ToList().ForEach(x => { if (x.TargetPlayerId == dyingTarget.PlayerId && x.transform.FindChild("ShootButton") != null) UnityEngine.Object.Destroy(x.transform.FindChild("ShootButton").gameObject); });
-                            usesRemaining.text = String.Format(ModTranslation.getString("guesserGuessesLeft"), Guesser.remainingShots(PlayerControl.LocalPlayer.PlayerId));
                         }
                         else
                         {
                             __instance.playerStates.ToList().ForEach(x => { if (x.transform.FindChild("ShootButton") != null) UnityEngine.Object.Destroy(x.transform.FindChild("ShootButton").gameObject); });
-                            usesRemaining.gameObject.SetActive(false);
                         }
+
+                        updateMeetingText(__instance);
 
                         // Shoot player and send chat info if activated
                         MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.GuesserShoot, Hazel.SendOption.Reliable, -1);
@@ -457,20 +457,8 @@ namespace TheOtherRoles.Patches {
         static void populateButtonsPostfix(MeetingHud __instance) {
             nameplatesChanged = true;
 
-            // Uses remaining text for guesser/swapper
-            if (usesRemaining == null)
-            {
-                usesRemaining = UnityEngine.Object.Instantiate(HudManager.Instance.TaskText, __instance.transform);
-                usesRemaining.alignment = TMPro.TextAlignmentOptions.BottomLeft;
-                usesRemaining.transform.position = Vector3.zero;
-                usesRemaining.transform.localPosition = new Vector3(-3.07f, 3.33f, -20f);
-                usesRemaining.transform.localScale *= 1.1f;
-                usesRemaining.color = Palette.White;
-                usesRemaining.gameObject.SetActive(false);
-            }
-
             // Add Swapper Buttons
-            if (Swapper.swapper != null && PlayerControl.LocalPlayer == Swapper.swapper && Swapper.numSwaps > 0 && !Swapper.swapper.Data.IsDead) {
+            if (PlayerControl.LocalPlayer.isRole(RoleId.Swapper) && Swapper.numSwaps > 0 && !Swapper.swapper.Data.IsDead) {
                 selections = new bool[__instance.playerStates.Length];
                 renderers = new SpriteRenderer[__instance.playerStates.Length];
 
@@ -496,11 +484,6 @@ namespace TheOtherRoles.Patches {
                     renderers[i] = renderer;
                 }
 
-                if (Swapper.numSwaps > 0)
-                {
-                    usesRemaining.text = String.Format(ModTranslation.getString("swapperSwapsLeft"), Swapper.numSwaps);
-                    usesRemaining.gameObject.SetActive(true);
-                }
             }
 
             // Add overlay for spelled players
@@ -534,12 +517,46 @@ namespace TheOtherRoles.Patches {
                     button.OnClick.AddListener((UnityEngine.Events.UnityAction)(() => guesserOnClick(copiedIndex, __instance)));
                 }
 
-                var numGuesses = Guesser.remainingShots(PlayerControl.LocalPlayer.PlayerId);
-                if (numGuesses > 0)
-                {
-                    usesRemaining.text = String.Format(ModTranslation.getString("guesserGuessesLeft"), numGuesses);
-                    usesRemaining.gameObject.SetActive(true);
-                }
+            }
+        }
+
+        public static void updateMeetingText(MeetingHud __instance)
+        {
+            // Uses remaining text for guesser/swapper
+            if (meetingInfoText == null)
+            {
+                meetingInfoText = UnityEngine.Object.Instantiate(HudManager.Instance.TaskText, __instance.transform);
+                meetingInfoText.alignment = TMPro.TextAlignmentOptions.BottomLeft;
+                meetingInfoText.transform.position = Vector3.zero;
+                meetingInfoText.transform.localPosition = new Vector3(-3.07f, 3.33f, -20f);
+                meetingInfoText.transform.localScale *= 1.1f;
+                meetingInfoText.color = Palette.White;
+                meetingInfoText.gameObject.SetActive(false);
+            }
+
+            meetingInfoText.text = "";
+            meetingInfoText.gameObject.SetActive(false);
+
+            if (__instance.state != MeetingHud.VoteStates.Discussion && __instance.state != MeetingHud.VoteStates.NotVoted)
+                return;
+
+            if (PlayerControl.LocalPlayer.isRole(RoleId.Swapper) && Swapper.numSwaps > 0 && !Swapper.swapper.Data.IsDead)
+            {
+                meetingInfoText.text = String.Format(ModTranslation.getString("swapperSwapsLeft"), Swapper.numSwaps);
+                meetingInfoText.gameObject.SetActive(true);
+            }
+
+            var numGuesses = Guesser.remainingShots(PlayerControl.LocalPlayer.PlayerId);
+            if (Guesser.isGuesser(PlayerControl.LocalPlayer.PlayerId) && !PlayerControl.LocalPlayer.Data.IsDead && numGuesses > 0)
+            {
+                meetingInfoText.text = String.Format(ModTranslation.getString("guesserGuessesLeft"), numGuesses);
+                meetingInfoText.gameObject.SetActive(true);
+            }
+
+            if (PlayerControl.LocalPlayer.isRole(RoleId.Shifter) && Shifter.futureShift != null)
+            {
+                meetingInfoText.text = String.Format(ModTranslation.getString("shifterTargetInfo"), Shifter.futureShift.Data.PlayerName);
+                meetingInfoText.gameObject.SetActive(true);
             }
         }
 
@@ -548,6 +565,7 @@ namespace TheOtherRoles.Patches {
             static void Postfix(MeetingHud __instance)
             {
                 populateButtonsPostfix(__instance);
+                updateMeetingText(__instance);
             }
         }
 
@@ -558,6 +576,7 @@ namespace TheOtherRoles.Patches {
                 // Add swapper buttons
                 if (initialState) {
                     populateButtonsPostfix(__instance);
+                    updateMeetingText(__instance);
                 }
             }
         }

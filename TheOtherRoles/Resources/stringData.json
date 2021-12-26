@@ -635,6 +635,10 @@
         "0": "Can Shift Former Shifters",
         "11": "\u5143\u30b7\u30d5\u30bf\u30fc\u306b\u30b7\u30d5\u30c8\u3067\u304d\u308b"
     },
+    "shifterTargetInfo": {
+        "0": "Shift Target: {0}",
+        "11": "\u30b7\u30d5\u30c8\u5bfe\u8c61: {0}"
+    },
     "mayor": {
         "0": "Mayor",
         "11": "\u30e1\u30a4\u30e4\u30fc"

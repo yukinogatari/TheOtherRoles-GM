@@ -193,6 +193,7 @@ namespace TheOtherRoles.Patches {
                             player.NameText.text = Janitor.janitor.Data.PlayerName + " (J)";
             }
 
+            bool meetingShow = MeetingHud.Instance != null && (MeetingHud.Instance.state == MeetingHud.VoteStates.Discussion | MeetingHud.Instance.state == MeetingHud.VoteStates.NotVoted);
             // Lovers
             if (PlayerControl.LocalPlayer.isLovers() && PlayerControl.LocalPlayer.isAlive()) {
                 string suffix = Lovers.getIcon(PlayerControl.LocalPlayer);
@@ -201,7 +202,7 @@ namespace TheOtherRoles.Patches {
                 lover1.nameText.text += suffix;
                 lover2.nameText.text += suffix;
 
-                if (MeetingHud.Instance != null)
+                if (meetingShow)
                     foreach (PlayerVoteArea player in MeetingHud.Instance.playerStates)
                         if (lover1.PlayerId == player.TargetPlayerId || lover2.PlayerId == player.TargetPlayerId)
                             player.NameText.text += suffix;
@@ -214,7 +215,7 @@ namespace TheOtherRoles.Patches {
                     couple.lover1.nameText.text += suffix;
                     couple.lover2.nameText.text += suffix;
 
-                    if (MeetingHud.Instance != null)
+                    if (meetingShow)
                         foreach (PlayerVoteArea player in MeetingHud.Instance.playerStates)
                             if (couple.lover1.PlayerId == player.TargetPlayerId || couple.lover2.PlayerId == player.TargetPlayerId)
                                 player.NameText.text += suffix;
@@ -228,7 +229,7 @@ namespace TheOtherRoles.Patches {
                 string suffix = Helpers.cs(Lawyer.color, " §");
                 Lawyer.target.nameText.text += suffix;
 
-                if (MeetingHud.Instance != null)
+                if (meetingShow)
                     foreach (PlayerVoteArea player in MeetingHud.Instance.playerStates)
                         if (player.TargetPlayerId == Lawyer.target.PlayerId)
                             player.NameText.text += suffix;
@@ -236,7 +237,7 @@ namespace TheOtherRoles.Patches {
 
             // Hacker and Detective
             if (PlayerControl.LocalPlayer != null && !PlayerControl.LocalPlayer.Data.IsDead && (PlayerControl.LocalPlayer == Hacker.hacker || PlayerControl.LocalPlayer == Detective.detective || PlayerControl.LocalPlayer == Medium.medium)) {
-                if (MeetingHud.Instance != null) {
+                if (meetingShow) {
                     foreach (PlayerVoteArea player in MeetingHud.Instance.playerStates) {
                         var target = Helpers.playerById(player.TargetPlayerId);
                         if (target != null)  player.NameText.text += $" ({(Helpers.isLighterColor(target.Data.DefaultOutfit.ColorId) ? ModTranslation.getString("detectiveLightLabel") : ModTranslation.getString("detectiveDarkLabel"))})";
