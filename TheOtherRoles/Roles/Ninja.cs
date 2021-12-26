@@ -39,6 +39,8 @@ namespace TheOtherRoles
         public override void OnMeetingStart()
         {
             stealthed = false;
+            ninjaButton.isEffectActive = false;
+            ninjaButton.Timer = ninjaButton.MaxTimer = Ninja.stealthCooldown;
         }
 
         public override void OnMeetingEnd()
@@ -95,7 +97,7 @@ namespace TheOtherRoles
             }
         }
 
-        public override void OnKill()
+        public override void OnKill(PlayerControl target)
         {
             penalized = stealthed;
             float penalty = penalized ? killPenalty : 0f;

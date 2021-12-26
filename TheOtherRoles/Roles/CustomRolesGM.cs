@@ -62,6 +62,29 @@ namespace TheOtherRoles
             }
         }
 
+        public static void HandleDisconnect(PlayerControl player, DisconnectReasons reason)
+        {
+            foreach (var role in Role.allRoles)
+            {
+                role.HandleDisconnect(player, reason);
+            }
+            Lovers.HandleDisconnect(player, reason);
+            Shifter.HandleDisconnect(player, reason);
+        }
+
+        [HarmonyPatch(typeof(GameData), nameof(GameData.HandleDisconnect), new Type[] { typeof(PlayerControl), typeof(DisconnectReasons) })]
+        class HandleDisconnectPatch
+        {
+            public static void Postfix(GameData __instance, PlayerControl player, DisconnectReasons reason)
+            {
+                if (AmongUsClient.Instance.GameState == InnerNet.InnerNetClient.GameStates.Started)
+                {
+                    Helpers.log($"{player.PlayerId} disconnected because {reason}");
+                    HandleDisconnect(player, reason);
+                }
+            }
+        }
+
         public static class Morphling
         {
             public static PlayerControl morphling;
@@ -223,6 +246,11 @@ namespace TheOtherRoles
 
             public static bool isNeutral = false;
             public static bool shiftPastShifters = false;
+
+            public static void HandleDisconnect(PlayerControl player, DisconnectReasons reason)
+            {
+                if (futureShift == player) futureShift = null;
+            }
 
             private static Sprite buttonSprite;
             public static Sprite getButtonSprite()

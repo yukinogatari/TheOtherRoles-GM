@@ -44,8 +44,8 @@ namespace TheOtherRoles
             }
         }
 
-        public override void OnKill() { }
-        public override void OnDeath() { }
+        public override void OnKill(PlayerControl target) { }
+        public override void OnDeath(PlayerControl killer = null) { }
 
         public static void MakeButtons(HudManager hm) {
 

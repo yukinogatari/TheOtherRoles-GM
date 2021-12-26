@@ -40,8 +40,9 @@ namespace TheOtherRoles
         public virtual void OnMeetingStart() { }
         public virtual void OnMeetingEnd() { }
         public virtual void FixedUpdate() { }
-        public virtual void OnKill() { }
-        public virtual void OnDeath() { }
+        public virtual void OnKill(PlayerControl target) { }
+        public virtual void OnDeath(PlayerControl killer = null) { }
+        public virtual void HandleDisconnect(PlayerControl player, DisconnectReasons reason) { }
 
         public static void Clear()
         {
@@ -97,11 +98,6 @@ namespace TheOtherRoles
         public static bool exists
         {
             get { return players.Count > 0; }
-        }
-
-        public static void _OnKill(PlayerControl player)
-        {
-
         }
 
         public static T getRole(PlayerControl player = null)
@@ -393,24 +389,24 @@ namespace TheOtherRoles
             }
         }
 
-        public static void OnKill(this PlayerControl player)
+        public static void OnKill(this PlayerControl player, PlayerControl target)
         {
             foreach (var r in Role.allRoles)
             {
                 if (r.player == player)
                 {
-                    r.OnKill();
+                    r.OnKill(target);
                 }
             }
         }
 
-        public static void OnDeath(this PlayerControl player)
+        public static void OnDeath(this PlayerControl player, PlayerControl killer)
         {
             foreach (var r in Role.allRoles)
             {
                 if (r.player == player)
                 {
-                    r.OnDeath();
+                    r.OnDeath(killer);
                 }
             }
         }

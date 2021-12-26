@@ -1219,8 +1219,8 @@ namespace TheOtherRoles.Patches
                 })));
             }
 
-            __instance.OnKill();
-            target.OnDeath();
+            __instance.OnKill(target);
+            target.OnDeath(__instance);
         }
     }
 

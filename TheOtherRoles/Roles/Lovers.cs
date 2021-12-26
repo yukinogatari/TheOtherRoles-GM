@@ -243,6 +243,11 @@ namespace TheOtherRoles
             return getCouple(player)?.existingWithKiller == true;
         }
 
+        public static void HandleDisconnect(PlayerControl player, DisconnectReasons reason)
+        {
+            eraseCouple(player);
+        }
+
         public static void clearAndReload()
         {
             couples = new List<Couple>();
