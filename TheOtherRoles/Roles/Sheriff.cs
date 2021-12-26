@@ -37,8 +37,11 @@ namespace TheOtherRoles
         public override void OnMeetingEnd() { }
 
         public override void FixedUpdate() {
-            currentTarget = setTarget();
-            setPlayerOutline(currentTarget, Sheriff.color);
+            if (player == PlayerControl.LocalPlayer && numShots > 0)
+            {
+                currentTarget = setTarget();
+                setPlayerOutline(currentTarget, Sheriff.color);
+            }
         }
 
         public override void OnKill() { }

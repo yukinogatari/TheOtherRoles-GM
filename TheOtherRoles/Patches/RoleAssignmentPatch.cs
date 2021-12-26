@@ -212,8 +212,6 @@ namespace TheOtherRoles.Patches
                 bool isOnlyRole = !CustomOptionHolder.loversCanHaveAnotherRole.getBool();
                 if (rnd.Next(1, 101) <= CustomOptionHolder.loversSpawnRate.getSelection() * 10)
                 {
-                    Helpers.log($"Assigning couple {i}: {singleCrew.Count} {singleImps.Count}");
-
                     int lover1 = -1;
                     int lover2 = -1;
                     int lover1Index = -1;
@@ -254,7 +252,6 @@ namespace TheOtherRoles.Patches
 
                     if (lover1 >= 0 && lover2 >= 0)
                     {
-                        Helpers.log($"Assigned couple {i}: {lover1} {lover2}");
                         MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.SetLovers, Hazel.SendOption.Reliable, -1);
                         writer.Write((byte)lover1);
                         writer.Write((byte)lover2);
