@@ -134,6 +134,8 @@ namespace TheOtherRoles
         UseAdminTime,
         UseCameraTime,
         UseVitalsTime,
+        ArsonistDouse,
+        VultureEat,
     }
 
     public static class RPCProcedure {
@@ -271,6 +273,10 @@ namespace TheOtherRoles
             PlayerControl sheriff = Helpers.playerById(sheriffId);
             PlayerControl target = Helpers.playerById(targetId);
             if (sheriff == null || target == null) return;
+
+            Sheriff role = Sheriff.getRole(sheriff);
+            if (role != null)
+                role.numShots--;
 
             if (misfire)
             {
@@ -846,6 +852,11 @@ namespace TheOtherRoles
             MapOptions.ventsToSeal.Add(vent);
         }
 
+        public static void arsonistDouse(byte playerId)
+        {
+            Arsonist.dousedPlayers.Add(Helpers.playerById(playerId));
+        }
+
         public static void arsonistWin() {
             Arsonist.triggerArsonistWin = true;
             foreach (PlayerControl p in PlayerControl.AllPlayerControls) {
@@ -855,6 +866,12 @@ namespace TheOtherRoles
                     finalStatuses[p.PlayerId] = FinalStatus.Torched;
                 }
             }
+        }
+
+        public static void vultureEat(byte playerId)
+        {
+            cleanBody(playerId);
+            Vulture.eatenBodies++;
         }
 
         public static void vultureWin() {
@@ -1185,6 +1202,13 @@ namespace TheOtherRoles
                 case (byte)CustomRPC.NinjaStealth:
                     RPCProcedure.ninjaStealth(reader.ReadByte(), reader.ReadBoolean());
                     break;
+                case (byte)CustomRPC.ArsonistDouse:
+                    RPCProcedure.arsonistDouse(reader.ReadByte());
+                    break;
+                case (byte)CustomRPC.VultureEat:
+                    RPCProcedure.vultureEat(reader.ReadByte());
+                    break;
+
                 case (byte)CustomRPC.GMKill:
                     RPCProcedure.GMKill(reader.ReadByte());
                     break;

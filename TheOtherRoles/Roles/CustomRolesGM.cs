@@ -60,16 +60,9 @@ namespace TheOtherRoles
             {
                 role.OnMeetingEnd();
             }
-        }
 
-        public static void HandleDisconnect(PlayerControl player, DisconnectReasons reason)
-        {
-            foreach (var role in Role.allRoles)
-            {
-                role.HandleDisconnect(player, reason);
-            }
-            Lovers.HandleDisconnect(player, reason);
-            Shifter.HandleDisconnect(player, reason);
+            CustomOverlays.hideInfoOverlay();
+            CustomOverlays.hideBlackBG();
         }
 
         [HarmonyPatch(typeof(GameData), nameof(GameData.HandleDisconnect), new Type[] { typeof(PlayerControl), typeof(DisconnectReasons) })]
@@ -79,8 +72,14 @@ namespace TheOtherRoles
             {
                 if (AmongUsClient.Instance.GameState == InnerNet.InnerNetClient.GameStates.Started)
                 {
-                    Helpers.log($"{player.PlayerId} disconnected because {reason}");
-                    HandleDisconnect(player, reason);
+                    foreach (var role in Role.allRoles)
+                    {
+                        role.HandleDisconnect(player, reason);
+                    }
+                    Lovers.HandleDisconnect(player, reason);
+                    Shifter.HandleDisconnect(player, reason);
+
+                    finalStatuses[player.PlayerId] = FinalStatus.Disconnected;
                 }
             }
         }

@@ -193,7 +193,11 @@ namespace TheOtherRoles.Patches {
                             player.NameText.text = Janitor.janitor.Data.PlayerName + " (J)";
             }
 
-            bool meetingShow = MeetingHud.Instance != null && (MeetingHud.Instance.state == MeetingHud.VoteStates.Discussion | MeetingHud.Instance.state == MeetingHud.VoteStates.NotVoted);
+            bool meetingShow = MeetingHud.Instance != null && 
+                (MeetingHud.Instance.state == MeetingHud.VoteStates.Voted ||
+                 MeetingHud.Instance.state == MeetingHud.VoteStates.NotVoted ||
+                 MeetingHud.Instance.state == MeetingHud.VoteStates.Discussion);
+            
             // Lovers
             if (PlayerControl.LocalPlayer.isLovers() && PlayerControl.LocalPlayer.isAlive()) {
                 string suffix = Lovers.getIcon(PlayerControl.LocalPlayer);

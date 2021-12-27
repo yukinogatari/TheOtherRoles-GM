@@ -360,7 +360,7 @@ namespace TheOtherRoles {
 
             ninjaSpawnRate = new CustomRoleOption(1000, "ninja", Ninja.color, 3);
             ninjaStealthCooldown = CustomOption.Create(1002, "ninjaStealthCooldown", 30f, 2.5f, 60f, 2.5f, ninjaSpawnRate, format: "unitSeconds");
-            ninjaStealthDuration = CustomOption.Create(1003, "ninjaStealthDuration", 30f, 2.5f, 60f, 2.5f, ninjaSpawnRate, format: "unitSeconds");
+            ninjaStealthDuration = CustomOption.Create(1003, "ninjaStealthDuration", 15f, 2.5f, 60f, 2.5f, ninjaSpawnRate, format: "unitSeconds");
             ninjaFadeTime = CustomOption.Create(1004, "ninjaFadeTime", 0.5f, 0.0f, 2.5f, 0.5f, ninjaSpawnRate, format: "unitSeconds");
             ninjaKillPenalty = CustomOption.Create(1005, "ninjaKillPenalty", 10f, 0f, 60f, 2.5f, ninjaSpawnRate, format: "unitSeconds");
             ninjaSpeedBonus = CustomOption.Create(1006, "ninjaSpeedBonus", 125f, 50f, 200f, 5f, ninjaSpawnRate, format: "unitPercent");

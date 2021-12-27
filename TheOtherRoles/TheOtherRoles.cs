@@ -914,6 +914,11 @@ namespace TheOtherRoles
 
             public static void updateIcons()
             {
+                foreach (PoolablePlayer pp in MapOptions.playerIcons.Values)
+                {
+                    pp.gameObject.SetActive(false);
+                }
+
                 if (Arsonist.arsonist != null && Arsonist.arsonist == PlayerControl.LocalPlayer)
                 {
                     int visibleCounter = 0;

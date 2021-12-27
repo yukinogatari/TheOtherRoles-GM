@@ -122,7 +122,7 @@ namespace TheOtherRoles.Patches {
             // Jester win condition
             else if (exiled != null && Jester.jester != null && Jester.jester.PlayerId == exiled.PlayerId) {
                 Jester.triggerJesterWin = true;
-            } 
+            }
 
             // Reset custom button timers where necessary
             CustomButton.MeetingEndedUpdate();

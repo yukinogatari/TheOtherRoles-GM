@@ -104,6 +104,12 @@ namespace TheOtherRoles
             player.SetKillTimerUnchecked(PlayerControl.GameOptions.KillCooldown + penalty);
         }
 
+        public override void OnDeath(PlayerControl killer)
+        {
+            stealthed = false;
+            ninjaButton.isEffectActive = false;
+        }
+
         private static Sprite buttonSprite;
         public static Sprite getButtonSprite()
         {
@@ -212,28 +218,27 @@ namespace TheOtherRoles
                     }
 
                     // Sometimes it just doesn't work?
+                    var color = Color.Lerp(Palette.ClearWhite, Palette.White, opacity);
                     try
                     {
-                        var color = Color.Lerp(Palette.ClearWhite, Palette.White, opacity);
-
                         if (ninja.MyPhysics?.rend != null)
                             ninja.MyPhysics.rend.color = color;
-                        ninja.MyPhysics?.Skin?.layer?.material?.SetColor("_Color", color);
+
+                        if (ninja.MyPhysics?.Skin?.layer != null)
+                            ninja.MyPhysics.Skin.layer.color = color;
 
                         if (ninja.HatRenderer != null)
                             ninja.HatRenderer.color = color;
-                        ninja.HatRenderer?.BackLayer?.material?.SetColor("_Color", color);
-                        ninja.HatRenderer?.FrontLayer?.material?.SetColor("_Color", color);
 
-                        if (ninja.CurrentPet != null)
-                            ninja.CurrentPet.Visible = opacity == 1.0 && ninja.isAlive();
-                        ninja.CurrentPet?.rend?.material?.SetColor("_Color", color);
-                        ninja.CurrentPet?.shadowRend?.material?.SetColor("_Color", color);
+                        if (ninja.CurrentPet?.rend != null)
+                            ninja.CurrentPet.rend.color = color;
+
+                        if (ninja.CurrentPet?.shadowRend != null)
+                            ninja.CurrentPet.shadowRend.color = color;
 
                         if (ninja.VisorSlot != null)
                             ninja.VisorSlot.color = color;
-                    }
-                    catch { }
+                    } catch { }
                 }
             }
         }

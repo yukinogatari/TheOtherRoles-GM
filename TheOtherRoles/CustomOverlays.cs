@@ -32,10 +32,10 @@ namespace TheOtherRoles {
             overlayShown = false;
         }
 
-        public static void initializeOverlays()
+        public static bool initializeOverlays()
         {
             HudManager hudManager = DestroyableSingleton<HudManager>.Instance;
-            if (hudManager == null) return;
+            if (hudManager == null) return false;
 
             if (helpButton == null)
             {
@@ -91,19 +91,23 @@ namespace TheOtherRoles {
                 infoOverlayRoles.color = Palette.White;
                 infoOverlayRoles.enabled = false;
             }
+
+            return true;
         }
 
         public static void showBlackBG()
         {
-            initializeOverlays();
-            meetingUnderlay.sprite = colorBG;
-            meetingUnderlay.color = Palette.Black;
-            meetingUnderlay.transform.localScale = new Vector3(20f, 20f, 1f);
             if (HudManager.Instance == null) return;
+            if (!initializeOverlays()) return;
 
-            HudManager.Instance.StartCoroutine(Effects.Lerp(5f, new Action<float>(t =>
+            meetingUnderlay.sprite = colorBG;
+            meetingUnderlay.enabled = true;
+            meetingUnderlay.transform.localScale = new Vector3(20f, 20f, 1f);
+            var clearBlack = new Color32(0, 0, 0, 0);
+
+            HudManager.Instance.StartCoroutine(Effects.Lerp(0.2f, new Action<float>(t =>
             {
-                meetingUnderlay.enabled = t < 1f;
+                meetingUnderlay.color = Color.Lerp(clearBlack, Palette.Black, t);
             })));
         }
 
@@ -121,12 +125,13 @@ namespace TheOtherRoles {
             if (ShipStatus.Instance == null || PlayerControl.LocalPlayer == null || hudManager == null || HudManager.Instance.isIntroDisplayed || (!PlayerControl.LocalPlayer.CanMove && MeetingHud.Instance == null))
                 return;
 
+            if (!initializeOverlays()) return;
+
             if (MapBehaviour.Instance != null)
                 MapBehaviour.Instance.Close();
             hudManager.SetHudActive(false);
             
             overlayShown = true;
-            initializeOverlays();
 
             Transform parent;
             if (MeetingHud.Instance != null)
@@ -161,17 +166,47 @@ namespace TheOtherRoles {
 
             infoOverlayRoles.text = rolesText;
             infoOverlayRoles.enabled = true;
+
+            var underlayTransparent = new Color(0.1f, 0.1f, 0.1f, 0.0f);
+            var underlayOpaque = new Color(0.1f, 0.1f, 0.1f, 0.88f);
+            HudManager.Instance.StartCoroutine(Effects.Lerp(0.2f, new Action<float>(t =>
+            {
+                infoUnderlay.color = Color.Lerp(underlayTransparent, underlayOpaque, t);
+                infoOverlayRules.color = Color.Lerp(Palette.ClearWhite, Palette.White, t);
+                infoOverlayRoles.color = Color.Lerp(Palette.ClearWhite, Palette.White, t);
+            })));
         }
 
         public static void hideInfoOverlay()
         {
             if (!overlayShown) return;
 
-            overlayShown = false;
             if (MeetingHud.Instance == null) DestroyableSingleton<HudManager>.Instance.SetHudActive(true);
-            if (infoUnderlay != null) infoUnderlay.enabled = false;
-            if (infoOverlayRules != null) infoOverlayRules.enabled = false;
-            if (infoOverlayRoles != null) infoOverlayRoles.enabled = false;
+
+            overlayShown = false;
+            var underlayTransparent = new Color(0.1f, 0.1f, 0.1f, 0.0f);
+            var underlayOpaque = new Color(0.1f, 0.1f, 0.1f, 0.88f);
+
+            HudManager.Instance.StartCoroutine(Effects.Lerp(0.2f, new Action<float>(t =>
+            {
+                if (infoUnderlay != null)
+                {
+                    infoUnderlay.color = Color.Lerp(underlayOpaque, underlayTransparent, t);
+                    if (t >= 1.0f) infoUnderlay.enabled = false;
+                }
+
+                if (infoOverlayRules != null)
+                {
+                    infoOverlayRules.color = Color.Lerp(Palette.White, Palette.ClearWhite, t);
+                    if (t >= 1.0f) infoOverlayRules.enabled = false;
+                }
+
+                if (infoOverlayRoles != null)
+                {
+                    infoOverlayRoles.color = Color.Lerp(Palette.White, Palette.ClearWhite, t);
+                    if (t >= 1.0f) infoOverlayRoles.enabled = false;
+                }
+            })));
         }
 
         public static void toggleInfoOverlay()

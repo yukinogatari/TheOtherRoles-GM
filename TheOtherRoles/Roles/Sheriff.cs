@@ -63,7 +63,6 @@ namespace TheOtherRoles
 
                     if (murderAttemptResult == MurderAttemptResult.PerformKill)
                     {
-
                         bool misfire = false;
                         byte targetId = local.currentTarget.PlayerId; ;
                         if ((local.currentTarget.Data.Role.IsImpostor && (local.currentTarget != Mini.mini || Mini.isGrownUp())) ||
@@ -90,7 +89,6 @@ namespace TheOtherRoles
 
                     sheriffKillButton.Timer = sheriffKillButton.MaxTimer;
                     local.currentTarget = null;
-                    local.numShots--;
                 },
                 () => { return PlayerControl.LocalPlayer.isRole(RoleId.Sheriff) && local.numShots > 0 && !PlayerControl.LocalPlayer.Data.IsDead; },
                 () =>

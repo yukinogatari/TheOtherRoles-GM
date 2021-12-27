@@ -69,6 +69,8 @@ namespace TheOtherRoles.Patches {
                 if (blockSkippingInEmergencyMeetings)
                     __instance.SkipVoteButton?.gameObject?.SetActive(false);
 
+                updateMeetingText(__instance);
+
                 // This fixes a bug with the original game where pressing the button and a kill happens simultaneously
                 // results in bodies sometimes being created *after* the meeting starts, marking them as dead and
                 // removing the corpses so there's no random corpses leftover afterwards
@@ -270,13 +272,11 @@ namespace TheOtherRoles.Patches {
                 if (meetingInfoText != null)
                     meetingInfoText.gameObject.SetActive(false);
 
-                CustomOverlays.hideInfoOverlay();
-
-
                 foreach (DeadBody b in UnityEngine.Object.FindObjectsOfType<DeadBody>())
                 {
                     UnityEngine.Object.Destroy(b.gameObject);
                 }
+
                 if (exiled != null)
                 {
                     finalStatuses[exiled.PlayerId] = FinalStatus.Exiled;
@@ -428,8 +428,6 @@ namespace TheOtherRoles.Patches {
                             __instance.playerStates.ToList().ForEach(x => { if (x.transform.FindChild("ShootButton") != null) UnityEngine.Object.Destroy(x.transform.FindChild("ShootButton").gameObject); });
                         }
 
-                        updateMeetingText(__instance);
-
                         // Shoot player and send chat info if activated
                         MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.GuesserShoot, Hazel.SendOption.Reliable, -1);
                         writer.Write(PlayerControl.LocalPlayer.PlayerId);
@@ -537,7 +535,9 @@ namespace TheOtherRoles.Patches {
             meetingInfoText.text = "";
             meetingInfoText.gameObject.SetActive(false);
 
-            if (__instance.state != MeetingHud.VoteStates.Discussion && __instance.state != MeetingHud.VoteStates.NotVoted)
+            if (MeetingHud.Instance.state != MeetingHud.VoteStates.Voted &&
+                MeetingHud.Instance.state != MeetingHud.VoteStates.NotVoted &&
+                MeetingHud.Instance.state != MeetingHud.VoteStates.Discussion)
                 return;
 
             if (PlayerControl.LocalPlayer.isRole(RoleId.Swapper) && Swapper.numSwaps > 0 && !Swapper.swapper.Data.IsDead)
@@ -565,7 +565,6 @@ namespace TheOtherRoles.Patches {
             static void Postfix(MeetingHud __instance)
             {
                 populateButtonsPostfix(__instance);
-                updateMeetingText(__instance);
             }
         }
 
@@ -576,7 +575,6 @@ namespace TheOtherRoles.Patches {
                 // Add swapper buttons
                 if (initialState) {
                     populateButtonsPostfix(__instance);
-                    updateMeetingText(__instance);
                 }
             }
         }
