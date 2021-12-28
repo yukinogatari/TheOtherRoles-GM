@@ -22,7 +22,8 @@ namespace TheOtherRoles.Patches
         JesterWin = 13,
         ArsonistWin = 14,
         VultureWin = 15,
-        LawyerSoloWin = 16
+        LawyerSoloWin = 16,
+        MadScientistWin = 17
     }
 
     enum WinCondition
@@ -39,7 +40,9 @@ namespace TheOtherRoles.Patches
         LawyerSoloWin,
         AdditionalLawyerBonusWin,
         AdditionalLawyerStolenWin,
-        AdditionalAlivePursuerWin
+        AdditionalAlivePursuerWin,
+        MadScientistWin
+
     }
 
     enum FinalStatus
@@ -140,6 +143,7 @@ namespace TheOtherRoles.Patches
             if (Vulture.vulture != null) notWinners.Add(Vulture.vulture);
             if (Lawyer.lawyer != null) notWinners.Add(Lawyer.lawyer);
             if (Pursuer.pursuer != null) notWinners.Add(Pursuer.pursuer);
+            if (MadScientist.players.FirstOrDefault().player != null) notWinners.Add(MadScientist.players.FirstOrDefault().player);
 
             notWinners.AddRange(Jackal.formerJackals);
             notWinners.AddRange(Madmate.allPlayers);
@@ -176,6 +180,7 @@ namespace TheOtherRoles.Patches
             bool teamJackalWin = gameOverReason == (GameOverReason)CustomGameOverReason.TeamJackalWin && ((Jackal.jackal != null && Jackal.jackal.isAlive()) || (Sidekick.sidekick != null && !Sidekick.sidekick.isAlive()));
             bool vultureWin = Vulture.vulture != null && gameOverReason == (GameOverReason)CustomGameOverReason.VultureWin;
             bool lawyerSoloWin = Lawyer.lawyer != null && gameOverReason == (GameOverReason)CustomGameOverReason.LawyerSoloWin;
+            bool madScientistWin = MadScientist.players.FirstOrDefault().player != null && gameOverReason == (GameOverReason)CustomGameOverReason.MadScientistWin;
 
 
             // Mini lose
@@ -287,6 +292,13 @@ namespace TheOtherRoles.Patches
                 WinningPlayerData wpd = new WinningPlayerData(Lawyer.lawyer.Data);
                 TempData.winners.Add(wpd);
                 AdditionalTempData.winCondition = WinCondition.LawyerSoloWin;
+            }
+            else if (madScientistWin)
+            {
+                TempData.winners = new Il2CppSystem.Collections.Generic.List<WinningPlayerData>();
+                WinningPlayerData wpd = new WinningPlayerData(MadScientist.players.FirstOrDefault().player.Data);
+                TempData.winners.Add(wpd);
+                AdditionalTempData.winCondition = WinCondition.MadScientistWin;
             }
 
             // Possible Additional winner: Lawyer
@@ -457,6 +469,12 @@ namespace TheOtherRoles.Patches
                         textRenderer.color = Lawyer.color;
                         __instance.BackgroundBar.material.SetColor("_Color", Lawyer.color);
                     }
+                    else if (AdditionalTempData.winCondition == WinCondition.MadScientistWin)
+                    {
+                        bonusText = "madScientistWin";
+                        textRenderer.color = MadScientist.color;
+                        __instance.BackgroundBar.material.SetColor("_Color", MadScientist.color);
+                    }
                     else if (AdditionalTempData.winCondition == WinCondition.LoversTeamWin)
                     {
                         bonusText = "crewWin";
@@ -599,6 +617,7 @@ namespace TheOtherRoles.Patches
                     if (CheckAndEndGameForLawyerMeetingWin(__instance)) return false;
                     if (CheckAndEndGameForArsonistWin(__instance)) return false;
                     if (CheckAndEndGameForVultureWin(__instance)) return false;
+                    if (CheckAndEndGameForMadScientistWin(__instance)) return false;
                     if (CheckAndEndGameForSabotageWin(__instance)) return false;
                     if (CheckAndEndGameForTaskWin(__instance)) return false;
                     if (CheckAndEndGameForLoverWin(__instance, statistics)) return false;
@@ -658,6 +677,16 @@ namespace TheOtherRoles.Patches
                     {
                         __instance.enabled = false;
                         ShipStatus.RpcEndGame((GameOverReason)CustomGameOverReason.LawyerSoloWin, false);
+                        return true;
+                    }
+                    return false;
+                }
+                private static bool CheckAndEndGameForMadScientistWin(ShipStatus __instance)
+                {
+                    if (MadScientist.triggerMadScientistWin)
+                    {
+                        __instance.enabled = false;
+                        ShipStatus.RpcEndGame((GameOverReason)CustomGameOverReason.MadScientistWin, false);
                         return true;
                     }
                     return false;
