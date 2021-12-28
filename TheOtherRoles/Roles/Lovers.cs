@@ -22,11 +22,21 @@ namespace TheOtherRoles
     {
         public PlayerControl lover1;
         public PlayerControl lover2;
+        public Color color;
 
-        public Couple(PlayerControl lover1, PlayerControl lover2)
+        public Couple(PlayerControl lover1, PlayerControl lover2, Color color)
         {
             this.lover1 = lover1;
             this.lover2 = lover2;
+            this.color = color;
+        }
+
+        public string icon
+        {
+            get
+            {
+                return Helpers.cs(color, " ♥");
+            }
         }
 
         public bool existing
@@ -80,20 +90,20 @@ namespace TheOtherRoles
 
         public static List<Color> loverIconColors = new List<Color>
             {
-                Lovers.color,
-                Palette.ImpostorRed,
-                Palette.Orange,
-                new Color(0.0f, 1f, 1f),
-                Palette.AcceptedGreen,
-                Palette.Blue,
-                Palette.Purple,
+                Lovers.color,                  // pink
+                new Color32(255, 165, 0, 255), // orange
+                new Color32(255, 255, 0, 255), // yellow
+                new Color32(0, 255, 0, 255),   // green
+                new Color32(0, 0, 255, 255),   // blue
+                new Color32(0, 255, 255, 255), // light blue
+                new Color32(255, 0, 0, 255),   // red
             };
 
-        public static bool bothDie = true;
+        public static bool bothDie { get { return CustomOptionHolder.loversBothDie.getBool(); } }
 
         // Making this closer to the au.libhalt.net version of Lovers
-        public static bool separateTeam = true;
-        public static bool tasksCount = false;
+        public static bool separateTeam { get { return CustomOptionHolder.loversSeparateTeam.getBool(); } }
+        public static bool tasksCount { get { return CustomOptionHolder.loversTasksCount.getBool(); } }
 
         public static bool hasTasks
         {
@@ -107,15 +117,20 @@ namespace TheOtherRoles
         {
             if (isLovers(player))
             {
-                var coupleId = couples.FindIndex(x => x.lover1 == player || x.lover2 == player);
-                return Helpers.cs(loverIconColors[coupleId], " ♥");
+                var couple = couples.Find(x => x.lover1 == player || x.lover2 == player);
+                return couple.icon;
             }
             return "";
         }
 
         public static void addCouple(PlayerControl player1, PlayerControl player2)
         {
-            couples.Add(new Couple(player1, player2));
+            var availableColors = new List<Color>(loverIconColors);
+            foreach (var couple in couples)
+            {
+                availableColors.RemoveAll(x => x == couple.color);
+            }
+            couples.Add(new Couple(player1, player2, availableColors[0]));
         }
 
         public static void eraseCouple(PlayerControl player)
@@ -251,9 +266,6 @@ namespace TheOtherRoles
         public static void clearAndReload()
         {
             couples = new List<Couple>();
-            bothDie = CustomOptionHolder.loversBothDie.getBool();
-            separateTeam = CustomOptionHolder.loversSeparateTeam.getBool();
-            tasksCount = CustomOptionHolder.loversTasksCount.getBool();
         }
     }
 }

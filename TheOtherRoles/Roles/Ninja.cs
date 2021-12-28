@@ -16,13 +16,13 @@ namespace TheOtherRoles
 
         public static Color color = Palette.ImpostorRed;
 
-        public static float stealthCooldown = 10f;
-        public static float stealthDuration = 10f;
-        public static float killPenalty = 10f;
-        public static float speedBonus = 1.25f;
-        public static float fadeTime = 0.5f;
-        public static bool canUseVents = false;
-        public static bool canBeTargeted = true;
+        public static float stealthCooldown { get { return CustomOptionHolder.ninjaStealthCooldown.getFloat(); } }
+        public static float stealthDuration { get { return CustomOptionHolder.ninjaStealthDuration.getFloat(); } }
+        public static float killPenalty { get { return CustomOptionHolder.ninjaKillPenalty.getFloat(); } }
+        public static float speedBonus { get { return CustomOptionHolder.ninjaSpeedBonus.getFloat() / 100f; } }
+        public static float fadeTime { get { return CustomOptionHolder.ninjaFadeTime.getFloat(); } }
+        public static bool canUseVents { get { return CustomOptionHolder.ninjaCanVent.getBool(); } }
+        public static bool canBeTargeted { get { return CustomOptionHolder.ninjaCanBeTargeted.getBool(); } }
 
         public bool penalized = false;
         public bool stealthed = false;
@@ -181,13 +181,6 @@ namespace TheOtherRoles
         public static void clearAndReload()
         {
             players = new List<Ninja>();
-            stealthCooldown = CustomOptionHolder.ninjaStealthCooldown.getFloat();
-            stealthDuration = CustomOptionHolder.ninjaStealthDuration.getFloat();
-            killPenalty = CustomOptionHolder.ninjaKillPenalty.getFloat();
-            speedBonus = CustomOptionHolder.ninjaSpeedBonus.getFloat() / 100f;
-            fadeTime = CustomOptionHolder.ninjaFadeTime.getFloat();
-            canUseVents = CustomOptionHolder.ninjaCanVent.getBool();
-            canBeTargeted = CustomOptionHolder.ninjaCanBeTargeted.getBool();
         }
 
         [HarmonyPatch(typeof(PlayerPhysics), nameof(PlayerPhysics.FixedUpdate))]

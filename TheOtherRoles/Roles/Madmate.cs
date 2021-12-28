@@ -9,10 +9,10 @@ namespace TheOtherRoles
     {
         public static Color color = Palette.ImpostorRed;
 
-        public static bool canEnterVents = false;
-        public static bool hasImpostorVision = false;
-        public static bool canSabotage = false;
-        public static bool canFixComm = true;
+        public static bool canEnterVents { get { return CustomOptionHolder.madmateCanEnterVents.getBool(); } }
+        public static bool hasImpostorVision { get { return CustomOptionHolder.madmateHasImpostorVision.getBool(); } }
+        public static bool canSabotage { get { return CustomOptionHolder.madmateCanSabotage.getBool(); } }
+        public static bool canFixComm { get { return CustomOptionHolder.madmateCanFixComm.getBool(); } }
 
         public Madmate()
         {
@@ -22,10 +22,6 @@ namespace TheOtherRoles
         public static void clearAndReload()
         {
             players = new List<Madmate>();
-            canEnterVents = CustomOptionHolder.madmateCanEnterVents.getBool();
-            hasImpostorVision = CustomOptionHolder.madmateHasImpostorVision.getBool();
-            canSabotage = CustomOptionHolder.madmateCanSabotage.getBool();
-            canFixComm = CustomOptionHolder.madmateCanFixComm.getBool();
         }
     }
 }
