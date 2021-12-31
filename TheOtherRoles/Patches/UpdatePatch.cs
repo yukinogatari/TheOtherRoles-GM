@@ -150,6 +150,10 @@ namespace TheOtherRoles.Patches {
             {
                 setPlayerNameColor(PlayerControl.LocalPlayer, Pursuer.color);
             }
+            else if (PlayerControl.LocalPlayer.isRole(RoleId.MadScientist))
+            {
+                setPlayerNameColor(PlayerControl.LocalPlayer, MadScientist.color);
+            }
 
             if (GM.gm != null) {
                 setPlayerNameColor(GM.gm, GM.color);

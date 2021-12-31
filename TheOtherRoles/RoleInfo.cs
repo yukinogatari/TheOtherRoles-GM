@@ -85,6 +85,7 @@ namespace TheOtherRoles
         public static RoleInfo vulture = new RoleInfo("vulture", Vulture.color, CustomOptionHolder.vultureSpawnRate, RoleId.Vulture);
         public static RoleInfo medium = new RoleInfo("medium", Medium.color, CustomOptionHolder.mediumSpawnRate, RoleId.Medium);
         public static RoleInfo ninja = new RoleInfo("ninja", Ninja.color, CustomOptionHolder.ninjaSpawnRate, RoleId.Ninja);
+        public static RoleInfo madScientist = new RoleInfo("madScientist", MadScientist.color, CustomOptionHolder.madScientistSpawnRate, RoleId.MadScientist);
 
         public static List<RoleInfo> allRoleInfos = new List<RoleInfo>() {
                 impostor,
@@ -135,7 +136,8 @@ namespace TheOtherRoles
                 madmate,
                 gm,
                 opportunist,
-	            medium
+	            medium,
+                madScientist
             };
 
         public static string tl(string key)
@@ -191,6 +193,7 @@ namespace TheOtherRoles
             if (p.isRole(RoleId.Lawyer)) infos.Add(lawyer);
             if (p.isRole(RoleId.Pursuer)) infos.Add(pursuer);
             if (p.isRole(RoleId.Ninja)) infos.Add(ninja);
+            if (p.isRole(RoleId.MadScientist)) infos.Add(madScientist);
 
 
             // Default roles

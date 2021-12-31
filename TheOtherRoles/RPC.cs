@@ -64,6 +64,7 @@ namespace TheOtherRoles
         Vulture,
         Lawyer,
         Pursuer,
+        MadScientist,
 
 
         GM = 200,
@@ -136,6 +137,9 @@ namespace TheOtherRoles
         UseVitalsTime,
         ArsonistDouse,
         VultureEat,
+        MadScientistWin,
+        MadScientistSetInfected,
+        MadScientistUpdateProgress,
     }
 
     public static class RPCProcedure {
@@ -554,6 +558,10 @@ namespace TheOtherRoles
                     case RoleId.Ninja:
                         Ninja.swapRole(player, oldShifter);
                         break;
+
+                    case RoleId.MadScientist:
+                        MadScientist.swapRole(player, oldShifter);
+                        break;
                 }
             }
 
@@ -689,6 +697,7 @@ namespace TheOtherRoles
             // Other roles
             if (player.isRole(RoleId.Jester)) Jester.clearAndReload();
             if (player.isRole(RoleId.Arsonist)) Arsonist.clearAndReload();
+            if (player.isRole(RoleId.MadScientist)) MadScientist.clearAndReload();
             if (Guesser.isGuesser(player.PlayerId)) Guesser.clear(player.PlayerId);
             if (!ignoreLovers && player.isLovers())
             { // The whole Lover couple is being erased
@@ -1036,7 +1045,26 @@ namespace TheOtherRoles
         {
             MapOptions.restrictVitalsTime -= time;
         }
+
+        public static void madScientistWin() {
+            MadScientist.triggerMadScientistWin = true;
+        }
+
+        public static void setInfected(byte targetId){
+            foreach(PlayerControl p in PlayerControl.AllPlayerControls){
+                if(p.Data.PlayerId == targetId){
+                    if(!MadScientist.infected.Keys.Contains(targetId)){
+                        MadScientist.infected.Add(targetId, p);
+                    }
+                }
+            }
+        }
+        public static void updateProgress(byte targetId, float progress){
+			MadScientist.progress[targetId] = progress;
+        }
     }   
+
+    
 
     [HarmonyPatch(typeof(PlayerControl), nameof(PlayerControl.HandleRpc))]
     class RPCHandlerPatch
@@ -1251,6 +1279,18 @@ namespace TheOtherRoles
                     break;
                 case (byte)CustomRPC.UseVitalsTime:
                     RPCProcedure.UseVitalsTime(reader.ReadSingle());
+                    break;
+                case (byte)CustomRPC.MadScientistWin:
+                    RPCProcedure.madScientistWin();
+                    break;
+                case (byte)CustomRPC.MadScientistSetInfected:
+                    RPCProcedure.setInfected(reader.ReadByte());
+                    break;
+                case (byte)CustomRPC.MadScientistUpdateProgress:
+					byte progressTarget = reader.ReadByte();
+					byte[] progressByte =  reader.ReadBytes(4);
+					float progress = System.BitConverter.ToSingle(progressByte, 0);
+                    RPCProcedure.updateProgress(progressTarget, progress);
                     break;
             }
         }

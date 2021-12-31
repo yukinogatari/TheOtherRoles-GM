@@ -272,6 +272,10 @@ namespace TheOtherRoles {
         public static CustomOption gmCanWarp;
         public static CustomOption gmCanKill;
 
+        public static CustomRoleOption madScientistSpawnRate;
+        public static CustomOption madScientistDistance;
+        public static CustomOption madScientistDuration;
+
         internal static Dictionary<byte, byte[]> blockedRolePairings = new Dictionary<byte, byte[]>();
         internal static List<byte> blockLovers = new List<byte>();
 
@@ -375,6 +379,9 @@ namespace TheOtherRoles {
             madmateCanSabotage = CustomOption.Create(364, "madmateCanSabotage", false, madmateSpawnRate);
             madmateCanFixComm = CustomOption.Create(365, "madmateCanFixComm", true, madmateSpawnRate);
 
+            madScientistSpawnRate = new CustomRoleOption(901, "マッドサイエンティスト", MadScientist.color);
+            madScientistDistance = CustomOption.Create(902, "感染距離", 1.0f, 0.5f, 5.0f, 0.25f, madScientistSpawnRate);
+            madScientistDuration = CustomOption.Create(903, "感染に必要な時間", 10f, 1f, 15f, 1f, madScientistSpawnRate);
 
             miniSpawnRate = new CustomRoleOption(180, "mini", Mini.color, 1);
             miniIsImpRate = CustomOption.Create(182, "miniIsImpRate", rates, miniSpawnRate);

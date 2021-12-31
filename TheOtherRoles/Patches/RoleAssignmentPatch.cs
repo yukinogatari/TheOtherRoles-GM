@@ -136,6 +136,7 @@ namespace TheOtherRoles.Patches
             neutralSettings.Add((byte)RoleId.Opportunist, CustomOptionHolder.opportunistSpawnRate.data);
             neutralSettings.Add((byte)RoleId.Vulture, CustomOptionHolder.vultureSpawnRate.data);
             neutralSettings.Add((byte)RoleId.Lawyer, CustomOptionHolder.lawyerSpawnRate.data);
+            neutralSettings.Add((byte)RoleId.MadScientist, CustomOptionHolder.madScientistSpawnRate.data);
 
             crewSettings.Add((byte)RoleId.Mayor, CustomOptionHolder.mayorSpawnRate.data);
             crewSettings.Add((byte)RoleId.Engineer, CustomOptionHolder.engineerSpawnRate.data);

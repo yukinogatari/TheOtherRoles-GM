@@ -24,6 +24,7 @@ namespace TheOtherRoles
         {
             Ninja.SetButtonCooldowns();
             Sheriff.SetButtonCooldowns();
+            MadScientist.SetButtonCooldowns();
 
             foreach (CustomButton gmButton in gmButtons)
             {
@@ -42,6 +43,7 @@ namespace TheOtherRoles
         {
             Ninja.MakeButtons(hm);
             Sheriff.MakeButtons(hm);
+            MadScientist.MakeButtons(hm);
 
             gmButtons = new List<CustomButton>();
             gmKillButtons = new List<CustomButton>();
