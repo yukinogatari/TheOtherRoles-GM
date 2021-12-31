@@ -979,6 +979,10 @@ namespace TheOtherRoles
                 else if (partner != null && PlayerControl.LocalPlayer == partner)
                     HudManager.Instance.KillOverlay.ShowKillAnimation(GM.gm.Data, partner.Data);
             }
+
+            GMUpdateMeeting(targetId, true);
+            if (partner != null)
+                GMUpdateMeeting(partner.PlayerId, true);
         }
 
         public static void GMRevive(byte targetId)
@@ -986,11 +990,35 @@ namespace TheOtherRoles
             PlayerControl target = Helpers.playerById(targetId);
             if (target == null) return;
             target.Revive();
-            target.getPartner()?.Revive(); // Lover check
+            GMUpdateMeeting(targetId, false);
+
+            PlayerControl partner = target.getPartner(); // Lover check
+            if (partner != null)
+            {
+                partner.Revive();
+                GMUpdateMeeting(partner.PlayerId, false);
+            }
 
             if (PlayerControl.LocalPlayer.isGM())
             {
                 HudManager.Instance.ShadowQuad.gameObject.SetActive(false);
+            }
+        }
+
+        public static void GMUpdateMeeting(byte targetId, bool dead)
+        {
+            if (MeetingHud.Instance)
+            {
+                foreach (PlayerVoteArea pva in MeetingHud.Instance.playerStates)
+                {
+                    if (pva.TargetPlayerId == targetId)
+                    {
+                        pva.SetDead(pva.DidReport, dead);
+                        pva.Overlay.gameObject.SetActive(dead);
+                    }
+                }
+                if (AmongUsClient.Instance.AmHost)
+                    MeetingHud.Instance.CheckForEndVoting();
             }
         }
 

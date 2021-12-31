@@ -288,6 +288,36 @@ namespace TheOtherRoles.Patches {
             }
         }
 
+        static void gmKillOnClick(int i, MeetingHud __instance)
+        {
+            if (__instance.state == MeetingHud.VoteStates.Results) return;
+            SpriteRenderer renderer = renderers[i];
+            var target = __instance.playerStates[i];
+
+            if (target != null)
+            {
+                if (target.AmDead)
+                {
+                    MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.GMRevive, Hazel.SendOption.Reliable, -1);
+                    writer.Write((byte)target.TargetPlayerId);
+                    AmongUsClient.Instance.FinishRpcImmediately(writer);
+                    RPCProcedure.GMRevive(target.TargetPlayerId);
+
+                    renderer.sprite = Guesser.getTargetSprite();
+                    renderer.color = Color.red;
+                }
+                else
+                {
+                    MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.GMKill, Hazel.SendOption.Reliable, -1);
+                    writer.Write((byte)target.TargetPlayerId);
+                    AmongUsClient.Instance.FinishRpcImmediately(writer);
+                    RPCProcedure.GMKill(target.TargetPlayerId);
+
+                    renderer.sprite = Swapper.getCheckSprite();
+                    renderer.color = Color.green;
+                }
+            }
+        }
 
         static void swapperOnClick(int i, MeetingHud __instance) {
             if (Swapper.numSwaps <= 0) return;
@@ -455,6 +485,32 @@ namespace TheOtherRoles.Patches {
         static void populateButtonsPostfix(MeetingHud __instance) {
             nameplatesChanged = true;
 
+            if (PlayerControl.LocalPlayer.isRole(RoleId.GM) && GM.canKill)
+            {
+                renderers = new SpriteRenderer[__instance.playerStates.Length];
+
+                for (int i = 0; i < __instance.playerStates.Length; i++)
+                {
+                    PlayerVoteArea playerVoteArea = __instance.playerStates[i];
+
+                    GameObject template = playerVoteArea.Buttons.transform.Find("CancelButton").gameObject;
+                    GameObject checkbox = UnityEngine.Object.Instantiate(template);
+                    checkbox.transform.SetParent(playerVoteArea.transform);
+                    checkbox.transform.position = template.transform.position;
+                    checkbox.transform.localPosition = new Vector3(-0.95f, 0.03f, -20f);
+                    SpriteRenderer renderer = checkbox.GetComponent<SpriteRenderer>();
+                    renderer.sprite = playerVoteArea.AmDead ? Swapper.getCheckSprite() : Guesser.getTargetSprite();
+                    renderer.color = playerVoteArea.AmDead ? Color.green : Color.red;
+
+                    PassiveButton button = checkbox.GetComponent<PassiveButton>();
+                    button.OnClick.RemoveAllListeners();
+                    int copiedIndex = i;
+                    button.OnClick.AddListener((UnityEngine.Events.UnityAction)(() => gmKillOnClick(copiedIndex, __instance)));
+
+                    renderers[i] = renderer;
+                }
+            }
+
             // Add Swapper Buttons
             if (PlayerControl.LocalPlayer.isRole(RoleId.Swapper) && Swapper.numSwaps > 0 && !Swapper.swapper.Data.IsDead) {
                 selections = new bool[__instance.playerStates.Length];
@@ -514,7 +570,6 @@ namespace TheOtherRoles.Patches {
                     int copiedIndex = i;
                     button.OnClick.AddListener((UnityEngine.Events.UnityAction)(() => guesserOnClick(copiedIndex, __instance)));
                 }
-
             }
         }
 
