@@ -272,9 +272,12 @@ namespace TheOtherRoles {
         public static CustomOption gmCanWarp;
         public static CustomOption gmCanKill;
 
-        public static CustomRoleOption madScientistSpawnRate;
-        public static CustomOption madScientistDistance;
-        public static CustomOption madScientistDuration;
+        public static CustomRoleOption plagueDoctorSpawnRate;
+        public static CustomOption plagueDoctorInfectCooldown;
+        public static CustomOption plagueDoctorNumInfections;
+        public static CustomOption plagueDoctorDistance;
+        public static CustomOption plagueDoctorDuration;
+        public static CustomOption plagueDoctorImmunityTime;
 
         internal static Dictionary<byte, byte[]> blockedRolePairings = new Dictionary<byte, byte[]>();
         internal static List<byte> blockLovers = new List<byte>();
@@ -379,10 +382,6 @@ namespace TheOtherRoles {
             madmateCanSabotage = CustomOption.Create(364, "madmateCanSabotage", false, madmateSpawnRate);
             madmateCanFixComm = CustomOption.Create(365, "madmateCanFixComm", true, madmateSpawnRate);
 
-            madScientistSpawnRate = new CustomRoleOption(901, "マッドサイエンティスト", MadScientist.color);
-            madScientistDistance = CustomOption.Create(902, "感染距離", 1.0f, 0.5f, 5.0f, 0.25f, madScientistSpawnRate);
-            madScientistDuration = CustomOption.Create(903, "感染に必要な時間", 10f, 1f, 15f, 1f, madScientistSpawnRate);
-
             miniSpawnRate = new CustomRoleOption(180, "mini", Mini.color, 1);
             miniIsImpRate = CustomOption.Create(182, "miniIsImpRate", rates, miniSpawnRate);
             miniGrowingUpDuration = CustomOption.Create(181, "miniGrowingUpDuration", 400f, 100f, 1500f, 100f, miniSpawnRate, format: "unitSeconds");
@@ -452,6 +451,13 @@ namespace TheOtherRoles {
             shifterIsNeutralRate = CustomOption.Create(72, "shifterIsNeutralRate", rates, shifterSpawnRate);
             shifterShiftsModifiers = CustomOption.Create(71, "shifterShiftsModifiers", false, shifterSpawnRate);
             shifterPastShifters = CustomOption.Create(73, "shifterPastShifters", false, shifterSpawnRate);
+
+            plagueDoctorSpawnRate = new CustomRoleOption(900, "plagueDoctor", PlagueDoctor.color, 1);
+            plagueDoctorInfectCooldown = CustomOption.Create(901, "plagueDoctorInfectCooldown", 10f, 2.5f, 60f, 2.5f, plagueDoctorSpawnRate, format: "unitSeconds");
+            plagueDoctorNumInfections = CustomOption.Create(902, "plagueDoctorNumInfections", 1f, 1f, 15, 1f, plagueDoctorSpawnRate, format: "unitPlayers");
+            plagueDoctorDistance = CustomOption.Create(903, "plagueDoctorDistance", 1.0f, 0.5f, 5.0f, 0.25f, plagueDoctorSpawnRate, format: "unitMeters");
+            plagueDoctorDuration = CustomOption.Create(904, "plagueDoctorDuration", 10f, 1f, 30f, 1f, plagueDoctorSpawnRate, format: "unitSeconds");
+            plagueDoctorImmunityTime = CustomOption.Create(905, "plagueDoctorImmunityTime", 10f, 1f, 30f, 1f, plagueDoctorSpawnRate, format: "unitSeconds");
 
             mayorSpawnRate = new CustomRoleOption(80, "mayor", Mayor.color, 1);
             mayorNumVotes = CustomOption.Create(81, "mayorNumVotes", 2f, 2f, 10f, 1f, mayorSpawnRate, format: "unitVotes");

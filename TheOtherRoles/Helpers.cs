@@ -230,6 +230,7 @@ namespace TheOtherRoles {
                     player.isRole(RoleId.Arsonist) ||
                     player.isRole(RoleId.Jester) ||
                     player.isRole(RoleId.Opportunist) ||
+                    player.isRole(RoleId.PlagueDoctor) ||
                     player.isRole(RoleId.Vulture) ||
                     player.isRole(RoleId.Lawyer) ||
                     player.isRole(RoleId.Pursuer) ||

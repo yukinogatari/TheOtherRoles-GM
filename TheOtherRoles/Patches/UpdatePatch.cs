@@ -150,9 +150,9 @@ namespace TheOtherRoles.Patches {
             {
                 setPlayerNameColor(PlayerControl.LocalPlayer, Pursuer.color);
             }
-            else if (PlayerControl.LocalPlayer.isRole(RoleId.MadScientist))
+            else if (PlayerControl.LocalPlayer.isRole(RoleId.PlagueDoctor))
             {
-                setPlayerNameColor(PlayerControl.LocalPlayer, MadScientist.color);
+                setPlayerNameColor(PlayerControl.LocalPlayer, PlagueDoctor.color);
             }
 
             if (GM.gm != null) {

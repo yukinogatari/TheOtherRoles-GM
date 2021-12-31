@@ -31,7 +31,7 @@ namespace TheOtherRoles
             Opportunist.clearAndReload();
             Ninja.clearAndReload();
             Madmate.clearAndReload();
-            MadScientist.clearAndReload();
+            PlagueDoctor.clearAndReload();
             Role.Clear();
         }
 

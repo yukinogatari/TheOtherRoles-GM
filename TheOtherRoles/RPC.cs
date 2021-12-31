@@ -64,7 +64,7 @@ namespace TheOtherRoles
         Vulture,
         Lawyer,
         Pursuer,
-        MadScientist,
+        PlagueDoctor,
 
 
         GM = 200,
@@ -137,9 +137,9 @@ namespace TheOtherRoles
         UseVitalsTime,
         ArsonistDouse,
         VultureEat,
-        MadScientistWin,
-        MadScientistSetInfected,
-        MadScientistUpdateProgress,
+        PlagueDoctorWin,
+        PlagueDoctorSetInfected,
+        PlagueDoctorUpdateProgress,
     }
 
     public static class RPCProcedure {
@@ -559,8 +559,8 @@ namespace TheOtherRoles
                         Ninja.swapRole(player, oldShifter);
                         break;
 
-                    case RoleId.MadScientist:
-                        MadScientist.swapRole(player, oldShifter);
+                    case RoleId.PlagueDoctor:
+                        PlagueDoctor.swapRole(player, oldShifter);
                         break;
                 }
             }
@@ -697,7 +697,7 @@ namespace TheOtherRoles
             // Other roles
             if (player.isRole(RoleId.Jester)) Jester.clearAndReload();
             if (player.isRole(RoleId.Arsonist)) Arsonist.clearAndReload();
-            if (player.isRole(RoleId.MadScientist)) MadScientist.clearAndReload();
+            if (player.isRole(RoleId.PlagueDoctor)) PlagueDoctor.clearAndReload();
             if (Guesser.isGuesser(player.PlayerId)) Guesser.clear(player.PlayerId);
             if (!ignoreLovers && player.isLovers())
             { // The whole Lover couple is being erased
@@ -1046,21 +1046,20 @@ namespace TheOtherRoles
             MapOptions.restrictVitalsTime -= time;
         }
 
-        public static void madScientistWin() {
-            MadScientist.triggerMadScientistWin = true;
+        public static void plagueDoctorWin() {
+            PlagueDoctor.triggerPlagueDoctorWin = true;
         }
 
-        public static void setInfected(byte targetId){
-            foreach(PlayerControl p in PlayerControl.AllPlayerControls){
-                if(p.Data.PlayerId == targetId){
-                    if(!MadScientist.infected.Keys.Contains(targetId)){
-                        MadScientist.infected.Add(targetId, p);
-                    }
-                }
+        public static void plagueDoctorInfected(byte targetId) {
+            var p = Helpers.playerById(targetId);
+            if (!PlagueDoctor.infected.ContainsKey(targetId))
+            {
+                PlagueDoctor.infected[targetId] = p;
             }
         }
-        public static void updateProgress(byte targetId, float progress){
-			MadScientist.progress[targetId] = progress;
+
+        public static void plagueDoctorProgress(byte targetId, float progress) {
+			PlagueDoctor.progress[targetId] = progress;
         }
     }   
 
@@ -1280,17 +1279,17 @@ namespace TheOtherRoles
                 case (byte)CustomRPC.UseVitalsTime:
                     RPCProcedure.UseVitalsTime(reader.ReadSingle());
                     break;
-                case (byte)CustomRPC.MadScientistWin:
-                    RPCProcedure.madScientistWin();
+                case (byte)CustomRPC.PlagueDoctorWin:
+                    RPCProcedure.plagueDoctorWin();
                     break;
-                case (byte)CustomRPC.MadScientistSetInfected:
-                    RPCProcedure.setInfected(reader.ReadByte());
+                case (byte)CustomRPC.PlagueDoctorSetInfected:
+                    RPCProcedure.plagueDoctorInfected(reader.ReadByte());
                     break;
-                case (byte)CustomRPC.MadScientistUpdateProgress:
+                case (byte)CustomRPC.PlagueDoctorUpdateProgress:
 					byte progressTarget = reader.ReadByte();
 					byte[] progressByte =  reader.ReadBytes(4);
 					float progress = System.BitConverter.ToSingle(progressByte, 0);
-                    RPCProcedure.updateProgress(progressTarget, progress);
+                    RPCProcedure.plagueDoctorProgress(progressTarget, progress);
                     break;
             }
         }

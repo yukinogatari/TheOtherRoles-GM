@@ -1,0 +1,280 @@
+using HarmonyLib;
+using Hazel;
+using System;
+using System.Linq;
+using System.Collections.Generic;
+using TheOtherRoles.Objects;
+using UnityEngine;
+using static TheOtherRoles.TheOtherRoles;
+using static TheOtherRoles.Patches.PlayerControlFixedUpdatePatch;
+
+namespace TheOtherRoles
+{
+    [HarmonyPatch]
+    public class PlagueDoctor : RoleBase<PlagueDoctor>
+    {
+        private static CustomButton plagueDoctorButton;
+        public static Color color = new Color32(255, 192, 0, byte.MaxValue);
+
+        public static Dictionary<int, PlayerControl> infected;
+        public static Dictionary<int, float> progress;
+        public static Dictionary<int, bool> dead;
+        public static TMPro.TMP_Text statusText = null;
+        public static TMPro.TMP_Text numInfectionsText = null;
+        public static bool triggerPlagueDoctorWin = false;
+
+        public PlayerControl currentTarget;
+        public int numInfections = 0;
+        public bool meetingFlag = false;
+
+        public static Sprite plagueDoctorIcon;
+
+        public static float infectCooldown { get { return CustomOptionHolder.plagueDoctorInfectCooldown.getFloat(); } }
+        public static int maxInfectable { get { return Mathf.RoundToInt(CustomOptionHolder.plagueDoctorNumInfections.getFloat()); } }
+        public static float infectDistance { get { return CustomOptionHolder.plagueDoctorDistance.getFloat(); } }
+        public static float infectDuration { get { return CustomOptionHolder.plagueDoctorDuration.getFloat(); } }
+        public static float immunityTime { get { return CustomOptionHolder.plagueDoctorImmunityTime.getFloat(); } }
+
+        public PlagueDoctor()
+        {
+            RoleType = roleId = RoleId.PlagueDoctor;
+
+            numInfections = maxInfectable;
+            meetingFlag = false;
+
+            updateDead();
+        }
+
+        public override void OnMeetingStart()
+        {
+            meetingFlag = true;
+        }
+
+        public override void OnMeetingEnd()
+        {
+            HudManager.Instance.StartCoroutine(Effects.Lerp(immunityTime, new Action<float>((p) =>
+            { // 5秒後から感染開始
+                if (p == 1f)
+                {
+                    meetingFlag = false;
+                }
+            })));
+
+            updateDead();
+        }
+
+        public override void FixedUpdate()
+        {
+            if (player == PlayerControl.LocalPlayer)
+            {
+                if (numInfections > 0)
+                {
+                    currentTarget = setTarget(untargetablePlayers: infected.Values.ToList());
+                    setPlayerOutline(currentTarget, PlagueDoctor.color);
+                }
+
+                if (!meetingFlag)
+                {
+
+                    List<PlayerControl> newInfected = new List<PlayerControl>();
+                    foreach (PlayerControl p1 in PlayerControl.AllPlayerControls)
+                    { // 非感染プレイヤーのループ
+                        if (p1 == player || p1.Data.IsDead || infected.ContainsKey(p1.PlayerId)) continue;
+                        // データが無い場合は作成する
+                        if (!progress.ContainsKey(p1.PlayerId))
+                        {
+                            progress[p1.PlayerId] = 0f;
+                        }
+                        foreach (int key in infected.Keys)
+                        { // 感染プレイヤーのループ
+                            if (infected[key].Data.IsDead) continue;
+                            float distance = Vector3.Distance(infected[key].transform.position, p1.transform.position);
+                            // 障害物判定
+                            bool anythingBetween = PhysicsHelpers.AnythingBetween(infected[key].GetTruePosition(), p1.GetTruePosition(), Constants.ShipAndObjectsMask, false);
+
+                            if (distance <= infectDistance && !anythingBetween)
+                            {
+                                progress[p1.PlayerId] += Time.fixedDeltaTime;
+
+                                // 他のクライアントに進行状況を通知する
+                                MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.PlagueDoctorUpdateProgress, Hazel.SendOption.Reliable, -1);
+                                writer.Write(p1.PlayerId);
+                                writer.Write(progress[p1.PlayerId]);
+                                AmongUsClient.Instance.FinishRpcImmediately(writer);
+
+                                // 既定値を超えたら感染扱いにする
+                                if (progress[p1.PlayerId] >= infectDuration)
+                                {
+                                    newInfected.Add(p1);
+                                }
+                            }
+
+                        }
+                    }
+
+                    // 感染者に追加する
+                    foreach (PlayerControl p in newInfected)
+                    {
+                        byte targetId = p.PlayerId;
+                        MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.PlagueDoctorSetInfected, Hazel.SendOption.Reliable, -1);
+                        writer.Write(targetId);
+                        AmongUsClient.Instance.FinishRpcImmediately(writer);
+                        RPCProcedure.plagueDoctorInfected(targetId);
+                    }
+
+                    // 勝利条件を満たしたか確認する
+                    bool winFlag = true;
+                    foreach (PlayerControl p in PlayerControl.AllPlayerControls)
+                    {
+                        if (p.Data.IsDead) continue;
+                        if (p == player) continue;
+                        if (!infected.ContainsKey(p.PlayerId))
+                        {
+                            winFlag = false;
+                            break;
+                        }
+                    }
+
+                    if (winFlag)
+                    {
+                        MessageWriter winWriter = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.PlagueDoctorWin, Hazel.SendOption.Reliable, -1);
+                        AmongUsClient.Instance.FinishRpcImmediately(winWriter);
+                        RPCProcedure.plagueDoctorWin();
+                    }
+                }
+            }
+            UpdateStatusText();
+        }
+
+        public void UpdateStatusText()
+        {
+            if ((player != null && PlayerControl.LocalPlayer == player) || PlayerControl.LocalPlayer.isDead())
+            {
+                if (statusText == null)
+                {
+                    var position = Camera.main.ViewportToWorldPoint(new Vector3(0f, 1f, Camera.main.nearClipPlane));
+                    var obj = UnityEngine.Object.Instantiate(HudManager._instance.GameSettings);
+                    statusText = obj.GetComponent<TMPro.TMP_Text>();
+                    statusText.transform.position = new Vector3(HudManager._instance.GameSettings.transform.position.x, position.y - 0.1f, -14f);
+                    statusText.transform.localScale = new Vector3(1f, 1f, 1f);
+                    statusText.fontSize = 1.5f;
+                    statusText.fontSizeMin = 1.5f;
+                    statusText.fontSizeMax = 1.5f;
+                    statusText.alignment = TMPro.TextAlignmentOptions.BottomLeft;
+                    statusText.transform.parent = HudManager._instance.GameSettings.transform.parent;
+                }
+                statusText.gameObject.SetActive(true);
+                string text = $"[{ModTranslation.getString("plagueDoctorProgress")}]\n";
+                foreach (PlayerControl p in PlayerControl.AllPlayerControls)
+                {
+                    if (p == player) continue;
+                    if (dead.ContainsKey(p.PlayerId) && dead[p.PlayerId]) continue;
+                    if (infected.ContainsKey(p.PlayerId))
+                    {
+                        text += $"{p.name}: {Helpers.cs(Color.red, ModTranslation.getString("plagueDoctorInfectedText"))}\n";
+                    }
+                    else
+                    {
+                        // データが無い場合は作成する
+                        if (!progress.ContainsKey(p.PlayerId))
+                        {
+                            progress[p.PlayerId] = 0f;
+                        }
+                        float currProgress = 100 * progress[p.PlayerId] / CustomOptionHolder.plagueDoctorDuration.getFloat();
+                        string prog = currProgress.ToString("F1");
+                        text += $"{p.name}: {prog}%\n";
+                    }
+                }
+
+                statusText.text = text;
+            }
+        }
+
+        public override void OnKill(PlayerControl target) { }
+
+        public override void OnDeath(PlayerControl killer = null)
+        {
+            if (killer != null)
+            {
+                byte targetId = killer.PlayerId;
+                MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.PlagueDoctorSetInfected, Hazel.SendOption.Reliable, -1);
+                writer.Write(targetId);
+                AmongUsClient.Instance.FinishRpcImmediately(writer);
+                RPCProcedure.plagueDoctorInfected(targetId);
+            }
+        }
+
+        public static void MakeButtons(HudManager hm)
+        {
+            plagueDoctorButton = new CustomButton(
+                () =>
+                {/*ボタンが押されたとき*/
+                    byte targetId = local.currentTarget.PlayerId;
+
+                    MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.PlagueDoctorSetInfected, Hazel.SendOption.Reliable, -1);
+                    writer.Write(targetId);
+                    AmongUsClient.Instance.FinishRpcImmediately(writer);
+                    RPCProcedure.plagueDoctorInfected(targetId);
+                    local.numInfections--;
+
+                    plagueDoctorButton.Timer = plagueDoctorButton.MaxTimer;
+                    local.currentTarget = null;
+                },
+                () => {/*ボタンが有効になる条件*/ return PlayerControl.LocalPlayer.isRole(RoleId.PlagueDoctor) && local.numInfections > 0 && !PlayerControl.LocalPlayer.Data.IsDead; },
+                () => {/*ボタンが使える条件*/
+                    if (numInfectionsText != null)
+                    {
+                        if (local.numInfections > 0)
+                            numInfectionsText.text = String.Format(ModTranslation.getString("plagueDoctorInfectionsLeft"), local.numInfections);
+                        else
+                            numInfectionsText.text = "";
+                    }
+
+                    return local.currentTarget != null && local.numInfections > 0 && PlayerControl.LocalPlayer.CanMove;
+                },
+                () => {/*ミーティング終了時*/ plagueDoctorButton.Timer = plagueDoctorButton.MaxTimer; },
+                getSyringeIcon(),
+                new Vector3(-1.8f, -0.06f, 0),
+                hm,
+                hm.UseButton,
+                KeyCode.F
+            );
+            plagueDoctorButton.buttonText = ModTranslation.getString("plagueDoctorInfectButton");
+
+            numInfectionsText = GameObject.Instantiate(plagueDoctorButton.actionButton.cooldownTimerText, plagueDoctorButton.actionButton.cooldownTimerText.transform.parent);
+            numInfectionsText.text = "";
+            numInfectionsText.enableWordWrapping = false;
+            numInfectionsText.transform.localScale = Vector3.one * 0.5f;
+            numInfectionsText.transform.localPosition += new Vector3(-0.05f, 0.7f, 0);
+        }
+
+        public static Sprite getSyringeIcon()
+        {
+            if (plagueDoctorIcon) return plagueDoctorIcon;
+            plagueDoctorIcon = Helpers.loadSpriteFromResources("TheOtherRoles.Resources.InfectButton.png", 115f);
+            return plagueDoctorIcon;
+        }
+
+        public static void SetButtonCooldowns()
+        {
+            plagueDoctorButton.MaxTimer = infectCooldown;
+        }
+
+        public static void updateDead()
+        {
+            foreach (var pc in PlayerControl.AllPlayerControls)
+            {
+                dead[pc.PlayerId] = pc.Data.IsDead;
+            }
+        }
+
+        public static void clearAndReload()
+        {
+            players = new List<PlagueDoctor>();
+            triggerPlagueDoctorWin = false;
+            infected = new Dictionary<int, PlayerControl>();
+            progress = new Dictionary<int, float>();
+            dead = new Dictionary<int, bool>();
+        }
+    }
+}

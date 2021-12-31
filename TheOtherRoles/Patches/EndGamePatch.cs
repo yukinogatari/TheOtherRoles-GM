@@ -23,7 +23,7 @@ namespace TheOtherRoles.Patches
         ArsonistWin = 14,
         VultureWin = 15,
         LawyerSoloWin = 16,
-        MadScientistWin = 17
+        PlagueDoctorWin = 17
     }
 
     enum WinCondition
@@ -41,8 +41,7 @@ namespace TheOtherRoles.Patches
         AdditionalLawyerBonusWin,
         AdditionalLawyerStolenWin,
         AdditionalAlivePursuerWin,
-        MadScientistWin
-
+        PlagueDoctorWin
     }
 
     enum FinalStatus
@@ -143,7 +142,7 @@ namespace TheOtherRoles.Patches
             if (Vulture.vulture != null) notWinners.Add(Vulture.vulture);
             if (Lawyer.lawyer != null) notWinners.Add(Lawyer.lawyer);
             if (Pursuer.pursuer != null) notWinners.Add(Pursuer.pursuer);
-            if (MadScientist.players.FirstOrDefault().player != null) notWinners.Add(MadScientist.players.FirstOrDefault().player);
+            if (PlagueDoctor.players.FirstOrDefault().player != null) notWinners.Add(PlagueDoctor.players.FirstOrDefault().player);
 
             notWinners.AddRange(Jackal.formerJackals);
             notWinners.AddRange(Madmate.allPlayers);
@@ -180,7 +179,7 @@ namespace TheOtherRoles.Patches
             bool teamJackalWin = gameOverReason == (GameOverReason)CustomGameOverReason.TeamJackalWin && ((Jackal.jackal != null && Jackal.jackal.isAlive()) || (Sidekick.sidekick != null && !Sidekick.sidekick.isAlive()));
             bool vultureWin = Vulture.vulture != null && gameOverReason == (GameOverReason)CustomGameOverReason.VultureWin;
             bool lawyerSoloWin = Lawyer.lawyer != null && gameOverReason == (GameOverReason)CustomGameOverReason.LawyerSoloWin;
-            bool madScientistWin = MadScientist.players.FirstOrDefault().player != null && gameOverReason == (GameOverReason)CustomGameOverReason.MadScientistWin;
+            bool plagueDoctorWin = gameOverReason == (GameOverReason)CustomGameOverReason.PlagueDoctorWin;
 
 
             // Mini lose
@@ -293,12 +292,15 @@ namespace TheOtherRoles.Patches
                 TempData.winners.Add(wpd);
                 AdditionalTempData.winCondition = WinCondition.LawyerSoloWin;
             }
-            else if (madScientistWin)
+            else if (plagueDoctorWin)
             {
-                TempData.winners = new Il2CppSystem.Collections.Generic.List<WinningPlayerData>();
-                WinningPlayerData wpd = new WinningPlayerData(MadScientist.players.FirstOrDefault().player.Data);
-                TempData.winners.Add(wpd);
-                AdditionalTempData.winCondition = WinCondition.MadScientistWin;
+                foreach (var pd in PlagueDoctor.players)
+                {
+                    TempData.winners = new Il2CppSystem.Collections.Generic.List<WinningPlayerData>();
+                    WinningPlayerData wpd = new WinningPlayerData(pd.player.Data);
+                    TempData.winners.Add(wpd);
+                    AdditionalTempData.winCondition = WinCondition.PlagueDoctorWin;
+                }
             }
 
             // Possible Additional winner: Lawyer
@@ -469,11 +471,11 @@ namespace TheOtherRoles.Patches
                         textRenderer.color = Lawyer.color;
                         __instance.BackgroundBar.material.SetColor("_Color", Lawyer.color);
                     }
-                    else if (AdditionalTempData.winCondition == WinCondition.MadScientistWin)
+                    else if (AdditionalTempData.winCondition == WinCondition.PlagueDoctorWin)
                     {
-                        bonusText = "madScientistWin";
-                        textRenderer.color = MadScientist.color;
-                        __instance.BackgroundBar.material.SetColor("_Color", MadScientist.color);
+                        bonusText = "plagueDoctorWin";
+                        textRenderer.color = PlagueDoctor.color;
+                        __instance.BackgroundBar.material.SetColor("_Color", PlagueDoctor.color);
                     }
                     else if (AdditionalTempData.winCondition == WinCondition.LoversTeamWin)
                     {
@@ -617,7 +619,7 @@ namespace TheOtherRoles.Patches
                     if (CheckAndEndGameForLawyerMeetingWin(__instance)) return false;
                     if (CheckAndEndGameForArsonistWin(__instance)) return false;
                     if (CheckAndEndGameForVultureWin(__instance)) return false;
-                    if (CheckAndEndGameForMadScientistWin(__instance)) return false;
+                    if (CheckAndEndGameForPlagueDoctorWin(__instance)) return false;
                     if (CheckAndEndGameForSabotageWin(__instance)) return false;
                     if (CheckAndEndGameForTaskWin(__instance)) return false;
                     if (CheckAndEndGameForLoverWin(__instance, statistics)) return false;
@@ -681,12 +683,13 @@ namespace TheOtherRoles.Patches
                     }
                     return false;
                 }
-                private static bool CheckAndEndGameForMadScientistWin(ShipStatus __instance)
+
+                private static bool CheckAndEndGameForPlagueDoctorWin(ShipStatus __instance)
                 {
-                    if (MadScientist.triggerMadScientistWin)
+                    if (PlagueDoctor.triggerPlagueDoctorWin)
                     {
                         __instance.enabled = false;
-                        ShipStatus.RpcEndGame((GameOverReason)CustomGameOverReason.MadScientistWin, false);
+                        ShipStatus.RpcEndGame((GameOverReason)CustomGameOverReason.PlagueDoctorWin, false);
                         return true;
                     }
                     return false;

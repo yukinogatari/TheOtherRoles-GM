@@ -635,6 +635,14 @@
         "0": "Can Shift Former Shifters",
         "11": "\u5143\u30b7\u30d5\u30bf\u30fc\u306b\u30b7\u30d5\u30c8\u3067\u304d\u308b"
     },
+    "shifterCooldown": {
+        "0": "Shift Cooldown",
+        "11": "\u30b7\u30d5\u30c8\u30af\u30fc\u30eb\u30c0\u30a6\u30f3"
+    },
+    "shifterShiftTime": {
+        "0": "Shift Time",
+        "11": "\u30b7\u30d5\u30c8\u306b\u304b\u304b\u308b\u6642\u9593"
+    },
     "shifterTargetInfo": {
         "0": "Shift Target: {0}",
         "11": "\u30b7\u30d5\u30c8\u5bfe\u8c61: {0}"
@@ -1401,6 +1409,54 @@
         "0": "Can Be Targeted While Stealthed",
         "11": "\u5fcd\u8853\u4e2d\u3001\u4ed6\u4eba\u306b\u30bf\u30fc\u30b2\u30c3\u30c8\u3055\u308c\u308b"
     },
+    "plagueDoctor": {
+        "0": "Plague Doctor",
+        "11": "\u30da\u30b9\u30c8\u533b\u5e2b"
+    },
+    "plagueDoctorIntroDesc": {
+        "0": "Spread disease to wipe out the crew",
+        "11": "\u307f\u3093\u306a\u306b\u75c5\u3092\u632f\u308a\u6492\u3053\u3046"
+    },
+    "plagueDoctorShortDesc": {
+        "0": "Spread disease to wipe out the crew",
+        "11": "\u307f\u3093\u306a\u306b\u75c5\u3092\u632f\u308a\u6492\u3053\u3046"
+    },
+    "plagueDoctorInfectCooldown": {
+        "0": "Infect Cooldown",
+        "11": "\u611f\u67d3\u30af\u30fc\u30eb\u30c0\u30a6\u30f3"
+    },
+    "plagueDoctorNumInfections": {
+        "0": "Players Plague Doctor Can Infect",
+        "11": "\u81ea\u3089\u611f\u67d3\u3055\u305b\u308b\u4eba\u6570"
+    },
+    "plagueDoctorDistance": {
+        "0": "Infection Range",
+        "11": "\u611f\u67d3\u8ddd\u96e2"
+    },
+    "plagueDoctorDuration": {
+        "0": "Infection Time",
+        "11": "\u611f\u67d3\u306b\u5fc5\u8981\u306a\u6642\u9593"
+    },
+    "plagueDoctorImmunityTime": {
+        "0": "Immunity Time After Meeting",
+        "11": "\u4f1a\u8b70\u5f8c\u3001\u611f\u67d3\u3057\u306a\u3044\u6642\u9593"
+    },
+    "plagueDoctorProgress": {
+        "0": "Infection Progress",
+        "11": "\u611f\u67d3\u72b6\u6cc1"
+    },
+    "plagueDoctorInfectedText": {
+        "0": "Infected",
+        "11": "\u611f\u67d3"
+    },
+    "plagueDoctorInfectButton": {
+        "0": "Infect",
+        "11": "\u611f\u67d3"
+    },
+    "plagueDoctorInfectionsLeft": {
+        "0": "Remaining: {0}",
+        "11": "\u6b8b\u308a {0}\u4eba"
+    },
     "husk": {
         "0": "Husk",
         "11": "\u306a\u308c\u306e\u679c\u3066"
@@ -1621,6 +1677,10 @@
         "0": "Lawyer Wins",
         "11": "\u5f01\u8b77\u58eb\u52dd\u5229"
     },
+    "plagueDoctorWin": {
+        "0": "Plague Doctor Wins",
+        "11": "\u30da\u30b9\u30c8\u533b\u5e2b\u52dd\u5229"
+    },
     "crewWinExtra": {
         "0": "Crewmates {0} Win",
         "11": "\u30af\u30eb\u30fc{0}\u52dd\u5229"
@@ -1656,6 +1716,10 @@
     "lawyerWinExtra": {
         "0": "Lawyer {0} Win",
         "11": "\u5f01\u8b77\u58eb{0}\u52dd\u5229"
+    },
+    "plagueDoctorWinExtra": {
+        "0": "Plague Doctor {0} Win",
+        "11": "\u30da\u30b9\u30c8\u533b\u5e2b{0}\u52dd\u5229"
     },
     "opportunistExtra": {
         "0": "& <color=#00FF00FF>Opportunist</color>",
@@ -1792,6 +1856,10 @@
     "unitTimes": {
         "0": "{0}x",
         "11": "{0}\u56de"
+    },
+    "unitMeters": {
+        "0": "{0}m",
+        "11": "{0}m"
     },
     "unitVotes": {
         "0": "{0}",
