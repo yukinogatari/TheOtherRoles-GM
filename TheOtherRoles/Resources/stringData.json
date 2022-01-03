@@ -1431,7 +1431,7 @@
     },
     "plagueDoctorDistance": {
         "0": "Infection Range",
-        "11": "\u611f\u67d3\u8ddd\u96e2"
+        "11": "\u611f\u67d3\u7bc4\u56f2"
     },
     "plagueDoctorDuration": {
         "0": "Infection Time",
@@ -1440,6 +1440,18 @@
     "plagueDoctorImmunityTime": {
         "0": "Immunity Time After Meeting",
         "11": "\u4f1a\u8b70\u5f8c\u3001\u611f\u67d3\u3057\u306a\u3044\u6642\u9593"
+    },
+    "plagueDoctorInfectKiller": {
+        "0": "Infect Killer",
+        "11": "\u6bba\u3057\u305f\u4eba\u3092\u81ea\u52d5\u7684\u306b\u611f\u67d3\u3055\u305b\u308b"
+    },
+    "plagueDoctorResetMeeting": {
+        "0": "Partial Infections Reset After Meeting",
+        "11": "\u4f1a\u8b70\u5f8c\u3001\u9014\u4e2d\u611f\u67d3\u72b6\u614b\u304c\u30ea\u30bb\u30c3\u30c8\u3055\u308c\u308b"
+    },
+    "plagueDoctorWinDead": {
+        "0": "Can Still Win After Death",
+        "11": "\u6b7b\u4ea1\u5f8c\u3067\u3082\u52dd\u5229\u3067\u304d\u308b"
     },
     "plagueDoctorProgress": {
         "0": "Infection Progress",

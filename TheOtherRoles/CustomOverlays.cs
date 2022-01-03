@@ -129,6 +129,7 @@ namespace TheOtherRoles {
 
             if (MapBehaviour.Instance != null)
                 MapBehaviour.Instance.Close();
+
             hudManager.SetHudActive(false);
             
             overlayShown = true;

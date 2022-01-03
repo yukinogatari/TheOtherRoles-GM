@@ -35,6 +35,13 @@ namespace TheOtherRoles
         public static float infectDuration { get { return CustomOptionHolder.plagueDoctorDuration.getFloat(); } }
         public static float immunityTime { get { return CustomOptionHolder.plagueDoctorImmunityTime.getFloat(); } }
 
+        public static bool infectKiller { get { return CustomOptionHolder.plagueDoctorInfectKiller.getBool(); } }
+        public static bool resetAfterMeeting { get {
+                //return CustomOptionHolder.plagueDoctorResetMeeting.getBool();
+                return false;
+            } }
+        public static bool canWinDead { get { return CustomOptionHolder.plagueDoctorWinDead.getBool(); } }
+
         public PlagueDoctor()
         {
             RoleType = roleId = RoleId.PlagueDoctor;
@@ -52,6 +59,13 @@ namespace TheOtherRoles
 
         public override void OnMeetingEnd()
         {
+            if (resetAfterMeeting)
+            {
+                progress.Clear();
+            }
+
+            updateDead();
+
             HudManager.Instance.StartCoroutine(Effects.Lerp(immunityTime, new Action<float>((p) =>
             { // 5秒後から感染開始
                 if (p == 1f)
@@ -59,56 +73,73 @@ namespace TheOtherRoles
                     meetingFlag = false;
                 }
             })));
+        }
 
-            updateDead();
+        public override void OnKill(PlayerControl target) { }
+        public override void HandleDisconnect(PlayerControl player, DisconnectReasons reason) { }
+
+        public override void OnDeath(PlayerControl killer = null)
+        {
+            if (killer != null && infectKiller)
+            {
+                byte targetId = killer.PlayerId;
+                MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.PlagueDoctorSetInfected, Hazel.SendOption.Reliable, -1);
+                writer.Write(targetId);
+                AmongUsClient.Instance.FinishRpcImmediately(writer);
+                RPCProcedure.plagueDoctorInfected(targetId);
+            }
         }
 
         public override void FixedUpdate()
         {
             if (player == PlayerControl.LocalPlayer)
             {
-                if (numInfections > 0)
+                if (numInfections > 0 && player.isAlive())
                 {
                     currentTarget = setTarget(untargetablePlayers: infected.Values.ToList());
                     setPlayerOutline(currentTarget, PlagueDoctor.color);
                 }
 
-                if (!meetingFlag)
+                if (!meetingFlag && (canWinDead || player.isAlive()))
                 {
-
                     List<PlayerControl> newInfected = new List<PlayerControl>();
-                    foreach (PlayerControl p1 in PlayerControl.AllPlayerControls)
+                    foreach (PlayerControl target in PlayerControl.AllPlayerControls)
                     { // 非感染プレイヤーのループ
-                        if (p1 == player || p1.Data.IsDead || infected.ContainsKey(p1.PlayerId)) continue;
+                        if (target == player || target.isDead() || infected.ContainsKey(target.PlayerId) || target.inVent) continue;
+
                         // データが無い場合は作成する
-                        if (!progress.ContainsKey(p1.PlayerId))
+                        if (!progress.ContainsKey(target.PlayerId))
                         {
-                            progress[p1.PlayerId] = 0f;
+                            progress[target.PlayerId] = 0f;
                         }
-                        foreach (int key in infected.Keys)
+
+                        foreach (var source in infected.Values.ToList())
                         { // 感染プレイヤーのループ
-                            if (infected[key].Data.IsDead) continue;
-                            float distance = Vector3.Distance(infected[key].transform.position, p1.transform.position);
+                            if (source.isDead()) continue;
+                            float distance = Vector3.Distance(source.transform.position, target.transform.position);
                             // 障害物判定
-                            bool anythingBetween = PhysicsHelpers.AnythingBetween(infected[key].GetTruePosition(), p1.GetTruePosition(), Constants.ShipAndObjectsMask, false);
+                            bool anythingBetween = PhysicsHelpers.AnythingBetween(source.GetTruePosition(), target.GetTruePosition(), Constants.ShipAndObjectsMask, false);
 
                             if (distance <= infectDistance && !anythingBetween)
                             {
-                                progress[p1.PlayerId] += Time.fixedDeltaTime;
+                                progress[target.PlayerId] += Time.fixedDeltaTime;
+                                Helpers.log($"player {target.PlayerId} status: {progress[target.PlayerId]}s");
 
                                 // 他のクライアントに進行状況を通知する
                                 MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.PlagueDoctorUpdateProgress, Hazel.SendOption.Reliable, -1);
-                                writer.Write(p1.PlayerId);
-                                writer.Write(progress[p1.PlayerId]);
+                                writer.Write(target.PlayerId);
+                                writer.Write(progress[target.PlayerId]);
                                 AmongUsClient.Instance.FinishRpcImmediately(writer);
 
-                                // 既定値を超えたら感染扱いにする
-                                if (progress[p1.PlayerId] >= infectDuration)
-                                {
-                                    newInfected.Add(p1);
-                                }
+                                // Only update a player's infection once per FixedUpdate
+                                break;
                             }
+                        }
 
+                        // 既定値を超えたら感染扱いにする
+                        if (progress[target.PlayerId] >= infectDuration)
+                        {
+                            newInfected.Add(target);
                         }
                     }
 
@@ -126,7 +157,7 @@ namespace TheOtherRoles
                     bool winFlag = true;
                     foreach (PlayerControl p in PlayerControl.AllPlayerControls)
                     {
-                        if (p.Data.IsDead) continue;
+                        if (p.isDead()) continue;
                         if (p == player) continue;
                         if (!infected.ContainsKey(p.PlayerId))
                         {
@@ -148,6 +179,12 @@ namespace TheOtherRoles
 
         public void UpdateStatusText()
         {
+            if (MeetingHud.Instance != null)
+            {
+                statusText.gameObject.SetActive(false);
+                return;
+            }
+
             if ((player != null && PlayerControl.LocalPlayer == player) || PlayerControl.LocalPlayer.isDead())
             {
                 if (statusText == null)
@@ -163,6 +200,7 @@ namespace TheOtherRoles
                     statusText.alignment = TMPro.TextAlignmentOptions.BottomLeft;
                     statusText.transform.parent = HudManager._instance.GameSettings.transform.parent;
                 }
+
                 statusText.gameObject.SetActive(true);
                 string text = $"[{ModTranslation.getString("plagueDoctorProgress")}]\n";
                 foreach (PlayerControl p in PlayerControl.AllPlayerControls)
@@ -190,20 +228,6 @@ namespace TheOtherRoles
             }
         }
 
-        public override void OnKill(PlayerControl target) { }
-
-        public override void OnDeath(PlayerControl killer = null)
-        {
-            if (killer != null)
-            {
-                byte targetId = killer.PlayerId;
-                MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.PlagueDoctorSetInfected, Hazel.SendOption.Reliable, -1);
-                writer.Write(targetId);
-                AmongUsClient.Instance.FinishRpcImmediately(writer);
-                RPCProcedure.plagueDoctorInfected(targetId);
-            }
-        }
-
         public static void MakeButtons(HudManager hm)
         {
             plagueDoctorButton = new CustomButton(
@@ -220,7 +244,7 @@ namespace TheOtherRoles
                     plagueDoctorButton.Timer = plagueDoctorButton.MaxTimer;
                     local.currentTarget = null;
                 },
-                () => {/*ボタンが有効になる条件*/ return PlayerControl.LocalPlayer.isRole(RoleId.PlagueDoctor) && local.numInfections > 0 && !PlayerControl.LocalPlayer.Data.IsDead; },
+                () => {/*ボタンが有効になる条件*/ return PlayerControl.LocalPlayer.isRole(RoleId.PlagueDoctor) && local.numInfections > 0 && !PlayerControl.LocalPlayer.isDead(); },
                 () => {/*ボタンが使える条件*/
                     if (numInfectionsText != null)
                     {
@@ -264,7 +288,7 @@ namespace TheOtherRoles
         {
             foreach (var pc in PlayerControl.AllPlayerControls)
             {
-                dead[pc.PlayerId] = pc.Data.IsDead;
+                dead[pc.PlayerId] = pc.isDead();
             }
         }
 

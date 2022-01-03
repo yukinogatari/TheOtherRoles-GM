@@ -9,6 +9,7 @@ This fork introduces a number of changes to [The Other Roles](https://github.com
   * [Ninja](#ninja) by [Virtual_Dusk](https://twitter.com/Virtual_Dusk)
   * [Evil Swapper](#swapper) by [Virtual_Dusk](https://twitter.com/Virtual_Dusk)
   * [Chain-Shifter](#shifter) by [Virtual_Dusk](https://twitter.com/Virtual_Dusk)
+  * [Plague Doctor](#plague-doctor) by [haoming37](https://github.com/haoming37)
 * Pluralized Roles
   * Lovers (up to 7 couples)
   * Sheriff
@@ -34,7 +35,7 @@ Even more roles are coming soon :)
 | [Godfather (Mafia)](#mafia) | [Mayor](#mayor) | [Vulture](#vulture)  |  |
 | [Mafioso (Mafia)](#mafia) | [Medic](#medic) | [Lawyer](#lawyer) |  |
 | [Janitor (Mafia)](#mafia)  | [Security Guard](#security-guard) | [Chain-Shifter](#shifter) |  |
-| [Morphling](#morphling) | [Seer](#seer) |  |  |
+| [Morphling](#morphling) | [Seer](#seer) | [Plague Doctor](#plague-doctor) |  |
 | [Trickster](#trickster) | [Sheriff](#sheriff) |  |  |
 | [Vampire](#vampire) | [Shifter](#shifter) |  |  |
 | [Warlock](#warlock) | [Snitch](#snitch) |  |  |
@@ -1410,6 +1411,17 @@ The Pursuer is still a neutral role, but has a different goal to win the game; t
 In order to achieve this goal, the Pursuer has an ability called "Blank", where they can fill a killers (this also includes the Sheriff) weapon with a blank. So, if the killer attempts to kill someone, the killer will miss their target, and their cooldowns will be triggered as usual.
 If the killer fires the "Blank", shields (e.g. Medic shield or Time Master shield) will not be triggered.
 The Pursuer has tasks (which can already be done while being a Lawyer), that count towards the task win for the Crewmates. If the Pursuer dies, their tasks won't be counted anymore.
+
+## Plague Doctor
+### **Team: Neutral**
+
+Created by [haoming37](https://github.com/haoming37)
+
+The Plague Doctor is a neutral role whose goal is to infect every living player. They start by choosing one player to infect, after which anyone who spends a set amount of time in range of the infected player becomes infected themselves. Infection progress is cumulative, and does not reset with distance or after meetings.
+
+The Plague Doctor is still able to win even if dead. Furthermore, if killed, their killer is automatically infected.
+
+A set period of time after each meeting, players are immune from infection, letting them get safely away from potentially infected players.
 
 # Source code
 It's bad I know, this is a side project and my second week of modding. So there are no best practices around here.

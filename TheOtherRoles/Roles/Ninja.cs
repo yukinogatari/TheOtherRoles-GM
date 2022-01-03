@@ -57,6 +57,9 @@ namespace TheOtherRoles
             }
         }
 
+        public override void FixedUpdate() { }
+        public override void HandleDisconnect(PlayerControl player, DisconnectReasons reason) { }
+
         public static bool isStealthed(PlayerControl player)
         {
             if (isRole(player) && player.isAlive())

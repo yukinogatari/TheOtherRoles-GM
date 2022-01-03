@@ -977,9 +977,16 @@ namespace TheOtherRoles
             if (target == null) return;
             target.MyPhysics.ExitAllVents();
             target.Exiled();
+            GMUpdateMeeting(targetId, true);
+            finalStatuses[target.PlayerId] = FinalStatus.GMExecuted;
 
             PlayerControl partner = target.getPartner(); // Lover check
-            partner?.MyPhysics.ExitAllVents();
+            if (partner != null)
+            {
+                partner?.MyPhysics.ExitAllVents();
+                GMUpdateMeeting(partner.PlayerId, true);
+                finalStatuses[partner.PlayerId] = FinalStatus.GMExecuted;
+            }
 
             if (HudManager.Instance != null && GM.gm != null)
             {
@@ -988,10 +995,6 @@ namespace TheOtherRoles
                 else if (partner != null && PlayerControl.LocalPlayer == partner)
                     HudManager.Instance.KillOverlay.ShowKillAnimation(GM.gm.Data, partner.Data);
             }
-
-            GMUpdateMeeting(targetId, true);
-            if (partner != null)
-                GMUpdateMeeting(partner.PlayerId, true);
         }
 
         public static void GMRevive(byte targetId)
@@ -1000,12 +1003,14 @@ namespace TheOtherRoles
             if (target == null) return;
             target.Revive();
             GMUpdateMeeting(targetId, false);
+            finalStatuses[target.PlayerId] = FinalStatus.Alive;
 
             PlayerControl partner = target.getPartner(); // Lover check
             if (partner != null)
             {
                 partner.Revive();
                 GMUpdateMeeting(partner.PlayerId, false);
+                finalStatuses[partner.PlayerId] = FinalStatus.Alive;
             }
 
             if (PlayerControl.LocalPlayer.isGM())

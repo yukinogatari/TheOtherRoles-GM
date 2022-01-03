@@ -54,6 +54,7 @@ namespace TheOtherRoles.Patches
         Dead,
         Suicide,
         Misfire,
+        GMExecuted,
         Disconnected
     }
 
@@ -142,11 +143,11 @@ namespace TheOtherRoles.Patches
             if (Vulture.vulture != null) notWinners.Add(Vulture.vulture);
             if (Lawyer.lawyer != null) notWinners.Add(Lawyer.lawyer);
             if (Pursuer.pursuer != null) notWinners.Add(Pursuer.pursuer);
-            if (PlagueDoctor.players.FirstOrDefault().player != null) notWinners.Add(PlagueDoctor.players.FirstOrDefault().player);
 
             notWinners.AddRange(Jackal.formerJackals);
             notWinners.AddRange(Madmate.allPlayers);
             notWinners.AddRange(Opportunist.allPlayers);
+            notWinners.AddRange(PlagueDoctor.allPlayers);
 
             // Neutral shifter can't win
             if (Shifter.shifter != null && Shifter.isNeutral) notWinners.Add(Shifter.shifter);
@@ -179,7 +180,7 @@ namespace TheOtherRoles.Patches
             bool teamJackalWin = gameOverReason == (GameOverReason)CustomGameOverReason.TeamJackalWin && ((Jackal.jackal != null && Jackal.jackal.isAlive()) || (Sidekick.sidekick != null && !Sidekick.sidekick.isAlive()));
             bool vultureWin = Vulture.vulture != null && gameOverReason == (GameOverReason)CustomGameOverReason.VultureWin;
             bool lawyerSoloWin = Lawyer.lawyer != null && gameOverReason == (GameOverReason)CustomGameOverReason.LawyerSoloWin;
-            bool plagueDoctorWin = gameOverReason == (GameOverReason)CustomGameOverReason.PlagueDoctorWin;
+            bool plagueDoctorWin = PlagueDoctor.exists && gameOverReason == (GameOverReason)CustomGameOverReason.PlagueDoctorWin;
 
 
             // Mini lose

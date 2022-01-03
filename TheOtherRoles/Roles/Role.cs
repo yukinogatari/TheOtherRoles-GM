@@ -38,12 +38,12 @@ namespace TheOtherRoles
         public PlayerControl player;
         public RoleId roleId;
 
-        public virtual void OnMeetingStart() { }
-        public virtual void OnMeetingEnd() { }
-        public virtual void FixedUpdate() { }
-        public virtual void OnKill(PlayerControl target) { }
-        public virtual void OnDeath(PlayerControl killer = null) { }
-        public virtual void HandleDisconnect(PlayerControl player, DisconnectReasons reason) { }
+        public abstract void OnMeetingStart();
+        public abstract void OnMeetingEnd();
+        public abstract void FixedUpdate();
+        public abstract void OnKill(PlayerControl target);
+        public abstract void OnDeath(PlayerControl killer = null);
+        public abstract void HandleDisconnect(PlayerControl player, DisconnectReasons reason);
 
         public static void Clear()
         {

@@ -986,7 +986,7 @@ namespace TheOtherRoles.Patches
                 hackerUpdate();
             }
 
-            TheOtherRolesGM.FixedUpdate();
+            TheOtherRolesGM.FixedUpdate(__instance);
         }
     }
 

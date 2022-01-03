@@ -278,6 +278,9 @@ namespace TheOtherRoles {
         public static CustomOption plagueDoctorDistance;
         public static CustomOption plagueDoctorDuration;
         public static CustomOption plagueDoctorImmunityTime;
+        public static CustomOption plagueDoctorInfectKiller;
+        public static CustomOption plagueDoctorResetMeeting;
+        public static CustomOption plagueDoctorWinDead;
 
         internal static Dictionary<byte, byte[]> blockedRolePairings = new Dictionary<byte, byte[]>();
         internal static List<byte> blockLovers = new List<byte>();
@@ -455,9 +458,12 @@ namespace TheOtherRoles {
             plagueDoctorSpawnRate = new CustomRoleOption(900, "plagueDoctor", PlagueDoctor.color, 1);
             plagueDoctorInfectCooldown = CustomOption.Create(901, "plagueDoctorInfectCooldown", 10f, 2.5f, 60f, 2.5f, plagueDoctorSpawnRate, format: "unitSeconds");
             plagueDoctorNumInfections = CustomOption.Create(902, "plagueDoctorNumInfections", 1f, 1f, 15, 1f, plagueDoctorSpawnRate, format: "unitPlayers");
-            plagueDoctorDistance = CustomOption.Create(903, "plagueDoctorDistance", 1.0f, 0.5f, 5.0f, 0.25f, plagueDoctorSpawnRate, format: "unitMeters");
+            plagueDoctorDistance = CustomOption.Create(903, "plagueDoctorDistance", 1.0f, 0.25f, 5.0f, 0.25f, plagueDoctorSpawnRate, format: "unitMeters");
             plagueDoctorDuration = CustomOption.Create(904, "plagueDoctorDuration", 10f, 1f, 30f, 1f, plagueDoctorSpawnRate, format: "unitSeconds");
             plagueDoctorImmunityTime = CustomOption.Create(905, "plagueDoctorImmunityTime", 10f, 1f, 30f, 1f, plagueDoctorSpawnRate, format: "unitSeconds");
+            //plagueDoctorResetMeeting = CustomOption.Create(907, "plagueDoctorResetMeeting", false, plagueDoctorSpawnRate);
+            plagueDoctorInfectKiller = CustomOption.Create(906, "plagueDoctorInfectKiller", true, plagueDoctorSpawnRate);
+            plagueDoctorWinDead = CustomOption.Create(908, "plagueDoctorWinDead", true, plagueDoctorSpawnRate);
 
             mayorSpawnRate = new CustomRoleOption(80, "mayor", Mayor.color, 1);
             mayorNumVotes = CustomOption.Create(81, "mayorNumVotes", 2f, 2f, 10f, 1f, mayorSpawnRate, format: "unitVotes");
