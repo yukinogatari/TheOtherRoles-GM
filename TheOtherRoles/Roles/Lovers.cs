@@ -161,6 +161,8 @@ namespace TheOtherRoles
 
         public static void killLovers(PlayerControl player)
         {
+            if (!player.isLovers()) return;
+
             if (separateTeam && tasksCount)
                 player.clearAllTasks();
 
@@ -182,6 +184,8 @@ namespace TheOtherRoles
 
         public static void exileLovers(PlayerControl player)
         {
+            if (!player.isLovers()) return;
+
             if (separateTeam && tasksCount)
                 player.clearAllTasks();
 

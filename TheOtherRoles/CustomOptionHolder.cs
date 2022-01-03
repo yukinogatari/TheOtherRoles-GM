@@ -459,7 +459,7 @@ namespace TheOtherRoles {
             plagueDoctorInfectCooldown = CustomOption.Create(901, "plagueDoctorInfectCooldown", 10f, 2.5f, 60f, 2.5f, plagueDoctorSpawnRate, format: "unitSeconds");
             plagueDoctorNumInfections = CustomOption.Create(902, "plagueDoctorNumInfections", 1f, 1f, 15, 1f, plagueDoctorSpawnRate, format: "unitPlayers");
             plagueDoctorDistance = CustomOption.Create(903, "plagueDoctorDistance", 1.0f, 0.25f, 5.0f, 0.25f, plagueDoctorSpawnRate, format: "unitMeters");
-            plagueDoctorDuration = CustomOption.Create(904, "plagueDoctorDuration", 10f, 1f, 30f, 1f, plagueDoctorSpawnRate, format: "unitSeconds");
+            plagueDoctorDuration = CustomOption.Create(904, "plagueDoctorDuration", 5f, 1f, 30f, 1f, plagueDoctorSpawnRate, format: "unitSeconds");
             plagueDoctorImmunityTime = CustomOption.Create(905, "plagueDoctorImmunityTime", 10f, 1f, 30f, 1f, plagueDoctorSpawnRate, format: "unitSeconds");
             //plagueDoctorResetMeeting = CustomOption.Create(907, "plagueDoctorResetMeeting", false, plagueDoctorSpawnRate);
             plagueDoctorInfectKiller = CustomOption.Create(906, "plagueDoctorInfectKiller", true, plagueDoctorSpawnRate);

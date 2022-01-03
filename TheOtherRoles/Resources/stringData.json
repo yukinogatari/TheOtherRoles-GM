@@ -1439,7 +1439,7 @@
     },
     "plagueDoctorImmunityTime": {
         "0": "Immunity Time After Meeting",
-        "11": "\u4f1a\u8b70\u5f8c\u3001\u611f\u67d3\u3057\u306a\u3044\u6642\u9593"
+        "11": "\u4f1a\u8b70\u5f8c\u3001\u611f\u67d3\u3055\u308c\u306a\u3044\u671f\u9593"
     },
     "plagueDoctorInfectKiller": {
         "0": "Infect Killer",
@@ -2005,7 +2005,7 @@
         "0": "The Shifter can take over the role of another Crewmate, the other player will transform\ninto a Crewmate.\nThe Shift will always be performed at the end of the next meeting right before a player\nis exiled. The target needs to be chosen during the round.\nEven if the Shifter or the target dies before the meeting, the Shift will still be\nperformed.\nSwapping roles with an Impostor or Neutral fails and the Shifter commits suicide after\nthe next meeting (there won't be any body).\nThe Shifter aims to save roles from leaving the game, by e.g. taking over a Sheriff or\nMedic that is known to the Impostors.\nThis works especially well against the Eraser, but also gives the Eraser the possiblity to\nact like a Shifter.",
         "11": "\u30fb\u8ab0\u304b1\u4eba\u306e\u5f79\u8077\u3092\u596a\u3048\u308b\u3002\n\u30fb\u596a\u3063\u305f\u5f79\u8077\u306f\u4f1a\u8b70\u5f8c\u306b\u53cd\u6620\u3055\u308c\u308b\n\u30fb<color=#ff1919ff>\u30a4\u30f3\u30dd\u30b9\u30bf\u30fc</color>\u9663\u55b6\u3001<color=#ffff00ff>\u305d\u306e\u4ed6\u9663\u55b6</color>\u306e\u5f79\u8077\u3092\u596a\u3046\u3068\u30b7\u30d5\u30bf\u30fc\u81ea\u8eab\u304c\u4f1a\u8b70\u5f8c\u306b\u6b7b\u4ea1\u3059\u308b"
     },
-    "swapperFullDesc": {
+    "niceSwapperFullDesc": {
         "0": "During meetings the Swapper can exchange votes that two people get\n(i.e. all votes that player A got will be given to player B and vice versa).\nBecause of the Swappers strength in meetings, they might not start emergency\nmeetings and can't fix lights and comms.",
         "11": "\u30fb\u81ea\u5206\u542b\u3081\u6295\u7968\u3092\u5165\u308c\u66ff\u3048\u308b\u3053\u3068\u304c\u3067\u304d\u308b"
     },

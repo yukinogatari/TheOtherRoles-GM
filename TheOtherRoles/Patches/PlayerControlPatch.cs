@@ -1113,7 +1113,8 @@ namespace TheOtherRoles.Patches
                 target.clearAllTasks();
 
             // Lover suicide trigger on murder
-            Lovers.killLovers(target);
+            if (target.isLovers())
+                Lovers.killLovers(target);
 
             // Sidekick promotion trigger on murder
             if (Sidekick.promotesToJackal && Sidekick.sidekick != null && !Sidekick.sidekick.Data.IsDead && target == Jackal.jackal && Jackal.jackal == PlayerControl.LocalPlayer)
@@ -1292,7 +1293,8 @@ namespace TheOtherRoles.Patches
                 __instance.clearAllTasks();
 
             // Lover suicide trigger on exile
-            Lovers.exileLovers(__instance);
+            if (__instance.isLovers())
+                Lovers.exileLovers(__instance);
 
             // Sidekick promotion trigger on exile
             if (Sidekick.promotesToJackal && Sidekick.sidekick != null && !Sidekick.sidekick.Data.IsDead && __instance == Jackal.jackal && Jackal.jackal == PlayerControl.LocalPlayer)
