@@ -50,6 +50,7 @@ namespace TheOtherRoles
         Witch,
         Ninja,
         Madmate,
+        SerialKiller,
 
 
         Mini = 150,
@@ -140,6 +141,7 @@ namespace TheOtherRoles
         PlagueDoctorWin,
         PlagueDoctorSetInfected,
         PlagueDoctorUpdateProgress,
+        SerialKillerSuicide,
     }
 
     public static class RPCProcedure {
@@ -561,6 +563,10 @@ namespace TheOtherRoles
 
                     case RoleId.PlagueDoctor:
                         PlagueDoctor.swapRole(player, oldShifter);
+                        break;
+
+                    case RoleId.SerialKiller:
+                        SerialKiller.swapRole(player, oldShifter);
                         break;
                 }
             }
@@ -1011,6 +1017,11 @@ namespace TheOtherRoles
         public static void plagueDoctorProgress(byte targetId, float progress) {
 			PlagueDoctor.progress[targetId] = progress;
         }
+        public static void serialKillerSuicide(byte serialKillerId ) {
+            PlayerControl serialKiller = Helpers.playerById(serialKillerId);
+            if (serialKiller == null) return;
+            serialKiller.MurderPlayer(serialKiller);
+        }
     }   
 
     
@@ -1240,6 +1251,10 @@ namespace TheOtherRoles
 					byte[] progressByte =  reader.ReadBytes(4);
 					float progress = System.BitConverter.ToSingle(progressByte, 0);
                     RPCProcedure.plagueDoctorProgress(progressTarget, progress);
+                    break;
+
+                case (byte)CustomRPC.SerialKillerSuicide:
+                    RPCProcedure.serialKillerSuicide(reader.ReadByte());
                     break;
             }
         }
