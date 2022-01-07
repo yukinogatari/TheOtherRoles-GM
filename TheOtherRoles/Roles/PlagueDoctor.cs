@@ -123,7 +123,6 @@ namespace TheOtherRoles
                             if (distance <= infectDistance && !anythingBetween)
                             {
                                 progress[target.PlayerId] += Time.fixedDeltaTime;
-                                Helpers.log($"player {target.PlayerId} status: {progress[target.PlayerId]}s");
 
                                 // 他のクライアントに進行状況を通知する
                                 MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.PlagueDoctorUpdateProgress, Hazel.SendOption.Reliable, -1);
