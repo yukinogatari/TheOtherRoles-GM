@@ -67,6 +67,9 @@ namespace TheOtherRoles.Patches
         public static bool isGM = false;
         public static GameOverReason gameOverReason;
 
+        public static Dictionary<int, PlayerControl> plagueDoctorInfected = new Dictionary<int, PlayerControl>();
+        public static Dictionary<int, float> plagueDoctorProgress = new Dictionary<int, float>();
+
         public static void clear()
         {
             playerRoles.Clear();
@@ -84,6 +87,7 @@ namespace TheOtherRoles.Patches
             public int TasksCompleted { get; set; }
             public int TasksTotal { get; set; }
             public FinalStatus Status { get; set; }
+            public int PlayerId { get; set; }
         }
     }
 
@@ -123,6 +127,7 @@ namespace TheOtherRoles.Patches
                 AdditionalTempData.playerRoles.Add(new AdditionalTempData.PlayerRoleInfo()
                 {
                     PlayerName = p.PlayerName,
+                    PlayerId = p.PlayerId,
                     NameSuffix = Lovers.getIcon(p.Object),
                     Roles = roles,
                     RoleString = RoleInfo.GetRolesString(p.Object, true, hideRoles),
@@ -133,6 +138,8 @@ namespace TheOtherRoles.Patches
             }
 
             AdditionalTempData.isGM = CustomOptionHolder.gmEnabled.getBool() && PlayerControl.LocalPlayer.isGM();
+            AdditionalTempData.plagueDoctorInfected = PlagueDoctor.infected;
+            AdditionalTempData.plagueDoctorProgress = PlagueDoctor.progress;
 
             // Remove Jester, Arsonist, Vulture, Jackal, former Jackals and Sidekick from winners (if they win, they'll be readded)
             List<PlayerControl> notWinners = new List<PlayerControl>();
@@ -586,7 +593,25 @@ namespace TheOtherRoles.Patches
                         {
                             var taskInfo = data.TasksTotal > 0 ? $"<color=#FAD934FF>{data.TasksCompleted}/{data.TasksTotal}</color>" : "";
                             string aliveDead = ModTranslation.getString("roleSummary" + data.Status.ToString(), def: "-");
-                            roleSummaryText.AppendLine($"{data.PlayerName + data.NameSuffix}<pos=18.5%>{taskInfo}<pos=25%>{aliveDead}<pos=34%>{data.RoleString}");
+                            string result = $"{data.PlayerName + data.NameSuffix}<pos=18.5%>{taskInfo}<pos=25%>{aliveDead}<pos=34%>{data.RoleString}";
+                            if (RoleInfo.plagueDoctor.enabled && data.Status == FinalStatus.Alive)
+                            {
+                                result += "<pos=52.5%>";
+                                if (AdditionalTempData.plagueDoctorInfected.ContainsKey(data.PlayerId))
+                                {
+                                    result += Helpers.cs(Color.red, ModTranslation.getString("plagueDoctorInfectedText"));
+                                }
+                                else 
+                                {
+                                    float progress = AdditionalTempData.plagueDoctorProgress.ContainsKey(data.PlayerId) ? AdditionalTempData.plagueDoctorProgress[data.PlayerId] : 0f;
+                                    if (progress > 0f)
+                                    {
+                                        float currProgress = 100 * progress / PlagueDoctor.infectDuration;
+                                        result += $"{currProgress.ToString("F1")}%";
+                                    }
+                                }
+                            }
+                            roleSummaryText.AppendLine(result);
                         }
 
                         TMPro.TMP_Text roleSummaryTextMesh = roleSummary.GetComponent<TMPro.TMP_Text>();

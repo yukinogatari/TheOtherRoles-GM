@@ -217,7 +217,7 @@ namespace TheOtherRoles
                         {
                             progress[p.PlayerId] = 0f;
                         }
-                        float currProgress = 100 * progress[p.PlayerId] / CustomOptionHolder.plagueDoctorDuration.getFloat();
+                        float currProgress = 100 * progress[p.PlayerId] / infectDuration;
                         string prog = currProgress.ToString("F1");
                         text += $"{p.name}: {prog}%\n";
                     }
