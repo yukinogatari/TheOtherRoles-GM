@@ -54,6 +54,7 @@ namespace TheOtherRoles.Patches
         Dead,
         Suicide,
         Misfire,
+        Revenge,
         GMExecuted,
         Disconnected
     }

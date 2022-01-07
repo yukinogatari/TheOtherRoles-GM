@@ -129,6 +129,7 @@ namespace TheOtherRoles {
         public static CustomOption lighterModeLightsOffVision;
         public static CustomOption lighterCooldown;
         public static CustomOption lighterDuration;
+        public static CustomOption lighterCanSeeNinja;
 
         public static CustomRoleOption detectiveSpawnRate;
         public static CustomOption detectiveAnonymousFootprints;
@@ -282,6 +283,12 @@ namespace TheOtherRoles {
         public static CustomOption plagueDoctorResetMeeting;
         public static CustomOption plagueDoctorWinDead;
 
+        public static CustomRoleOption nekoKabochaSpawnRate;
+        public static CustomOption nekoKabochaRevengeCrew;
+        public static CustomOption nekoKabochaRevengeNeutral;
+        public static CustomOption nekoKabochaRevengeImpostor;
+        public static CustomOption nekoKabochaRevengeExile;
+
         internal static Dictionary<byte, byte[]> blockedRolePairings = new Dictionary<byte, byte[]>();
         internal static List<byte> blockLovers = new List<byte>();
 
@@ -376,6 +383,13 @@ namespace TheOtherRoles {
             ninjaSpeedBonus = CustomOption.Create(1006, "ninjaSpeedBonus", 125f, 50f, 200f, 5f, ninjaSpawnRate, format: "unitPercent");
             ninjaCanBeTargeted = CustomOption.Create(1007, "ninjaCanBeTargeted", true, ninjaSpawnRate);
             ninjaCanVent = CustomOption.Create(1008, "ninjaCanVent", false, ninjaSpawnRate);
+
+
+            nekoKabochaSpawnRate = new CustomRoleOption(1020, "nekoKabocha", NekoKabocha.color, 3);
+            nekoKabochaRevengeCrew = CustomOption.Create(1021, "nekoKabochaRevengeCrew", true, nekoKabochaSpawnRate);
+            nekoKabochaRevengeNeutral = CustomOption.Create(1022, "nekoKabochaRevengeNeutral", true, nekoKabochaSpawnRate);
+            nekoKabochaRevengeImpostor = CustomOption.Create(1023, "nekoKabochaRevengeImpostor", true, nekoKabochaSpawnRate);
+            nekoKabochaRevengeExile = CustomOption.Create(1024, "nekoKabochaRevengeExile", false, nekoKabochaSpawnRate);
 
 
             madmateSpawnRate = new CustomRoleOption(360, "madmate", Madmate.color);
@@ -479,11 +493,12 @@ namespace TheOtherRoles {
             sheriffMisfireKillsTarget = CustomOption.Create(104, "sheriffMisfireKillsTarget", false, sheriffSpawnRate);
             sheriffCanKillNeutrals = CustomOption.Create(102, "sheriffCanKillNeutrals", false, sheriffSpawnRate);
 
-            lighterSpawnRate = new CustomRoleOption(110, "lighter", Lighter.color, 1);
+            lighterSpawnRate = new CustomRoleOption(110, "lighter", Lighter.color, 15);
             lighterModeLightsOnVision = CustomOption.Create(111, "lighterModeLightsOnVision", 2f, 0.25f, 5f, 0.25f, lighterSpawnRate, format: "unitMultiplier");
             lighterModeLightsOffVision = CustomOption.Create(112, "lighterModeLightsOffVision", 0.75f, 0.25f, 5f, 0.25f, lighterSpawnRate, format: "unitMultiplier");
             lighterCooldown = CustomOption.Create(113, "lighterCooldown", 30f, 5f, 120f, 5f, lighterSpawnRate, format: "unitSeconds");
             lighterDuration = CustomOption.Create(114, "lighterDuration", 5f, 2.5f, 60f, 2.5f, lighterSpawnRate, format: "unitSeconds");
+            lighterCanSeeNinja = CustomOption.Create(115, "lighterCanSeeNinja", true, lighterSpawnRate);
 
             detectiveSpawnRate = new CustomRoleOption(120, "detective", Detective.color, 1);
             detectiveAnonymousFootprints = CustomOption.Create(121, "detectiveAnonymousFootprints", false, detectiveSpawnRate);

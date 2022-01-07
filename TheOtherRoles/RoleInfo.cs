@@ -86,6 +86,7 @@ namespace TheOtherRoles
         public static RoleInfo medium = new RoleInfo("medium", Medium.color, CustomOptionHolder.mediumSpawnRate, RoleId.Medium);
         public static RoleInfo ninja = new RoleInfo("ninja", Ninja.color, CustomOptionHolder.ninjaSpawnRate, RoleId.Ninja);
         public static RoleInfo plagueDoctor = new RoleInfo("plagueDoctor", PlagueDoctor.color, CustomOptionHolder.plagueDoctorSpawnRate, RoleId.PlagueDoctor);
+        public static RoleInfo nekoKabocha = new RoleInfo("nekoKabocha", NekoKabocha.color, CustomOptionHolder.nekoKabochaSpawnRate, RoleId.NekoKabocha);
 
         public static List<RoleInfo> allRoleInfos = new List<RoleInfo>() {
                 impostor,
@@ -137,7 +138,8 @@ namespace TheOtherRoles
                 gm,
                 opportunist,
 	            medium,
-                plagueDoctor
+                plagueDoctor,
+                nekoKabocha
             };
 
         public static string tl(string key)
@@ -194,6 +196,7 @@ namespace TheOtherRoles
             if (p.isRole(RoleId.Pursuer)) infos.Add(pursuer);
             if (p.isRole(RoleId.Ninja)) infos.Add(ninja);
             if (p.isRole(RoleId.PlagueDoctor)) infos.Add(plagueDoctor);
+            if (p.isRole(RoleId.NekoKabocha)) infos.Add(nekoKabocha);
 
 
             // Default roles

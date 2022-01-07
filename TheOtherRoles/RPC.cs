@@ -49,6 +49,7 @@ namespace TheOtherRoles
         BountyHunter,
         Witch,
         Ninja,
+        NekoKabocha,
         Madmate,
 
 
@@ -404,7 +405,7 @@ namespace TheOtherRoles
                         break;
 
                     case RoleId.Lighter:
-                        Lighter.lighter = oldShifter;
+                        Lighter.swapRole(player, oldShifter);
                         break;
 
                     case RoleId.Detective:

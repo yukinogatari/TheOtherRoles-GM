@@ -129,6 +129,8 @@ namespace TheOtherRoles.Patches
             impSettings.Add((byte)RoleId.Warlock, CustomOptionHolder.warlockSpawnRate.data);
             impSettings.Add((byte)RoleId.BountyHunter, CustomOptionHolder.bountyHunterSpawnRate.data);
             impSettings.Add((byte)RoleId.Witch, CustomOptionHolder.witchSpawnRate.data);
+            impSettings.Add((byte)RoleId.Ninja, CustomOptionHolder.ninjaSpawnRate.data);
+            impSettings.Add((byte)RoleId.NekoKabocha, CustomOptionHolder.nekoKabochaSpawnRate.data);
 
             neutralSettings.Add((byte)RoleId.Jester, CustomOptionHolder.jesterSpawnRate.data);
             neutralSettings.Add((byte)RoleId.Arsonist, CustomOptionHolder.arsonistSpawnRate.data);
@@ -159,7 +161,6 @@ namespace TheOtherRoles.Patches
                 crewSettings.Add((byte)RoleId.Spy, CustomOptionHolder.spySpawnRate.data);
             }
 
-            impSettings.Add((byte)RoleId.Ninja, CustomOptionHolder.ninjaSpawnRate.data);
 
             return new RoleAssignmentData
             {

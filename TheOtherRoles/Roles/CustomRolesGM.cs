@@ -33,6 +33,7 @@ namespace TheOtherRoles
             Ninja.clearAndReload();
             Madmate.clearAndReload();
             PlagueDoctor.clearAndReload();
+            Lighter.clearAndReload();
             Role.Clear();
         }
 

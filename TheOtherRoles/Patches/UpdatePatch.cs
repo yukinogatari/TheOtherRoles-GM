@@ -264,7 +264,6 @@ namespace TheOtherRoles.Patches {
 
         static void timerUpdate() {
             Hacker.hackerTimer -= Time.deltaTime;
-            Lighter.lighterTimer -= Time.deltaTime;
             Trickster.lightsOutTimer -= Time.deltaTime;
             Tracker.corpsesTrackingTimer -= Time.deltaTime;
         }

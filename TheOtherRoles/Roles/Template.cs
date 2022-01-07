@@ -1,6 +1,11 @@
 using HarmonyLib;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
+using TheOtherRoles.Objects;
+using TheOtherRoles.Patches;
+using static TheOtherRoles.TheOtherRoles;
+using static TheOtherRoles.GameHistory;
 
 namespace TheOtherRoles
 {
