@@ -46,6 +46,7 @@ namespace TheOtherRoles
         public abstract void OnKill(PlayerControl target);
         public abstract void OnDeath(PlayerControl killer = null);
         public abstract void HandleDisconnect(PlayerControl player, DisconnectReasons reason);
+        public virtual void ResetRole() { }
 
         public static void Clear()
         {
@@ -125,6 +126,7 @@ namespace TheOtherRoles
 
         public static void eraseRole(PlayerControl player)
         {
+            players.DoIf(x => x.player == player, x => x.ResetRole());
             players.RemoveAll(x => x.player == player && x.roleId == RoleType);
             allRoles.RemoveAll(x => x.player == player && x.roleId == RoleType);
         }
