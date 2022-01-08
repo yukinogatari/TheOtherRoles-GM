@@ -6,6 +6,7 @@ using TheOtherRoles.Objects;
 using TheOtherRoles.Patches;
 using static TheOtherRoles.TheOtherRoles;
 using static TheOtherRoles.GameHistory;
+using Hazel;
 
 namespace TheOtherRoles
 {
@@ -31,7 +32,7 @@ namespace TheOtherRoles
         
         public override void OnDeath(PlayerControl killer = null)
         {
-            if (killer != null)
+            if (killer != null && killer.isAlive())
             {
                 if ((revengeCrew && killer.isCrew()) ||
                     (revengeNeutral && killer.isNeutral()) ||
@@ -41,14 +42,16 @@ namespace TheOtherRoles
                     finalStatuses[killer.PlayerId] = FinalStatus.Revenge;
                 }
             }
-            else if (killer == null && revengeExile)
+            else if (killer == null && revengeExile && PlayerControl.LocalPlayer == player)
             {
                 var candidates = PlayerControl.AllPlayerControls.ToArray().Where(x => x != player && x.isAlive()).ToList();
                 int targetID = rnd.Next(0, candidates.Count);
                 var target = candidates[targetID];
 
-                target.Exiled();
-                finalStatuses[target.PlayerId] = FinalStatus.Revenge;
+                MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.NekoKabochaExile, Hazel.SendOption.Reliable, -1);
+                writer.Write(target.PlayerId);
+                AmongUsClient.Instance.FinishRpcImmediately(writer);
+                RPCProcedure.nekoKabochaExile(target.PlayerId);
             }
         }
 

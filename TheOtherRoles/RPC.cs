@@ -141,6 +141,7 @@ namespace TheOtherRoles
         PlagueDoctorWin,
         PlagueDoctorSetInfected,
         PlagueDoctorUpdateProgress,
+        NekoKabochaExile,
     }
 
     public static class RPCProcedure {
@@ -954,7 +955,7 @@ namespace TheOtherRoles
             if (value > 0) Pursuer.blankedList.Add(target);
         }
 
-        internal static void witchSpellCast(byte playerId)
+        public static void witchSpellCast(byte playerId)
         {
             uncheckedExilePlayer(playerId);
             finalStatuses[playerId] = FinalStatus.Spelled;
@@ -1066,6 +1067,12 @@ namespace TheOtherRoles
 
         public static void plagueDoctorProgress(byte targetId, float progress) {
 			PlagueDoctor.progress[targetId] = progress;
+        }
+
+        public static void nekoKabochaExile(byte playerId)
+        {
+            uncheckedExilePlayer(playerId);
+            finalStatuses[playerId] = FinalStatus.Revenge;
         }
     }   
 
@@ -1296,6 +1303,9 @@ namespace TheOtherRoles
 					byte[] progressByte =  reader.ReadBytes(4);
 					float progress = System.BitConverter.ToSingle(progressByte, 0);
                     RPCProcedure.plagueDoctorProgress(progressTarget, progress);
+                    break;
+                case (byte)CustomRPC.NekoKabochaExile:
+                    RPCProcedure.nekoKabochaExile(reader.ReadByte());
                     break;
             }
         }
