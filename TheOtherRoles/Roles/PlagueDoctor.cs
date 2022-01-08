@@ -180,7 +180,10 @@ namespace TheOtherRoles
         {
             if (MeetingHud.Instance != null)
             {
-                statusText.gameObject.SetActive(false);
+                if (statusText != null)
+                {
+                    statusText.gameObject.SetActive(false);
+                }
                 return;
             }
 
