@@ -20,6 +20,16 @@ namespace TheOtherRoles {
             }
         }
 
+        [HarmonyPatch(typeof(AirshipUploadTask), nameof(AirshipUploadTask.FixedUpdate))]
+        public static class AirshipUploadTaskPatch
+        {
+            public static void Postfix(AirshipUploadTask __instance)
+            {
+                if (__instance.IsComplete)
+                    __instance.Arrows?.DoIf(x => x != null && x.isActiveAndEnabled, x => x.gameObject?.SetActive(false));
+            }
+        }
+
         public static Tuple<int, int> taskInfo(GameData.PlayerInfo playerInfo) {
             int TotalTasks = 0;
             int CompletedTasks = 0;
