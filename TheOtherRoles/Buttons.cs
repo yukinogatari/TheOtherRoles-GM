@@ -31,7 +31,6 @@ namespace TheOtherRoles
         private static CustomButton jackalKillButton;
         private static CustomButton sidekickKillButton;
         private static CustomButton jackalSidekickButton;
-        private static CustomButton lighterButton;
         private static CustomButton eraserButton;
         private static CustomButton placeJackInTheBoxButton;
         private static CustomButton lightsOutButton;
@@ -70,7 +69,6 @@ namespace TheOtherRoles
             jackalKillButton.MaxTimer = Jackal.cooldown;
             sidekickKillButton.MaxTimer = Sidekick.cooldown;
             jackalSidekickButton.MaxTimer = Jackal.createSidekickCooldown;
-            lighterButton.MaxTimer = Lighter.cooldown;
             eraserButton.MaxTimer = Eraser.cooldown;
             placeJackInTheBoxButton.MaxTimer = Trickster.placeBoxCooldown;
             lightsOutButton.MaxTimer = Trickster.lightsOutCooldown;
@@ -89,7 +87,6 @@ namespace TheOtherRoles
             hackerVitalsButton.EffectDuration = Hacker.duration;
             hackerAdminTableButton.EffectDuration = Hacker.duration;
             vampireKillButton.EffectDuration = Vampire.delay;
-            lighterButton.EffectDuration = Lighter.duration;
             camouflagerButton.EffectDuration = Camouflager.duration;
             morphlingButton.EffectDuration = Morphling.duration;
             lightsOutButton.EffectDuration = Trickster.lightsOutDuration;
@@ -726,30 +723,6 @@ namespace TheOtherRoles
                 KeyCode.Q
             );
 
-            // Lighter light
-            lighterButton = new CustomButton(
-                () =>
-                {
-                    Lighter.lighterTimer = Lighter.duration;
-                },
-                () => { return Lighter.lighter != null && Lighter.lighter == PlayerControl.LocalPlayer && !PlayerControl.LocalPlayer.Data.IsDead; },
-                () => { return PlayerControl.LocalPlayer.CanMove; },
-                () =>
-                {
-                    lighterButton.Timer = lighterButton.MaxTimer;
-                    lighterButton.isEffectActive = false;
-                    lighterButton.actionButton.graphic.color = Palette.EnabledColor;
-                },
-                Lighter.getButtonSprite(),
-                new Vector3(-1.8f, -0.06f, 0),
-                __instance,
-                __instance.UseButton,
-                KeyCode.F,
-                true,
-                Lighter.duration,
-                () => { lighterButton.Timer = lighterButton.MaxTimer; }
-            );
-            lighterButton.buttonText = ModTranslation.getString("LighterText");
 
             // Eraser erase button
             eraserButton = new CustomButton(

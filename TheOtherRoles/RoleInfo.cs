@@ -137,7 +137,7 @@ namespace TheOtherRoles
                 gm,
                 opportunist,
 	            medium,
-                plagueDoctor
+                plagueDoctor,
             };
 
         public static string tl(string key)

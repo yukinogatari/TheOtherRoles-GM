@@ -159,7 +159,7 @@ namespace TheOtherRoles
             }
         }
 
-        public static void killLovers(PlayerControl player)
+        public static void killLovers(PlayerControl player, PlayerControl killer = null)
         {
             if (!player.isLovers()) return;
 
@@ -173,30 +173,15 @@ namespace TheOtherRoles
             {
                 if (!partner.Data.IsDead)
                 {
-                    partner.MurderPlayer(partner);
-                    finalStatuses[partner.PlayerId] = FinalStatus.Suicide;
-                }
+                    if (killer != null)
+                    {
+                        partner.MurderPlayer(partner);
+                    }
+                    else
+                    {
+                        partner.Exiled();
+                    }
 
-                if (separateTeam && tasksCount)
-                    partner.clearAllTasks();
-            }
-        }
-
-        public static void exileLovers(PlayerControl player)
-        {
-            if (!player.isLovers()) return;
-
-            if (separateTeam && tasksCount)
-                player.clearAllTasks();
-
-            if (!bothDie) return;
-
-            var partner = getPartner(player);
-            if (partner != null)
-            {
-                if (!partner.Data.IsDead)
-                {
-                    partner.Exiled();
                     finalStatuses[partner.PlayerId] = FinalStatus.Suicide;
                 }
 

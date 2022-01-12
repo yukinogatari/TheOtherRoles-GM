@@ -176,38 +176,6 @@ namespace TheOtherRoles
             }
         }
 
-        public static class Lighter
-        {
-            public static PlayerControl lighter;
-            public static Color color = new Color32(238, 229, 190, byte.MaxValue);
-
-            public static float lighterModeLightsOnVision = 2f;
-            public static float lighterModeLightsOffVision = 0.75f;
-
-            public static float cooldown = 30f;
-            public static float duration = 5f;
-
-            public static float lighterTimer = 0f;
-
-            private static Sprite buttonSprite;
-            public static Sprite getButtonSprite()
-            {
-                if (buttonSprite) return buttonSprite;
-                buttonSprite = ModTranslation.getImage("LighterButton", 115f);
-                return buttonSprite;
-            }
-
-            public static void clearAndReload()
-            {
-                lighter = null;
-                lighterTimer = 0f;
-                cooldown = CustomOptionHolder.lighterCooldown.getFloat();
-                duration = CustomOptionHolder.lighterDuration.getFloat();
-                lighterModeLightsOnVision = CustomOptionHolder.lighterModeLightsOnVision.getFloat();
-                lighterModeLightsOffVision = CustomOptionHolder.lighterModeLightsOffVision.getFloat();
-            }
-        }
-
         public static class Detective
         {
             public static PlayerControl detective;

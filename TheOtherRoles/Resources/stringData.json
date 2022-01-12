@@ -747,6 +747,10 @@
         "0": "Light Duration",
         "11": "\u30e9\u30a4\u30c8\u6301\u7d9a\u6642\u9593"
     },
+    "lighterCanSeeNinja": {
+        "0": "Can See Stealthed Ninja",
+        "11": "\u30e9\u30a4\u30c8\u4e2d\u3001\u900f\u660e\u5316\u4e2d\u306e\u30cb\u30f3\u30b8\u30e3\u304c\u898b\u3048\u308b"
+    },
     "detective": {
         "0": "Detective",
         "11": "\u30c7\u30a3\u30c6\u30af\u30c6\u30a3\u30d6"
@@ -1788,6 +1792,10 @@
     "roleSummarySabotage": {
         "0": "Sabotage",
         "11": "\u30b5\u30dc"
+    },
+    "roleSummaryRevenge": {
+        "0": "Revenge",
+        "11": "\u9053\u9023\u308c"
     },
     "roleSummaryDisconnected": {
         "0": "DC'd",

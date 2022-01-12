@@ -25,6 +25,7 @@ namespace TheOtherRoles
         public static Dictionary<Type, RoleId> allRoleTypes = new Dictionary<Type, RoleId>
         {
             { typeof(RoleBase<Sheriff>), RoleId.Sheriff },
+            { typeof(RoleBase<Lighter>), RoleId.Lighter },
             { typeof(RoleBase<Ninja>), RoleId.Ninja },
             { typeof(RoleBase<Madmate>), RoleId.Madmate },
             { typeof(RoleBase<Opportunist>), RoleId.Opportunist },
@@ -159,8 +160,6 @@ namespace TheOtherRoles
                     return Mayor.mayor == player;
                 case RoleId.Engineer:
                     return Engineer.engineer == player;
-                case RoleId.Lighter:
-                    return Lighter.lighter == player;
                 case RoleId.Godfather:
                     return Godfather.godfather == player;
                 case RoleId.Mafioso:
@@ -258,9 +257,6 @@ namespace TheOtherRoles
                     break;
                 case RoleId.Engineer:
                     Engineer.engineer = player;
-                    break;
-                case RoleId.Lighter:
-                    Lighter.lighter = player;
                     break;
                 case RoleId.Godfather:
                     Godfather.godfather = player;
@@ -409,6 +405,10 @@ namespace TheOtherRoles
                     r.OnDeath(killer);
                 }
             }
+
+            // Lover suicide trigger on exile/death
+            if (player.isLovers())
+                Lovers.killLovers(player, killer);
         }
     }
 }

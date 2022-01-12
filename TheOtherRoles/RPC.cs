@@ -404,7 +404,7 @@ namespace TheOtherRoles
                         break;
 
                     case RoleId.Lighter:
-                        Lighter.lighter = oldShifter;
+                        Lighter.swapRole(player, oldShifter);
                         break;
 
                     case RoleId.Detective:

@@ -129,6 +129,7 @@ namespace TheOtherRoles {
         public static CustomOption lighterModeLightsOffVision;
         public static CustomOption lighterCooldown;
         public static CustomOption lighterDuration;
+        public static CustomOption lighterCanSeeNinja;
 
         public static CustomRoleOption detectiveSpawnRate;
         public static CustomOption detectiveAnonymousFootprints;
@@ -479,11 +480,12 @@ namespace TheOtherRoles {
             sheriffMisfireKillsTarget = CustomOption.Create(104, "sheriffMisfireKillsTarget", false, sheriffSpawnRate);
             sheriffCanKillNeutrals = CustomOption.Create(102, "sheriffCanKillNeutrals", false, sheriffSpawnRate);
 
-            lighterSpawnRate = new CustomRoleOption(110, "lighter", Lighter.color, 1);
+            lighterSpawnRate = new CustomRoleOption(110, "lighter", Lighter.color, 15);
             lighterModeLightsOnVision = CustomOption.Create(111, "lighterModeLightsOnVision", 2f, 0.25f, 5f, 0.25f, lighterSpawnRate, format: "unitMultiplier");
             lighterModeLightsOffVision = CustomOption.Create(112, "lighterModeLightsOffVision", 0.75f, 0.25f, 5f, 0.25f, lighterSpawnRate, format: "unitMultiplier");
             lighterCooldown = CustomOption.Create(113, "lighterCooldown", 30f, 5f, 120f, 5f, lighterSpawnRate, format: "unitSeconds");
             lighterDuration = CustomOption.Create(114, "lighterDuration", 5f, 2.5f, 60f, 2.5f, lighterSpawnRate, format: "unitSeconds");
+            lighterCanSeeNinja = CustomOption.Create(115, "lighterCanSeeNinja", true, lighterSpawnRate);
 
             detectiveSpawnRate = new CustomRoleOption(120, "detective", Detective.color, 1);
             detectiveAnonymousFootprints = CustomOption.Create(121, "detectiveAnonymousFootprints", false, detectiveSpawnRate);

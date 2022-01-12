@@ -237,7 +237,12 @@ namespace TheOtherRoles
                     var ninja = __instance.myPlayer;
                     if (ninja == null) return;
 
-                    var opacity = (PlayerControl.LocalPlayer.Data.Role.IsImpostor || PlayerControl.LocalPlayer.Data.IsDead) ? 0.1f : 0.0f;
+                    bool canSee = 
+                        PlayerControl.LocalPlayer.isImpostor() ||
+                        PlayerControl.LocalPlayer.isDead() ||
+                        (Lighter.canSeeNinja && PlayerControl.LocalPlayer.isRole(RoleId.Lighter) && Lighter.isLightActive(PlayerControl.LocalPlayer));
+
+                    var opacity = canSee ? 0.1f : 0.0f;
 
                     if (isStealthed(ninja))
                     {
