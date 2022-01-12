@@ -30,7 +30,7 @@ namespace TheOtherRoles
 
         public Ninja()
         {
-            RoleType = roleId = RoleId.Ninja;
+            RoleType = roleId = RoleType.Ninja;
             penalized = false;
             stealthed = false;
             stealthedAt = DateTime.UtcNow;
@@ -147,7 +147,7 @@ namespace TheOtherRoles
                     AmongUsClient.Instance.FinishRpcImmediately(writer);
                     RPCProcedure.ninjaStealth(PlayerControl.LocalPlayer.PlayerId, true);
                 },
-                () => { return PlayerControl.LocalPlayer.isRole(RoleId.Ninja) && !PlayerControl.LocalPlayer.Data.IsDead; },
+                () => { return PlayerControl.LocalPlayer.isRole(RoleType.Ninja) && !PlayerControl.LocalPlayer.Data.IsDead; },
                 () => {
                     if (ninjaButton.isEffectActive)
                     {
@@ -240,7 +240,7 @@ namespace TheOtherRoles
                     bool canSee = 
                         PlayerControl.LocalPlayer.Data.Role.IsImpostor ||
                         PlayerControl.LocalPlayer.Data.IsDead ||
-                        (PlayerControl.LocalPlayer.isRole(RoleId.Lighter) && Lighter.isLightActive(PlayerControl.LocalPlayer));
+                        (PlayerControl.LocalPlayer.isRole(RoleType.Lighter) && Lighter.isLightActive(PlayerControl.LocalPlayer));
 
                     var opacity = canSee ? 0.1f : 0.0f;
 

@@ -18,12 +18,13 @@ namespace TheOtherRoles.Patches {
 
             foreach (PlayerControl player in PlayerControl.AllPlayerControls) {
                 player.nameText.text = Helpers.hidePlayerName(PlayerControl.LocalPlayer, player) ? "" : player.CurrentOutfit.PlayerName;
-                if (PlayerControl.LocalPlayer.Data.Role.IsImpostor && player.Data.Role.IsImpostor) {
+                if (PlayerControl.LocalPlayer.isImpostor() && player.isImpostor()) {
                     player.nameText.color = Palette.ImpostorRed;
                 } else {
                     player.nameText.color = Color.white;
                 }
             }
+
             if (MeetingHud.Instance != null) {
                 foreach (PlayerVoteArea player in MeetingHud.Instance.playerStates) {
                     PlayerControl playerControl = playersById.ContainsKey((byte)player.TargetPlayerId) ? playersById[(byte)player.TargetPlayerId] : null;
@@ -37,9 +38,9 @@ namespace TheOtherRoles.Patches {
                     }
                 }
             }
-            if (PlayerControl.LocalPlayer.Data.Role.IsImpostor) {
-                List<PlayerControl> impostors = PlayerControl.AllPlayerControls.ToArray().ToList();
-                impostors.RemoveAll(x => !x.Data.Role.IsImpostor);
+
+            if (PlayerControl.LocalPlayer.isImpostor()) {
+                List<PlayerControl> impostors = PlayerControl.AllPlayerControls.ToArray().Where(x => x.isImpostor()).ToList();
                 foreach (PlayerControl player in impostors)
                     player.nameText.color = Palette.ImpostorRed;
                 if (MeetingHud.Instance != null)
@@ -61,35 +62,35 @@ namespace TheOtherRoles.Patches {
         }
 
         static void setNameColors() {
-            if (PlayerControl.LocalPlayer.isRole(RoleId.Jester))
+            if (PlayerControl.LocalPlayer.isRole(RoleType.Jester))
                 setPlayerNameColor(PlayerControl.LocalPlayer, Jester.color);
-            else if (PlayerControl.LocalPlayer.isRole(RoleId.Mayor))
+            else if (PlayerControl.LocalPlayer.isRole(RoleType.Mayor))
                 setPlayerNameColor(PlayerControl.LocalPlayer, Mayor.color);
-            else if (PlayerControl.LocalPlayer.isRole(RoleId.Engineer))
+            else if (PlayerControl.LocalPlayer.isRole(RoleType.Engineer))
                 setPlayerNameColor(PlayerControl.LocalPlayer, Engineer.color);
-            else if (PlayerControl.LocalPlayer.isRole(RoleId.Sheriff))
+            else if (PlayerControl.LocalPlayer.isRole(RoleType.Sheriff))
                 setPlayerNameColor(PlayerControl.LocalPlayer, Sheriff.color);
-            else if (PlayerControl.LocalPlayer.isRole(RoleId.Lighter))
+            else if (PlayerControl.LocalPlayer.isRole(RoleType.Lighter))
                 setPlayerNameColor(PlayerControl.LocalPlayer, Lighter.color);
-            else if (PlayerControl.LocalPlayer.isRole(RoleId.Detective))
+            else if (PlayerControl.LocalPlayer.isRole(RoleType.Detective))
                 setPlayerNameColor(PlayerControl.LocalPlayer, Detective.color);
-            else if (PlayerControl.LocalPlayer.isRole(RoleId.TimeMaster))
+            else if (PlayerControl.LocalPlayer.isRole(RoleType.TimeMaster))
                 setPlayerNameColor(PlayerControl.LocalPlayer, TimeMaster.color);
-            else if (PlayerControl.LocalPlayer.isRole(RoleId.Medic))
+            else if (PlayerControl.LocalPlayer.isRole(RoleType.Medic))
                 setPlayerNameColor(PlayerControl.LocalPlayer, Medic.color);
-            else if (PlayerControl.LocalPlayer.isRole(RoleId.Shifter))
+            else if (PlayerControl.LocalPlayer.isRole(RoleType.Shifter))
                 setPlayerNameColor(PlayerControl.LocalPlayer, Shifter.color);
-            else if (PlayerControl.LocalPlayer.isRole(RoleId.Swapper))
+            else if (PlayerControl.LocalPlayer.isRole(RoleType.Swapper))
                 setPlayerNameColor(PlayerControl.LocalPlayer, Swapper.swapper.Data.Role.IsImpostor ? Palette.ImpostorRed : Swapper.color);
-            else if (PlayerControl.LocalPlayer.isRole(RoleId.Seer))
+            else if (PlayerControl.LocalPlayer.isRole(RoleType.Seer))
                 setPlayerNameColor(PlayerControl.LocalPlayer, Seer.color);
-            else if (PlayerControl.LocalPlayer.isRole(RoleId.Hacker))
+            else if (PlayerControl.LocalPlayer.isRole(RoleType.Hacker))
                 setPlayerNameColor(PlayerControl.LocalPlayer, Hacker.color);
-            else if (PlayerControl.LocalPlayer.isRole(RoleId.Tracker))
+            else if (PlayerControl.LocalPlayer.isRole(RoleType.Tracker))
                 setPlayerNameColor(PlayerControl.LocalPlayer, Tracker.color);
-            else if (PlayerControl.LocalPlayer.isRole(RoleId.Snitch))
+            else if (PlayerControl.LocalPlayer.isRole(RoleType.Snitch))
                 setPlayerNameColor(PlayerControl.LocalPlayer, Snitch.color);
-            else if (PlayerControl.LocalPlayer.isRole(RoleId.Jackal))
+            else if (PlayerControl.LocalPlayer.isRole(RoleType.Jackal))
             {
                 // Jackal can see his sidekick
                 setPlayerNameColor(PlayerControl.LocalPlayer, Jackal.color);
@@ -102,55 +103,55 @@ namespace TheOtherRoles.Patches {
                     setPlayerNameColor(Jackal.fakeSidekick, Jackal.color);
                 }
             }
-            else if (PlayerControl.LocalPlayer.isRole(RoleId.Spy))
+            else if (PlayerControl.LocalPlayer.isRole(RoleType.Spy))
             {
                 setPlayerNameColor(PlayerControl.LocalPlayer, Spy.color);
             }
-            else if (PlayerControl.LocalPlayer.isRole(RoleId.SecurityGuard))
+            else if (PlayerControl.LocalPlayer.isRole(RoleType.SecurityGuard))
             {
                 setPlayerNameColor(PlayerControl.LocalPlayer, SecurityGuard.color);
             }
-            else if (PlayerControl.LocalPlayer.isRole(RoleId.Arsonist))
+            else if (PlayerControl.LocalPlayer.isRole(RoleType.Arsonist))
             {
                 setPlayerNameColor(PlayerControl.LocalPlayer, Arsonist.color);
             }
-            else if (PlayerControl.LocalPlayer.isRole(RoleId.NiceGuesser))
+            else if (PlayerControl.LocalPlayer.isRole(RoleType.NiceGuesser))
             {
                 setPlayerNameColor(PlayerControl.LocalPlayer, Guesser.color);
             }
-            else if (PlayerControl.LocalPlayer.isRole(RoleId.EvilGuesser))
+            else if (PlayerControl.LocalPlayer.isRole(RoleType.EvilGuesser))
             {
                 setPlayerNameColor(PlayerControl.LocalPlayer, Palette.ImpostorRed);
             }
-            else if (PlayerControl.LocalPlayer.isRole(RoleId.Bait))
+            else if (PlayerControl.LocalPlayer.isRole(RoleType.Bait))
             {
                 setPlayerNameColor(PlayerControl.LocalPlayer, Bait.color);
             }
-            else if (PlayerControl.LocalPlayer.isRole(RoleId.Madmate))
+            else if (PlayerControl.LocalPlayer.isRole(RoleType.Madmate))
             {
                 setPlayerNameColor(PlayerControl.LocalPlayer, Madmate.color);
             }
-            else if (PlayerControl.LocalPlayer.isRole(RoleId.Opportunist))
+            else if (PlayerControl.LocalPlayer.isRole(RoleType.Opportunist))
             {
                 setPlayerNameColor(PlayerControl.LocalPlayer, Opportunist.color);
             }
-            else if (PlayerControl.LocalPlayer.isRole(RoleId.Vulture))
+            else if (PlayerControl.LocalPlayer.isRole(RoleType.Vulture))
             {
                 setPlayerNameColor(PlayerControl.LocalPlayer, Vulture.color);
             }
-            else if (PlayerControl.LocalPlayer.isRole(RoleId.Medium))
+            else if (PlayerControl.LocalPlayer.isRole(RoleType.Medium))
             {
                 setPlayerNameColor(PlayerControl.LocalPlayer, Medium.color);
             }
-            else if (PlayerControl.LocalPlayer.isRole(RoleId.Lawyer))
+            else if (PlayerControl.LocalPlayer.isRole(RoleType.Lawyer))
             {
                 setPlayerNameColor(PlayerControl.LocalPlayer, Lawyer.color);
             }
-            else if (PlayerControl.LocalPlayer.isRole(RoleId.Pursuer))
+            else if (PlayerControl.LocalPlayer.isRole(RoleType.Pursuer))
             {
                 setPlayerNameColor(PlayerControl.LocalPlayer, Pursuer.color);
             }
-            else if (PlayerControl.LocalPlayer.isRole(RoleId.PlagueDoctor))
+            else if (PlayerControl.LocalPlayer.isRole(RoleType.PlagueDoctor))
             {
                 setPlayerNameColor(PlayerControl.LocalPlayer, PlagueDoctor.color);
             }
@@ -160,7 +161,7 @@ namespace TheOtherRoles.Patches {
             }
 
             // No else if here, as a Lover of team Jackal needs the colors
-            if (PlayerControl.LocalPlayer.isRole(RoleId.Sidekick)) {
+            if (PlayerControl.LocalPlayer.isRole(RoleType.Sidekick)) {
                 // Sidekick can see the jackal
                 setPlayerNameColor(Sidekick.sidekick, Sidekick.color);
                 if (Jackal.jackal != null) {

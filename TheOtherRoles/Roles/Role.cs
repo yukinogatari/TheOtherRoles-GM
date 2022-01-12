@@ -22,15 +22,16 @@ namespace TheOtherRoles
     [HarmonyPatch]
     public static class RoleData
     {
-        public static Dictionary<Type, RoleId> allRoleTypes = new Dictionary<Type, RoleId>
+        public static Dictionary<RoleType, Type> allRoleTypes = new Dictionary<RoleType, Type>
         {
-            { typeof(RoleBase<Sheriff>), RoleId.Sheriff },
-            { typeof(RoleBase<Lighter>), RoleId.Lighter },
-            { typeof(RoleBase<Ninja>), RoleId.Ninja },
-            { typeof(RoleBase<NekoKabocha>), RoleId.NekoKabocha },
-            { typeof(RoleBase<Madmate>), RoleId.Madmate },
-            { typeof(RoleBase<Opportunist>), RoleId.Opportunist },
-            { typeof(RoleBase<PlagueDoctor>), RoleId.PlagueDoctor },
+            { RoleType.Sheriff, typeof(RoleBase<Sheriff>) },
+            { RoleType.Lighter, typeof(RoleBase<Lighter>) },
+            { RoleType.Ninja, typeof(RoleBase<Ninja>) },
+            { RoleType.NekoKabocha, typeof(RoleBase<NekoKabocha>) },
+            { RoleType.Tetrachrome, typeof(RoleBase<Tetrachrome>) },
+            { RoleType.Madmate, typeof(RoleBase<Madmate>) },
+            { RoleType.Opportunist, typeof(RoleBase<Opportunist>) },
+            { RoleType.PlagueDoctor, typeof(RoleBase<PlagueDoctor>) },
         };
     }
 
@@ -38,7 +39,7 @@ namespace TheOtherRoles
     {
         public static List<Role> allRoles = new List<Role>();
         public PlayerControl player;
-        public RoleId roleId;
+        public RoleType roleId;
 
         public abstract void OnMeetingStart();
         public abstract void OnMeetingEnd();
@@ -58,7 +59,7 @@ namespace TheOtherRoles
     public abstract class RoleBase<T> : Role where T : RoleBase<T>, new()
     {
         public static List<T> players = new List<T>();
-        public static RoleId RoleType;
+        public static RoleType RoleType;
 
         public void Init(PlayerControl player)
         {
@@ -143,93 +144,93 @@ namespace TheOtherRoles
 
     public static class RoleHelpers
     {
-        public static bool isRole(this PlayerControl player, RoleId role)
+        public static bool isRole(this PlayerControl player, RoleType role)
         {
             foreach (var t in RoleData.allRoleTypes)
             {
-                if (role == t.Value)
+                if (role == t.Key)
                 {
-                    return (bool)t.Key.GetMethod("isRole", BindingFlags.Public | BindingFlags.Static)?.Invoke(null, new object[] { player });
+                    return (bool)t.Value.GetMethod("isRole", BindingFlags.Public | BindingFlags.Static)?.Invoke(null, new object[] { player });
                 }
             }
 
             switch (role)
             {
-                case RoleId.Jester:
+                case RoleType.Jester:
                     return Jester.jester == player;
-                case RoleId.Mayor:
+                case RoleType.Mayor:
                     return Mayor.mayor == player;
-                case RoleId.Engineer:
+                case RoleType.Engineer:
                     return Engineer.engineer == player;
-                case RoleId.Godfather:
+                case RoleType.Godfather:
                     return Godfather.godfather == player;
-                case RoleId.Mafioso:
+                case RoleType.Mafioso:
                     return Mafioso.mafioso == player;
-                case RoleId.Janitor:
+                case RoleType.Janitor:
                     return Janitor.janitor == player;
-                case RoleId.Detective:
+                case RoleType.Detective:
                     return Detective.detective == player;
-                case RoleId.TimeMaster:
+                case RoleType.TimeMaster:
                     return TimeMaster.timeMaster == player;
-                case RoleId.Medic:
+                case RoleType.Medic:
                     return Medic.medic == player;
-                case RoleId.Shifter:
+                case RoleType.Shifter:
                     return Shifter.shifter == player;
-                case RoleId.Swapper:
+                case RoleType.Swapper:
                     return Swapper.swapper == player;
-                case RoleId.Seer:
+                case RoleType.Seer:
                     return Seer.seer == player;
-                case RoleId.Morphling:
+                case RoleType.Morphling:
                     return Morphling.morphling == player;
-                case RoleId.Camouflager:
+                case RoleType.Camouflager:
                     return Camouflager.camouflager == player;
-                case RoleId.Hacker:
+                case RoleType.Hacker:
                     return Hacker.hacker == player;
-                case RoleId.Mini:
+                case RoleType.Mini:
                     return Mini.mini == player;
-                case RoleId.Tracker:
+                case RoleType.Tracker:
                     return Tracker.tracker == player;
-                case RoleId.Vampire:
+                case RoleType.Vampire:
                     return Vampire.vampire == player;
-                case RoleId.Snitch:
+                case RoleType.Snitch:
                     return Snitch.snitch == player;
-                case RoleId.Jackal:
+                case RoleType.Jackal:
                     return Jackal.jackal == player;
-                case RoleId.Sidekick:
+                case RoleType.Sidekick:
                     return Sidekick.sidekick == player;
-                case RoleId.Eraser:
+                case RoleType.Eraser:
                     return Eraser.eraser == player;
-                case RoleId.Spy:
+                case RoleType.Spy:
                     return Spy.spy == player;
-                case RoleId.Trickster:
+                case RoleType.Trickster:
                     return Trickster.trickster == player;
-                case RoleId.Cleaner:
+                case RoleType.Cleaner:
                     return Cleaner.cleaner == player;
-                case RoleId.Warlock:
+                case RoleType.Warlock:
                     return Warlock.warlock == player;
-                case RoleId.SecurityGuard:
+                case RoleType.SecurityGuard:
                     return SecurityGuard.securityGuard == player;
-                case RoleId.Arsonist:
+                case RoleType.Arsonist:
                     return Arsonist.arsonist == player;
-                case RoleId.EvilGuesser:
+                case RoleType.EvilGuesser:
                     return Guesser.evilGuesser == player;
-                case RoleId.NiceGuesser:
+                case RoleType.NiceGuesser:
                     return Guesser.niceGuesser == player;
-                case RoleId.BountyHunter:
+                case RoleType.BountyHunter:
                     return BountyHunter.bountyHunter == player;
-                case RoleId.Bait:
+                case RoleType.Bait:
                     return Bait.bait == player;
-                case RoleId.GM:
+                case RoleType.GM:
                     return GM.gm == player;
-                case RoleId.Vulture:
+                case RoleType.Vulture:
                     return Vulture.vulture == player;
-                case RoleId.Medium:
+                case RoleType.Medium:
                     return Medium.medium == player;
-                case RoleId.Witch:
+                case RoleType.Witch:
                     return Witch.witch == player;
-                case RoleId.Lawyer:
+                case RoleType.Lawyer:
                     return Lawyer.lawyer == player;
-                case RoleId.Pursuer:
+                case RoleType.Pursuer:
                     return Pursuer.pursuer == player;
                 default:
                     TheOtherRolesPlugin.Logger.LogError($"isRole: no method found for role type {role}");
@@ -237,131 +238,131 @@ namespace TheOtherRoles
             }
         }
 
-        public static void setRole(this PlayerControl player, RoleId role)
+        public static void setRole(this PlayerControl player, RoleType role)
         {
             foreach (var t in RoleData.allRoleTypes)
             {
-                if (role == t.Value)
+                if (role == t.Key)
                 {
-                    t.Key.GetMethod("setRole", BindingFlags.Public | BindingFlags.Static)?.Invoke(null, new object[] { player });
+                    t.Value.GetMethod("setRole", BindingFlags.Public | BindingFlags.Static)?.Invoke(null, new object[] { player });
                     return;
                 }
             }
 
             switch (role)
             {
-                case RoleId.Jester:
+                case RoleType.Jester:
                     Jester.jester = player;
                     break;
-                case RoleId.Mayor:
+                case RoleType.Mayor:
                     Mayor.mayor = player;
                     break;
-                case RoleId.Engineer:
+                case RoleType.Engineer:
                     Engineer.engineer = player;
                     break;
-                case RoleId.Godfather:
+                case RoleType.Godfather:
                     Godfather.godfather = player;
                     break;
-                case RoleId.Mafioso:
+                case RoleType.Mafioso:
                     Mafioso.mafioso = player;
                     break;
-                case RoleId.Janitor:
+                case RoleType.Janitor:
                     Janitor.janitor = player;
                     break;
-                case RoleId.Detective:
+                case RoleType.Detective:
                     Detective.detective = player;
                     break;
-                case RoleId.TimeMaster:
+                case RoleType.TimeMaster:
                     TimeMaster.timeMaster = player;
                     break;
-                case RoleId.Medic:
+                case RoleType.Medic:
                     Medic.medic = player;
                     break;
-                case RoleId.Shifter:
+                case RoleType.Shifter:
                     Shifter.shifter = player;
                     break;
-                case RoleId.Swapper:
+                case RoleType.Swapper:
                     Swapper.swapper = player;
                     break;
-                case RoleId.Seer:
+                case RoleType.Seer:
                     Seer.seer = player;
                     break;
-                case RoleId.Morphling:
+                case RoleType.Morphling:
                     Morphling.morphling = player;
                     break;
-                case RoleId.Camouflager:
+                case RoleType.Camouflager:
                     Camouflager.camouflager = player;
                     break;
-                case RoleId.Hacker:
+                case RoleType.Hacker:
                     Hacker.hacker = player;
                     break;
-                case RoleId.Mini:
+                case RoleType.Mini:
                     Mini.mini = player;
                     break;
-                case RoleId.Tracker:
+                case RoleType.Tracker:
                     Tracker.tracker = player;
                     break;
-                case RoleId.Vampire:
+                case RoleType.Vampire:
                     Vampire.vampire = player;
                     break;
-                case RoleId.Snitch:
+                case RoleType.Snitch:
                     Snitch.snitch = player;
                     break;
-                case RoleId.Jackal:
+                case RoleType.Jackal:
                     Jackal.jackal = player;
                     break;
-                case RoleId.Sidekick:
+                case RoleType.Sidekick:
                     Sidekick.sidekick = player;
                     break;
-                case RoleId.Eraser:
+                case RoleType.Eraser:
                     Eraser.eraser = player;
                     break;
-                case RoleId.Spy:
+                case RoleType.Spy:
                     Spy.spy = player;
                     break;
-                case RoleId.Trickster:
+                case RoleType.Trickster:
                     Trickster.trickster = player;
                     break;
-                case RoleId.Cleaner:
+                case RoleType.Cleaner:
                     Cleaner.cleaner = player;
                     break;
-                case RoleId.Warlock:
+                case RoleType.Warlock:
                     Warlock.warlock = player;
                     break;
-                case RoleId.SecurityGuard:
+                case RoleType.SecurityGuard:
                     SecurityGuard.securityGuard = player;
                     break;
-                case RoleId.Arsonist:
+                case RoleType.Arsonist:
                     Arsonist.arsonist = player;
                     break;
-                case RoleId.EvilGuesser:
+                case RoleType.EvilGuesser:
                     Guesser.evilGuesser = player;
                     break;
-                case RoleId.NiceGuesser:
+                case RoleType.NiceGuesser:
                     Guesser.niceGuesser = player;
                     break;
-                case RoleId.BountyHunter:
+                case RoleType.BountyHunter:
                     BountyHunter.bountyHunter = player;
                     break;
-                case RoleId.Bait:
+                case RoleType.Bait:
                     Bait.bait = player;
                     break;
-                case RoleId.GM:
+                case RoleType.GM:
                     GM.gm = player;
                     break;
-                case RoleId.Vulture:
+                case RoleType.Vulture:
                     Vulture.vulture = player;
                     break;
-                case RoleId.Medium:
+                case RoleType.Medium:
                     Medium.medium = player;
                     break;
-                case RoleId.Witch:
+                case RoleType.Witch:
                     Witch.witch = player;
                     break;
-                case RoleId.Lawyer:
+                case RoleType.Lawyer:
                     Lawyer.lawyer = player;
                     break;
-                case RoleId.Pursuer:
+                case RoleType.Pursuer:
                     Pursuer.pursuer = player;
                     break;
                 default:
@@ -370,15 +371,15 @@ namespace TheOtherRoles
             }
         }
 
-        public static void eraseRole(this PlayerControl player, RoleId role)
+        public static void eraseRole(this PlayerControl player, RoleType role)
         {
             if (isRole(player, role))
             {
                 foreach (var t in RoleData.allRoleTypes)
                 {
-                    if (role == t.Value)
+                    if (role == t.Key)
                     {
-                        t.Key.GetMethod("eraseRole", BindingFlags.Public | BindingFlags.Static)?.Invoke(null, new object[] { player });
+                        t.Value.GetMethod("eraseRole", BindingFlags.Public | BindingFlags.Static)?.Invoke(null, new object[] { player });
                         return;
                     }
                 }

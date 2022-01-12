@@ -10,13 +10,13 @@ using static TheOtherRoles.GameHistory;
 namespace TheOtherRoles
 {
     [HarmonyPatch]
-    public class Template : RoleBase<Template>
+    public class Tetrachrome : RoleBase<Tetrachrome>
     {
-        public static Color color = Palette.CrewmateBlue;
+        public static Color color = Palette.Purple;
 
-        public Template()
+        public Tetrachrome()
         {
-            RoleType = roleId = RoleType.NoRole;
+            RoleType = roleId = RoleType.Tetrachrome;
         }
 
         public override void OnMeetingStart() { }
@@ -31,7 +31,7 @@ namespace TheOtherRoles
 
         public static void clearAndReload()
         {
-            players = new List<Template>();
+            players = new List<Tetrachrome>();
         }
     }
 }

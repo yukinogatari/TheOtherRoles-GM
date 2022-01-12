@@ -21,12 +21,12 @@ namespace TheOtherRoles.Patches
             bool isReactor = task.TaskType == TaskTypes.StopCharles || task.TaskType == TaskTypes.ResetSeismic || task.TaskType == TaskTypes.ResetReactor;
             bool isO2 = task.TaskType == TaskTypes.RestoreOxy;
 
-            if (pc.isRole(RoleId.Swapper) && (isLights || isComms))
+            if (pc.isRole(RoleType.Swapper) && (isLights || isComms))
             {
                 return true;
             }
 
-            if (pc.isRole(RoleId.Madmate) && (isLights || (isComms && !Madmate.canFixComm)))
+            if (pc.isRole(RoleType.Madmate) && (isLights || (isComms && !Madmate.canFixComm)))
             {
                 return true;
             }
@@ -156,7 +156,7 @@ namespace TheOtherRoles.Patches
                 bool canUse;
                 bool couldUse;
                 __instance.CanUse(PlayerControl.LocalPlayer.Data, out canUse, out couldUse);
-                bool canMoveInVents = PlayerControl.LocalPlayer != Spy.spy && !PlayerControl.LocalPlayer.isRole(RoleId.Madmate);
+                bool canMoveInVents = PlayerControl.LocalPlayer != Spy.spy && !PlayerControl.LocalPlayer.isRole(RoleType.Madmate);
                 if (!canUse) return false; // No need to execute the native method as using is disallowed anyways
 
                 bool isEnter = !PlayerControl.LocalPlayer.inVent;
@@ -236,7 +236,7 @@ namespace TheOtherRoles.Patches
                 if (__instance.isActiveAndEnabled && __instance.currentTarget && !__instance.isCoolingDown && !PlayerControl.LocalPlayer.Data.IsDead && PlayerControl.LocalPlayer.CanMove)
                 {
                     bool showAnimation = true;
-                    if (PlayerControl.LocalPlayer.isRole(RoleId.Ninja) && Ninja.isStealthed(PlayerControl.LocalPlayer))
+                    if (PlayerControl.LocalPlayer.isRole(RoleType.Ninja) && Ninja.isStealthed(PlayerControl.LocalPlayer))
                     {
                         showAnimation = false;
                     }

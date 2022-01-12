@@ -285,7 +285,7 @@ namespace TheOtherRoles.Patches
         {
             // If LocalPlayer is Sidekick, the Jackal is disconnected and Sidekick promotion is enabled, then trigger promotion
             if (Sidekick.promotesToJackal && 
-                PlayerControl.LocalPlayer.isRole(RoleId.Sidekick) &&
+                PlayerControl.LocalPlayer.isRole(RoleType.Sidekick) &&
                 PlayerControl.LocalPlayer.isAlive() && 
                 (Jackal.jackal == null || Jackal.jackal.isDead()))
             {
@@ -527,7 +527,7 @@ namespace TheOtherRoles.Patches
                     }
 
                     var (tasksCompleted, tasksTotal) = TasksHandler.taskInfo(p.Data);
-                    string roleNames = RoleInfo.GetRolesString(p, true, new RoleId[] { RoleId.Lovers });
+                    string roleNames = RoleInfo.GetRolesString(p, true, new RoleType[] { RoleType.Lovers });
 
                     var completedStr = commsActive ? "?" : tasksCompleted.ToString();
                     string taskInfo = tasksTotal > 0 ? $"<color=#FAD934FF>({completedStr}/{tasksTotal})</color>" : "";
@@ -1232,7 +1232,7 @@ namespace TheOtherRoles.Patches
             float addition = 0f;
             if (Mini.mini != null && PlayerControl.LocalPlayer == Mini.mini && Mini.mini.Data.Role.IsImpostor) multiplier = Mini.isGrownUp() ? 0.66f : 2f;
             if (BountyHunter.bountyHunter != null && PlayerControl.LocalPlayer == BountyHunter.bountyHunter) addition = BountyHunter.punishmentTime;
-            if (PlayerControl.LocalPlayer.isRole(RoleId.Ninja) && Ninja.isPenalized(PlayerControl.LocalPlayer)) addition = Ninja.killPenalty;
+            if (PlayerControl.LocalPlayer.isRole(RoleType.Ninja) && Ninja.isPenalized(PlayerControl.LocalPlayer)) addition = Ninja.killPenalty;
 
             float max = Mathf.Max(PlayerControl.GameOptions.KillCooldown * multiplier + addition, __instance.killTimer);
             __instance.SetKillTimerUnchecked(Mathf.Clamp(time, 0f, max), max);

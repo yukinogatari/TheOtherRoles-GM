@@ -234,16 +234,6 @@ namespace TheOtherRoles {
         public static CustomOption noVoteIsSelfVote;
         public static CustomOption hidePlayerNames;
 
-        public static CustomOption hideSettings;
-        public static CustomOption restrictDevices;
-        public static CustomOption restrictAdmin;
-        public static CustomOption restrictCameras;
-        public static CustomOption restrictVents;
-
-        public static CustomOption uselessOptions;
-        public static CustomOption playerColorRandom;
-        public static CustomOption playerNameDupes;
-        public static CustomOption disableVents;
 		public static CustomOption allowParallelMedBayScans;
         public static CustomOption dynamicMap;
 
@@ -288,6 +278,21 @@ namespace TheOtherRoles {
         public static CustomOption nekoKabochaRevengeNeutral;
         public static CustomOption nekoKabochaRevengeImpostor;
         public static CustomOption nekoKabochaRevengeExile;
+
+        public static CustomDualRoleOption tetrachromeSpawnRate;
+
+        public static CustomOption hideSettings;
+        public static CustomOption restrictDevices;
+        public static CustomOption restrictAdmin;
+        public static CustomOption restrictCameras;
+        public static CustomOption restrictVents;
+
+        public static CustomOption hideOutOfSightNametags;
+
+        public static CustomOption uselessOptions;
+        public static CustomOption playerColorRandom;
+        public static CustomOption playerNameDupes;
+        public static CustomOption disableVents;
 
         internal static Dictionary<byte, byte[]> blockedRolePairings = new Dictionary<byte, byte[]>();
         internal static List<byte> blockLovers = new List<byte>();
@@ -479,6 +484,10 @@ namespace TheOtherRoles {
             plagueDoctorInfectKiller = CustomOption.Create(906, "plagueDoctorInfectKiller", true, plagueDoctorSpawnRate);
             plagueDoctorWinDead = CustomOption.Create(908, "plagueDoctorWinDead", true, plagueDoctorSpawnRate);
 
+
+            tetrachromeSpawnRate = new CustomDualRoleOption(1040, "tetrachrome", Tetrachrome.color, RoleType.Tetrachrome, 15);
+
+
             mayorSpawnRate = new CustomRoleOption(80, "mayor", Mayor.color, 1);
             mayorNumVotes = CustomOption.Create(81, "mayorNumVotes", 2f, 2f, 10f, 1f, mayorSpawnRate, format: "unitVotes");
 
@@ -569,6 +578,7 @@ namespace TheOtherRoles {
             maxNumberOfMeetings = CustomOption.Create(3, "maxNumberOfMeetings", 10, 0, 15, 1, specialOptions, true);
             blockSkippingInEmergencyMeetings = CustomOption.Create(4, "blockSkippingInEmergencyMeetings", false, specialOptions);
             noVoteIsSelfVote = CustomOption.Create(5, "noVoteIsSelfVote", false, specialOptions);
+            hideOutOfSightNametags = CustomOption.Create(550, "hideOutOfSightNametags", false, specialOptions);
             allowParallelMedBayScans = CustomOption.Create(540, "parallelMedbayScans", false, specialOptions);
             hideSettings = CustomOption.Create(520, "hideSettings", false, specialOptions);
 
@@ -584,12 +594,12 @@ namespace TheOtherRoles {
             playerNameDupes = CustomOption.Create(522, "playerNameDupes", false, uselessOptions);
             playerColorRandom = CustomOption.Create(521, "playerColorRandom", false, uselessOptions);
 
-            blockedRolePairings.Add((byte)RoleId.Vampire, new [] { (byte)RoleId.Warlock});
-            blockedRolePairings.Add((byte)RoleId.Warlock, new [] { (byte)RoleId.Vampire});
-            blockedRolePairings.Add((byte)RoleId.Spy, new [] { (byte)RoleId.Mini});
-            blockedRolePairings.Add((byte)RoleId.Mini, new [] { (byte)RoleId.Spy});
+            blockedRolePairings.Add((byte)RoleType.Vampire, new [] { (byte)RoleType.Warlock});
+            blockedRolePairings.Add((byte)RoleType.Warlock, new [] { (byte)RoleType.Vampire});
+            blockedRolePairings.Add((byte)RoleType.Spy, new [] { (byte)RoleType.Mini});
+            blockedRolePairings.Add((byte)RoleType.Mini, new [] { (byte)RoleType.Spy});
 
-            blockLovers.Add((byte)RoleId.Snitch);
+            blockLovers.Add((byte)RoleType.Snitch);
         }
     }
 

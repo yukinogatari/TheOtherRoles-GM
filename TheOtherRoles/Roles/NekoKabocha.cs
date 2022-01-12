@@ -22,7 +22,7 @@ namespace TheOtherRoles
 
         public NekoKabocha()
         {
-            RoleType = roleId = RoleId.NekoKabocha;
+            RoleType = roleId = RoleType.NekoKabocha;
         }
 
         public override void OnMeetingStart() { }

@@ -179,7 +179,7 @@ namespace TheOtherRoles.Patches {
         class MeetingHudBloopAVoteIconPatch {
             public static bool Prefix(MeetingHud __instance, [HarmonyArgument(0)]GameData.PlayerInfo voterPlayer, [HarmonyArgument(1)]int index, [HarmonyArgument(2)]Transform parent) {
                 SpriteRenderer spriteRenderer = UnityEngine.Object.Instantiate<SpriteRenderer>(__instance.PlayerVotePrefab);
-                if (!PlayerControl.GameOptions.AnonymousVotes || (PlayerControl.LocalPlayer.Data.IsDead && MapOptions.ghostsSeeVotes))
+                if (!PlayerControl.GameOptions.AnonymousVotes || (PlayerControl.LocalPlayer.Data.IsDead && MapOptions.ghostsSeeVotes) || PlayerControl.LocalPlayer.isRole(RoleType.Tetrachrome))
                     PlayerControl.SetPlayerMaterialColors(voterPlayer.DefaultOutfit.ColorId, spriteRenderer);
                 else
                     PlayerControl.SetPlayerMaterialColors(Palette.DisabledGrey, spriteRenderer);
@@ -396,12 +396,12 @@ namespace TheOtherRoles.Patches {
 
             foreach (RoleInfo roleInfo in RoleInfo.allRoleInfos)
             {
-                RoleId guesserRole = (Guesser.niceGuesser != null && PlayerControl.LocalPlayer.PlayerId == Guesser.niceGuesser.PlayerId) ? RoleId.NiceGuesser : RoleId.EvilGuesser;
+                RoleType guesserRole = (Guesser.niceGuesser != null && PlayerControl.LocalPlayer.PlayerId == Guesser.niceGuesser.PlayerId) ? RoleType.NiceGuesser : RoleType.EvilGuesser;
                 if (roleInfo == null || 
-                    roleInfo.roleId == RoleId.Lovers || 
+                    roleInfo.roleId == RoleType.Lovers || 
                     roleInfo.roleId == guesserRole || 
                     roleInfo == RoleInfo.niceMini || 
-					(!Guesser.evilGuesserCanGuessSpy && guesserRole == RoleId.EvilGuesser && roleInfo.roleId == RoleId.Spy) ||
+					(!Guesser.evilGuesserCanGuessSpy && guesserRole == RoleType.EvilGuesser && roleInfo.roleId == RoleType.Spy) ||
                     roleInfo == RoleInfo.gm ||
                     (Guesser.onlyAvailableRoles && !roleInfo.enabled && !MapOptions.hideSettings))
                     continue; // Not guessable roles
@@ -485,7 +485,7 @@ namespace TheOtherRoles.Patches {
         static void populateButtonsPostfix(MeetingHud __instance) {
             nameplatesChanged = true;
 
-            if (PlayerControl.LocalPlayer.isRole(RoleId.GM) && GM.canKill)
+            if (PlayerControl.LocalPlayer.isRole(RoleType.GM) && GM.canKill)
             {
                 renderers = new SpriteRenderer[__instance.playerStates.Length];
 
@@ -512,7 +512,7 @@ namespace TheOtherRoles.Patches {
             }
 
             // Add Swapper Buttons
-            if (PlayerControl.LocalPlayer.isRole(RoleId.Swapper) && Swapper.numSwaps > 0 && !Swapper.swapper.Data.IsDead) {
+            if (PlayerControl.LocalPlayer.isRole(RoleType.Swapper) && Swapper.numSwaps > 0 && !Swapper.swapper.Data.IsDead) {
                 selections = new bool[__instance.playerStates.Length];
                 renderers = new SpriteRenderer[__instance.playerStates.Length];
 
@@ -595,7 +595,7 @@ namespace TheOtherRoles.Patches {
                 MeetingHud.Instance.state != MeetingHud.VoteStates.Discussion)
                 return;
 
-            if (PlayerControl.LocalPlayer.isRole(RoleId.Swapper) && Swapper.numSwaps > 0 && !Swapper.swapper.Data.IsDead)
+            if (PlayerControl.LocalPlayer.isRole(RoleType.Swapper) && Swapper.numSwaps > 0 && !Swapper.swapper.Data.IsDead)
             {
                 meetingInfoText.text = String.Format(ModTranslation.getString("swapperSwapsLeft"), Swapper.numSwaps);
                 meetingInfoText.gameObject.SetActive(true);
@@ -608,7 +608,7 @@ namespace TheOtherRoles.Patches {
                 meetingInfoText.gameObject.SetActive(true);
             }
 
-            if (PlayerControl.LocalPlayer.isRole(RoleId.Shifter) && Shifter.futureShift != null)
+            if (PlayerControl.LocalPlayer.isRole(RoleType.Shifter) && Shifter.futureShift != null)
             {
                 meetingInfoText.text = String.Format(ModTranslation.getString("shifterTargetInfo"), Shifter.futureShift.Data.PlayerName);
                 meetingInfoText.gameObject.SetActive(true);

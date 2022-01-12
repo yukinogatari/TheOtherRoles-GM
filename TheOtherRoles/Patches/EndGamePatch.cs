@@ -109,7 +109,7 @@ namespace TheOtherRoles.Patches
         public static void Postfix(AmongUsClient __instance, [HarmonyArgument(0)] ref EndGameResult endGameResult)
         {
             var gameOverReason = AdditionalTempData.gameOverReason;
-            var hideRoles = new RoleId[] { RoleId.Lovers };
+            var hideRoles = new RoleType[] { RoleType.Lovers };
             AdditionalTempData.clear();
 
             //foreach (var pc in PlayerControl.AllPlayerControls)
@@ -575,8 +575,8 @@ namespace TheOtherRoles.Patches
                         {
                             RoleInfo roleX = x.Roles.FirstOrDefault();
                             RoleInfo roleY = y.Roles.FirstOrDefault();
-                            RoleId idX = roleX == null ? RoleId.NoRole : roleX.roleId;
-                            RoleId idY = roleY == null ? RoleId.NoRole : roleY.roleId;
+                            RoleType idX = roleX == null ? RoleType.NoRole : roleX.roleId;
+                            RoleType idY = roleY == null ? RoleType.NoRole : roleY.roleId;
 
                             if (x.Status == y.Status)
                             {

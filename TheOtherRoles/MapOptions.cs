@@ -12,6 +12,7 @@ namespace TheOtherRoles{
         public static bool noVoteIsSelfVote = false;
         public static bool hidePlayerNames = false;
         public static bool hideSettings = false;
+        public static bool hideOutOfSightNametags = false;
 
         public static bool randomizeColors = false;
         public static bool allowDupeNames = false;
@@ -48,6 +49,8 @@ namespace TheOtherRoles{
             blockSkippingInEmergencyMeetings = CustomOptionHolder.blockSkippingInEmergencyMeetings.getBool();
             noVoteIsSelfVote = CustomOptionHolder.noVoteIsSelfVote.getBool();
             hidePlayerNames = CustomOptionHolder.hidePlayerNames.getBool();
+
+            hideOutOfSightNametags = CustomOptionHolder.hideOutOfSightNametags.getBool();
 
             hideSettings = CustomOptionHolder.hideSettings.getBool();
 
