@@ -276,22 +276,6 @@ namespace TheOtherRoles.Patches
                     TempData.winners.Add(wpdFormerJackal);
                 }
             }
-            else if (Madmate.exists)
-            {
-                // Madmate wins if team impostors wins
-                foreach (WinningPlayerData winner in TempData.winners)
-                {
-                    if (winner.IsImpostor)
-                    {
-                        foreach (var p in Madmate.allPlayers)
-                        {
-                            WinningPlayerData wpd = new WinningPlayerData(p.Data);
-                            TempData.winners.Add(wpd);
-                        }
-                        break;
-                    }
-                }
-            }
             // Lawyer solo win 
             else if (lawyerSoloWin)
             {
@@ -300,6 +284,7 @@ namespace TheOtherRoles.Patches
                 TempData.winners.Add(wpd);
                 AdditionalTempData.winCondition = WinCondition.LawyerSoloWin;
             }
+
             else if (plagueDoctorWin)
             {
                 foreach (var pd in PlagueDoctor.players)
@@ -308,6 +293,16 @@ namespace TheOtherRoles.Patches
                     WinningPlayerData wpd = new WinningPlayerData(pd.player.Data);
                     TempData.winners.Add(wpd);
                     AdditionalTempData.winCondition = WinCondition.PlagueDoctorWin;
+                }
+            }
+
+            // Madmate win with impostors
+            if (Madmate.exists && TempData.winners.ToArray().Any(x => x.IsImpostor))
+            {
+                foreach (var p in Madmate.allPlayers)
+                {
+                    WinningPlayerData wpd = new WinningPlayerData(p.Data);
+                    TempData.winners.Add(wpd);
                 }
             }
 
