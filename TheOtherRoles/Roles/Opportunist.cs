@@ -14,7 +14,7 @@ namespace TheOtherRoles
             RoleType = roleId = RoleId.Opportunist;
         }
 
-        public static void clearAndReload()
+        public static void Clear()
         {
             players = new List<Opportunist>();
         }

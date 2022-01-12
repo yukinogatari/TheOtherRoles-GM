@@ -27,14 +27,15 @@ namespace TheOtherRoles
             Camouflager.clearAndReload();
             Shifter.clearAndReload();
             Swapper.clearAndReload();
-            Lovers.clearAndReload();
             GM.clearAndReload();
-            Opportunist.clearAndReload();
-            Ninja.clearAndReload();
-            Madmate.clearAndReload();
-            PlagueDoctor.clearAndReload();
-            Lighter.clearAndReload();
-            Role.Clear();
+
+            Lovers.Clear();
+            Opportunist.Clear();
+            Ninja.Clear();
+            Madmate.Clear();
+            PlagueDoctor.Clear();
+            Lighter.Clear();
+            Role.ClearAll();
         }
 
         public static void FixedUpdate(PlayerControl player)

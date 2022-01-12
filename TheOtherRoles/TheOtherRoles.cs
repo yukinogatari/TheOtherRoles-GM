@@ -40,8 +40,8 @@ namespace TheOtherRoles
             Jester.clearAndReload();
             Mayor.clearAndReload();
             Engineer.clearAndReload();
-            Sheriff.clearAndReload();
-            Lighter.clearAndReload();
+            Sheriff.Clear();
+            Lighter.Clear();
             Godfather.clearAndReload();
             Mafioso.clearAndReload();
             Janitor.clearAndReload();

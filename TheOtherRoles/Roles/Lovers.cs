@@ -252,7 +252,7 @@ namespace TheOtherRoles
             eraseCouple(player);
         }
 
-        public static void clearAndReload()
+        public static void Clear()
         {
             couples = new List<Couple>();
         }

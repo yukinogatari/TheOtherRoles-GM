@@ -294,7 +294,7 @@ namespace TheOtherRoles
             }
         }
 
-        public static void clearAndReload()
+        public static void Clear()
         {
             players = new List<PlagueDoctor>();
             triggerPlagueDoctorWin = false;

@@ -26,7 +26,7 @@ namespace TheOtherRoles
         public override void OnDeath(PlayerControl killer = null) { }
         public override void HandleDisconnect(PlayerControl player, DisconnectReasons reason) { }
 
-        public static void clearAndReload()
+        public static void Clear()
         {
             players = new List<Madmate>();
         }

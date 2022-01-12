@@ -190,7 +190,7 @@ namespace TheOtherRoles
             ninjaButton.MaxTimer = Ninja.stealthCooldown;
         }
 
-        public static void clearAndReload()
+        public static void Clear()
         {
             players = new List<Ninja>();
         }

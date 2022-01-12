@@ -85,7 +85,7 @@ namespace TheOtherRoles
             lighterButton.EffectDuration = duration;
         }
 
-        public static void clearAndReload()
+        public static void Clear()
         {
             players = new List<Lighter>();
         }
