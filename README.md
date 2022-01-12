@@ -13,6 +13,7 @@ This fork introduces a number of changes to [The Other Roles](https://github.com
 * Pluralized Roles
   * Lovers (up to 7 couples)
   * Sheriff
+  * And more...
 * [Translation](#translation) into any language supported by Among Us
 * Custom Hats
   * Almost 90 new hats drawn by members of the Japanese Among Us community
@@ -52,6 +53,8 @@ The [Role Assignment](#role-assignment) sections explains how the roles are bein
 # Releases
 | Among Us - Version | Mod Version | Link |
 |----------|-------------|-----------------|
+| 2021.12.15s (build num: 1421) | v3.4.0 GM | [Download](https://github.com/yukinogatari/TheOtherRoles-GM/releases/download/v3.4.0/TheOtherRoles-GM.v3.4.0.zip)
+| 2021.12.15s (build num: 1421) | v3.3.3.1 GM | [Download](https://github.com/yukinogatari/TheOtherRoles-GM/releases/download/v3.3.3.1/TheOtherRoles-GM.v3.3.3.1.zip)
 | 2021.12.15s (build num: 1421) | v3.3.2 GM | [Download](https://github.com/yukinogatari/TheOtherRoles-GM/releases/download/v3.3.2/TheOtherRoles-GM.v3.3.2.zip)
 | 2021.12.15s (build num: 1421) | v3.3.1 GM | [Download](https://github.com/yukinogatari/TheOtherRoles-GM/releases/download/v3.3.1/TheOtherRoles-GM.v3.3.1.zip)
 | 2021.12.15s (build num: 1421) | v3.3.0 GM | [Download](https://github.com/yukinogatari/TheOtherRoles-GM/releases/download/v3.3.0/TheOtherRoles-GM.v3.3.0.zip)
