@@ -282,9 +282,11 @@ namespace TheOtherRoles {
         public static CustomOption plagueDoctorInfectKiller;
         public static CustomOption plagueDoctorResetMeeting;
         public static CustomOption plagueDoctorWinDead;
+
         public static CustomRoleOption serialKillerSpawnRate;
         public static CustomOption serialKillerKillCooldown;
         public static CustomOption serialKillerSuicideTimer;
+        public static CustomOption serialKillerResetTimer;
 
         internal static Dictionary<byte, byte[]> blockedRolePairings = new Dictionary<byte, byte[]>();
         internal static List<byte> blockLovers = new List<byte>();
@@ -381,9 +383,10 @@ namespace TheOtherRoles {
             ninjaCanBeTargeted = CustomOption.Create(1007, "ninjaCanBeTargeted", true, ninjaSpawnRate);
             ninjaCanVent = CustomOption.Create(1008, "ninjaCanVent", false, ninjaSpawnRate);
 
-            serialKillerSpawnRate = new CustomRoleOption(1010, "serialKiller", SerialKiller.color, 1);
-            serialKillerKillCooldown = CustomOption.Create(1012, "serialKillerKillCooldown", 15f, 1f, 60f, 0.5f, serialKillerSpawnRate, format: "unitSeconds");
-            serialKillerSuicideTimer = CustomOption.Create(1013, "serialKillerSuicideTimer", 40f, 1f, 60f, 0.5f, serialKillerSpawnRate, format: "unitSeconds");
+            serialKillerSpawnRate = new CustomRoleOption(1010, "serialKiller", SerialKiller.color, 3);
+            serialKillerKillCooldown = CustomOption.Create(1012, "serialKillerKillCooldown", 15f, 2.5f, 60f, 2.5f, serialKillerSpawnRate, format: "unitSeconds");
+            serialKillerSuicideTimer = CustomOption.Create(1013, "serialKillerSuicideTimer", 40f, 2.5f, 60f, 2.5f, serialKillerSpawnRate, format: "unitSeconds");
+            serialKillerResetTimer = CustomOption.Create(1014, "serialKillerResetTimer", true, serialKillerSpawnRate);
 
             madmateSpawnRate = new CustomRoleOption(360, "madmate", Madmate.color);
             madmateCanDieToSheriff = CustomOption.Create(361, "madmateCanDieToSheriff", false, madmateSpawnRate);

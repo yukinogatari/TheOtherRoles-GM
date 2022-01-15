@@ -1477,6 +1477,30 @@
         "0": "Remaining: {0}",
         "11": "\u6b8b\u308a {0}\u4eba"
     },
+    "serialKiller": {
+        "0": "Serial Killer",
+        "11": "\u30b7\u30ea\u30a2\u30eb\u30ad\u30e9\u30fc"
+    },
+    "serialKillerIntroDesc": {
+        "0": "You crave blood",
+        "11": "\u6bba\u4eba\u885d\u52d5\u304c\u6291\u3048\u3089\u308c\u306a\u3044"
+    },
+    "serialKillerShortDesc": {
+        "0": "You crave blood",
+        "11": "\u6bba\u4eba\u885d\u52d5\u304c\u6291\u3048\u3089\u308c\u306a\u3044"
+    },
+    "serialKillerKillCooldown": {
+        "0": "Kill Cooldown",
+        "11": "\u30ad\u30eb\u30af\u30fc\u30eb"
+    },
+    "serialKillerSuicideTimer": {
+        "0": "Suicide Timer",
+        "11": "\u81ea\u6bba\u30bf\u30a4\u30de\u30fc"
+    },
+    "serialKillerResetTimer": {
+        "0": "Reset Suicide Timer After Meetings",
+        "11": "\u4f1a\u8b70\u5f8c\u3001\u81ea\u6bba\u30bf\u30a4\u30de\u30fc\u304c\u30ea\u30bb\u30c3\u30c8\u3055\u308c\u308b"
+    },
     "husk": {
         "0": "Husk",
         "11": "\u306a\u308c\u306e\u679c\u3066"
@@ -2438,6 +2462,10 @@
     "NinjaUnstealthText": {
         "0": "Unstealth",
         "11": "\u89e3\u9664"
+    },
+    "SerialKillerText": {
+        "0": "Until Suicide",
+        "11": "\u81ea\u6bba\u307e\u3067"
     },
     "colorSalmon": {
         "0": "Salmon",

@@ -50,7 +50,8 @@ namespace TheOtherRoles
                 if (penalized)
                 {
                     player.SetKillTimerUnchecked(PlayerControl.GameOptions.KillCooldown + killPenalty);
-                } else
+                }
+                else
                 {
                     player.SetKillTimer(PlayerControl.GameOptions.KillCooldown);
                 }
@@ -113,7 +114,8 @@ namespace TheOtherRoles
         {
             penalized = stealthed;
             float penalty = penalized ? killPenalty : 0f;
-            player.SetKillTimerUnchecked(PlayerControl.GameOptions.KillCooldown + penalty);
+            if (PlayerControl.LocalPlayer == player)
+                player.SetKillTimerUnchecked(PlayerControl.GameOptions.KillCooldown + penalty);
         }
 
         public override void OnDeath(PlayerControl killer)

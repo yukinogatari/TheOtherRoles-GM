@@ -1230,8 +1230,8 @@ namespace TheOtherRoles.Patches
             if (PlayerControl.GameOptions.KillCooldown <= 0f) return false;
             float multiplier = 1f;
             float addition = 0f;
-            if (Mini.mini != null && PlayerControl.LocalPlayer == Mini.mini && Mini.mini.Data.Role.IsImpostor) multiplier = Mini.isGrownUp() ? 0.66f : 2f;
-            if (BountyHunter.bountyHunter != null && PlayerControl.LocalPlayer == BountyHunter.bountyHunter) addition = BountyHunter.punishmentTime;
+            if (PlayerControl.LocalPlayer.isRole(RoleId.Mini) && PlayerControl.LocalPlayer.isImpostor()) multiplier = Mini.isGrownUp() ? 0.66f : 2f;
+            if (PlayerControl.LocalPlayer.isRole(RoleId.BountyHunter)) addition = BountyHunter.punishmentTime;
             if (PlayerControl.LocalPlayer.isRole(RoleId.Ninja) && Ninja.isPenalized(PlayerControl.LocalPlayer)) addition = Ninja.killPenalty;
 
             float max = Mathf.Max(PlayerControl.GameOptions.KillCooldown * multiplier + addition, __instance.killTimer);
@@ -1239,9 +1239,9 @@ namespace TheOtherRoles.Patches
             return false;
         }
 
-        public static void SetKillTimerUnchecked(this PlayerControl player, float time, float max = float.MinValue)
+        public static void SetKillTimerUnchecked(this PlayerControl player, float time, float max = float.NegativeInfinity)
         {
-            if (max == float.MinValue) max = time;
+            if (max == float.NegativeInfinity) max = time;
 
             player.killTimer = time;
             DestroyableSingleton<HudManager>.Instance.KillButton.SetCoolDown(time, max);
