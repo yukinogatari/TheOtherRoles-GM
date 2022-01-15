@@ -35,6 +35,7 @@ namespace TheOtherRoles
             Madmate.Clear();
             PlagueDoctor.Clear();
             Lighter.Clear();
+            SerialKiller.Clear();
             Role.ClearAll();
         }
 

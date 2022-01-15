@@ -27,6 +27,7 @@ namespace TheOtherRoles
             { typeof(RoleBase<Sheriff>), RoleId.Sheriff },
             { typeof(RoleBase<Lighter>), RoleId.Lighter },
             { typeof(RoleBase<Ninja>), RoleId.Ninja },
+            { typeof(RoleBase<SerialKiller>), RoleId.SerialKiller },
             { typeof(RoleBase<Madmate>), RoleId.Madmate },
             { typeof(RoleBase<Opportunist>), RoleId.Opportunist },
             { typeof(RoleBase<PlagueDoctor>), RoleId.PlagueDoctor },
