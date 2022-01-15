@@ -91,7 +91,7 @@ namespace TheOtherRoles
                     sheriffKillButton.Timer = sheriffKillButton.MaxTimer;
                     local.currentTarget = null;
                 },
-                () => { return PlayerControl.LocalPlayer.isRole(RoleId.Sheriff) && local.numShots > 0 && !PlayerControl.LocalPlayer.Data.IsDead; },
+                () => { return PlayerControl.LocalPlayer.isRole(RoleId.Sheriff) && local.numShots > 0 && PlayerControl.LocalPlayer.isAlive(); },
                 () =>
                 {
                     if (sheriffNumShotsText != null)

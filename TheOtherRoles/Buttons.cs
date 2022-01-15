@@ -155,7 +155,7 @@ namespace TheOtherRoles
                         }
                     }
                 },
-                () => { return Engineer.engineer != null && Engineer.engineer == PlayerControl.LocalPlayer && Engineer.remainingFixes > 0 && !PlayerControl.LocalPlayer.Data.IsDead; },
+                () => { return Engineer.engineer != null && Engineer.engineer == PlayerControl.LocalPlayer && Engineer.remainingFixes > 0 && PlayerControl.LocalPlayer.isAlive(); },
                 () =>
                 {
                     bool sabotageActive = false;
@@ -202,7 +202,7 @@ namespace TheOtherRoles
                         }
                     }
                 },
-                () => { return Janitor.janitor != null && Janitor.janitor == PlayerControl.LocalPlayer && !PlayerControl.LocalPlayer.Data.IsDead; },
+                () => { return Janitor.janitor != null && Janitor.janitor == PlayerControl.LocalPlayer && PlayerControl.LocalPlayer.isAlive(); },
                 () => { return __instance.ReportButton.graphic.color == Palette.EnabledColor && PlayerControl.LocalPlayer.CanMove; },
                 () => { janitorCleanButton.Timer = janitorCleanButton.MaxTimer; },
                 Janitor.getButtonSprite(),
@@ -222,7 +222,7 @@ namespace TheOtherRoles
                     AmongUsClient.Instance.FinishRpcImmediately(writer);
                     RPCProcedure.timeMasterShield();
                 },
-                () => { return TimeMaster.timeMaster != null && TimeMaster.timeMaster == PlayerControl.LocalPlayer && !PlayerControl.LocalPlayer.Data.IsDead; },
+                () => { return TimeMaster.timeMaster != null && TimeMaster.timeMaster == PlayerControl.LocalPlayer && PlayerControl.LocalPlayer.isAlive(); },
                 () => { return PlayerControl.LocalPlayer.CanMove; },
                 () =>
                 {
@@ -255,7 +255,7 @@ namespace TheOtherRoles
                     else
                         RPCProcedure.medicSetShielded(Medic.currentTarget.PlayerId);
                 },
-                () => { return Medic.medic != null && Medic.medic == PlayerControl.LocalPlayer && !PlayerControl.LocalPlayer.Data.IsDead; },
+                () => { return Medic.medic != null && Medic.medic == PlayerControl.LocalPlayer && PlayerControl.LocalPlayer.isAlive(); },
                 () => { return !Medic.usedShield && Medic.currentTarget && PlayerControl.LocalPlayer.CanMove; },
                 () => { },
                 Medic.getButtonSprite(),
@@ -276,7 +276,7 @@ namespace TheOtherRoles
                     AmongUsClient.Instance.FinishRpcImmediately(writer);
                     RPCProcedure.setFutureShifted(Shifter.currentTarget.PlayerId);
                 },
-                () => { return Shifter.shifter != null && Shifter.shifter == PlayerControl.LocalPlayer && !PlayerControl.LocalPlayer.Data.IsDead; },
+                () => { return Shifter.shifter != null && Shifter.shifter == PlayerControl.LocalPlayer && PlayerControl.LocalPlayer.isAlive(); },
                 () => { return Shifter.currentTarget && Shifter.futureShift == null && PlayerControl.LocalPlayer.CanMove; },
                 () => { },
                 Shifter.getButtonSprite(),
@@ -308,7 +308,7 @@ namespace TheOtherRoles
                         morphlingButton.EffectDuration = 1f;
                     }
                 },
-                () => { return Morphling.morphling != null && Morphling.morphling == PlayerControl.LocalPlayer && !PlayerControl.LocalPlayer.Data.IsDead; },
+                () => { return Morphling.morphling != null && Morphling.morphling == PlayerControl.LocalPlayer && PlayerControl.LocalPlayer.isAlive(); },
                 () => { return (Morphling.currentTarget || Morphling.sampledTarget) && PlayerControl.LocalPlayer.CanMove; },
                 () =>
                 {
@@ -346,7 +346,7 @@ namespace TheOtherRoles
                     AmongUsClient.Instance.FinishRpcImmediately(writer);
                     RPCProcedure.camouflagerCamouflage();
                 },
-                () => { return Camouflager.camouflager != null && Camouflager.camouflager == PlayerControl.LocalPlayer && !PlayerControl.LocalPlayer.Data.IsDead; },
+                () => { return Camouflager.camouflager != null && Camouflager.camouflager == PlayerControl.LocalPlayer && PlayerControl.LocalPlayer.isAlive(); },
                 () => { return PlayerControl.LocalPlayer.CanMove; },
                 () =>
                 {
@@ -371,7 +371,7 @@ namespace TheOtherRoles
                 {
                     Hacker.hackerTimer = Hacker.duration;
                 },
-                () => { return Hacker.hacker != null && Hacker.hacker == PlayerControl.LocalPlayer && !PlayerControl.LocalPlayer.Data.IsDead; },
+                () => { return Hacker.hacker != null && Hacker.hacker == PlayerControl.LocalPlayer && PlayerControl.LocalPlayer.isAlive(); },
                 () => { return PlayerControl.LocalPlayer.CanMove; },
                 () =>
                 {
@@ -398,7 +398,7 @@ namespace TheOtherRoles
 
                    Hacker.chargesAdminTable--;
                },
-               () => { return Hacker.hacker != null && Hacker.hacker == PlayerControl.LocalPlayer && MapOptions.couldUseAdmin && !PlayerControl.LocalPlayer.Data.IsDead; },
+               () => { return Hacker.hacker != null && Hacker.hacker == PlayerControl.LocalPlayer && MapOptions.couldUseAdmin && PlayerControl.LocalPlayer.isAlive(); },
                () =>
                {
                    if (hackerAdminTableChargesText != null)
@@ -463,7 +463,7 @@ namespace TheOtherRoles
                    }
                    Hacker.chargesVitals--;
                },
-               () => { return Hacker.hacker != null && Hacker.hacker == PlayerControl.LocalPlayer && MapOptions.couldUseVitals && !PlayerControl.LocalPlayer.Data.IsDead && PlayerControl.GameOptions.MapId != 0 && PlayerControl.GameOptions.MapId != 3; },
+               () => { return Hacker.hacker != null && Hacker.hacker == PlayerControl.LocalPlayer && MapOptions.couldUseVitals && PlayerControl.LocalPlayer.isAlive() && PlayerControl.GameOptions.MapId != 0 && PlayerControl.GameOptions.MapId != 3; },
                () =>
                {
                    if (hackerVitalsChargesText != null)
@@ -518,7 +518,7 @@ namespace TheOtherRoles
                     AmongUsClient.Instance.FinishRpcImmediately(writer);
                     RPCProcedure.trackerUsedTracker(Tracker.currentTarget.PlayerId);
                 },
-                () => { return Tracker.tracker != null && Tracker.tracker == PlayerControl.LocalPlayer && !PlayerControl.LocalPlayer.Data.IsDead; },
+                () => { return Tracker.tracker != null && Tracker.tracker == PlayerControl.LocalPlayer && PlayerControl.LocalPlayer.isAlive(); },
                 () => { return PlayerControl.LocalPlayer.CanMove && Tracker.currentTarget != null && !Tracker.usedTracker; },
                 () => { if (Tracker.resetTargetAfterMeeting) Tracker.resetTracked(); },
                 Tracker.getButtonSprite(),
@@ -531,7 +531,7 @@ namespace TheOtherRoles
 
             trackerTrackCorpsesButton = new CustomButton(
                 () => { Tracker.corpsesTrackingTimer = Tracker.corpsesTrackingDuration; },
-                () => { return Tracker.tracker != null && Tracker.tracker == PlayerControl.LocalPlayer && !PlayerControl.LocalPlayer.Data.IsDead && Tracker.canTrackCorpses; },
+                () => { return Tracker.tracker != null && Tracker.tracker == PlayerControl.LocalPlayer && PlayerControl.LocalPlayer.isAlive() && Tracker.canTrackCorpses; },
                 () => { return PlayerControl.LocalPlayer.CanMove; },
                 () =>
                 {
@@ -604,7 +604,7 @@ namespace TheOtherRoles
                         vampireKillButton.HasEffect = false;
                     }
                 },
-                () => { return Vampire.vampire != null && Vampire.vampire == PlayerControl.LocalPlayer && !PlayerControl.LocalPlayer.Data.IsDead; },
+                () => { return Vampire.vampire != null && Vampire.vampire == PlayerControl.LocalPlayer && PlayerControl.LocalPlayer.isAlive(); },
                 () =>
                 {
                     if (Vampire.targetNearGarlic && Vampire.canKillNearGarlics)
@@ -653,7 +653,7 @@ namespace TheOtherRoles
                     writer.EndMessage();
                     RPCProcedure.placeGarlic(buff);
                 },
-                () => { return !Vampire.localPlacedGarlic && !PlayerControl.LocalPlayer.Data.IsDead && Vampire.garlicsActive && !PlayerControl.LocalPlayer.isGM(); },
+                () => { return !Vampire.localPlacedGarlic && PlayerControl.LocalPlayer.isAlive() && Vampire.garlicsActive && !PlayerControl.LocalPlayer.isGM(); },
                 () => { return PlayerControl.LocalPlayer.CanMove && !Vampire.localPlacedGarlic; },
                 () => { },
                 Vampire.getGarlicButtonSprite(),
@@ -675,7 +675,7 @@ namespace TheOtherRoles
                     AmongUsClient.Instance.FinishRpcImmediately(writer);
                     RPCProcedure.jackalCreatesSidekick(Jackal.currentTarget.PlayerId);
                 },
-                () => { return Jackal.canCreateSidekick && Jackal.jackal != null && Jackal.jackal == PlayerControl.LocalPlayer && !PlayerControl.LocalPlayer.Data.IsDead; },
+                () => { return Jackal.canCreateSidekick && Jackal.jackal != null && Jackal.jackal == PlayerControl.LocalPlayer && PlayerControl.LocalPlayer.isAlive(); },
                 () => { return Jackal.canCreateSidekick && Jackal.currentTarget != null && PlayerControl.LocalPlayer.CanMove; },
                 () => { jackalSidekickButton.Timer = jackalSidekickButton.MaxTimer; },
                 Jackal.getSidekickButtonSprite(),
@@ -695,7 +695,7 @@ namespace TheOtherRoles
                     jackalKillButton.Timer = jackalKillButton.MaxTimer;
                     Jackal.currentTarget = null;
                 },
-                () => { return Jackal.jackal != null && Jackal.jackal == PlayerControl.LocalPlayer && !PlayerControl.LocalPlayer.Data.IsDead; },
+                () => { return PlayerControl.LocalPlayer.isRole(RoleId.Jackal) && PlayerControl.LocalPlayer.isAlive(); },
                 () => { return Jackal.currentTarget && PlayerControl.LocalPlayer.CanMove; },
                 () => { jackalKillButton.Timer = jackalKillButton.MaxTimer; },
                 __instance.KillButton.graphic.sprite,
@@ -713,7 +713,7 @@ namespace TheOtherRoles
                     sidekickKillButton.Timer = sidekickKillButton.MaxTimer;
                     Sidekick.currentTarget = null;
                 },
-                () => { return Sidekick.canKill && Sidekick.sidekick != null && Sidekick.sidekick == PlayerControl.LocalPlayer && !PlayerControl.LocalPlayer.Data.IsDead; },
+                () => { return Sidekick.canKill && Sidekick.sidekick != null && Sidekick.sidekick == PlayerControl.LocalPlayer && PlayerControl.LocalPlayer.isAlive(); },
                 () => { return Sidekick.currentTarget && PlayerControl.LocalPlayer.CanMove; },
                 () => { sidekickKillButton.Timer = sidekickKillButton.MaxTimer; },
                 __instance.KillButton.graphic.sprite,
@@ -736,7 +736,7 @@ namespace TheOtherRoles
                     AmongUsClient.Instance.FinishRpcImmediately(writer);
                     RPCProcedure.setFutureErased(Eraser.currentTarget.PlayerId);
                 },
-                () => { return Eraser.eraser != null && Eraser.eraser == PlayerControl.LocalPlayer && !PlayerControl.LocalPlayer.Data.IsDead; },
+                () => { return Eraser.eraser != null && Eraser.eraser == PlayerControl.LocalPlayer && PlayerControl.LocalPlayer.isAlive(); },
                 () => { return PlayerControl.LocalPlayer.CanMove && Eraser.currentTarget != null; },
                 () => { eraserButton.Timer = eraserButton.MaxTimer; },
                 Eraser.getButtonSprite(),
@@ -762,7 +762,7 @@ namespace TheOtherRoles
                     writer.EndMessage();
                     RPCProcedure.placeJackInTheBox(buff);
                 },
-                () => { return Trickster.trickster != null && Trickster.trickster == PlayerControl.LocalPlayer && !PlayerControl.LocalPlayer.Data.IsDead && !JackInTheBox.hasJackInTheBoxLimitReached(); },
+                () => { return Trickster.trickster != null && Trickster.trickster == PlayerControl.LocalPlayer && PlayerControl.LocalPlayer.isAlive() && !JackInTheBox.hasJackInTheBoxLimitReached(); },
                 () => { return PlayerControl.LocalPlayer.CanMove && !JackInTheBox.hasJackInTheBoxLimitReached(); },
                 () => { placeJackInTheBoxButton.Timer = placeJackInTheBoxButton.MaxTimer; },
                 Trickster.getPlaceBoxButtonSprite(),
@@ -780,7 +780,7 @@ namespace TheOtherRoles
                     AmongUsClient.Instance.FinishRpcImmediately(writer);
                     RPCProcedure.lightsOut();
                 },
-                () => { return Trickster.trickster != null && Trickster.trickster == PlayerControl.LocalPlayer && !PlayerControl.LocalPlayer.Data.IsDead && JackInTheBox.hasJackInTheBoxLimitReached() && JackInTheBox.boxesConvertedToVents; },
+                () => { return Trickster.trickster != null && Trickster.trickster == PlayerControl.LocalPlayer && PlayerControl.LocalPlayer.isAlive() && JackInTheBox.hasJackInTheBoxLimitReached() && JackInTheBox.boxesConvertedToVents; },
                 () => { return PlayerControl.LocalPlayer.CanMove && JackInTheBox.hasJackInTheBoxLimitReached() && JackInTheBox.boxesConvertedToVents; },
                 () =>
                 {
@@ -828,7 +828,7 @@ namespace TheOtherRoles
                         }
                     }
                 },
-                () => { return Cleaner.cleaner != null && Cleaner.cleaner == PlayerControl.LocalPlayer && !PlayerControl.LocalPlayer.Data.IsDead; },
+                () => { return Cleaner.cleaner != null && Cleaner.cleaner == PlayerControl.LocalPlayer && PlayerControl.LocalPlayer.isAlive(); },
                 () => { return __instance.ReportButton.graphic.color == Palette.EnabledColor && PlayerControl.LocalPlayer.CanMove; },
                 () => { cleanerCleanButton.Timer = cleanerCleanButton.MaxTimer; },
                 Cleaner.getButtonSprite(),
@@ -878,7 +878,7 @@ namespace TheOtherRoles
 
                     }
                 },
-                () => { return Warlock.warlock != null && Warlock.warlock == PlayerControl.LocalPlayer && !PlayerControl.LocalPlayer.Data.IsDead; },
+                () => { return Warlock.warlock != null && Warlock.warlock == PlayerControl.LocalPlayer && PlayerControl.LocalPlayer.isAlive(); },
                 () => { return ((Warlock.curseVictim == null && Warlock.currentTarget != null) || (Warlock.curseVictim != null && Warlock.curseVictimTarget != null)) && PlayerControl.LocalPlayer.CanMove; },
                 () =>
                 {
@@ -934,7 +934,7 @@ namespace TheOtherRoles
                     }
                     securityGuardButton.Timer = securityGuardButton.MaxTimer;
                 },
-                () => { return SecurityGuard.securityGuard != null && SecurityGuard.securityGuard == PlayerControl.LocalPlayer && !PlayerControl.LocalPlayer.Data.IsDead && SecurityGuard.remainingScrews >= Mathf.Min(SecurityGuard.ventPrice, SecurityGuard.camPrice); },
+                () => { return SecurityGuard.securityGuard != null && SecurityGuard.securityGuard == PlayerControl.LocalPlayer && PlayerControl.LocalPlayer.isAlive() && SecurityGuard.remainingScrews >= Mathf.Min(SecurityGuard.ventPrice, SecurityGuard.camPrice); },
                 () =>
                 {
                     if (SecurityGuard.ventTarget == null && PlayerControl.GameOptions.MapId != 1)
@@ -982,7 +982,7 @@ namespace TheOtherRoles
                         arsonistButton.HasEffect = true;
                     }
                 },
-                () => { return Arsonist.arsonist != null && Arsonist.arsonist == PlayerControl.LocalPlayer && !Arsonist.dousedEveryone && !PlayerControl.LocalPlayer.Data.IsDead; },
+                () => { return Arsonist.arsonist != null && Arsonist.arsonist == PlayerControl.LocalPlayer && !Arsonist.dousedEveryone && PlayerControl.LocalPlayer.isAlive(); },
                 () =>
                 {
                     if (arsonistButton.isEffectActive && Arsonist.douseTarget != Arsonist.currentTarget)
@@ -1043,7 +1043,7 @@ namespace TheOtherRoles
                         RPCProcedure.arsonistWin();
                     }
                 },
-                () => { return Arsonist.arsonist != null && Arsonist.arsonist == PlayerControl.LocalPlayer && Arsonist.dousedEveryone && !PlayerControl.LocalPlayer.Data.IsDead; },
+                () => { return Arsonist.arsonist != null && Arsonist.arsonist == PlayerControl.LocalPlayer && Arsonist.dousedEveryone && PlayerControl.LocalPlayer.isAlive(); },
                 () => { return PlayerControl.LocalPlayer.CanMove && Arsonist.dousedEveryone; },
                 () => { },
                 Arsonist.getIgniteSprite(),
@@ -1090,7 +1090,7 @@ namespace TheOtherRoles
                         return;
                     }
                 },
-                () => { return Vulture.vulture != null && Vulture.vulture == PlayerControl.LocalPlayer && !PlayerControl.LocalPlayer.Data.IsDead; },
+                () => { return Vulture.vulture != null && Vulture.vulture == PlayerControl.LocalPlayer && PlayerControl.LocalPlayer.isAlive(); },
                 () =>
                 {
                     if (vultureNumCorpsesText != null)
@@ -1122,7 +1122,7 @@ namespace TheOtherRoles
                         mediumButton.HasEffect = true;
                     }
                 },
-                () => { return Medium.medium != null && Medium.medium == PlayerControl.LocalPlayer && !PlayerControl.LocalPlayer.Data.IsDead; },
+                () => { return Medium.medium != null && Medium.medium == PlayerControl.LocalPlayer && PlayerControl.LocalPlayer.isAlive(); },
                 () =>
                 {
                     if (mediumButton.isEffectActive && Medium.target != Medium.soulTarget)
@@ -1228,7 +1228,7 @@ namespace TheOtherRoles
                     }
 
                 },
-                () => { return Pursuer.pursuer != null && Pursuer.pursuer == PlayerControl.LocalPlayer && !PlayerControl.LocalPlayer.Data.IsDead && Pursuer.blanks < Pursuer.blanksNumber; },
+                () => { return Pursuer.pursuer != null && Pursuer.pursuer == PlayerControl.LocalPlayer && PlayerControl.LocalPlayer.isAlive() && Pursuer.blanks < Pursuer.blanksNumber; },
                 () =>
                 {
                     if (pursuerButtonBlanksText != null) pursuerButtonBlanksText.text = String.Format(ModTranslation.getString("pursuerBlanks"), Pursuer.blanksNumber - Pursuer.blanks);
@@ -1261,7 +1261,7 @@ namespace TheOtherRoles
                         Witch.spellCastingTarget = Witch.currentTarget;
                     }
                 },
-                () => { return Witch.witch != null && Witch.witch == PlayerControl.LocalPlayer && !PlayerControl.LocalPlayer.Data.IsDead; },
+                () => { return Witch.witch != null && Witch.witch == PlayerControl.LocalPlayer && PlayerControl.LocalPlayer.isAlive(); },
                 () =>
                 {
                     if (witchSpellButton.isEffectActive && Witch.spellCastingTarget != Witch.currentTarget)

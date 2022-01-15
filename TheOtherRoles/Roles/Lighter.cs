@@ -54,7 +54,7 @@ namespace TheOtherRoles
                 {
                     local.lightActive = true;
                 },
-                () => { return PlayerControl.LocalPlayer.isRole(RoleId.Lighter) && !PlayerControl.LocalPlayer.Data.IsDead; },
+                () => { return PlayerControl.LocalPlayer.isRole(RoleId.Lighter) && PlayerControl.LocalPlayer.isAlive(); },
                 () => { return PlayerControl.LocalPlayer.CanMove; },
                 () =>
                 {

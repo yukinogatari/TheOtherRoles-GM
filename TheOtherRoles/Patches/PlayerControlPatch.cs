@@ -287,7 +287,7 @@ namespace TheOtherRoles.Patches
             if (Sidekick.promotesToJackal && 
                 PlayerControl.LocalPlayer.isRole(RoleId.Sidekick) &&
                 PlayerControl.LocalPlayer.isAlive() && 
-                (Jackal.jackal == null || Jackal.jackal.isDead()))
+                (Jackal.jackal == null || Jackal.jackal.Data.Disconnected))
             {
                 MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.SidekickPromotes, Hazel.SendOption.Reliable, -1);
                 AmongUsClient.Instance.FinishRpcImmediately(writer);
@@ -494,7 +494,7 @@ namespace TheOtherRoles.Patches
 
             foreach (PlayerControl p in PlayerControl.AllPlayerControls)
             {
-                if (p != PlayerControl.LocalPlayer && !PlayerControl.LocalPlayer.Data.IsDead && !p.isGM() && !PlayerControl.LocalPlayer.isGM()) continue;
+                if (p != PlayerControl.LocalPlayer && PlayerControl.LocalPlayer.isAlive() && !p.isGM() && !PlayerControl.LocalPlayer.isGM()) continue;
                 if ((Lawyer.lawyerKnowsRole && PlayerControl.LocalPlayer == Lawyer.lawyer && p == Lawyer.target) || p == PlayerControl.LocalPlayer || PlayerControl.LocalPlayer.Data.IsDead)
                 {
                     Transform playerInfoTransform = p.nameText.transform.parent.FindChild("Info");

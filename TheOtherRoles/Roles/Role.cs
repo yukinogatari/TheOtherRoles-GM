@@ -390,7 +390,6 @@ namespace TheOtherRoles
             foreach (var t in RoleData.allRoleTypes)
             {
                 t.Key.GetMethod("eraseRole", BindingFlags.Public | BindingFlags.Static)?.Invoke(null, new object[] { player });
-                return;
             }
 
             // Crewmate roles
@@ -437,7 +436,7 @@ namespace TheOtherRoles
 
             if (player.isRole(RoleId.Jackal))
             { // Promote Sidekick and hence override the the Jackal or erase Jackal
-                if (Sidekick.promotesToJackal && Sidekick.sidekick != null && !Sidekick.sidekick.Data.IsDead)
+                if (Sidekick.promotesToJackal && Sidekick.sidekick != null && Sidekick.sidekick.isAlive())
                 {
                     RPCProcedure.sidekickPromotes();
                 }

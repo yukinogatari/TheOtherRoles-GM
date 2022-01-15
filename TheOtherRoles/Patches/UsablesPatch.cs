@@ -233,7 +233,7 @@ namespace TheOtherRoles.Patches
         {
             public static bool Prefix(KillButton __instance)
             {
-                if (__instance.isActiveAndEnabled && __instance.currentTarget && !__instance.isCoolingDown && !PlayerControl.LocalPlayer.Data.IsDead && PlayerControl.LocalPlayer.CanMove)
+                if (__instance.isActiveAndEnabled && __instance.currentTarget && !__instance.isCoolingDown && PlayerControl.LocalPlayer.isAlive() && PlayerControl.LocalPlayer.CanMove)
                 {
                     bool showAnimation = true;
                     if (PlayerControl.LocalPlayer.isRole(RoleId.Ninja) && Ninja.isStealthed(PlayerControl.LocalPlayer))

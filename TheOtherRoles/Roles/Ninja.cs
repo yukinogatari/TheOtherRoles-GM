@@ -147,7 +147,7 @@ namespace TheOtherRoles
                     AmongUsClient.Instance.FinishRpcImmediately(writer);
                     RPCProcedure.ninjaStealth(PlayerControl.LocalPlayer.PlayerId, true);
                 },
-                () => { return PlayerControl.LocalPlayer.isRole(RoleId.Ninja) && !PlayerControl.LocalPlayer.Data.IsDead; },
+                () => { return PlayerControl.LocalPlayer.isRole(RoleId.Ninja) && PlayerControl.LocalPlayer.isAlive(); },
                 () => {
                     if (ninjaButton.isEffectActive)
                     {
