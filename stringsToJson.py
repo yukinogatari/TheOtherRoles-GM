@@ -37,7 +37,7 @@ def stringToJson(filename):
       if data:
         stringData[name] = data
     
-  with open(OUT_FILE, "w") as f:
+  with open(OUT_FILE, "w", newline="\n") as f:
     json.dump(stringData, f, indent=4)
 
 if __name__ == "__main__":
