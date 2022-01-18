@@ -28,6 +28,7 @@ namespace TheOtherRoles
             PlagueDoctor.SetButtonCooldowns();
             Lighter.SetButtonCooldowns();
             SerialKiller.SetButtonCooldowns();
+            Immoralist.SetButtonCooldowns();
 
             foreach (CustomButton gmButton in gmButtons)
             {
@@ -49,6 +50,8 @@ namespace TheOtherRoles
             PlagueDoctor.MakeButtons(hm);
             Lighter.MakeButtons(hm);
             SerialKiller.MakeButtons(hm);
+            Fox.MakeButtons(hm);
+            Immoralist.MakeButtons(hm);
 
             gmButtons = new List<CustomButton>();
             gmKillButtons = new List<CustomButton>();

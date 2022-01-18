@@ -36,6 +36,18 @@ namespace TheOtherRoles.Patches
                 return true;
             }
 
+            if (pc.isRole(RoleId.Fox) && (isLights || isComms || isReactor || isO2))
+            {
+                if(isLights|| isComms)
+                {
+                    return true;
+                }
+                else if((isO2 || isReactor) && !Fox.canFixReactorAndO2)
+                {
+                    return true;
+                }
+            }
+
             return false;
         }
 

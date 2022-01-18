@@ -553,6 +553,7 @@ namespace TheOtherRoles
             public static Sprite buttonSprite;
             public static bool jackalPromotedFromSidekickCanCreateSidekick = true;
             public static bool canCreateSidekickFromImpostor = true;
+            public static bool canCreateSidekickFromFox = true;
             public static bool hasImpostorVision = false;
 
             public static Sprite getSidekickButtonSprite()

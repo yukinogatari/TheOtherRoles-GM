@@ -154,6 +154,14 @@ namespace TheOtherRoles.Patches {
             {
                 setPlayerNameColor(PlayerControl.LocalPlayer, PlagueDoctor.color);
             }
+            else if (PlayerControl.LocalPlayer.isRole(RoleId.Fox))
+            {
+                setPlayerNameColor(PlayerControl.LocalPlayer, Fox.color);
+            }
+            else if (PlayerControl.LocalPlayer.isRole(RoleId.Immoralist))
+            {
+                setPlayerNameColor(PlayerControl.LocalPlayer, Immoralist.color);
+            }
 
             if (GM.gm != null) {
                 setPlayerNameColor(GM.gm, GM.color);
@@ -171,6 +179,22 @@ namespace TheOtherRoles.Patches {
             // No else if here, as the Impostors need the Spy name to be colored
             if (Spy.spy != null && PlayerControl.LocalPlayer.Data.Role.IsImpostor) {
                 setPlayerNameColor(Spy.spy, Spy.color);
+            }
+
+            if (Immoralist.exists && PlayerControl.LocalPlayer.isRole(RoleId.Fox))
+            {
+                foreach(var immoralist in Immoralist.allPlayers)
+                {
+                    setPlayerNameColor(immoralist, Immoralist.color);
+                }
+            }
+
+            if (PlayerControl.LocalPlayer.isRole(RoleId.Immoralist))
+            {
+                foreach(var fox in Fox.allPlayers)
+                {
+                    setPlayerNameColor(fox, Fox.color);
+                }
             }
 
             // Crewmate roles with no changes: Mini
