@@ -1979,7 +1979,7 @@
     },
     "lighterFullDesc": {
         "0": "The Lighter can turn on their Lighter every now and then,\nwhich increases their vision by a customizable amount.",
-        "11": "\u30fb\u80fd\u529b\u3092\u4f7f\u3046\u3068\u4e00\u5b9a\u6642\u9593\u8996\u754c\u304c\u5e83\u304f\u306a\u308b"
+        "11": "\u30fb\u80fd\u529b\u3092\u4f7f\u3046\u3068\u4e00\u5b9a\u6642\u9593\u8996\u754c\u304c\u5e83\u304f\u306a\u308b\n\u30fb\u80fd\u529b\u4f7f\u7528\u6642\u3001\u900f\u660e\u5316\u4e2d\u306e<color=#ff1919ff>\u30cb\u30f3\u30b8\u30e3</color>\u3092\u8996\u8a8d\u3067\u304d\u308b"
     },
     "godfatherFullDesc": {
         "0": "The Mafia are a group of three Impostors.\nThe Godfather works like a normal Impostor.",
@@ -2089,11 +2089,11 @@
         "0": "The Arsonist does not have any tasks, they have to win the game solo.\nThe Arsonist can douse other players by pressing the douse button and remaining\nnext to the player for a few seconds.\nIf the player that the Arsonist douses walks out of range, the cooldown will reset to 0.\nAfter dousing everyone alive the Arsonist can ignite all the players which results in\nan Arsonist win.",
         "11": "\u30fb\u5168\u30d7\u30ec\u30a4\u30e4\u30fc\u306b\u30ac\u30bd\u30ea\u30f3\u3092\u5857\u308b\u3053\u3068\u304c\u3067\u304d\u308b\n\u30fb\u5168\u30d7\u30ec\u30a4\u30e4\u30fc\u306b\u30ac\u30bd\u30ea\u30f3\u3092\u5857\u308b\u3053\u3068\u304c\u3067\u304d\u305f\u3068\u304d\u653e\u706b\u3059\u308b\u3068\u52dd\u5229\u3059\u308b\n\u30fb\u6b7b\u3093\u3060\u30d7\u30ec\u30a4\u30e4\u30fc\u306f\u30ab\u30a6\u30f3\u30c8\u3055\u308c\u306a\u3044"
     },
-    "goodGuesserFullDesc": {
+    "niceGuesserFullDesc": {
         "0": "The Guesser can be a Crewmate or an Impostor (depending on the settings).\nThe Guesser can shoot a player during the meeting, by guessing its role.\nIf the guess is wrong, the Guesser dies instead.\nYou can select how many players can be shot per meeting and how many players can\nbe shot per game.\nThe guesses Impostor and Crewmate are only right, if the player is part of the\ncorresponding team and has no special role.\nYou can only shoot during the voting time.",
         "11": "\u30fb\u4f1a\u8b70\u4e2d\u306b\u8ab0\u304b\u306e\u5f79\u8077\u3092\u9078\u3093\u3067\u5f53\u3066\u3089\u308c\u308c\u3070\u30ad\u30eb\u3067\u304d\u308b\n\u30fb\u5931\u6557\u3059\u308c\u3070\u81ea\u5206\u304c\u4f1a\u8b70\u4e2d\u306b\u6b7b\u3093\u3067\u3057\u307e\u3046"
     },
-    "badGuesserFullDesc": {
+    "evilGuesserFullDesc": {
         "0": "The Guesser can be a Crewmate or an Impostor (depending on the settings).\nThe Guesser can shoot a player during the meeting, by guessing its role.\nIf the guess is wrong, the Guesser dies instead.\nYou can select how many players can be shot per meeting and how many players can\nbe shot per game.\nThe guesses Impostor and Crewmate are only right, if the player is part of the\ncorresponding team and has no special role.\nYou can only shoot during the voting time.",
         "11": "\u30fb\u4f1a\u8b70\u4e2d\u306b\u8ab0\u304b\u306e\u5f79\u8077\u3092\u9078\u3093\u3067\u5f53\u3066\u3089\u308c\u308c\u3070\u30ad\u30eb\u3067\u304d\u308b\n\u30fb\u5931\u6557\u3059\u308c\u3070\u81ea\u5206\u304c\u4f1a\u8b70\u4e2d\u306b\u6b7b\u3093\u3067\u3057\u307e\u3046"
     },
