@@ -162,6 +162,10 @@ namespace TheOtherRoles.Patches {
             {
                 setPlayerNameColor(PlayerControl.LocalPlayer, Immoralist.color);
             }
+            else if (PlayerControl.LocalPlayer.isRole(RoleId.FortuneTeller) && (FortuneTeller.isCompletedNumTasks(PlayerControl.LocalPlayer) || PlayerControl.LocalPlayer.Data.IsDead))
+            {
+                setPlayerNameColor(PlayerControl.LocalPlayer, FortuneTeller.color);
+            }
 
             if (GM.gm != null) {
                 setPlayerNameColor(GM.gm, GM.color);

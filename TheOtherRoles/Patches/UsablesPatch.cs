@@ -340,6 +340,13 @@ namespace TheOtherRoles.Patches
                     statusText = ModTranslation.getString("gmMeetingButton");
                 }
 
+                // Deactivate emergency button for FortuneTeller
+                if (PlayerControl.LocalPlayer.isRole(RoleId.FortuneTeller) && FortuneTeller.isCompletedNumTasks(PlayerControl.LocalPlayer))
+                {
+                    roleCanCallEmergency = false;
+                    statusText = ModTranslation.getString("占い師は会議ボタンを押せない");
+                }
+
                 // Deactivate emergency button for Swapper
                 if (Swapper.swapper != null && Swapper.swapper == PlayerControl.LocalPlayer && !Swapper.canCallEmergency)
                 {

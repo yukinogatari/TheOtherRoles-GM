@@ -68,6 +68,7 @@ namespace TheOtherRoles
         PlagueDoctor,
         Fox,
         Immoralist,
+        FortuneTeller,
 
 
         GM = 200,
@@ -144,6 +145,7 @@ namespace TheOtherRoles
         PlagueDoctorSetInfected,
         PlagueDoctorUpdateProgress,
         SerialKillerSuicide,
+        FortuneTellerUsedDivine,
         FoxStealth,
         FoxCreatesImmoralist,
     }
@@ -576,6 +578,9 @@ namespace TheOtherRoles
                         break;
                     case RoleId.Immoralist:
                         Immoralist.swapRole(player, oldShifter);
+                        break;
+                    case RoleId.FortuneTeller:
+                        FortuneTeller.swapRole(player, oldShifter);
                         break;
                 }
             }
@@ -1055,6 +1060,35 @@ namespace TheOtherRoles
             if (serialKiller == null) return;
             serialKiller.MurderPlayer(serialKiller);
         }
+        public static void fortuneTellerUsedDivine(byte fortuneTellerId, byte targetId) {
+            PlayerControl fortuneTeller = Helpers.playerById(fortuneTellerId);
+            PlayerControl target = Helpers.playerById(targetId);
+            if (target == null) return;
+            if (target.isDead()) return;
+            // 呪殺
+            if(target.isRole(RoleId.Fox)){
+                KillAnimationCoPerformKillPatch.hideNextAnimation = true;
+                if(PlayerControl.LocalPlayer.isRole(RoleId.FortuneTeller))
+                {
+                    // 狐を殺せたことを分からなくするためにキル音を鳴らさないための処置
+                    target.MurderPlayer(target);
+                }
+                else
+                {
+                    fortuneTeller.MurderPlayer(target);
+                }
+            }
+            // インポスターの場合は占い師の位置に矢印を表示
+            if(PlayerControl.LocalPlayer.isImpostor()){
+                FortuneTeller.fortuneTellerMessage("占い師が占いを使った", 5f, Color.white);
+                FortuneTeller.impostorArrowFlag = true;
+            }
+            // 占われたのが背徳者の場合は通知を表示
+            if(target.isRole(RoleId.Immoralist) && PlayerControl.LocalPlayer.isRole(RoleId.Immoralist))
+            {
+                FortuneTeller.fortuneTellerMessage("占い師に占われた", 5f, Color.white);
+            }
+        }
     }   
 
     
@@ -1289,6 +1323,11 @@ namespace TheOtherRoles
                 case (byte)CustomRPC.SerialKillerSuicide:
                     RPCProcedure.serialKillerSuicide(reader.ReadByte());
                     break;
+                case (byte)CustomRPC.FortuneTellerUsedDivine:
+                    byte fId = reader.ReadByte();
+                    byte tId = reader.ReadByte();
+                    RPCProcedure.fortuneTellerUsedDivine(fId, tId);
+                    break;    
                 case (byte)CustomRPC.FoxStealth:
                     RPCProcedure.foxStealth(reader.ReadByte(), reader.ReadBoolean());
                     break;

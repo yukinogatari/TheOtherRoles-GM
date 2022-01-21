@@ -52,6 +52,7 @@ namespace TheOtherRoles
             SerialKiller.MakeButtons(hm);
             Fox.MakeButtons(hm);
             Immoralist.MakeButtons(hm);
+            FortuneTeller.MakeButtons(hm);
 
             gmButtons = new List<CustomButton>();
             gmKillButtons = new List<CustomButton>();

@@ -33,6 +33,7 @@ namespace TheOtherRoles
             { typeof(RoleBase<PlagueDoctor>), RoleId.PlagueDoctor },
             { typeof(RoleBase<Fox>), RoleId.Fox},
             { typeof(RoleBase<Immoralist>), RoleId.Immoralist},
+            { typeof(RoleBase<FortuneTeller>), RoleId.FortuneTeller},
         };
     }
 

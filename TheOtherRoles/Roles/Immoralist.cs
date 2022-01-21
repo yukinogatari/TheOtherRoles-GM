@@ -20,7 +20,7 @@ namespace TheOtherRoles
 
         public Immoralist()
         {
-            RoleType = roleId = RoleId.NoRole;
+            RoleType = roleId = RoleId.Immoralist;
         }
 
         public override void OnMeetingStart() { }

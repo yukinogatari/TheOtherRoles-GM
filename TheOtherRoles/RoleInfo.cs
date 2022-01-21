@@ -89,6 +89,7 @@ namespace TheOtherRoles
         public static RoleInfo serialKiller = new RoleInfo("serialKiller", SerialKiller.color, CustomOptionHolder.serialKillerSpawnRate, RoleId.SerialKiller);
         public static RoleInfo fox = new RoleInfo("妖狐", Fox.color, CustomOptionHolder.foxSpawnRate, RoleId.Fox);
         public static RoleInfo immoralist = new RoleInfo("背徳者", Immoralist.color, CustomOptionHolder.foxSpawnRate, RoleId.Immoralist);
+        public static RoleInfo fortuneTeller= new RoleInfo("占い師", FortuneTeller.color, CustomOptionHolder.fortuneTellerSpawnRate, RoleId.FortuneTeller);
 
         public static List<RoleInfo> allRoleInfos = new List<RoleInfo>() {
                 impostor,
@@ -144,6 +145,7 @@ namespace TheOtherRoles
                 plagueDoctor,
                 fox,
                 immoralist,
+                fortuneTeller
             };
 
         public static string tl(string key)
@@ -203,6 +205,18 @@ namespace TheOtherRoles
             if (p.isRole(RoleId.SerialKiller)) infos.Add(serialKiller);
             if (p.isRole(RoleId.Fox)) infos.Add(fox);
             if (p.isRole(RoleId.Immoralist)) infos.Add(immoralist);
+            if(p.isRole(RoleId.FortuneTeller))
+            {
+                if(PlayerControl.LocalPlayer.Data.IsDead || FortuneTeller.endGameFlag)
+                {
+                    infos.Add(fortuneTeller);
+                }
+                else
+                {
+                    var info = FortuneTeller.isCompletedNumTasks(p) ? fortuneTeller: crewmate;
+                    infos.Add(info);
+                }
+            }
 
 
             // Default roles
