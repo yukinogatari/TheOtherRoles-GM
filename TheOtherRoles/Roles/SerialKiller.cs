@@ -42,7 +42,17 @@ namespace TheOtherRoles
             }
         }
 
-        public override void FixedUpdate() { }
+        public override void FixedUpdate()
+        {
+            // エアシップで会議後のクールダウンが正常にセットされない暫定対応
+            if(player == PlayerControl.LocalPlayer)
+            {
+                if(player.killTimer > killCooldown)
+                {
+                    player.SetKillTimerUnchecked(killCooldown);
+                }
+            }
+        }
         public override void HandleDisconnect(PlayerControl player, DisconnectReasons reason) { }
 
         public override void OnKill(PlayerControl target)
