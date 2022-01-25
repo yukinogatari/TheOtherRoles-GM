@@ -209,9 +209,10 @@ namespace TheOtherRoles
                 {
                     if (p == player) continue;
                     if (dead.ContainsKey(p.PlayerId) && dead[p.PlayerId]) continue;
+                    text += $"{p.name}: ";
                     if (infected.ContainsKey(p.PlayerId))
                     {
-                        text += $"{p.name}: {Helpers.cs(Color.red, ModTranslation.getString("plagueDoctorInfectedText"))}\n";
+                        text += Helpers.cs(Color.red, ModTranslation.getString("plagueDoctorInfectedText"));
                     }
                     else
                     {
@@ -222,8 +223,10 @@ namespace TheOtherRoles
                         }
                         float currProgress = 100 * progress[p.PlayerId] / infectDuration;
                         string prog = currProgress.ToString("F1");
-                        text += $"{p.name}: {prog}%\n";
+                        var color = Color.Lerp(Color.green, Color.red, currProgress / 100);
+                        text += Helpers.cs(color, $"{prog}%");
                     }
+                    text += "\n";
                 }
 
                 statusText.text = text;

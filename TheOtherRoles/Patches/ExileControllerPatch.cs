@@ -119,11 +119,19 @@ namespace TheOtherRoles.Patches {
             if (exiled != null && Mini.mini != null && Mini.mini.PlayerId == exiled.PlayerId && !Mini.isGrownUp() && !Mini.mini.Data.Role.IsImpostor) {
                 Mini.triggerMiniLose = true;
             }
+
             // Jester win condition
             else if (exiled != null && Jester.jester != null && Jester.jester.PlayerId == exiled.PlayerId) {
                 Jester.triggerJesterWin = true;
             }
+        }
+    }
 
+    [HarmonyPatch(typeof(ExileController), nameof(ExileController.ReEnableGameplay))]
+    class ExileControllerReEnableGameplayPatch
+    {
+        public static void Postfix(ExileController __instance)
+        {
             // Reset custom button timers where necessary
             CustomButton.MeetingEndedUpdate();
 
@@ -131,27 +139,32 @@ namespace TheOtherRoles.Patches {
             TheOtherRolesGM.OnMeetingEnd();
 
             // Mini set adapted cooldown
-            if (Mini.mini != null && PlayerControl.LocalPlayer == Mini.mini && Mini.mini.Data.Role.IsImpostor) {
+            if (Mini.mini != null && PlayerControl.LocalPlayer == Mini.mini && Mini.mini.Data.Role.IsImpostor)
+            {
                 var multiplier = Mini.isGrownUp() ? 0.66f : 2f;
                 Mini.mini.SetKillTimer(PlayerControl.GameOptions.KillCooldown * multiplier);
             }
 
             // Seer spawn souls
-            if (Seer.deadBodyPositions != null && Seer.seer != null && PlayerControl.LocalPlayer == Seer.seer && (Seer.mode == 0 || Seer.mode == 2)) {
-                foreach (Vector3 pos in Seer.deadBodyPositions) {
+            if (Seer.deadBodyPositions != null && Seer.seer != null && PlayerControl.LocalPlayer == Seer.seer && (Seer.mode == 0 || Seer.mode == 2))
+            {
+                foreach (Vector3 pos in Seer.deadBodyPositions)
+                {
                     GameObject soul = new GameObject();
                     soul.transform.position = pos;
                     soul.layer = 5;
                     var rend = soul.AddComponent<SpriteRenderer>();
                     rend.sprite = Seer.getSoulSprite();
-                    
-                    if(Seer.limitSoulDuration) {
+
+                    if (Seer.limitSoulDuration)
+                    {
                         HudManager.Instance.StartCoroutine(Effects.Lerp(Seer.soulDuration, new Action<float>((p) => {
-                            if (rend != null) {
+                            if (rend != null)
+                            {
                                 var tmp = rend.color;
                                 tmp.a = Mathf.Clamp01(1 - p);
                                 rend.color = tmp;
-                            }    
+                            }
                             if (p == 1f && rend != null && rend.gameObject != null) UnityEngine.Object.Destroy(rend.gameObject);
                         })));
                     }
@@ -170,14 +183,18 @@ namespace TheOtherRoles.Patches {
                 BountyHunter.bountyUpdateTimer = 0f;
 
             // Medium spawn souls
-            if (Medium.medium != null && PlayerControl.LocalPlayer == Medium.medium) {
-                if (Medium.souls != null) {
+            if (Medium.medium != null && PlayerControl.LocalPlayer == Medium.medium)
+            {
+                if (Medium.souls != null)
+                {
                     foreach (SpriteRenderer sr in Medium.souls) UnityEngine.Object.Destroy(sr.gameObject);
                     Medium.souls = new List<SpriteRenderer>();
                 }
 
-                if (Medium.featureDeadBodies != null) {
-                    foreach ((DeadPlayer db, Vector3 ps) in Medium.featureDeadBodies) {
+                if (Medium.featureDeadBodies != null)
+                {
+                    foreach ((DeadPlayer db, Vector3 ps) in Medium.featureDeadBodies)
+                    {
                         GameObject s = new GameObject();
                         s.transform.position = ps;
                         s.layer = 5;
