@@ -221,10 +221,7 @@ namespace TheOtherRoles
                         {
                             progress[p.PlayerId] = 0f;
                         }
-                        float currProgress = 100 * progress[p.PlayerId] / infectDuration;
-                        string prog = currProgress.ToString("F1");
-                        var color = Color.Lerp(Color.green, Color.red, currProgress / 100);
-                        text += Helpers.cs(color, $"{prog}%");
+                        text += getProgressString(progress[p.PlayerId]);
                     }
                     text += "\n";
                 }
@@ -295,6 +292,20 @@ namespace TheOtherRoles
             {
                 dead[pc.PlayerId] = pc.isDead();
             }
+        }
+
+        public static string getProgressString(float progress)
+        {
+            // Go from green -> yellow -> red based on infection progress
+            Color color;
+            var prog = progress / infectDuration;
+            if (prog < 0.5f)
+                color = Color.Lerp(Color.green, Color.yellow, prog * 2);
+            else
+                color = Color.Lerp(Color.yellow, Color.red, prog * 2 - 1);
+
+            float progPercent = prog * 100;
+            return Helpers.cs(color, $"{progPercent.ToString("F1")}%");
         }
 
         public static void Clear()
