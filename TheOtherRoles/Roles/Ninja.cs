@@ -50,7 +50,8 @@ namespace TheOtherRoles
                 if (penalized)
                 {
                     player.SetKillTimerUnchecked(PlayerControl.GameOptions.KillCooldown + killPenalty);
-                } else
+                }
+                else
                 {
                     player.SetKillTimer(PlayerControl.GameOptions.KillCooldown);
                 }
@@ -113,7 +114,8 @@ namespace TheOtherRoles
         {
             penalized = stealthed;
             float penalty = penalized ? killPenalty : 0f;
-            player.SetKillTimerUnchecked(PlayerControl.GameOptions.KillCooldown + penalty);
+            if (PlayerControl.LocalPlayer == player)
+                player.SetKillTimerUnchecked(PlayerControl.GameOptions.KillCooldown + penalty);
         }
 
         public override void OnDeath(PlayerControl killer)
@@ -190,7 +192,7 @@ namespace TheOtherRoles
             ninjaButton.MaxTimer = Ninja.stealthCooldown;
         }
 
-        public static void clearAndReload()
+        public static void Clear()
         {
             players = new List<Ninja>();
         }
@@ -238,9 +240,9 @@ namespace TheOtherRoles
                     if (ninja == null) return;
 
                     bool canSee = 
-                        PlayerControl.LocalPlayer.Data.Role.IsImpostor ||
-                        PlayerControl.LocalPlayer.Data.IsDead ||
-                        (PlayerControl.LocalPlayer.isRole(RoleType.Lighter) && Lighter.isLightActive(PlayerControl.LocalPlayer));
+                        PlayerControl.LocalPlayer.isImpostor() ||
+                        PlayerControl.LocalPlayer.isDead() ||
+                        (Lighter.canSeeNinja && PlayerControl.LocalPlayer.isRole(RoleId.Lighter) && Lighter.isLightActive(PlayerControl.LocalPlayer));
 
                     var opacity = canSee ? 0.1f : 0.0f;
 

@@ -123,7 +123,7 @@ namespace TheOtherRoles
             sheriffKillButton.MaxTimer = Sheriff.cooldown;
         }
 
-        public static void clearAndReload()
+        public static void Clear()
         {
             players = new List<Sheriff>();
         }

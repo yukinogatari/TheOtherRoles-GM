@@ -277,22 +277,6 @@ namespace TheOtherRoles.Patches
                     TempData.winners.Add(wpdFormerJackal);
                 }
             }
-            else if (Madmate.exists)
-            {
-                // Madmate wins if team impostors wins
-                foreach (WinningPlayerData winner in TempData.winners)
-                {
-                    if (winner.IsImpostor)
-                    {
-                        foreach (var p in Madmate.allPlayers)
-                        {
-                            WinningPlayerData wpd = new WinningPlayerData(p.Data);
-                            TempData.winners.Add(wpd);
-                        }
-                        break;
-                    }
-                }
-            }
             // Lawyer solo win 
             else if (lawyerSoloWin)
             {
@@ -301,6 +285,7 @@ namespace TheOtherRoles.Patches
                 TempData.winners.Add(wpd);
                 AdditionalTempData.winCondition = WinCondition.LawyerSoloWin;
             }
+
             else if (plagueDoctorWin)
             {
                 foreach (var pd in PlagueDoctor.players)
@@ -309,6 +294,16 @@ namespace TheOtherRoles.Patches
                     WinningPlayerData wpd = new WinningPlayerData(pd.player.Data);
                     TempData.winners.Add(wpd);
                     AdditionalTempData.winCondition = WinCondition.PlagueDoctorWin;
+                }
+            }
+
+            // Madmate win with impostors
+            if (Madmate.exists && TempData.winners.ToArray().Any(x => x.IsImpostor))
+            {
+                foreach (var p in Madmate.allPlayers)
+                {
+                    WinningPlayerData wpd = new WinningPlayerData(p.Data);
+                    TempData.winners.Add(wpd);
                 }
             }
 
@@ -602,14 +597,10 @@ namespace TheOtherRoles.Patches
                                 {
                                     result += Helpers.cs(Color.red, ModTranslation.getString("plagueDoctorInfectedText"));
                                 }
-                                else 
+                                else if (!data.Roles.Contains(RoleInfo.plagueDoctor))
                                 {
                                     float progress = AdditionalTempData.plagueDoctorProgress.ContainsKey(data.PlayerId) ? AdditionalTempData.plagueDoctorProgress[data.PlayerId] : 0f;
-                                    if (progress > 0f)
-                                    {
-                                        float currProgress = 100 * progress / PlagueDoctor.infectDuration;
-                                        result += $"{currProgress.ToString("F1")}%";
-                                    }
+                                    result += PlagueDoctor.getProgressString(progress);
                                 }
                             }
                             roleSummaryText.AppendLine(result);

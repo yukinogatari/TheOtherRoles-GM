@@ -1425,6 +1425,10 @@
         "0": "Spread disease to wipe out the crew",
         "11": "\u307f\u3093\u306a\u306b\u75c5\u3092\u632f\u308a\u6492\u3053\u3046"
     },
+    "plagueDoctorFullDesc": {
+        "0": "The Plague Doctor is a neutral role whose goal is to infect every living player.\nThey start by choosing one player to infect, after which anyone who spends a set\namount of time in range of the infected player becomes infected themselves.\nInfection progress is cumulative, and does not reset with distance or after meetings.",
+        "11": "\u30fb\u8ab0\u304b1\u4eba\u306b\u611f\u67d3\u75c5\u3092\u4ed8\u4e0e\u3067\u304d\u308b\n\u30fb\u611f\u67d3\u3057\u305f\u4eba\u304c\u4e00\u5b9a\u6642\u9593\u306e\u9593\u975e\u611f\u67d3\u8005\u306e\u8fd1\u304f\u306b\u3044\u308b\u3068\u305d\u306e\u4eba\u3082\u611f\u67d3\u8005\u3068\u306a\u308b\n\u30fb\u611f\u67d3\u72b6\u6cc1\u306f\u5099\u84c4\u3055\u308c\u308b\uff08\u4f1a\u8b70\u3084\u96e2\u308c\u3066\u3082\u6642\u9593\u306e\u30ea\u30bb\u30c3\u30c8\u304c\u3055\u308c\u306a\u3044\uff09\n\u30fb\u30da\u30b9\u30c8\u533b\u5e2b\u304c\u30ad\u30eb\u3055\u308c\u305f\u3089\u3001\u30ad\u30eb\u3057\u305f\u4eba\u306f\u611f\u67d3\u8005\u3068\u306a\u308b\n\u30fb\u751f\u5b58\u8005\u5168\u54e1\u304c\u611f\u67d3\u8005\u3068\u306a\u308b\u3053\u3068\u304c\u52dd\u5229\u6761\u4ef6"
+    },
     "plagueDoctorInfectCooldown": {
         "0": "Infect Cooldown",
         "11": "\u611f\u67d3\u30af\u30fc\u30eb\u30c0\u30a6\u30f3"
@@ -1473,45 +1477,29 @@
         "0": "Remaining: {0}",
         "11": "\u6b8b\u308a {0}\u4eba"
     },
-    "nekoKabocha": {
-        "0": "Neko-Kabocha",
-        "11": "\u30cd\u30b3\u30ab\u30dc\u30c1\u30e3"
+    "serialKiller": {
+        "0": "Serial Killer",
+        "11": "\u30b7\u30ea\u30a2\u30eb\u30ad\u30e9\u30fc"
     },
-    "nekoKabochaIntroDesc": {
-        "0": "You'll never die alone",
-        "11": "\u72ec\u308a\u3067\u306f\u7d76\u5bfe\u306b\u6b7b\u306a\u306a\u3044"
+    "serialKillerIntroDesc": {
+        "0": "You crave blood",
+        "11": "\u6bba\u4eba\u885d\u52d5\u304c\u6291\u3048\u3089\u308c\u306a\u3044"
     },
-    "nekoKabochaShortDesc": {
-        "0": "You'll never die alone",
-        "11": "\u72ec\u308a\u3067\u306f\u7d76\u5bfe\u306b\u6b7b\u306a\u306a\u3044"
+    "serialKillerShortDesc": {
+        "0": "You crave blood",
+        "11": "\u6bba\u4eba\u885d\u52d5\u304c\u6291\u3048\u3089\u308c\u306a\u3044"
     },
-    "nekoKabochaRevengeCrew": {
-        "0": "Revenge Kill Crewmates",
-        "11": "\u30af\u30eb\u30fc\u306b\u6bba\u3055\u308c\u305f\u3089\u9053\u9023\u308c\u306b\u3059\u308b"
+    "serialKillerKillCooldown": {
+        "0": "Kill Cooldown",
+        "11": "\u30ad\u30eb\u30af\u30fc\u30eb"
     },
-    "nekoKabochaRevengeNeutral": {
-        "0": "Revenge Kill Neutrals",
-        "11": "\u305d\u306e\u4ed6\u9663\u55b6\u306b\u6bba\u3055\u308c\u305f\u3089\u9053\u9023\u308c\u306b\u3059\u308b"
+    "serialKillerSuicideTimer": {
+        "0": "Suicide Timer",
+        "11": "\u81ea\u6bba\u30bf\u30a4\u30de\u30fc"
     },
-    "nekoKabochaRevengeImpostor": {
-        "0": "Revenge Kill Impostors",
-        "11": "\u30a4\u30f3\u30dd\u30b9\u30bf\u30fc\u306b\u6bba\u3055\u308c\u305f\u3089\u9053\u9023\u308c\u306b\u3059\u308b"
-    },
-    "nekoKabochaRevengeExile": {
-        "0": "Revenge Kill on Exile",
-        "11": "\u8ffd\u653e\u3055\u308c\u305f\u3089\u8ab0\u304b\u3092\u9053\u9023\u308c\u306b\u3059\u308b"
-    },
-    "tetrachrome": {
-        "0": "Tetrachrome",
-        "11": "\u30c6\u30c8\u30e9\u30af\u30ed\u30fc\u30e0"
-    },
-    "niceTetrachrome": {
-        "0": "Nice Tetrachrome",
-        "11": "\u30ca\u30a4\u30b9\u30c6\u30c8\u30e9\u30af\u30ed\u30fc\u30e0"
-    },
-    "evilTetrachrome": {
-        "0": "Evil Tetrachrome",
-        "11": "\u30a4\u30d3\u30eb\u30c6\u30c8\u30e9\u30af\u30ed\u30fc\u30e0"
+    "serialKillerResetTimer": {
+        "0": "Reset Suicide Timer After Meetings",
+        "11": "\u4f1a\u8b70\u5f8c\u3001\u81ea\u6bba\u30bf\u30a4\u30de\u30fc\u304c\u30ea\u30bb\u30c3\u30c8\u3055\u308c\u308b"
     },
     "husk": {
         "0": "Husk",
@@ -1567,7 +1555,7 @@
     },
     "hidePlayerNames": {
         "0": "Hide Player Names",
-        "11": "\u5168\u54e1\u306e\u540d\u524d\u3092\u975e\u8868\u793a"
+        "11": "\u540d\u524d\u3092\u8868\u793a\u3057\u306a\u3044"
     },
     "hideSettings": {
         "0": "Hide Special Settings",
@@ -1576,10 +1564,6 @@
     "parallelMedbayScans": {
         "0": "Allow Parallel MedBay Scans",
         "11": "\u30e1\u30c3\u30c9\u30d9\u30a4\u30b9\u30ad\u30e3\u30f3\u540c\u6642\u4f7f\u7528\u53ef"
-    },
-    "hideOutOfSightNametags": {
-        "0": "Hide Out-Of-Sight Player Names",
-        "11": "\u8996\u754c\u5916\u306e\u4eba\u306e\u540d\u524d\u3092\u975e\u8868\u793a"
     },
     "restrictDevices": {
         "0": "Restrict Special Devices",
@@ -1636,14 +1620,6 @@
     "roleNumAssigned": {
         "0": "Role Count",
         "11": "\u4eba\u6570"
-    },
-    "roleImpChance": {
-        "0": "Chance To Be Impostor",
-        "11": "\u30a4\u30f3\u30dd\u30b9\u30bf\u30fc\u306b\u306a\u308b\u78ba\u7387"
-    },
-    "roleBothChance": {
-        "0": "Spawn Nice & Evil Rate",
-        "11": "\u4e21\u9663\u55b6\u306e\u540c\u6642\u51fa\u73fe\u7387"
     },
     "optionOn": {
         "0": "On",
@@ -2003,7 +1979,7 @@
     },
     "lighterFullDesc": {
         "0": "The Lighter can turn on their Lighter every now and then,\nwhich increases their vision by a customizable amount.",
-        "11": "\u30fb\u80fd\u529b\u3092\u4f7f\u3046\u3068\u4e00\u5b9a\u6642\u9593\u8996\u754c\u304c\u5e83\u304f\u306a\u308b"
+        "11": "\u30fb\u80fd\u529b\u3092\u4f7f\u3046\u3068\u4e00\u5b9a\u6642\u9593\u8996\u754c\u304c\u5e83\u304f\u306a\u308b\n\u30fb\u80fd\u529b\u4f7f\u7528\u6642\u3001\u900f\u660e\u5316\u4e2d\u306e<color=#ff1919ff>\u30cb\u30f3\u30b8\u30e3</color>\u3092\u8996\u8a8d\u3067\u304d\u308b"
     },
     "godfatherFullDesc": {
         "0": "The Mafia are a group of three Impostors.\nThe Godfather works like a normal Impostor.",
@@ -2113,11 +2089,11 @@
         "0": "The Arsonist does not have any tasks, they have to win the game solo.\nThe Arsonist can douse other players by pressing the douse button and remaining\nnext to the player for a few seconds.\nIf the player that the Arsonist douses walks out of range, the cooldown will reset to 0.\nAfter dousing everyone alive the Arsonist can ignite all the players which results in\nan Arsonist win.",
         "11": "\u30fb\u5168\u30d7\u30ec\u30a4\u30e4\u30fc\u306b\u30ac\u30bd\u30ea\u30f3\u3092\u5857\u308b\u3053\u3068\u304c\u3067\u304d\u308b\n\u30fb\u5168\u30d7\u30ec\u30a4\u30e4\u30fc\u306b\u30ac\u30bd\u30ea\u30f3\u3092\u5857\u308b\u3053\u3068\u304c\u3067\u304d\u305f\u3068\u304d\u653e\u706b\u3059\u308b\u3068\u52dd\u5229\u3059\u308b\n\u30fb\u6b7b\u3093\u3060\u30d7\u30ec\u30a4\u30e4\u30fc\u306f\u30ab\u30a6\u30f3\u30c8\u3055\u308c\u306a\u3044"
     },
-    "goodGuesserFullDesc": {
+    "niceGuesserFullDesc": {
         "0": "The Guesser can be a Crewmate or an Impostor (depending on the settings).\nThe Guesser can shoot a player during the meeting, by guessing its role.\nIf the guess is wrong, the Guesser dies instead.\nYou can select how many players can be shot per meeting and how many players can\nbe shot per game.\nThe guesses Impostor and Crewmate are only right, if the player is part of the\ncorresponding team and has no special role.\nYou can only shoot during the voting time.",
         "11": "\u30fb\u4f1a\u8b70\u4e2d\u306b\u8ab0\u304b\u306e\u5f79\u8077\u3092\u9078\u3093\u3067\u5f53\u3066\u3089\u308c\u308c\u3070\u30ad\u30eb\u3067\u304d\u308b\n\u30fb\u5931\u6557\u3059\u308c\u3070\u81ea\u5206\u304c\u4f1a\u8b70\u4e2d\u306b\u6b7b\u3093\u3067\u3057\u307e\u3046"
     },
-    "badGuesserFullDesc": {
+    "evilGuesserFullDesc": {
         "0": "The Guesser can be a Crewmate or an Impostor (depending on the settings).\nThe Guesser can shoot a player during the meeting, by guessing its role.\nIf the guess is wrong, the Guesser dies instead.\nYou can select how many players can be shot per meeting and how many players can\nbe shot per game.\nThe guesses Impostor and Crewmate are only right, if the player is part of the\ncorresponding team and has no special role.\nYou can only shoot during the voting time.",
         "11": "\u30fb\u4f1a\u8b70\u4e2d\u306b\u8ab0\u304b\u306e\u5f79\u8077\u3092\u9078\u3093\u3067\u5f53\u3066\u3089\u308c\u308c\u3070\u30ad\u30eb\u3067\u304d\u308b\n\u30fb\u5931\u6557\u3059\u308c\u3070\u81ea\u5206\u304c\u4f1a\u8b70\u4e2d\u306b\u6b7b\u3093\u3067\u3057\u307e\u3046"
     },
@@ -2486,6 +2462,10 @@
     "NinjaUnstealthText": {
         "0": "Unstealth",
         "11": "\u89e3\u9664"
+    },
+    "SerialKillerText": {
+        "0": "Until Suicide",
+        "11": "\u81ea\u6bba\u307e\u3067"
     },
     "colorSalmon": {
         "0": "Salmon",

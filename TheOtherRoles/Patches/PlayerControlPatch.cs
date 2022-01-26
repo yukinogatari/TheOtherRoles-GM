@@ -287,7 +287,7 @@ namespace TheOtherRoles.Patches
             if (Sidekick.promotesToJackal && 
                 PlayerControl.LocalPlayer.isRole(RoleType.Sidekick) &&
                 PlayerControl.LocalPlayer.isAlive() && 
-                (Jackal.jackal == null || Jackal.jackal.isDead()))
+                (Jackal.jackal == null || Jackal.jackal.Data.Disconnected))
             {
                 MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.SidekickPromotes, Hazel.SendOption.Reliable, -1);
                 AmongUsClient.Instance.FinishRpcImmediately(writer);
@@ -494,7 +494,7 @@ namespace TheOtherRoles.Patches
 
             foreach (PlayerControl p in PlayerControl.AllPlayerControls)
             {
-                if (p != PlayerControl.LocalPlayer && !PlayerControl.LocalPlayer.Data.IsDead && !p.isGM() && !PlayerControl.LocalPlayer.isGM()) continue;
+                if (p != PlayerControl.LocalPlayer && PlayerControl.LocalPlayer.isAlive() && !p.isGM() && !PlayerControl.LocalPlayer.isGM()) continue;
                 if ((Lawyer.lawyerKnowsRole && PlayerControl.LocalPlayer == Lawyer.lawyer && p == Lawyer.target) || p == PlayerControl.LocalPlayer || PlayerControl.LocalPlayer.Data.IsDead)
                 {
                     Transform playerInfoTransform = p.nameText.transform.parent.FindChild("Info");
@@ -1230,8 +1230,8 @@ namespace TheOtherRoles.Patches
             if (PlayerControl.GameOptions.KillCooldown <= 0f) return false;
             float multiplier = 1f;
             float addition = 0f;
-            if (Mini.mini != null && PlayerControl.LocalPlayer == Mini.mini && Mini.mini.Data.Role.IsImpostor) multiplier = Mini.isGrownUp() ? 0.66f : 2f;
-            if (BountyHunter.bountyHunter != null && PlayerControl.LocalPlayer == BountyHunter.bountyHunter) addition = BountyHunter.punishmentTime;
+            if (PlayerControl.LocalPlayer.isRole(RoleType.Mini) && PlayerControl.LocalPlayer.isImpostor()) multiplier = Mini.isGrownUp() ? 0.66f : 2f;
+            if (PlayerControl.LocalPlayer.isRole(RoleType.BountyHunter)) addition = BountyHunter.punishmentTime;
             if (PlayerControl.LocalPlayer.isRole(RoleType.Ninja) && Ninja.isPenalized(PlayerControl.LocalPlayer)) addition = Ninja.killPenalty;
 
             float max = Mathf.Max(PlayerControl.GameOptions.KillCooldown * multiplier + addition, __instance.killTimer);
@@ -1239,9 +1239,9 @@ namespace TheOtherRoles.Patches
             return false;
         }
 
-        public static void SetKillTimerUnchecked(this PlayerControl player, float time, float max = float.MinValue)
+        public static void SetKillTimerUnchecked(this PlayerControl player, float time, float max = float.NegativeInfinity)
         {
-            if (max == float.MinValue) max = time;
+            if (max == float.NegativeInfinity) max = time;
 
             player.killTimer = time;
             DestroyableSingleton<HudManager>.Instance.KillButton.SetCoolDown(time, max);

@@ -29,7 +29,7 @@ namespace TheOtherRoles
         public static void MakeButtons(HudManager hm) { }
         public static void SetButtonCooldowns() { }
 
-        public static void clearAndReload()
+        public static void Clear()
         {
             players = new List<Template>();
         }

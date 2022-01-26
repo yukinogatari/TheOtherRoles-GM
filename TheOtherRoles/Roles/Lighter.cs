@@ -16,6 +16,7 @@ namespace TheOtherRoles
 
         public static float lighterModeLightsOnVision { get { return CustomOptionHolder.lighterModeLightsOnVision.getFloat(); } }
         public static float lighterModeLightsOffVision { get { return CustomOptionHolder.lighterModeLightsOffVision.getFloat(); } }
+        public static bool canSeeNinja { get { return CustomOptionHolder.lighterCanSeeNinja.getBool(); } }
 
         public static float cooldown { get { return CustomOptionHolder.lighterCooldown.getFloat(); } }
         public static float duration { get { return CustomOptionHolder.lighterDuration.getFloat(); } }
@@ -84,7 +85,7 @@ namespace TheOtherRoles
             lighterButton.EffectDuration = duration;
         }
 
-        public static void clearAndReload()
+        public static void Clear()
         {
             players = new List<Lighter>();
         }

@@ -51,6 +51,7 @@ namespace TheOtherRoles
         Ninja,
         NekoKabocha,
         Madmate,
+        SerialKiller,
 
 
         Mini = 150,
@@ -143,6 +144,7 @@ namespace TheOtherRoles
         PlagueDoctorSetInfected,
         PlagueDoctorUpdateProgress,
         NekoKabochaExile,
+        SerialKillerSuicide,
     }
 
     public static class RPCProcedure {
@@ -565,6 +567,10 @@ namespace TheOtherRoles
                     case RoleType.PlagueDoctor:
                         PlagueDoctor.swapRole(player, oldShifter);
                         break;
+
+                    case RoleId.SerialKiller:
+                        SerialKiller.swapRole(player, oldShifter);
+                        break;
                 }
             }
 
@@ -661,67 +667,12 @@ namespace TheOtherRoles
             if (player.isNeutral())
                 player.clearAllTasks();
 
-            // Crewmate roles
-            if (player.isRole(RoleType.Mayor)) Mayor.clearAndReload();
-            if (player.isRole(RoleType.Engineer)) Engineer.clearAndReload();
-            if (player.isRole(RoleType.Sheriff)) Sheriff.clearAndReload();
-            if (player.isRole(RoleType.Lighter)) Lighter.clearAndReload();
-            if (player.isRole(RoleType.Detective)) Detective.clearAndReload();
-            if (player.isRole(RoleType.TimeMaster)) TimeMaster.clearAndReload();
-            if (player.isRole(RoleType.Medic)) Medic.clearAndReload();
-            if (player.isRole(RoleType.Shifter)) Shifter.clearAndReload();
-            if (player.isRole(RoleType.Seer)) Seer.clearAndReload();
-            if (player.isRole(RoleType.Hacker)) Hacker.clearAndReload();
-            if (player.isRole(RoleType.Mini)) Mini.clearAndReload();
-            if (player.isRole(RoleType.Tracker)) Tracker.clearAndReload();
-            if (player.isRole(RoleType.Snitch)) Snitch.clearAndReload();
-            if (player.isRole(RoleType.Swapper)) Swapper.clearAndReload();
-            if (player.isRole(RoleType.Spy)) Spy.clearAndReload();
-            if (player.isRole(RoleType.SecurityGuard)) SecurityGuard.clearAndReload();
-            if (player.isRole(RoleType.Bait)) Bait.clearAndReload();
-            if (player.isRole(RoleType.Madmate)) player.eraseRole(RoleType.Madmate);
-            if (player.isRole(RoleType.Opportunist)) player.eraseRole(RoleType.Opportunist);
-            if (player.isRole(RoleType.Medium)) Medium.clearAndReload();
+            player.eraseAllRoles();
 
-            // Impostor roles
-            if (player.isRole(RoleType.Morphling)) Morphling.clearAndReload();
-            if (player.isRole(RoleType.Camouflager)) Camouflager.clearAndReload();
-            if (player.isRole(RoleType.Godfather)) Godfather.clearAndReload();
-            if (player.isRole(RoleType.Mafioso)) Mafioso.clearAndReload();
-            if (player.isRole(RoleType.Janitor)) Janitor.clearAndReload();
-            if (player.isRole(RoleType.Vampire)) Vampire.clearAndReload();
-            if (player.isRole(RoleType.Eraser)) Eraser.clearAndReload();
-            if (player.isRole(RoleType.Trickster)) Trickster.clearAndReload();
-            if (player.isRole(RoleType.Cleaner)) Cleaner.clearAndReload();
-            if (player.isRole(RoleType.Warlock)) Warlock.clearAndReload();
-            if (player.isRole(RoleType.Witch)) Witch.clearAndReload();
-            if (player.isRole(RoleType.Ninja)) player.eraseRole(RoleType.Ninja);
-
-            // Other roles
-            if (player.isRole(RoleType.Jester)) Jester.clearAndReload();
-            if (player.isRole(RoleType.Arsonist)) Arsonist.clearAndReload();
-            if (player.isRole(RoleType.PlagueDoctor)) PlagueDoctor.clearAndReload();
-            if (Guesser.isGuesser(player.PlayerId)) Guesser.clear(player.PlayerId);
             if (!ignoreLovers && player.isLovers())
             { // The whole Lover couple is being erased
                 Lovers.eraseCouple(player);
             }
-            if (player.isRole(RoleType.Jackal))
-            { // Promote Sidekick and hence override the the Jackal or erase Jackal
-                if (Sidekick.promotesToJackal && Sidekick.sidekick != null && !Sidekick.sidekick.Data.IsDead)
-                {
-                    RPCProcedure.sidekickPromotes();
-                }
-                else
-                {
-                    Jackal.clearAndReload();
-                }
-            }
-            if (player.isRole(RoleType.Sidekick)) Sidekick.clearAndReload();
-            if (player.isRole(RoleType.BountyHunter)) BountyHunter.clearAndReload();
-            if (player.isRole(RoleType.Vulture)) Vulture.clearAndReload();
-            if (player.isRole(RoleType.Lawyer)) Lawyer.clearAndReload();
-            if (player.isRole(RoleType.Pursuer)) Pursuer.clearAndReload();
         }
 
         public static void setFutureErased(byte playerId) {
@@ -1074,8 +1025,13 @@ namespace TheOtherRoles
         {
             uncheckedExilePlayer(playerId);
             finalStatuses[playerId] = FinalStatus.Revenge;
+    	}
+		
+        public static void serialKillerSuicide(byte serialKillerId ) {
+            PlayerControl serialKiller = Helpers.playerById(serialKillerId);
+            if (serialKiller == null) return;
+            serialKiller.MurderPlayer(serialKiller);
         }
-    }   
 
     
 
@@ -1307,6 +1263,9 @@ namespace TheOtherRoles
                     break;
                 case (byte)CustomRPC.NekoKabochaExile:
                     RPCProcedure.nekoKabochaExile(reader.ReadByte());
+
+                case (byte)CustomRPC.SerialKillerSuicide:
+                    RPCProcedure.serialKillerSuicide(reader.ReadByte());
                     break;
             }
         }

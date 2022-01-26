@@ -395,23 +395,23 @@ namespace TheOtherRoles {
 
         public static bool roleCanUseVents(this PlayerControl player) {
             bool roleCouldUse = false;
-            if (Engineer.engineer != null && Engineer.engineer == player)
+            if (player.isRole(RoleId.Engineer))
                 roleCouldUse = true;
-            else if (Jackal.canUseVents && Jackal.jackal != null && Jackal.jackal == player)
+            else if (Jackal.canUseVents && player.isRole(RoleId.Jackal))
                 roleCouldUse = true;
-            else if (Sidekick.canUseVents && Sidekick.sidekick != null && Sidekick.sidekick == player)
+            else if (Sidekick.canUseVents && player.isRole(RoleId.Sidekick))
                 roleCouldUse = true;
-            else if (Spy.canEnterVents && Spy.spy != null && Spy.spy == player)
+            else if (Spy.canEnterVents && player.isRole(RoleId.Spy))
                 roleCouldUse = true;
             else if (Madmate.canEnterVents && player.isRole(RoleType.Madmate))
                 roleCouldUse = true;
-            else if (Vulture.canUseVents && Vulture.vulture != null && Vulture.vulture == player)
+            else if (Vulture.canUseVents && player.isRole(RoleId.Vulture))
                 roleCouldUse = true;
             else if (player.Data?.Role != null && player.Data.Role.CanVent)
             {
-                if (Janitor.janitor != null && Janitor.janitor == PlayerControl.LocalPlayer)
+                if (player.isRole(RoleId.Janitor))
                     roleCouldUse = false;
-                else if (Mafioso.mafioso != null && Mafioso.mafioso == PlayerControl.LocalPlayer && Godfather.godfather != null && Godfather.godfather.isAlive())
+                else if (player.isRole(RoleId.Mafioso) && Godfather.godfather != null && Godfather.godfather.isAlive())
                     roleCouldUse = false;
                 else if (!Ninja.canUseVents && player.isRole(RoleType.Ninja))
                     roleCouldUse = false;

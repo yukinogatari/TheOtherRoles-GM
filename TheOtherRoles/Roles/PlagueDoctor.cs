@@ -209,9 +209,10 @@ namespace TheOtherRoles
                 {
                     if (p == player) continue;
                     if (dead.ContainsKey(p.PlayerId) && dead[p.PlayerId]) continue;
+                    text += $"{p.name}: ";
                     if (infected.ContainsKey(p.PlayerId))
                     {
-                        text += $"{p.name}: {Helpers.cs(Color.red, ModTranslation.getString("plagueDoctorInfectedText"))}\n";
+                        text += Helpers.cs(Color.red, ModTranslation.getString("plagueDoctorInfectedText"));
                     }
                     else
                     {
@@ -220,10 +221,9 @@ namespace TheOtherRoles
                         {
                             progress[p.PlayerId] = 0f;
                         }
-                        float currProgress = 100 * progress[p.PlayerId] / infectDuration;
-                        string prog = currProgress.ToString("F1");
-                        text += $"{p.name}: {prog}%\n";
+                        text += getProgressString(progress[p.PlayerId]);
                     }
+                    text += "\n";
                 }
 
                 statusText.text = text;
@@ -294,7 +294,21 @@ namespace TheOtherRoles
             }
         }
 
-        public static void clearAndReload()
+        public static string getProgressString(float progress)
+        {
+            // Go from green -> yellow -> red based on infection progress
+            Color color;
+            var prog = progress / infectDuration;
+            if (prog < 0.5f)
+                color = Color.Lerp(Color.green, Color.yellow, prog * 2);
+            else
+                color = Color.Lerp(Color.yellow, Color.red, prog * 2 - 1);
+
+            float progPercent = prog * 100;
+            return Helpers.cs(color, $"{progPercent.ToString("F1")}%");
+        }
+
+        public static void Clear()
         {
             players = new List<PlagueDoctor>();
             triggerPlagueDoctorWin = false;

@@ -32,6 +32,7 @@ namespace TheOtherRoles
             { RoleType.Madmate, typeof(RoleBase<Madmate>) },
             { RoleType.Opportunist, typeof(RoleBase<Opportunist>) },
             { RoleType.PlagueDoctor, typeof(RoleBase<PlagueDoctor>) },
+			{ typeof(RoleBase<SerialKiller>), RoleId.SerialKiller },
         };
     }
 
@@ -49,7 +50,7 @@ namespace TheOtherRoles
         public abstract void HandleDisconnect(PlayerControl player, DisconnectReasons reason);
         public virtual void ResetRole() { }
 
-        public static void Clear()
+        public static void ClearAll()
         {
             allRoles = new List<Role>();
         }
@@ -384,6 +385,68 @@ namespace TheOtherRoles
                     }
                 }
                 TheOtherRolesPlugin.Logger.LogError($"eraseRole: no method found for role type {role}");
+            }
+        }
+
+        public static void eraseAllRoles(this PlayerControl player)
+        {
+            foreach (var t in RoleData.allRoleTypes)
+            {
+                t.Key.GetMethod("eraseRole", BindingFlags.Public | BindingFlags.Static)?.Invoke(null, new object[] { player });
+            }
+
+            // Crewmate roles
+            if (player.isRole(RoleId.Mayor)) Mayor.clearAndReload();
+            if (player.isRole(RoleId.Engineer)) Engineer.clearAndReload();
+            if (player.isRole(RoleId.Detective)) Detective.clearAndReload();
+            if (player.isRole(RoleId.TimeMaster)) TimeMaster.clearAndReload();
+            if (player.isRole(RoleId.Medic)) Medic.clearAndReload();
+            if (player.isRole(RoleId.Shifter)) Shifter.clearAndReload();
+            if (player.isRole(RoleId.Seer)) Seer.clearAndReload();
+            if (player.isRole(RoleId.Hacker)) Hacker.clearAndReload();
+            if (player.isRole(RoleId.Mini)) Mini.clearAndReload();
+            if (player.isRole(RoleId.Tracker)) Tracker.clearAndReload();
+            if (player.isRole(RoleId.Snitch)) Snitch.clearAndReload();
+            if (player.isRole(RoleId.Swapper)) Swapper.clearAndReload();
+            if (player.isRole(RoleId.Spy)) Spy.clearAndReload();
+            if (player.isRole(RoleId.SecurityGuard)) SecurityGuard.clearAndReload();
+            if (player.isRole(RoleId.Bait)) Bait.clearAndReload();
+            if (player.isRole(RoleId.Medium)) Medium.clearAndReload();
+
+            // Impostor roles
+            if (player.isRole(RoleId.Morphling)) Morphling.clearAndReload();
+            if (player.isRole(RoleId.Camouflager)) Camouflager.clearAndReload();
+            if (player.isRole(RoleId.Godfather)) Godfather.clearAndReload();
+            if (player.isRole(RoleId.Mafioso)) Mafioso.clearAndReload();
+            if (player.isRole(RoleId.Janitor)) Janitor.clearAndReload();
+            if (player.isRole(RoleId.Vampire)) Vampire.clearAndReload();
+            if (player.isRole(RoleId.Eraser)) Eraser.clearAndReload();
+            if (player.isRole(RoleId.Trickster)) Trickster.clearAndReload();
+            if (player.isRole(RoleId.Cleaner)) Cleaner.clearAndReload();
+            if (player.isRole(RoleId.Warlock)) Warlock.clearAndReload();
+            if (player.isRole(RoleId.Witch)) Witch.clearAndReload();
+
+            // Other roles
+            if (player.isRole(RoleId.Jester)) Jester.clearAndReload();
+            if (player.isRole(RoleId.Arsonist)) Arsonist.clearAndReload();
+            if (player.isRole(RoleId.Sidekick)) Sidekick.clearAndReload();
+            if (player.isRole(RoleId.BountyHunter)) BountyHunter.clearAndReload();
+            if (player.isRole(RoleId.Vulture)) Vulture.clearAndReload();
+            if (player.isRole(RoleId.Lawyer)) Lawyer.clearAndReload();
+            if (player.isRole(RoleId.Pursuer)) Pursuer.clearAndReload();
+            if (Guesser.isGuesser(player.PlayerId)) Guesser.clear(player.PlayerId);
+
+
+            if (player.isRole(RoleId.Jackal))
+            { // Promote Sidekick and hence override the the Jackal or erase Jackal
+                if (Sidekick.promotesToJackal && Sidekick.sidekick != null && Sidekick.sidekick.isAlive())
+                {
+                    RPCProcedure.sidekickPromotes();
+                }
+                else
+                {
+                    Jackal.clearAndReload();
+                }
             }
         }
 

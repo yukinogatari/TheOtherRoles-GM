@@ -294,6 +294,11 @@ namespace TheOtherRoles {
         public static CustomOption playerNameDupes;
         public static CustomOption disableVents;
 
+        public static CustomRoleOption serialKillerSpawnRate;
+        public static CustomOption serialKillerKillCooldown;
+        public static CustomOption serialKillerSuicideTimer;
+        public static CustomOption serialKillerResetTimer;
+
         internal static Dictionary<byte, byte[]> blockedRolePairings = new Dictionary<byte, byte[]>();
         internal static List<byte> blockLovers = new List<byte>();
 
@@ -389,6 +394,10 @@ namespace TheOtherRoles {
             ninjaCanBeTargeted = CustomOption.Create(1007, "ninjaCanBeTargeted", true, ninjaSpawnRate);
             ninjaCanVent = CustomOption.Create(1008, "ninjaCanVent", false, ninjaSpawnRate);
 
+            serialKillerSpawnRate = new CustomRoleOption(1010, "serialKiller", SerialKiller.color, 3);
+            serialKillerKillCooldown = CustomOption.Create(1012, "serialKillerKillCooldown", 15f, 2.5f, 60f, 2.5f, serialKillerSpawnRate, format: "unitSeconds");
+            serialKillerSuicideTimer = CustomOption.Create(1013, "serialKillerSuicideTimer", 40f, 2.5f, 60f, 2.5f, serialKillerSpawnRate, format: "unitSeconds");
+            serialKillerResetTimer = CustomOption.Create(1014, "serialKillerResetTimer", true, serialKillerSpawnRate);
 
             nekoKabochaSpawnRate = new CustomRoleOption(1020, "nekoKabocha", NekoKabocha.color, 3);
             nekoKabochaRevengeCrew = CustomOption.Create(1021, "nekoKabochaRevengeCrew", true, nekoKabochaSpawnRate);
