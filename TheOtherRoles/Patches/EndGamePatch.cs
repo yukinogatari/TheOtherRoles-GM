@@ -812,7 +812,7 @@ namespace TheOtherRoles.Patches
                     int numDeadPlayerUncompletedTasks = 0;
                     foreach(var player in PlayerControl.AllPlayerControls){
                         foreach(var task in player.Data.Tasks){
-                            if(player.Data.IsDead && Helpers.isCrew(player))
+                            if(player.Data.IsDead && Helpers.isCrew(player) && !player.isRole(RoleId.Madmate))
                             {
                                 if(!task.Complete)
                                 {

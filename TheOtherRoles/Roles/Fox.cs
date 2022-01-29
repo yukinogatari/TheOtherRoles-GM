@@ -67,13 +67,15 @@ namespace TheOtherRoles
             {
                 foreach(var immoralist in Immoralist.allPlayers)
                 {
-                    if(killer == null)
-                    {
-                        immoralist.Exiled();
-                    }
-                    else
-                    {
-                        immoralist.MurderPlayer(immoralist);
+                    if(immoralist.isAlive()){
+                        if(killer == null)
+                        {
+                            immoralist.Exiled();
+                        }
+                        else
+                        {
+                            immoralist.MurderPlayer(immoralist);
+                        }
                     }
                 }
             }
