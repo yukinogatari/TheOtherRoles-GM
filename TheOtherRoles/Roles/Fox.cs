@@ -53,7 +53,7 @@ namespace TheOtherRoles
         {
             stealthed = false;
             foxButton.isEffectActive = false;
-            foxButton.Timer = foxButton.MaxTimer = Ninja.stealthCooldown;
+            foxButton.Timer = foxButton.MaxTimer = stealthCooldown;
         }
 
         public override void OnMeetingEnd() {}
