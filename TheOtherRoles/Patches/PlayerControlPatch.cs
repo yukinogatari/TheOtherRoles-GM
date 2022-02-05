@@ -47,6 +47,13 @@ namespace TheOtherRoles.Patches
                 }
             }
 
+            // Can't target stealthed Fox
+            foreach (Fox f in Fox.players)
+            {
+                if(f.stealthed) untargetablePlayers.Add(f.player);
+            }
+
+
             Vector2 truePosition = targetingPlayer.GetTruePosition();
             Il2CppSystem.Collections.Generic.List<GameData.PlayerInfo> allPlayers = GameData.Instance.AllPlayers;
             for (int i = 0; i < allPlayers.Count; i++)
@@ -633,9 +640,17 @@ namespace TheOtherRoles.Patches
                 {
                     bool arrowForImp = p.Data.Role.IsImpostor;
                     bool arrowForTeamJackal = Snitch.includeTeamJackal && (p == Jackal.jackal || p == Sidekick.sidekick);
+                    bool arrowForFox = p.isRole(RoleId.Fox) || p.isRole(RoleId.Immoralist);
+
                     // Update the arrows' color every time bc things go weird when you add a sidekick or someone dies
-                    Color c = arrowForTeamJackal ? Jackal.color : Palette.ImpostorRed;
-                    if (!p.Data.IsDead && (arrowForImp || arrowForTeamJackal))
+                    Color c = Palette.ImpostorRed;
+                    if(arrowForTeamJackal){
+                        c = Jackal.color;
+                    }
+                    else if(arrowForFox){
+                        c = Fox.color;
+                    }
+                    if (!p.Data.IsDead && (arrowForImp || arrowForTeamJackal || arrowForFox))
                     {
                         if (arrowIndex >= Snitch.localArrows.Count)
                         {

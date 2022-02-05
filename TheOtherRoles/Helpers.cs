@@ -239,6 +239,8 @@ namespace TheOtherRoles {
                     player.isRole(RoleType.Jester) ||
                     player.isRole(RoleType.Opportunist) ||
                     player.isRole(RoleType.PlagueDoctor) ||
+                    player.isRole(RoleType.Fox) ||
+                    player.isRole(RoleType.Immoralist) ||
                     player.isRole(RoleType.Vulture) ||
                     player.isRole(RoleType.Lawyer) ||
                     player.isRole(RoleType.Pursuer) ||
@@ -344,6 +346,7 @@ namespace TheOtherRoles {
             if (target.isDead()) return true;
             if (Camouflager.camouflageTimer > 0f) return true; // No names are visible
             if (!source.isImpostor() && Ninja.isStealthed(target)) return true; // Hide ninja nametags from non-impostors
+            if (!source.isRole(RoleType.Fox) && !source.Data.IsDead && Fox.isStealthed(target)) return true;
             if (GameStarted && MapOptions.hideOutOfSightNametags && source.transform != null && target.transform != null)
             {
                 float distMod = 1.05f;
@@ -356,6 +359,7 @@ namespace TheOtherRoles {
             if (source.isImpostor() && (target.isImpostor() || target.isRole(RoleType.Spy))) return false; // Members of team Impostors see the names of Impostors/Spies
             if (source.getPartner() == target) return false; // Members of team Lovers see the names of each other
             if ((source.isRole(RoleType.Jackal) || source.isRole(RoleType.Sidekick)) && (target.isRole(RoleType.Jackal) || target.isRole(RoleType.Sidekick) || target == Jackal.fakeSidekick)) return false; // Members of team Jackal see the names of each other
+            if ((source.isRole(RoleId.Fox) || source.isRole(RoleType.Immoralist)) && (target.isRole(RoleType.Fox) || target.isRole(RoleType.Immoralist))) return false; // Members of team Fox see the names of each other
             return true;
         }
 
@@ -514,6 +518,26 @@ namespace TheOtherRoles {
             }
             
             return team;
+        }
+
+        public static void shuffle<T>(this IList<T> self, int startAt = 0)
+        {
+            for (int i = startAt; i < self.Count - 1; i++) {
+                T value = self[i];
+                int index = UnityEngine.Random.Range(i, self.Count);
+                self[i] = self[index];
+                self[index] = value;
+            }
+        }
+
+        public static void shuffle<T>(this System.Random r, IList<T> self)
+        {
+            for (int i = 0; i < self.Count; i++) {
+                T value = self[i];
+                int index = r.Next(self.Count);
+                self[i] = self[index];
+                self[index] = value;
+            }
         }
     }
 }

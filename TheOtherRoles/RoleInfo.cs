@@ -90,6 +90,9 @@ namespace TheOtherRoles
         public static RoleInfo niceWatcher = new RoleInfo("niceWatcher", Watcher.color, CustomOptionHolder.watcherSpawnRate, RoleType.Watcher);
         public static RoleInfo evilWatcher = new RoleInfo("evilWatcher", Palette.ImpostorRed, CustomOptionHolder.watcherSpawnRate, RoleType.Watcher);
         public static RoleInfo serialKiller = new RoleInfo("serialKiller", SerialKiller.color, CustomOptionHolder.serialKillerSpawnRate, RoleType.SerialKiller);
+        public static RoleInfo fox = new RoleInfo("妖狐", Fox.color, CustomOptionHolder.foxSpawnRate, RoleId.Fox);
+        public static RoleInfo immoralist = new RoleInfo("背徳者", Immoralist.color, CustomOptionHolder.foxSpawnRate, RoleId.Immoralist);
+        public static RoleInfo fortuneTeller= new RoleInfo("占い師", FortuneTeller.color, CustomOptionHolder.fortuneTellerSpawnRate, RoleId.FortuneTeller);
 
         public static List<RoleInfo> allRoleInfos = new List<RoleInfo>() {
                 impostor,
@@ -146,6 +149,9 @@ namespace TheOtherRoles
                 nekoKabocha,
                 niceWatcher,
                 evilWatcher,
+                fox,
+                immoralist,
+                fortuneTeller
             };
 
         public static string tl(string key)
@@ -208,6 +214,20 @@ namespace TheOtherRoles
             {
                 if (p.isImpostor()) infos.Add(evilWatcher);
                 else infos.Add(niceWatcher);
+            }
+            if (p.isRole(RoleType.Fox)) infos.Add(fox);
+            if (p.isRole(RoleType.Immoralist)) infos.Add(immoralist);
+            if(p.isRole(RoleType.FortuneTeller))
+            {
+                if(PlayerControl.LocalPlayer.Data.IsDead || FortuneTeller.endGameFlag)
+                {
+                    infos.Add(fortuneTeller);
+                }
+                else
+                {
+                    var info = FortuneTeller.isCompletedNumTasks(p) ? fortuneTeller: crewmate;
+                    infos.Add(info);
+                }
             }
 
 

@@ -69,6 +69,9 @@ namespace TheOtherRoles
         Pursuer,
         PlagueDoctor,
         Watcher,
+        Fox,
+        Immoralist,
+        FortuneTeller,
 
 
         GM = 200,
@@ -146,6 +149,9 @@ namespace TheOtherRoles
         PlagueDoctorUpdateProgress,
         NekoKabochaExile,
         SerialKillerSuicide,
+        FortuneTellerUsedDivine,
+        FoxStealth,
+        FoxCreatesImmoralist,
     }
 
     public static class RPCProcedure
@@ -607,9 +613,17 @@ namespace TheOtherRoles
                     case RoleType.PlagueDoctor:
                         PlagueDoctor.swapRole(player, oldShifter);
                         break;
-
                     case RoleType.SerialKiller:
                         SerialKiller.swapRole(player, oldShifter);
+                        break;
+                    case RoleId.Fox:
+                        Fox.swapRole(player, oldShifter);
+                        break;
+                    case RoleId.Immoralist:
+                        Immoralist.swapRole(player, oldShifter);
+                        break;
+                    case RoleId.FortuneTeller:
+                        FortuneTeller.swapRole(player, oldShifter);
                         break;
                 }
             }
@@ -692,15 +706,22 @@ namespace TheOtherRoles
             PlayerControl player = Helpers.playerById(targetId);
             if (player == null) return;
 
-            if (!Jackal.canCreateSidekickFromImpostor && player.Data.Role.IsImpostor)
-            {
+            if (!Jackal.canCreateSidekickFromImpostor && player.Data.Role.IsImpostor) {
                 Jackal.fakeSidekick = player;
-            }
-            else
-            {
+            }else if (!Jackal.canCreateSidekickFromFox && player.isRole(RoleId.Fox)){
+                Jackal.fakeSidekick = player;
+            }else {
                 DestroyableSingleton<RoleManager>.Instance.SetRole(player, RoleTypes.Crewmate);
                 erasePlayerRoles(player.PlayerId, true);
                 Sidekick.sidekick = player;
+                // 狐が一人もいなくなったら背徳者は死亡する
+                if(!Fox.isFoxAlive())
+                {
+                    foreach(var immoralist in Immoralist.allPlayers)
+                    {
+                        immoralist.MurderPlayer(immoralist);
+                    }
+                }
             }
             Jackal.canCreateSidekick = false;
         }
@@ -1006,6 +1027,20 @@ namespace TheOtherRoles
             PlayerControl player = Helpers.playerById(playerId);
             Ninja.setStealthed(player, stealthed);
         }
+        public static void foxStealth(byte playerId, bool stealthed)
+        {
+            PlayerControl player = Helpers.playerById(playerId);
+            Fox.setStealthed(player, stealthed);
+        }
+
+        public static void foxCreatesImmoralist(byte targetId)
+        {
+            PlayerControl player = Helpers.playerById(targetId);
+            DestroyableSingleton<RoleManager>.Instance.SetRole(player, RoleTypes.Crewmate);
+            erasePlayerRoles(player.PlayerId, true);
+            player.setRole(RoleId.Immoralist);
+            player.clearAllTasks();
+        }
 
         public static void GMKill(byte targetId)
         {
@@ -1118,6 +1153,36 @@ namespace TheOtherRoles
             PlayerControl serialKiller = Helpers.playerById(serialKillerId);
             if (serialKiller == null) return;
             serialKiller.MurderPlayer(serialKiller);
+        }
+		
+        public static void fortuneTellerUsedDivine(byte fortuneTellerId, byte targetId) {
+            PlayerControl fortuneTeller = Helpers.playerById(fortuneTellerId);
+            PlayerControl target = Helpers.playerById(targetId);
+            if (target == null) return;
+            if (target.isDead()) return;
+            // 呪殺
+            if(target.isRole(RoleId.Fox)){
+                KillAnimationCoPerformKillPatch.hideNextAnimation = true;
+                if(PlayerControl.LocalPlayer.isRole(RoleId.FortuneTeller))
+                {
+                    // 狐を殺せたことを分からなくするためにキル音を鳴らさないための処置
+                    target.MurderPlayer(target);
+                }
+                else
+                {
+                    fortuneTeller.MurderPlayer(target);
+                }
+            }
+            // インポスターの場合は占い師の位置に矢印を表示
+            if(PlayerControl.LocalPlayer.isImpostor()){
+                FortuneTeller.fortuneTellerMessage("占い師が占いを使った", 5f, Color.white);
+                FortuneTeller.impostorArrowFlag = true;
+            }
+            // 占われたのが背徳者の場合は通知を表示
+            if(target.isRole(RoleId.Immoralist) && PlayerControl.LocalPlayer.isRole(RoleId.Immoralist))
+            {
+                FortuneTeller.fortuneTellerMessage("占い師に占われた", 5f, Color.white);
+            }
         }
 
 
@@ -1358,7 +1423,17 @@ namespace TheOtherRoles
                     case (byte)CustomRPC.SerialKillerSuicide:
                         RPCProcedure.serialKillerSuicide(reader.ReadByte());
                         break;
-                }
+                case (byte)CustomRPC.FortuneTellerUsedDivine:
+                    byte fId = reader.ReadByte();
+                    byte tId = reader.ReadByte();
+                    RPCProcedure.fortuneTellerUsedDivine(fId, tId);
+                    break;    
+                case (byte)CustomRPC.FoxStealth:
+                    RPCProcedure.foxStealth(reader.ReadByte(), reader.ReadBoolean());
+                    break;
+                case (byte)CustomRPC.FoxCreatesImmoralist:
+                    RPCProcedure.foxCreatesImmoralist(reader.ReadByte());
+                    break;
             }
         }
     }

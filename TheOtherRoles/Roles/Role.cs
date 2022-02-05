@@ -32,7 +32,9 @@ namespace TheOtherRoles
             { RoleType.Madmate, typeof(RoleBase<Madmate>) },
             { RoleType.Opportunist, typeof(RoleBase<Opportunist>) },
             { RoleType.PlagueDoctor, typeof(RoleBase<PlagueDoctor>) },
-			{ RoleType.SerialKiller, typeof(RoleBase<SerialKiller>) },
+            { RoleType.Fox, typeof(RoleBase<Fox>) },
+            { RoleType.Immoralist, typeof(RoleBase<Immoralist>) },
+            { RoleType.FortuneTeller, typeof(RoleBase<FortuneTeller>) },
         };
     }
 
