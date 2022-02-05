@@ -87,6 +87,7 @@ namespace TheOtherRoles {
         public static CustomOption sidekickCanUseVents;
         public static CustomOption jackalPromotedFromSidekickCanCreateSidekick;
         public static CustomOption jackalCanCreateSidekickFromImpostor;
+        public static CustomOption jackalCanCreateSidekickFromFox;
         public static CustomOption jackalAndSidekickHaveImpostorVision;
         public static CustomOption jackalCanSeeEngineerVent;
 
@@ -109,6 +110,12 @@ namespace TheOtherRoles {
         public static CustomOption shifterIsNeutralRate;
         public static CustomOption shifterShiftsModifiers;
         public static CustomOption shifterPastShifters;
+
+        public static CustomRoleOption fortuneTellerSpawnRate;
+        public static CustomOption fortuneTellerNumTasks;
+        public static CustomOption fortuneTellerResultIsCrewOrNot;
+        public static CustomOption fortuneTellerDistance;
+        public static CustomOption fortuneTellerDuration;
 
         public static CustomRoleOption mayorSpawnRate;
         public static CustomOption mayorNumVotes;
@@ -287,6 +294,17 @@ namespace TheOtherRoles {
         public static CustomOption serialKillerKillCooldown;
         public static CustomOption serialKillerSuicideTimer;
         public static CustomOption serialKillerResetTimer;
+        public static CustomRoleOption foxSpawnRate;
+        public static CustomOption foxCanFixReactorAndO2;
+        public static CustomOption foxCanCreateImmoralist;
+        public static CustomOption foxNumRepair;
+
+        public static CustomOption foxCrewWinsByTasks;
+        public static CustomOption foxStealthCooldown;
+        public static CustomOption foxStealthDuration;
+        public static CustomOption foxNumCommonTasks;
+        public static CustomOption foxNumLongTasks;
+        public static CustomOption foxNumShortTasks;
 
         internal static Dictionary<byte, byte[]> blockedRolePairings = new Dictionary<byte, byte[]>();
         internal static List<byte> blockLovers = new List<byte>();
@@ -444,6 +462,7 @@ namespace TheOtherRoles {
             sidekickCanUseVents = CustomOption.Create(227, "sidekickCanUseVents", true, jackalCanCreateSidekick);
             jackalPromotedFromSidekickCanCreateSidekick = CustomOption.Create(228, "jackalPromotedFromSidekickCanCreateSidekick", true, jackalCanCreateSidekick);
             jackalCanCreateSidekickFromImpostor = CustomOption.Create(229, "jackalCanCreateSidekickFromImpostor", true, jackalCanCreateSidekick);
+            jackalCanCreateSidekickFromFox = CustomOption.Create(431, "jackalCanCreateSidekickFromFox", true, jackalCanCreateSidekick);
 
             vultureSpawnRate = new CustomRoleOption(340, "vulture", Vulture.color, 1);
             vultureCooldown = CustomOption.Create(341, "vultureCooldown", 15f, 2.5f, 60f, 2.5f, vultureSpawnRate, format: "unitSeconds");
@@ -474,6 +493,25 @@ namespace TheOtherRoles {
             //plagueDoctorResetMeeting = CustomOption.Create(907, "plagueDoctorResetMeeting", false, plagueDoctorSpawnRate);
             plagueDoctorInfectKiller = CustomOption.Create(906, "plagueDoctorInfectKiller", true, plagueDoctorSpawnRate);
             plagueDoctorWinDead = CustomOption.Create(908, "plagueDoctorWinDead", true, plagueDoctorSpawnRate);
+
+
+            foxSpawnRate = new CustomRoleOption(910, "妖狐", Fox.color, 1);
+            foxCanFixReactorAndO2 = CustomOption.Create(911, "リアクターとO2を直せる", false, foxSpawnRate);
+            foxCrewWinsByTasks= CustomOption.Create(912, "クルーはタスクで勝利する", true, foxSpawnRate);
+            foxNumCommonTasks = CustomOption.Create(913, "コモンタスク数", 2f, 0f, 4f, 1f, foxSpawnRate);
+            foxNumLongTasks = CustomOption.Create(914, "ロングタスク数", 2f, 0f, 4f, 1f, foxSpawnRate);
+            foxNumShortTasks = CustomOption.Create(915, "ショートタスク数", 2f, 0f, 4f, 1f, foxSpawnRate);
+            foxStealthCooldown = CustomOption.Create(916, "透明クールダウン", 15f, 1f, 30f, 1f, foxSpawnRate);
+            foxStealthDuration = CustomOption.Create(917, "透明時間", 15f, 1f, 30f, 1f, foxSpawnRate);
+            foxCanCreateImmoralist = CustomOption.Create(918, "背徳者を作れる", true, foxSpawnRate);
+            foxNumRepair = CustomOption.Create(919, "リペア回数", 1f, 0f, 5f, 1f, foxSpawnRate);
+
+
+            fortuneTellerSpawnRate = new CustomRoleOption(940, "占い師", FortuneTeller.color, 1);
+            fortuneTellerNumTasks = CustomOption.Create(941, "占いに必要なタスク数", 4f, 1f, 10f, 1f, fortuneTellerSpawnRate);
+            fortuneTellerResultIsCrewOrNot = CustomOption.Create(942, "占い結果が白黒のみ ", true, fortuneTellerSpawnRate);
+            fortuneTellerDuration = CustomOption.Create(943, "接触時間 ", 20f, 1f, 50f, 0.5f, fortuneTellerSpawnRate);
+            fortuneTellerDistance = CustomOption.Create(944, "接触判定距離 ", 2.5f, 1f, 10f, 0.5f, fortuneTellerSpawnRate, format: "unitMeters");
 
             mayorSpawnRate = new CustomRoleOption(80, "mayor", Mayor.color, 1);
             mayorNumVotes = CustomOption.Create(81, "mayorNumVotes", 2f, 2f, 10f, 1f, mayorSpawnRate, format: "unitVotes");

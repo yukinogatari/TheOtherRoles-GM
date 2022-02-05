@@ -36,6 +36,18 @@ namespace TheOtherRoles.Patches
                 return true;
             }
 
+            if (pc.isRole(RoleId.Fox) && (isLights || isComms || isReactor || isO2))
+            {
+                if(isLights|| isComms)
+                {
+                    return true;
+                }
+                else if((isO2 || isReactor) && !Fox.canFixReactorAndO2)
+                {
+                    return true;
+                }
+            }
+
             return false;
         }
 
@@ -326,6 +338,13 @@ namespace TheOtherRoles.Patches
                 {
                     roleCanCallEmergency = false;
                     statusText = ModTranslation.getString("gmMeetingButton");
+                }
+
+                // Deactivate emergency button for FortuneTeller
+                if (PlayerControl.LocalPlayer.isRole(RoleId.FortuneTeller) && FortuneTeller.isCompletedNumTasks(PlayerControl.LocalPlayer))
+                {
+                    roleCanCallEmergency = false;
+                    statusText = ModTranslation.getString("占い師は会議ボタンを押せない");
                 }
 
                 // Deactivate emergency button for Swapper

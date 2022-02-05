@@ -231,6 +231,8 @@ namespace TheOtherRoles {
                     player.isRole(RoleId.Jester) ||
                     player.isRole(RoleId.Opportunist) ||
                     player.isRole(RoleId.PlagueDoctor) ||
+                    player.isRole(RoleId.Fox) ||
+                    player.isRole(RoleId.Immoralist) ||
                     player.isRole(RoleId.Vulture) ||
                     player.isRole(RoleId.Lawyer) ||
                     player.isRole(RoleId.Pursuer) ||
@@ -255,7 +257,7 @@ namespace TheOtherRoles {
 
         public static bool neutralHasTasks(this PlayerControl player)
         {
-            return player.isNeutral() && (player.isRole(RoleId.Lawyer) || player.isRole(RoleId.Pursuer) || player.isRole(RoleId.Shifter));
+            return player.isNeutral() && (player.isRole(RoleId.Lawyer) || player.isRole(RoleId.Pursuer) || player.isRole(RoleId.Shifter)) || player.isRole(RoleId.Fox);
         }
 
         public static bool isGM(this PlayerControl player)
@@ -331,12 +333,14 @@ namespace TheOtherRoles {
         public static bool hidePlayerName(PlayerControl source, PlayerControl target) {
             if (Camouflager.camouflageTimer > 0f) return true; // No names are visible
             else if (!source.Data.Role.IsImpostor && !source.Data.IsDead && Ninja.isStealthed(target)) return true; // Hide ninja nametags from non-impostors
+            else if (!source.isRole(RoleId.Fox) && !source.Data.IsDead && Fox.isStealthed(target)) return true;
             else if (!MapOptions.hidePlayerNames) return false; // All names are visible
             else if (source == null || target == null) return true;
             else if (source == target) return false; // Player sees his own name
             else if (source.Data.Role.IsImpostor && (target.Data.Role.IsImpostor || target.isRole(RoleId.Spy))) return false; // Members of team Impostors see the names of Impostors/Spies
             else if (source.getPartner() == target) return false; // Members of team Lovers see the names of each other
             else if ((source.isRole(RoleId.Jackal) || source.isRole(RoleId.Sidekick)) && (target.isRole(RoleId.Jackal) || target.isRole(RoleId.Sidekick) || target == Jackal.fakeSidekick)) return false; // Members of team Jackal see the names of each other
+            else if ((source.isRole(RoleId.Fox) || source.isRole(RoleId.Immoralist)) && (target.isRole(RoleId.Fox) || target.isRole(RoleId.Immoralist))) return false; // Members of team Fox see the names of each other
             return true;
         }
 
@@ -495,6 +499,26 @@ namespace TheOtherRoles {
             }
             
             return team;
+        }
+
+        public static void shuffle<T>(this IList<T> self, int startAt = 0)
+        {
+            for (int i = startAt; i < self.Count - 1; i++) {
+                T value = self[i];
+                int index = UnityEngine.Random.Range(i, self.Count);
+                self[i] = self[index];
+                self[index] = value;
+            }
+        }
+
+        public static void shuffle<T>(this System.Random r, IList<T> self)
+        {
+            for (int i = 0; i < self.Count; i++) {
+                T value = self[i];
+                int index = r.Next(self.Count);
+                self[i] = self[index];
+                self[index] = value;
+            }
         }
     }
 }
