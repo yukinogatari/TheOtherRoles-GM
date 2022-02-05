@@ -279,7 +279,7 @@ namespace TheOtherRoles {
         public static CustomOption nekoKabochaRevengeImpostor;
         public static CustomOption nekoKabochaRevengeExile;
 
-        public static CustomDualRoleOption tetrachromeSpawnRate;
+        public static CustomDualRoleOption watcherSpawnRate;
 
         public static CustomOption hideSettings;
         public static CustomOption restrictDevices;
@@ -494,7 +494,7 @@ namespace TheOtherRoles {
             plagueDoctorWinDead = CustomOption.Create(908, "plagueDoctorWinDead", true, plagueDoctorSpawnRate);
 
 
-            tetrachromeSpawnRate = new CustomDualRoleOption(1040, "tetrachrome", Tetrachrome.color, RoleType.Tetrachrome, 15);
+            watcherSpawnRate = new CustomDualRoleOption(1040, "watcher", Watcher.color, RoleType.Watcher, 15);
 
 
             mayorSpawnRate = new CustomRoleOption(80, "mayor", Mayor.color, 1);

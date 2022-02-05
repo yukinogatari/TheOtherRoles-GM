@@ -340,7 +340,7 @@ namespace TheOtherRoles.Patches
                 int evilCount = 0;
                 while (niceCount + evilCount < option.count)
                 {
-                    if (rnd.Next(1, 101) <= option.bothChance * 10)
+                    if (option.assignEqually)
                     {
                         niceCount++;
                         evilCount++;

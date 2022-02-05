@@ -2558,5 +2558,73 @@
     "gmEditionGeneral": {
         "0": "GM Edition Exclusive",
         "11": "GM\u30a8\u30c7\u30a3\u30b7\u30e7\u30f3\u9650\u5b9a"
+    },
+    "nekoKabocha": {
+        "0": "Neko-Kabocha",
+        "11": "\u30cd\u30b3\u30ab\u30dc\u30c1\u30e3"
+    },
+    "nekoKabochaIntroDesc": {
+        "0": "You will never die alone",
+        "11": "\u72ec\u308a\u3067\u306f\u6b7b\u306d\u306a\u3044"
+    },
+    "nekoKabochaShortDesc": {
+        "0": "You will never die alone",
+        "11": "\u72ec\u308a\u3067\u306f\u6b7b\u306d\u306a\u3044"
+    },
+    "nekoKabochaFullDesc": {
+        "0": "An Impostor capable of revenge-killing their killer.",
+        "11": "\u30fb\u6bba\u3055\u308c\u305f\u3089\u3001\u6bba\u3057\u305f\u4eba\u3092\u9053\u9023\u308c\u306b\u3067\u304d\u308b\u30a4\u30f3\u30dd\u30b9\u30bf\u30fc"
+    },
+    "nekoKabochaRevengeCrew": {
+        "0": "Take Revenge on Crew Killer",
+        "11": "\u30af\u30eb\u30fc\u306b\u6bba\u3055\u308c\u305f\u3089\u3001\u9053\u9023\u308c\u306b\u3059\u308b"
+    },
+    "nekoKabochaRevengeNeutral": {
+        "0": "Take Revenge on Neutral Killer",
+        "11": "\u305d\u306e\u4ed6\u9663\u55b6\u306b\u6bba\u3055\u308c\u305f\u3089\u3001\u9053\u9023\u308c\u306b\u3059\u308b"
+    },
+    "nekoKabochaRevengeImpostor": {
+        "0": "Take Revenge on Impostor Killer",
+        "11": "\u30a4\u30f3\u30dd\u30b9\u30bf\u30fc\u306b\u6bba\u3055\u308c\u305f\u3089\u3001\u9053\u9023\u308c\u306b\u3059\u308b"
+    },
+    "nekoKabochaRevengeExile": {
+        "0": "Take Revenge When Exiled",
+        "11": "\u8ffd\u653e\u3055\u308c\u305f\u3089\u3001\u30e9\u30f3\u30c0\u30e0\u306b\u9053\u9023\u308c\u306b\u3059\u308b"
+    },
+    "watcher": {
+        "0": "Watcher",
+        "11": "\u30a6\u30a9\u30c3\u30c1\u30e3\u30fc"
+    },
+    "niceWatcher": {
+        "0": "Nice Watcher",
+        "11": "\u30ca\u30a4\u30b9\u30a6\u30a9\u30c3\u30c1\u30e3\u30fc"
+    },
+    "niceWatcherIntroDesc": {
+        "0": "Pay close attention to the crew's votes",
+        "11": "\u307f\u3093\u306a\u306e\u6295\u7968\u306b\u76ee\u3092\u5149\u3089\u305b\u3088\u3046"
+    },
+    "niceWatcherShortDesc": {
+        "0": "Pay close attention to the crew's votes",
+        "11": "\u307f\u3093\u306a\u306e\u6295\u7968\u306b\u76ee\u3092\u5149\u3089\u305b\u3088\u3046"
+    },
+    "evilWatcher": {
+        "0": "Evil Watcher",
+        "11": "\u30a4\u30d3\u30eb\u30a6\u30a9\u30c3\u30c1\u30e3\u30fc"
+    },
+    "evilWatcherIntroDesc": {
+        "0": "Pay close attention to the crew's votes",
+        "11": "\u307f\u3093\u306a\u306e\u6295\u7968\u306b\u76ee\u3092\u5149\u3089\u305b\u3088\u3046"
+    },
+    "evilWatcherShortDesc": {
+        "0": "Pay close attention to the crew's votes",
+        "11": "\u307f\u3093\u306a\u306e\u6295\u7968\u306b\u76ee\u3092\u5149\u3089\u305b\u3088\u3046"
+    },
+    "roleAssignEqually": {
+        "0": "Assign Each Team Equally",
+        "11": "\u4e21\u9663\u55b6\u5e73\u7b49\u306b\u5272\u308a\u632f\u308b"
+    },
+    "roleImpChance": {
+        "0": "Impostor Chance",
+        "11": "\u30a4\u30f3\u30dd\u30b9\u30bf\u30fc\u306b\u306a\u308b\u78ba\u7387"
     }
 }

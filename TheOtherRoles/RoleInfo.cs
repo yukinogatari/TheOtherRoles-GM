@@ -87,9 +87,9 @@ namespace TheOtherRoles
         public static RoleInfo ninja = new RoleInfo("ninja", Ninja.color, CustomOptionHolder.ninjaSpawnRate, RoleType.Ninja);
         public static RoleInfo plagueDoctor = new RoleInfo("plagueDoctor", PlagueDoctor.color, CustomOptionHolder.plagueDoctorSpawnRate, RoleType.PlagueDoctor);
         public static RoleInfo nekoKabocha = new RoleInfo("nekoKabocha", NekoKabocha.color, CustomOptionHolder.nekoKabochaSpawnRate, RoleType.NekoKabocha);
-        public static RoleInfo niceTetrachrome = new RoleInfo("niceTetrachrome", Tetrachrome.color, CustomOptionHolder.tetrachromeSpawnRate, RoleType.Tetrachrome);
-        public static RoleInfo evilTetrachrome = new RoleInfo("evilTetrachrome", Palette.ImpostorRed, CustomOptionHolder.tetrachromeSpawnRate, RoleType.Tetrachrome);
-        public static RoleInfo serialKiller = new RoleInfo("serialKiller", SerialKiller.color, CustomOptionHolder.serialKillerSpawnRate, RoleId.SerialKiller);
+        public static RoleInfo niceWatcher = new RoleInfo("niceWatcher", Watcher.color, CustomOptionHolder.watcherSpawnRate, RoleType.Watcher);
+        public static RoleInfo evilWatcher = new RoleInfo("evilWatcher", Palette.ImpostorRed, CustomOptionHolder.watcherSpawnRate, RoleType.Watcher);
+        public static RoleInfo serialKiller = new RoleInfo("serialKiller", SerialKiller.color, CustomOptionHolder.serialKillerSpawnRate, RoleType.SerialKiller);
 
         public static List<RoleInfo> allRoleInfos = new List<RoleInfo>() {
                 impostor,
@@ -144,8 +144,8 @@ namespace TheOtherRoles
 	            medium,
                 plagueDoctor,
                 nekoKabocha,
-                niceTetrachrome,
-                evilTetrachrome,
+                niceWatcher,
+                evilWatcher,
             };
 
         public static string tl(string key)
@@ -203,11 +203,11 @@ namespace TheOtherRoles
             if (p.isRole(RoleType.Ninja)) infos.Add(ninja);
             if (p.isRole(RoleType.PlagueDoctor)) infos.Add(plagueDoctor);
             if (p.isRole(RoleType.NekoKabocha)) infos.Add(nekoKabocha);
-            if (p.isRole(RoleId.SerialKiller)) infos.Add(serialKiller);
-            if (p.isRole(RoleType.Tetrachrome))
+            if (p.isRole(RoleType.SerialKiller)) infos.Add(serialKiller);
+            if (p.isRole(RoleType.Watcher))
             {
-                if (p.isImpostor()) infos.Add(evilTetrachrome);
-                else infos.Add(niceTetrachrome);
+                if (p.isImpostor()) infos.Add(evilWatcher);
+                else infos.Add(niceWatcher);
             }
 
 

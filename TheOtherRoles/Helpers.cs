@@ -340,9 +340,10 @@ namespace TheOtherRoles {
         {
             if (source == target) return false;
             if (source == null || target == null) return true;
+            if (source.isDead()) return false;
+            if (target.isDead()) return true;
             if (Camouflager.camouflageTimer > 0f) return true; // No names are visible
-            if (!source.isImpostor() && !source.isDead() && Ninja.isStealthed(target)) return true; // Hide ninja nametags from non-impostors
-            if (source.isAlive() && target.isDead()) return true;
+            if (!source.isImpostor() && Ninja.isStealthed(target)) return true; // Hide ninja nametags from non-impostors
             if (GameStarted && MapOptions.hideOutOfSightNametags && source.transform != null && target.transform != null)
             {
                 float distMod = 1.05f;
@@ -395,23 +396,23 @@ namespace TheOtherRoles {
 
         public static bool roleCanUseVents(this PlayerControl player) {
             bool roleCouldUse = false;
-            if (player.isRole(RoleId.Engineer))
+            if (player.isRole(RoleType.Engineer))
                 roleCouldUse = true;
-            else if (Jackal.canUseVents && player.isRole(RoleId.Jackal))
+            else if (Jackal.canUseVents && player.isRole(RoleType.Jackal))
                 roleCouldUse = true;
-            else if (Sidekick.canUseVents && player.isRole(RoleId.Sidekick))
+            else if (Sidekick.canUseVents && player.isRole(RoleType.Sidekick))
                 roleCouldUse = true;
-            else if (Spy.canEnterVents && player.isRole(RoleId.Spy))
+            else if (Spy.canEnterVents && player.isRole(RoleType.Spy))
                 roleCouldUse = true;
             else if (Madmate.canEnterVents && player.isRole(RoleType.Madmate))
                 roleCouldUse = true;
-            else if (Vulture.canUseVents && player.isRole(RoleId.Vulture))
+            else if (Vulture.canUseVents && player.isRole(RoleType.Vulture))
                 roleCouldUse = true;
             else if (player.Data?.Role != null && player.Data.Role.CanVent)
             {
-                if (player.isRole(RoleId.Janitor))
+                if (player.isRole(RoleType.Janitor))
                     roleCouldUse = false;
-                else if (player.isRole(RoleId.Mafioso) && Godfather.godfather != null && Godfather.godfather.isAlive())
+                else if (player.isRole(RoleType.Mafioso) && Godfather.godfather != null && Godfather.godfather.isAlive())
                     roleCouldUse = false;
                 else if (!Ninja.canUseVents && player.isRole(RoleType.Ninja))
                     roleCouldUse = false;
@@ -494,9 +495,9 @@ namespace TheOtherRoles {
     
         public static void shareGameVersion() {
             MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.VersionHandshake, Hazel.SendOption.Reliable, -1);
-            writer.Write((byte)TheOtherRolesPlugin.Version.Major);
-            writer.Write((byte)TheOtherRolesPlugin.Version.Minor);
-            writer.Write((byte)TheOtherRolesPlugin.Version.Build);
+            writer.WritePacked(TheOtherRolesPlugin.Version.Major);
+            writer.WritePacked(TheOtherRolesPlugin.Version.Minor);
+            writer.WritePacked(TheOtherRolesPlugin.Version.Build);
             writer.WritePacked(AmongUsClient.Instance.ClientId);
             writer.Write((byte)(TheOtherRolesPlugin.Version.Revision < 0 ? 0xFF : TheOtherRolesPlugin.Version.Revision));
             writer.Write(Assembly.GetExecutingAssembly().ManifestModule.ModuleVersionId.ToByteArray());

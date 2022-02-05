@@ -218,16 +218,17 @@ namespace TheOtherRoles
     {
         public static List<CustomDualRoleOption> dualRoles = new List<CustomDualRoleOption>();
         public CustomOption roleImpChance = null;
-        public CustomOption roleBothChance = null;
+        public CustomOption roleAssignEqually = null;
         public RoleType roleType;
 
         public int impChance { get { return roleImpChance.getSelection(); } }
-        public int bothChance { get { return roleBothChance.getSelection(); } }
+        
+        public bool assignEqually { get { return roleAssignEqually.getSelection() == 0; } }
 
         public CustomDualRoleOption(int id, string name, Color color, RoleType roleType, int max = 15) : base(id, name, color, max)
         {
-            roleImpChance = CustomOption.Create(id + 10010, "roleImpChance", CustomOptionHolder.rates, this);
-            roleBothChance = CustomOption.Create(id + 10011, "roleBothChance", CustomOptionHolder.rates, this);
+            roleAssignEqually = new CustomOption(id + 10011, "roleAssignEqually", new string[] { "optionOn", "optionOff" }, "optionOff", this, false, false, "");
+            roleImpChance = CustomOption.Create(id + 10010, "roleImpChance", CustomOptionHolder.rates, roleAssignEqually);
             this.roleType = roleType;
 
             dualRoles.Add(this);

@@ -242,7 +242,7 @@ namespace TheOtherRoles
                     bool canSee = 
                         PlayerControl.LocalPlayer.isImpostor() ||
                         PlayerControl.LocalPlayer.isDead() ||
-                        (Lighter.canSeeNinja && PlayerControl.LocalPlayer.isRole(RoleId.Lighter) && Lighter.isLightActive(PlayerControl.LocalPlayer));
+                        (Lighter.canSeeNinja && PlayerControl.LocalPlayer.isRole(RoleType.Lighter) && Lighter.isLightActive(PlayerControl.LocalPlayer));
 
                     var opacity = canSee ? 0.1f : 0.0f;
 
