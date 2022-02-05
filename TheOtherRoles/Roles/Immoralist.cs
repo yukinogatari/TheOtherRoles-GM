@@ -1,14 +1,9 @@
 using HarmonyLib;
 using Hazel;
-using System.Collections.Generic;
-using System.Linq;
-using UnityEngine;
-using TheOtherRoles.Objects;
-using TheOtherRoles.Patches;
-using static TheOtherRoles.TheOtherRoles;
-using static TheOtherRoles.TheOtherRolesGM;
-using static TheOtherRoles.GameHistory;
 using System;
+using System.Collections.Generic;
+using TheOtherRoles.Objects;
+using UnityEngine;
 
 namespace TheOtherRoles
 {
@@ -20,14 +15,14 @@ namespace TheOtherRoles
 
         public Immoralist()
         {
-            RoleType = roleId = RoleId.Immoralist;
+            RoleType = roleId = RoleType.Immoralist;
         }
 
         public override void OnMeetingStart() { }
         public override void OnMeetingEnd() { }
         public override void FixedUpdate()
         {
-            if(PlayerControl.LocalPlayer.isRole(RoleId.Immoralist))
+            if (PlayerControl.LocalPlayer.isRole(RoleType.Immoralist))
             {
                 arrowUpdate();
             }
@@ -45,7 +40,8 @@ namespace TheOtherRoles
         {
             players = new List<Immoralist>();
         }
-        public static void suicide() {
+        public static void suicide()
+        {
             byte targetId = PlayerControl.LocalPlayer.PlayerId;
             MessageWriter killWriter = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.SerialKillerSuicide, Hazel.SendOption.Reliable, -1); killWriter.Write(targetId);
             AmongUsClient.Instance.FinishRpcImmediately(killWriter);
@@ -53,7 +49,7 @@ namespace TheOtherRoles
         }
 
         private static Sprite buttonSprite;
-         public static Sprite getButtonSprite()
+        public static Sprite getButtonSprite()
         {
             if (buttonSprite) return buttonSprite;
             buttonSprite = Helpers.loadSpriteFromResources("TheOtherRoles.Resources.CurseButton.png", 115f);
@@ -63,12 +59,14 @@ namespace TheOtherRoles
         {
             // Fox stealth
             immoralistButton = new CustomButton(
-                () => {
+                () =>
+                {
                     suicide();
                 },
-                () => { return PlayerControl.LocalPlayer.isRole(RoleId.Immoralist) && !PlayerControl.LocalPlayer.Data.IsDead; },
-                () => {return true;},
-                () => {
+                () => { return PlayerControl.LocalPlayer.isRole(RoleType.Immoralist) && !PlayerControl.LocalPlayer.Data.IsDead; },
+                () => { return true; },
+                () =>
+                {
                     immoralistButton.Timer = immoralistButton.MaxTimer = 20;
                 },
                 getButtonSprite(),
@@ -86,16 +84,19 @@ namespace TheOtherRoles
         public static List<Arrow> arrows = new List<Arrow>();
         public static float updateTimer = 0f;
         public static float arrowUpdateInterval = 0.5f;
-        static void arrowUpdate(){
+        static void arrowUpdate()
+        {
 
             // 前フレームからの経過時間をマイナスする
             updateTimer -= Time.fixedDeltaTime;
 
             // 1秒経過したらArrowを更新
-            if(updateTimer <= 0.0f){
+            if (updateTimer <= 0.0f)
+            {
 
                 // 前回のArrowをすべて破棄する
-                foreach(Arrow arrow in arrows){
+                foreach (Arrow arrow in arrows)
+                {
                     arrow.arrow.SetActive(false);
                     UnityEngine.Object.Destroy(arrow.arrow);
                 }
@@ -104,10 +105,12 @@ namespace TheOtherRoles
                 arrows = new List<Arrow>();
 
                 // 狐の位置を示すArrorwを描画
-                foreach(PlayerControl p in PlayerControl.AllPlayerControls){
-                    if(p.Data.IsDead) continue;
+                foreach (PlayerControl p in PlayerControl.AllPlayerControls)
+                {
+                    if (p.Data.IsDead) continue;
                     Arrow arrow;
-                    if(p.isRole(RoleId.Fox)){
+                    if (p.isRole(RoleType.Fox))
+                    {
                         arrow = new Arrow(Fox.color);
                         arrow.arrow.SetActive(true);
                         arrow.Update(p.transform.position);
@@ -120,11 +123,13 @@ namespace TheOtherRoles
             }
         }
         [HarmonyPatch(typeof(PlayerControl), nameof(PlayerControl.MurderPlayer))]
-        public static class MurderPlayerPatch{
+        public static class MurderPlayerPatch
+        {
             public static void Postfix(PlayerControl __instance, [HarmonyArgument(0)] PlayerControl target)
             {
                 PlayerControl player = PlayerControl.LocalPlayer;
-                if(player.isRole(RoleId.Immoralist) && player.isAlive()){
+                if (player.isRole(RoleType.Immoralist) && player.isAlive())
+                {
 
                     HudManager.Instance.FullScreen.enabled = true;
                     HudManager.Instance.StartCoroutine(Effects.Lerp(1f, new Action<float>((p) =>

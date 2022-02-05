@@ -220,7 +220,7 @@ namespace TheOtherRoles {
 
         public static bool isDead(this PlayerControl player)
         {
-            return player.Data.IsDead || player.Data.Disconnected ||
+            return player?.Data?.IsDead == true || player?.Data?.Disconnected == true ||
                   (finalStatuses.ContainsKey(player.PlayerId) && finalStatuses[player.PlayerId] != FinalStatus.Alive);
         }
 
@@ -338,6 +338,11 @@ namespace TheOtherRoles {
             return result;
         }
 
+        public static bool hidePlayerName(PlayerControl target)
+        {
+            return hidePlayerName(PlayerControl.LocalPlayer, target);
+        }
+
         public static bool hidePlayerName(PlayerControl source, PlayerControl target)
         {
             if (source == target) return false;
@@ -347,9 +352,9 @@ namespace TheOtherRoles {
             if (Camouflager.camouflageTimer > 0f) return true; // No names are visible
             if (!source.isImpostor() && Ninja.isStealthed(target)) return true; // Hide ninja nametags from non-impostors
             if (!source.isRole(RoleType.Fox) && !source.Data.IsDead && Fox.isStealthed(target)) return true;
-            if (GameStarted && MapOptions.hideOutOfSightNametags && source.transform != null && target.transform != null)
+            if (MapOptions.hideOutOfSightNametags && GameStarted && ShipStatus.Instance != null && source.transform != null && target.transform != null)
             {
-                float distMod = 1.05f;
+                float distMod = 1.025f;
                 float distance = Vector3.Distance(source.transform.position, target.transform.position);
                 bool anythingBetween = PhysicsHelpers.AnythingBetween(source.GetTruePosition(), target.GetTruePosition(), Constants.ShadowMask, false);
 
@@ -359,7 +364,7 @@ namespace TheOtherRoles {
             if (source.isImpostor() && (target.isImpostor() || target.isRole(RoleType.Spy))) return false; // Members of team Impostors see the names of Impostors/Spies
             if (source.getPartner() == target) return false; // Members of team Lovers see the names of each other
             if ((source.isRole(RoleType.Jackal) || source.isRole(RoleType.Sidekick)) && (target.isRole(RoleType.Jackal) || target.isRole(RoleType.Sidekick) || target == Jackal.fakeSidekick)) return false; // Members of team Jackal see the names of each other
-            if ((source.isRole(RoleId.Fox) || source.isRole(RoleType.Immoralist)) && (target.isRole(RoleType.Fox) || target.isRole(RoleType.Immoralist))) return false; // Members of team Fox see the names of each other
+            if ((source.isRole(RoleType.Fox) || source.isRole(RoleType.Immoralist)) && (target.isRole(RoleType.Fox) || target.isRole(RoleType.Immoralist))) return false; // Members of team Fox see the names of each other
             return true;
         }
 

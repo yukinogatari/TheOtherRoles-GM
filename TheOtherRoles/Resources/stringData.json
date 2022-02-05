@@ -2565,11 +2565,11 @@
     },
     "nekoKabochaIntroDesc": {
         "0": "You will never die alone",
-        "11": "\u72ec\u308a\u3067\u306f\u6b7b\u306d\u306a\u3044"
+        "11": "\u72ec\u308a\u3067\u306f\u7d76\u5bfe\u306b\u6b7b\u306d\u306a\u3044"
     },
     "nekoKabochaShortDesc": {
         "0": "You will never die alone",
-        "11": "\u72ec\u308a\u3067\u306f\u6b7b\u306d\u306a\u3044"
+        "11": "\u72ec\u308a\u3067\u306f\u7d76\u5bfe\u306b\u6b7b\u306d\u306a\u3044"
     },
     "nekoKabochaFullDesc": {
         "0": "An Impostor capable of revenge-killing their killer.",
@@ -2626,5 +2626,77 @@
     "roleImpChance": {
         "0": "Impostor Chance",
         "11": "\u30a4\u30f3\u30dd\u30b9\u30bf\u30fc\u306b\u306a\u308b\u78ba\u7387"
+    },
+    "hideOutOfSightNametags": {
+        "0": "Hide Out-Of-Sight Nametags",
+        "11": "\u8996\u754c\u5916\u306e\u30d7\u30ec\u30a4\u30e4\u30fc\u306e\u540d\u524d\u3092\u975e\u8868\u793a\u306b\u3059\u308b"
+    },
+    "fox": {
+        "0": "Fox",
+        "11": "\u5996\u72d0"
+    },
+    "foxCanFixReactorAndO2": {
+        "0": "Can Fix Reactor/O2",
+        "11": "\u30ea\u30a2\u30af\u30bf\u30fc\u3068O2\u3092\u76f4\u305b\u308b"
+    },
+    "foxCrewWinsByTasks": {
+        "0": "Crew Task Win Takes Priority",
+        "11": "\u30af\u30eb\u30fc\u306e\u30bf\u30b9\u30af\u52dd\u5229\u304c\u512a\u5148\u3055\u308c\u308b"
+    },
+    "foxNumCommonTasks": {
+        "0": "Common Tasks",
+        "11": "\u901a\u5e38\u30bf\u30b9\u30af"
+    },
+    "foxNumLongTasks": {
+        "0": "Long Tasks",
+        "11": "\u30ed\u30f3\u30b0\u30bf\u30b9\u30af"
+    },
+    "foxNumShortTasks": {
+        "0": "Short Tasks",
+        "11": "\u30b7\u30e7\u30fc\u30c8\u30bf\u30b9\u30af"
+    },
+    "foxStealthCooldown": {
+        "0": "Stealth Cooldown",
+        "11": "\u900f\u660e\u30af\u30fc\u30eb\u30c0\u30a6\u30f3"
+    },
+    "foxStealthDuration": {
+        "0": "Stealth Duration",
+        "11": "\u900f\u660e\u6642\u9593"
+    },
+    "foxCanCreateImmoralist": {
+        "0": "Can Create Immoralist",
+        "11": "\u80cc\u5fb3\u8005\u3092\u4f5c\u308c\u308b"
+    },
+    "foxNumRepair": {
+        "0": "Number of Repairs",
+        "11": "\u30ea\u30da\u30a2\u56de\u6570"
+    },
+    "jackalCanCreateSidekickFromFox": {
+        "0": "Can Make Fox Into Sidekick",
+        "11": "\u5996\u72d0\u3092\u30b5\u30a4\u30c9\u30ad\u30c3\u30af\u306b\u6307\u540d\u3067\u304d\u308b"
+    },
+    "immoralist": {
+        "0": "Immoralist",
+        "11": "\u80cc\u5fb3\u8005"
+    },
+    "fortuneTeller": {
+        "0": "Fortune Teller",
+        "11": "\u5360\u3044\u5e2b"
+    },
+    "fortuneTellerNumTasks": {
+        "0": "Number of Tasks to Divine",
+        "11": "\u5360\u3044\u306b\u5fc5\u8981\u306a\u30bf\u30b9\u30af\u6570"
+    },
+    "fortuneTellerResultIsCrewOrNot": {
+        "0": "Divination Only Reveals Crew or Not",
+        "11": "\u5360\u3044\u7d50\u679c\u304c\u767d\u9ed2\u306e\u307f"
+    },
+    "fortuneTellerDuration": {
+        "0": "Time to Divine",
+        "11": "\u63a5\u89e6\u6642\u9593"
+    },
+    "fortuneTellerDistance": {
+        "0": "Divination Range",
+        "11": "\u63a5\u89e6\u5224\u5b9a\u8ddd\u96e2"
     }
 }

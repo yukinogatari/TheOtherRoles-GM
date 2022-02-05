@@ -155,15 +155,15 @@ namespace TheOtherRoles.Patches {
             {
                 setPlayerNameColor(PlayerControl.LocalPlayer, PlagueDoctor.color);
             }
-            else if (PlayerControl.LocalPlayer.isRole(RoleId.Fox))
+            else if (PlayerControl.LocalPlayer.isRole(RoleType.Fox))
             {
                 setPlayerNameColor(PlayerControl.LocalPlayer, Fox.color);
             }
-            else if (PlayerControl.LocalPlayer.isRole(RoleId.Immoralist))
+            else if (PlayerControl.LocalPlayer.isRole(RoleType.Immoralist))
             {
                 setPlayerNameColor(PlayerControl.LocalPlayer, Immoralist.color);
             }
-            else if (PlayerControl.LocalPlayer.isRole(RoleId.FortuneTeller) && (FortuneTeller.isCompletedNumTasks(PlayerControl.LocalPlayer) || PlayerControl.LocalPlayer.Data.IsDead))
+            else if (PlayerControl.LocalPlayer.isRole(RoleType.FortuneTeller) && (FortuneTeller.isCompletedNumTasks(PlayerControl.LocalPlayer) || PlayerControl.LocalPlayer.Data.IsDead))
             {
                 setPlayerNameColor(PlayerControl.LocalPlayer, FortuneTeller.color);
             }
@@ -186,7 +186,7 @@ namespace TheOtherRoles.Patches {
                 setPlayerNameColor(Spy.spy, Spy.color);
             }
 
-            if (Immoralist.exists && PlayerControl.LocalPlayer.isRole(RoleId.Fox))
+            if (Immoralist.exists && PlayerControl.LocalPlayer.isRole(RoleType.Fox))
             {
                 foreach(var immoralist in Immoralist.allPlayers)
                 {
@@ -194,7 +194,7 @@ namespace TheOtherRoles.Patches {
                 }
             }
 
-            if (PlayerControl.LocalPlayer.isRole(RoleId.Immoralist))
+            if (PlayerControl.LocalPlayer.isRole(RoleType.Immoralist))
             {
                 foreach(var fox in Fox.allPlayers)
                 {
@@ -210,12 +210,15 @@ namespace TheOtherRoles.Patches {
             // Mafia
             if (PlayerControl.LocalPlayer != null && PlayerControl.LocalPlayer.Data.Role.IsImpostor) {
                 foreach (PlayerControl player in PlayerControl.AllPlayerControls)
+                {
+                    if (player.nameText.text == "") continue;
                     if (Godfather.godfather != null && Godfather.godfather == player)
-                            player.nameText.text = player.Data.PlayerName + " (G)";
+                        player.nameText.text = player.Data.PlayerName + " (G)";
                     else if (Mafioso.mafioso != null && Mafioso.mafioso == player)
-                            player.nameText.text = player.Data.PlayerName + " (M)";
+                        player.nameText.text = player.Data.PlayerName + " (M)";
                     else if (Janitor.janitor != null && Janitor.janitor == player)
-                            player.nameText.text = player.Data.PlayerName + " (J)";
+                        player.nameText.text = player.Data.PlayerName + " (J)";
+                }
                 if (MeetingHud.Instance != null)
                     foreach (PlayerVoteArea player in MeetingHud.Instance.playerStates)
                         if (Godfather.godfather != null && Godfather.godfather.PlayerId == player.TargetPlayerId)
@@ -236,8 +239,10 @@ namespace TheOtherRoles.Patches {
                 string suffix = Lovers.getIcon(PlayerControl.LocalPlayer);
                 var lover1 = PlayerControl.LocalPlayer;
                 var lover2 = PlayerControl.LocalPlayer.getPartner();
+
                 lover1.nameText.text += suffix;
-                lover2.nameText.text += suffix;
+                if (!Helpers.hidePlayerName(lover2))
+                    lover2.nameText.text += suffix;
 
                 if (meetingShow)
                     foreach (PlayerVoteArea player in MeetingHud.Instance.playerStates)
@@ -264,7 +269,8 @@ namespace TheOtherRoles.Patches {
             bool localIsKnowingTarget = Lawyer.lawyer != null && Lawyer.target != null && Lawyer.targetKnows && Lawyer.target == PlayerControl.LocalPlayer;
             if (localIsLawyer || (localIsKnowingTarget && !Lawyer.lawyer.Data.IsDead)) {
                 string suffix = Helpers.cs(Lawyer.color, " §");
-                Lawyer.target.nameText.text += suffix;
+                if (!Helpers.hidePlayerName(Lawyer.target))
+                    Lawyer.target.nameText.text += suffix;
 
                 if (meetingShow)
                     foreach (PlayerVoteArea player in MeetingHud.Instance.playerStates)
@@ -306,14 +312,16 @@ namespace TheOtherRoles.Patches {
             if (growingProgress != 1f)
                 suffix = " <color=#FAD934FF>(" + Mathf.FloorToInt(growingProgress * 18) + ")</color>"; 
 
-            Mini.mini.nameText.text += suffix;
+            if (!Helpers.hidePlayerName(Mini.mini))
+                Mini.mini.nameText.text += suffix;
+
             if (MeetingHud.Instance != null) {
                 foreach (PlayerVoteArea player in MeetingHud.Instance.playerStates)
                     if (player.NameText != null && Mini.mini.PlayerId == player.TargetPlayerId)
                         player.NameText.text += suffix;
             }
 
-            if (Morphling.morphling != null && Morphling.morphTarget == Mini.mini && Morphling.morphTimer > 0f)
+            if (Morphling.morphling != null && Morphling.morphTarget == Mini.mini && Morphling.morphTimer > 0f && !Helpers.hidePlayerName(Morphling.morphling))
                 Morphling.morphling.nameText.text += suffix;
         }
 

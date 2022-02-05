@@ -573,7 +573,7 @@ namespace TheOtherRoles.Patches
                     }
 
                     playerInfo.text = playerInfoText;
-                    playerInfo.gameObject.SetActive(p.Visible);
+                    playerInfo.gameObject.SetActive(p.Visible && !Helpers.hidePlayerName(p));
                     if (meetingInfo != null) meetingInfo.text = MeetingHud.Instance.state == MeetingHud.VoteStates.Results ? "" : meetingInfoText;
                 }
             }
@@ -640,7 +640,7 @@ namespace TheOtherRoles.Patches
                 {
                     bool arrowForImp = p.Data.Role.IsImpostor;
                     bool arrowForTeamJackal = Snitch.includeTeamJackal && (p == Jackal.jackal || p == Sidekick.sidekick);
-                    bool arrowForFox = p.isRole(RoleId.Fox) || p.isRole(RoleId.Immoralist);
+                    bool arrowForFox = p.isRole(RoleType.Fox) || p.isRole(RoleType.Immoralist);
 
                     // Update the arrows' color every time bc things go weird when you add a sidekick or someone dies
                     Color c = Palette.ImpostorRed;
@@ -848,6 +848,12 @@ namespace TheOtherRoles.Patches
             {
                 PlayerControl pc = Helpers.playerById(playerID);
                 PoolablePlayer pp = MapOptions.playerIcons[playerID];
+                if (pc.Data.Disconnected)
+                {
+                    pp.gameObject.SetActive(false);
+                    continue;
+                }
+
                 pp.gameObject.SetActive(showIcon);
                 if (pc.Data.IsDead)
                 {

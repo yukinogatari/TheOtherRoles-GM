@@ -36,7 +36,7 @@ namespace TheOtherRoles.Patches
                 return true;
             }
 
-            if (pc.isRole(RoleId.Fox) && (isLights || isComms || isReactor || isO2))
+            if (pc.isRole(RoleType.Fox) && (isLights || isComms || isReactor || isO2))
             {
                 if(isLights|| isComms)
                 {
@@ -341,7 +341,7 @@ namespace TheOtherRoles.Patches
                 }
 
                 // Deactivate emergency button for FortuneTeller
-                if (PlayerControl.LocalPlayer.isRole(RoleId.FortuneTeller) && FortuneTeller.isCompletedNumTasks(PlayerControl.LocalPlayer))
+                if (PlayerControl.LocalPlayer.isRole(RoleType.FortuneTeller) && FortuneTeller.isCompletedNumTasks(PlayerControl.LocalPlayer))
                 {
                     roleCanCallEmergency = false;
                     statusText = ModTranslation.getString("占い師は会議ボタンを押せない");

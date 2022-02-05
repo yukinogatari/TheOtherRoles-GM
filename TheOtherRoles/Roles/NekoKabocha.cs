@@ -32,7 +32,7 @@ namespace TheOtherRoles
         
         public override void OnDeath(PlayerControl killer = null)
         {
-            if (killer != null && killer.isAlive())
+            if (killer != null && killer != player && killer.isAlive() && !killer.isGM())
             {
                 if ((revengeCrew && killer.isCrew()) ||
                     (revengeNeutral && killer.isNeutral()) ||

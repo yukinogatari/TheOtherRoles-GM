@@ -24,17 +24,25 @@ namespace TheOtherRoles
     {
         public static Dictionary<RoleType, Type> allRoleTypes = new Dictionary<RoleType, Type>
         {
+            // Crew
             { RoleType.Sheriff, typeof(RoleBase<Sheriff>) },
             { RoleType.Lighter, typeof(RoleBase<Lighter>) },
+            { RoleType.FortuneTeller, typeof(RoleBase<FortuneTeller>) },
+            { RoleType.Madmate, typeof(RoleBase<Madmate>) },
+
+            // Impostor
             { RoleType.Ninja, typeof(RoleBase<Ninja>) },
             { RoleType.NekoKabocha, typeof(RoleBase<NekoKabocha>) },
-            { RoleType.Watcher, typeof(RoleBase<Watcher>) },
-            { RoleType.Madmate, typeof(RoleBase<Madmate>) },
+            { RoleType.SerialKiller, typeof(RoleBase<SerialKiller>) },
+
+            // Neutral
             { RoleType.Opportunist, typeof(RoleBase<Opportunist>) },
             { RoleType.PlagueDoctor, typeof(RoleBase<PlagueDoctor>) },
             { RoleType.Fox, typeof(RoleBase<Fox>) },
             { RoleType.Immoralist, typeof(RoleBase<Immoralist>) },
-            { RoleType.FortuneTeller, typeof(RoleBase<FortuneTeller>) },
+
+            // Other
+            { RoleType.Watcher, typeof(RoleBase<Watcher>) },
         };
     }
 

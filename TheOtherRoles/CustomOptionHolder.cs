@@ -513,26 +513,26 @@ namespace TheOtherRoles {
             plagueDoctorWinDead = CustomOption.Create(908, "plagueDoctorWinDead", true, plagueDoctorSpawnRate);
 
 
-            foxSpawnRate = new CustomRoleOption(910, "妖狐", Fox.color, 1);
-            foxCanFixReactorAndO2 = CustomOption.Create(911, "リアクターとO2を直せる", false, foxSpawnRate);
-            foxCrewWinsByTasks= CustomOption.Create(912, "クルーはタスクで勝利する", true, foxSpawnRate);
-            foxNumCommonTasks = CustomOption.Create(913, "コモンタスク数", 2f, 0f, 4f, 1f, foxSpawnRate);
-            foxNumLongTasks = CustomOption.Create(914, "ロングタスク数", 2f, 0f, 4f, 1f, foxSpawnRate);
-            foxNumShortTasks = CustomOption.Create(915, "ショートタスク数", 2f, 0f, 4f, 1f, foxSpawnRate);
-            foxStealthCooldown = CustomOption.Create(916, "透明クールダウン", 15f, 1f, 30f, 1f, foxSpawnRate);
-            foxStealthDuration = CustomOption.Create(917, "透明時間", 15f, 1f, 30f, 1f, foxSpawnRate);
-            foxCanCreateImmoralist = CustomOption.Create(918, "背徳者を作れる", true, foxSpawnRate);
-            foxNumRepair = CustomOption.Create(919, "リペア回数", 1f, 0f, 5f, 1f, foxSpawnRate);
-
-
-            fortuneTellerSpawnRate = new CustomRoleOption(940, "占い師", FortuneTeller.color, 1);
-            fortuneTellerNumTasks = CustomOption.Create(941, "占いに必要なタスク数", 4f, 1f, 10f, 1f, fortuneTellerSpawnRate);
-            fortuneTellerResultIsCrewOrNot = CustomOption.Create(942, "占い結果が白黒のみ ", true, fortuneTellerSpawnRate);
-            fortuneTellerDuration = CustomOption.Create(943, "接触時間 ", 20f, 1f, 50f, 0.5f, fortuneTellerSpawnRate);
-            fortuneTellerDistance = CustomOption.Create(944, "接触判定距離 ", 2.5f, 1f, 10f, 0.5f, fortuneTellerSpawnRate, format: "unitMeters");
-
-
             watcherSpawnRate = new CustomDualRoleOption(1040, "watcher", Watcher.color, RoleType.Watcher, 15);
+
+
+            foxSpawnRate = new CustomRoleOption(910, "fox", Fox.color, 1);
+            foxCanFixReactorAndO2 = CustomOption.Create(911, "foxCanFixReactorAndO2", false, foxSpawnRate);
+            foxCrewWinsByTasks = CustomOption.Create(912, "foxCrewWinsByTasks", true, foxSpawnRate);
+            foxNumCommonTasks = CustomOption.Create(913, "foxNumCommonTasks", 2f, 0f, 4f, 1f, foxSpawnRate);
+            foxNumLongTasks = CustomOption.Create(914, "foxNumLongTasks", 2f, 0f, 4f, 1f, foxSpawnRate);
+            foxNumShortTasks = CustomOption.Create(915, "foxNumShortTasks", 2f, 0f, 4f, 1f, foxSpawnRate);
+            foxStealthCooldown = CustomOption.Create(916, "foxStealthCooldown", 15f, 1f, 30f, 1f, foxSpawnRate);
+            foxStealthDuration = CustomOption.Create(917, "foxStealthDuration", 15f, 1f, 30f, 1f, foxSpawnRate);
+            foxCanCreateImmoralist = CustomOption.Create(918, "foxCanCreateImmoralist", true, foxSpawnRate);
+            foxNumRepair = CustomOption.Create(919, "foxNumRepair", 1f, 0f, 5f, 1f, foxSpawnRate);
+
+
+            fortuneTellerSpawnRate = new CustomRoleOption(940, "fortuneTeller", FortuneTeller.color, 1);
+            fortuneTellerNumTasks = CustomOption.Create(941, "fortuneTellerNumTasks", 4f, 1f, 10f, 1f, fortuneTellerSpawnRate);
+            fortuneTellerResultIsCrewOrNot = CustomOption.Create(942, "fortuneTellerResultIsCrewOrNot ", true, fortuneTellerSpawnRate);
+            fortuneTellerDuration = CustomOption.Create(943, "fortuneTellerDuration ", 20f, 1f, 50f, 0.5f, fortuneTellerSpawnRate, format: "unitSeconds");
+            fortuneTellerDistance = CustomOption.Create(944, "fortuneTellerDistance ", 2.5f, 1f, 10f, 0.5f, fortuneTellerSpawnRate, format: "unitMeters");
 
 
             mayorSpawnRate = new CustomRoleOption(80, "mayor", Mayor.color, 1);

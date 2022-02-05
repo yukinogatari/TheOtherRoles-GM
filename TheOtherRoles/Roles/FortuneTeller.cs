@@ -14,7 +14,7 @@ namespace TheOtherRoles
     [HarmonyPatch]
     public class FortuneTeller : RoleBase<FortuneTeller>
     {
-        public static Color color = Color.cyan;
+        public static Color color = new Color32(175, 198, 241, byte.MaxValue);
         public static int numUsed = 0;
         public static int numTasks {get { return (int)CustomOptionHolder.fortuneTellerNumTasks.getFloat();}}
         public static bool resultIsCrewOrNot {get { return CustomOptionHolder.fortuneTellerResultIsCrewOrNot.getBool();}}
@@ -30,7 +30,7 @@ namespace TheOtherRoles
 
         public FortuneTeller()
         {
-            RoleType = roleId = RoleId.FortuneTeller;
+            RoleType = roleId = RoleType.FortuneTeller;
         }
 
         public override void OnMeetingStart()
@@ -105,7 +105,7 @@ namespace TheOtherRoles
                 return () =>
                 {
                     var p = PlayerControl.LocalPlayer;
-                    if (!p.isRole(RoleId.FortuneTeller)) return false;
+                    if (!p.isRole(RoleType.FortuneTeller)) return false;
                     if (p.CanMove && p.isAlive() & p.PlayerId != index
                         && MapOptions.playerIcons.ContainsKey(index) && isCompletedNumTasks(p) && numUsed < 1)
                     {
@@ -150,7 +150,7 @@ namespace TheOtherRoles
                     //　占い師以外の場合、リソースがない場合はボタンを表示しない
                     var p = Helpers.playerById(index);
                     if (!MapOptions.playerIcons.ContainsKey(index) ||
-                        !PlayerControl.LocalPlayer.isRole(RoleId.FortuneTeller)) 
+                        !PlayerControl.LocalPlayer.isRole(RoleType.FortuneTeller)) 
                     {
                         return false;
                     }
@@ -214,7 +214,7 @@ namespace TheOtherRoles
         private static void fortuneTellerUpdate()
         {
             if(meetingFlag) return;
-            if(!PlayerControl.LocalPlayer.isRole(RoleId.FortuneTeller)) return;
+            if(!PlayerControl.LocalPlayer.isRole(RoleType.FortuneTeller)) return;
 
             foreach (PlayerControl p in PlayerControl.AllPlayerControls)
             {
@@ -257,7 +257,7 @@ namespace TheOtherRoles
                     if(p.Data.IsDead) continue;
                     Arrow arrow;
                     // float distance = Vector2.Distance(p.transform.position, PlayerControl.LocalPlayer.transform.position);
-                    if(p.isRole(RoleId.FortuneTeller)){
+                    if(p.isRole(RoleType.FortuneTeller)){
                         arrow = new Arrow(FortuneTeller.color);
                         arrow.arrow.SetActive(true);
                         arrow.Update(p.transform.position);

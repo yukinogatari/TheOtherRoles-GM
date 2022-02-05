@@ -616,13 +616,13 @@ namespace TheOtherRoles
                     case RoleType.SerialKiller:
                         SerialKiller.swapRole(player, oldShifter);
                         break;
-                    case RoleId.Fox:
+                    case RoleType.Fox:
                         Fox.swapRole(player, oldShifter);
                         break;
-                    case RoleId.Immoralist:
+                    case RoleType.Immoralist:
                         Immoralist.swapRole(player, oldShifter);
                         break;
-                    case RoleId.FortuneTeller:
+                    case RoleType.FortuneTeller:
                         FortuneTeller.swapRole(player, oldShifter);
                         break;
                 }
@@ -708,14 +708,14 @@ namespace TheOtherRoles
 
             if (!Jackal.canCreateSidekickFromImpostor && player.Data.Role.IsImpostor) {
                 Jackal.fakeSidekick = player;
-            }else if (!Jackal.canCreateSidekickFromFox && player.isRole(RoleId.Fox)){
+            }else if (!Jackal.canCreateSidekickFromFox && player.isRole(RoleType.Fox)){
                 Jackal.fakeSidekick = player;
             }else {
                 DestroyableSingleton<RoleManager>.Instance.SetRole(player, RoleTypes.Crewmate);
                 erasePlayerRoles(player.PlayerId, true);
                 Sidekick.sidekick = player;
                 // 狐が一人もいなくなったら背徳者は死亡する
-                if(!Fox.isFoxAlive())
+                if(Fox.exists && !Fox.isFoxAlive())
                 {
                     foreach(var immoralist in Immoralist.allPlayers)
                     {
@@ -1038,7 +1038,7 @@ namespace TheOtherRoles
             PlayerControl player = Helpers.playerById(targetId);
             DestroyableSingleton<RoleManager>.Instance.SetRole(player, RoleTypes.Crewmate);
             erasePlayerRoles(player.PlayerId, true);
-            player.setRole(RoleId.Immoralist);
+            player.setRole(RoleType.Immoralist);
             player.clearAllTasks();
         }
 
@@ -1161,9 +1161,9 @@ namespace TheOtherRoles
             if (target == null) return;
             if (target.isDead()) return;
             // 呪殺
-            if(target.isRole(RoleId.Fox)){
+            if(target.isRole(RoleType.Fox)){
                 KillAnimationCoPerformKillPatch.hideNextAnimation = true;
-                if(PlayerControl.LocalPlayer.isRole(RoleId.FortuneTeller))
+                if(PlayerControl.LocalPlayer.isRole(RoleType.FortuneTeller))
                 {
                     // 狐を殺せたことを分からなくするためにキル音を鳴らさないための処置
                     target.MurderPlayer(target);
@@ -1179,7 +1179,7 @@ namespace TheOtherRoles
                 FortuneTeller.impostorArrowFlag = true;
             }
             // 占われたのが背徳者の場合は通知を表示
-            if(target.isRole(RoleId.Immoralist) && PlayerControl.LocalPlayer.isRole(RoleId.Immoralist))
+            if(target.isRole(RoleType.Immoralist) && PlayerControl.LocalPlayer.isRole(RoleType.Immoralist))
             {
                 FortuneTeller.fortuneTellerMessage("占い師に占われた", 5f, Color.white);
             }
@@ -1423,17 +1423,18 @@ namespace TheOtherRoles
                     case (byte)CustomRPC.SerialKillerSuicide:
                         RPCProcedure.serialKillerSuicide(reader.ReadByte());
                         break;
-                case (byte)CustomRPC.FortuneTellerUsedDivine:
-                    byte fId = reader.ReadByte();
-                    byte tId = reader.ReadByte();
-                    RPCProcedure.fortuneTellerUsedDivine(fId, tId);
-                    break;    
-                case (byte)CustomRPC.FoxStealth:
-                    RPCProcedure.foxStealth(reader.ReadByte(), reader.ReadBoolean());
-                    break;
-                case (byte)CustomRPC.FoxCreatesImmoralist:
-                    RPCProcedure.foxCreatesImmoralist(reader.ReadByte());
-                    break;
+                    case (byte)CustomRPC.FortuneTellerUsedDivine:
+                        byte fId = reader.ReadByte();
+                        byte tId = reader.ReadByte();
+                        RPCProcedure.fortuneTellerUsedDivine(fId, tId);
+                        break;
+                    case (byte)CustomRPC.FoxStealth:
+                        RPCProcedure.foxStealth(reader.ReadByte(), reader.ReadBoolean());
+                        break;
+                    case (byte)CustomRPC.FoxCreatesImmoralist:
+                        RPCProcedure.foxCreatesImmoralist(reader.ReadByte());
+                        break;
+                }
             }
         }
     }

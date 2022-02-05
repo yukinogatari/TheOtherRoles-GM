@@ -42,7 +42,7 @@ namespace TheOtherRoles
         {
             stealthed = false;
             stealthedAt = DateTime.UtcNow;
-            RoleType = roleId = RoleId.Fox;
+            RoleType = roleId = RoleType.Fox;
             numRepair = optNumRepair;
             immoralist = null;
             currentTarget = null;
@@ -83,7 +83,7 @@ namespace TheOtherRoles
 
         public override void FixedUpdate()
         {
-            if(PlayerControl.LocalPlayer.isRole(RoleId.Fox))
+            if(PlayerControl.LocalPlayer.isRole(RoleType.Fox))
             {
                 arrowUpdate();
             }
@@ -92,7 +92,7 @@ namespace TheOtherRoles
                 List<PlayerControl> untargetablePlayers =  new List<PlayerControl>();
                 foreach(var p in PlayerControl.AllPlayerControls)
                 {
-                    if(p.isImpostor() || p.isRole(RoleId.Jackal) || p.isRole(RoleId.Sheriff))
+                    if(p.isImpostor() || p.isRole(RoleType.Jackal) || p.isRole(RoleType.Sheriff))
                     {
                         untargetablePlayers.Add(p);
                     }
@@ -181,7 +181,7 @@ namespace TheOtherRoles
                     AmongUsClient.Instance.FinishRpcImmediately(writer);
                     RPCProcedure.foxStealth(PlayerControl.LocalPlayer.PlayerId, true);
                 },
-                () => { return PlayerControl.LocalPlayer.isRole(RoleId.Fox) && !PlayerControl.LocalPlayer.Data.IsDead; },
+                () => { return PlayerControl.LocalPlayer.isRole(RoleType.Fox) && !PlayerControl.LocalPlayer.Data.IsDead; },
                 () => {
                     if (foxButton.isEffectActive)
                     {
@@ -258,7 +258,7 @@ namespace TheOtherRoles
                     }
                     numRepair -= 1;
                 },
-                () => { return PlayerControl.LocalPlayer.isRole(RoleId.Fox)  && PlayerControl.LocalPlayer.isAlive() && numRepair > 0; },
+                () => { return PlayerControl.LocalPlayer.isRole(RoleType.Fox)  && PlayerControl.LocalPlayer.isAlive() && numRepair > 0; },
                 () =>
                 {
                     bool sabotageActive = false;
@@ -284,7 +284,7 @@ namespace TheOtherRoles
                     AmongUsClient.Instance.FinishRpcImmediately(writer);
                     RPCProcedure.foxCreatesImmoralist(currentTarget.PlayerId);
                 },
-                () => { return !Immoralist.exists && canCreateImmoralist && PlayerControl.LocalPlayer.isRole(RoleId.Fox) && PlayerControl.LocalPlayer.isAlive(); },
+                () => { return !Immoralist.exists && canCreateImmoralist && PlayerControl.LocalPlayer.isRole(RoleType.Fox) && PlayerControl.LocalPlayer.isAlive(); },
                 () => { return canCreateImmoralist && Fox.currentTarget != null && PlayerControl.LocalPlayer.CanMove; },
                 () => { foxImmoralistButton.Timer = 20; },
                 getImmoralistButtonSprite(),
@@ -318,13 +318,13 @@ namespace TheOtherRoles
                     if(p.Data.IsDead) continue;
                     Arrow arrow;
                     // float distance = Vector2.Distance(p.transform.position, PlayerControl.LocalPlayer.transform.position);
-                    if(p.Data.Role.IsImpostor || p.isRole(RoleId.Jackal) || p.isRole(RoleId.Sheriff)){
+                    if(p.Data.Role.IsImpostor || p.isRole(RoleType.Jackal) || p.isRole(RoleType.Sheriff)){
                         if(p.Data.Role.IsImpostor){
                             arrow = new Arrow(Color.red);
                         }
-                        else if(p.isRole(RoleId.Jackal)){
+                        else if(p.isRole(RoleType.Jackal)){
                             arrow = new Arrow(Jackal.color);
-                        }else if(p.isRole(RoleId.Sheriff)){
+                        }else if(p.isRole(RoleType.Sheriff)){
                             arrow = new Arrow(Sheriff.color);
                         }else{
                             arrow = new Arrow(Color.black);
@@ -439,7 +439,7 @@ namespace TheOtherRoles
         [HarmonyPatch(typeof(IntroCutscene), nameof(IntroCutscene.BeginCrewmate))]
         class BeginCrewmatePatch {
             public static void Postfix(IntroCutscene __instance, ref  Il2CppSystem.Collections.Generic.List<PlayerControl> yourTeam) {
-                if (PlayerControl.LocalPlayer.isRole(RoleId.Fox))
+                if (PlayerControl.LocalPlayer.isRole(RoleType.Fox))
                 {
                     SetFoxTasks();
                 }
@@ -457,7 +457,7 @@ namespace TheOtherRoles
                 {
                     GameData.PlayerInfo playerInfo = __instance.AllPlayers[i];
                     PlayerControl player = Helpers.playerById(playerInfo.PlayerId);
-                    if (player.isRole(RoleId.Fox))
+                    if (player.isRole(RoleType.Fox))
                     {
                         if (!playerInfo.Disconnected && playerInfo.Tasks != null && playerInfo.Object && (PlayerControl.GameOptions.GhostsDoTasks || !playerInfo.IsDead) && playerInfo.Role && playerInfo.Role.TasksCountTowardProgress)
                         {
@@ -480,7 +480,7 @@ namespace TheOtherRoles
         {
             static void Postfix(GameData __instance, PlayerControl pc, uint taskId)
             {
-                if (pc.isRole(RoleId.Fox))
+                if (pc.isRole(RoleType.Fox))
                 {
                     __instance.CompletedTasks--;
                 }
