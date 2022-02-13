@@ -1126,6 +1126,14 @@ namespace TheOtherRoles
         public static void plagueDoctorWin()
         {
             PlagueDoctor.triggerPlagueDoctorWin = true;
+            foreach (PlayerControl p in PlayerControl.AllPlayerControls)
+            {
+                if (!p.isRole(RoleType.PlagueDoctor) && p.isAlive())
+                {
+                    p.Exiled();
+                    finalStatuses[p.PlayerId] = FinalStatus.Diseased;
+                }
+            }
         }
 
         public static void plagueDoctorInfected(byte targetId)
@@ -1175,13 +1183,13 @@ namespace TheOtherRoles
             }
             // インポスターの場合は占い師の位置に矢印を表示
             if(PlayerControl.LocalPlayer.isImpostor()){
-                FortuneTeller.fortuneTellerMessage("占い師が占いを使った", 5f, Color.white);
+                FortuneTeller.fortuneTellerMessage("fortuneTellerDivinedSomeone", 5f, Color.white);
                 FortuneTeller.impostorArrowFlag = true;
             }
             // 占われたのが背徳者の場合は通知を表示
-            if(target.isRole(RoleType.Immoralist) && PlayerControl.LocalPlayer.isRole(RoleType.Immoralist))
+            if(target.isRole(RoleType.Immoralist) && target == PlayerControl.LocalPlayer)
             {
-                FortuneTeller.fortuneTellerMessage("占い師に占われた", 5f, Color.white);
+                FortuneTeller.fortuneTellerMessage("fortuneTellerDivinedYou", 5f, Color.white);
             }
         }
 

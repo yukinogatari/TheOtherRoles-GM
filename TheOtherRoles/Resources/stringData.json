@@ -1489,6 +1489,9 @@
         "0": "You crave blood",
         "11": "\u6bba\u4eba\u885d\u52d5\u304c\u6291\u3048\u3089\u308c\u306a\u3044"
     },
+    "serialKillerFullDesc": {
+        "11": "\u30fb\u30ad\u30eb\u30af\u30fc\u30eb\u304c\u30a4\u30f3\u30dd\u30b9\u30bf\u30fc\u3084\u30b8\u30e3\u30c3\u30ab\u30eb\u3088\u308a\u77ed\u3044\n\u30fb\u30ad\u30eb\u3092\u3057\u305f\u3089\u6b21\u306e\u30ad\u30eb\u307e\u3067\u306e\u6642\u9593\u304c\u8868\u793a\u3055\u308c\u6642\u9593\u5185\u306b\u30ad\u30eb\u3092\u3057\u306a\u3044\u3068\u81ea\u7206\u3059\u308b\n\u30fb\u30ad\u30eb\u3092\u3057\u7d9a\u3051\u308c\u3070\u81ea\u7206\u306f\u3057\u306a\u3044\n\u30fb\u4f1a\u8b70\u3067\u81ea\u7206\u30bf\u30a4\u30de\u30fc\u304c\u30ea\u30bb\u30c3\u30c8\u3055\u308c\u308b\uff08\u8a2d\u5b9a\u306b\u3088\u308b\uff09"
+    },
     "serialKillerKillCooldown": {
         "0": "Kill Cooldown",
         "11": "\u30ad\u30eb\u30af\u30fc\u30eb"
@@ -1500,6 +1503,38 @@
     "serialKillerResetTimer": {
         "0": "Reset Suicide Timer After Meetings",
         "11": "\u4f1a\u8b70\u5f8c\u3001\u81ea\u6bba\u30bf\u30a4\u30de\u30fc\u304c\u30ea\u30bb\u30c3\u30c8\u3055\u308c\u308b"
+    },
+    "nekoKabocha": {
+        "0": "Neko-Kabocha",
+        "11": "\u30cd\u30b3\u30ab\u30dc\u30c1\u30e3"
+    },
+    "nekoKabochaIntroDesc": {
+        "0": "You will never die alone",
+        "11": "\u72ec\u308a\u3067\u306f\u7d76\u5bfe\u306b\u6b7b\u306d\u306a\u3044"
+    },
+    "nekoKabochaShortDesc": {
+        "0": "You will never die alone",
+        "11": "\u72ec\u308a\u3067\u306f\u7d76\u5bfe\u306b\u6b7b\u306d\u306a\u3044"
+    },
+    "nekoKabochaFullDesc": {
+        "0": "An Impostor capable of revenge-killing their killer.",
+        "11": "\u30fb\u6bba\u5bb3\u3055\u308c\u305f\u5834\u5408\u306e\u307f\u6bba\u5bb3\u3057\u305f\u30d7\u30ec\u30a4\u30e4\u30fc\u3092\u9053\u9023\u308c\u306b\u3059\u308b\n\n\u4ee5\u4e0b\u306f\u8a2d\u5b9a\u306b\u3088\u3063\u3066\u5909\u66f4\u53ef\u80fd\n\u30fb\u30af\u30eb\u30fc\u9663\u55b6\uff08\u30b7\u30a7\u30ea\u30d5\u7b49\uff09\u306b\u6bba\u3055\u308c\u305f\u5834\u5408\u3001\u9053\u9023\u308c\u304c\u767a\u751f\u3059\u308bor\u3057\u306a\u3044\n\u30fb\u30a4\u30f3\u30dd\u30b9\u30bf\u30fc\u9663\u55b6\uff08\u30b9\u30d1\u30a4\u304c\u3044\u308b\u6642\uff09\u306b\u6bba\u3055\u308c\u305f\u5834\u5408\u3001\u9053\u9023\u308c\u304c\u767a\u751f\u3059\u308bor\u3057\u306a\u3044\n\u30fb\u305d\u306e\u4ed6\u9663\u55b6\uff08\u30b8\u30e3\u30c3\u30ab\u30eb\u7b49\uff09\u306b\u6bba\u5bb3\u3055\u308c\u305f\u5834\u5408\u3001\u9053\u9023\u308c\u304c\u767a\u751f\u3059\u308bor\u3057\u306a\u3044 "
+    },
+    "nekoKabochaRevengeCrew": {
+        "0": "Take Revenge on Crew Killer",
+        "11": "\u30af\u30eb\u30fc\u306b\u6bba\u3055\u308c\u305f\u3089\u3001\u9053\u9023\u308c\u306b\u3059\u308b"
+    },
+    "nekoKabochaRevengeNeutral": {
+        "0": "Take Revenge on Neutral Killer",
+        "11": "\u305d\u306e\u4ed6\u9663\u55b6\u306b\u6bba\u3055\u308c\u305f\u3089\u3001\u9053\u9023\u308c\u306b\u3059\u308b"
+    },
+    "nekoKabochaRevengeImpostor": {
+        "0": "Take Revenge on Impostor Killer",
+        "11": "\u30a4\u30f3\u30dd\u30b9\u30bf\u30fc\u306b\u6bba\u3055\u308c\u305f\u3089\u3001\u9053\u9023\u308c\u306b\u3059\u308b"
+    },
+    "nekoKabochaRevengeExile": {
+        "0": "Take Revenge When Exiled",
+        "11": "\u8ffd\u653e\u3055\u308c\u305f\u3089\u3001\u30e9\u30f3\u30c0\u30e0\u306b\u9053\u9023\u308c\u306b\u3059\u308b"
     },
     "husk": {
         "0": "Husk",
@@ -1564,6 +1599,10 @@
     "parallelMedbayScans": {
         "0": "Allow Parallel MedBay Scans",
         "11": "\u30e1\u30c3\u30c9\u30d9\u30a4\u30b9\u30ad\u30e3\u30f3\u540c\u6642\u4f7f\u7528\u53ef"
+    },
+    "hideOutOfSightNametags": {
+        "0": "Hide Out-Of-Sight Nametags",
+        "11": "\u8996\u754c\u5916\u306e\u30d7\u30ec\u30a4\u30e4\u30fc\u306e\u540d\u524d\u3092\u975e\u8868\u793a\u306b\u3059\u308b"
     },
     "restrictDevices": {
         "0": "Restrict Special Devices",
@@ -1725,6 +1764,10 @@
         "0": "Plague Doctor Wins",
         "11": "\u30da\u30b9\u30c8\u533b\u5e2b\u52dd\u5229"
     },
+    "everyoneDied": {
+        "0": "Everyone Died",
+        "11": "\u8ab0\u3082\u3044\u306a\u304f\u306a\u3063\u305f"
+    },
     "crewWinExtra": {
         "0": "Crewmates {0} Win",
         "11": "\u30af\u30eb\u30fc{0}\u52dd\u5229"
@@ -1824,6 +1867,10 @@
     "roleSummaryRevenge": {
         "0": "Revenge",
         "11": "\u9053\u9023\u308c"
+    },
+    "roleSummaryDiseased": {
+        "0": "Diseased",
+        "11": "\u75c5\u6b7b"
     },
     "roleSummaryDisconnected": {
         "0": "DC'd",
@@ -2363,96 +2410,127 @@
         "0": "VampireButton.png"
     },
     "CamoText": {
+        "0": "[BLANK]",
         "11": "\u30ab\u30e2"
     },
     "CleanText": {
+        "0": "[BLANK]",
         "11": "\u6383\u9664"
     },
     "CloseVentText": {
+        "0": "[BLANK]",
         "11": "\u5c01\u9396"
     },
     "CurseText": {
+        "0": "[BLANK]",
         "11": "\u546a\u3046"
     },
     "CurseKillText": {
+        "0": "[BLANK]",
         "11": "\u546a\u6bba"
     },
     "DouseText": {
+        "0": "[BLANK]",
         "11": "\u304b\u3051\u308b"
     },
     "EraserText": {
+        "0": "[BLANK]",
         "11": "\u524a\u9664"
     },
     "GarlicText": {
+        "0": "[BLANK]",
         "11": "\u30cb\u30f3\u30cb\u30af"
     },
     "HackerText": {
+        "0": "[BLANK]",
         "11": "\u30cf\u30c3\u30af"
     },
     "IgniteText": {
+        "0": "[BLANK]",
         "11": "\u7740\u706b"
     },
     "LighterText": {
+        "0": "[BLANK]",
         "11": "\u30e9\u30a4\u30c8"
     },
     "LightsOutText": {
+        "0": "[BLANK]",
         "11": "\u5f37\u5236\u505c\u96fb"
     },
     "MorphText": {
+        "0": "[BLANK]",
         "11": "\u5909\u8eab"
     },
     "PlaceCameraText": {
+        "0": "[BLANK]",
         "11": "\u8a2d\u7f6e"
     },
     "PlaceJackInTheBoxText": {
+        "0": "[BLANK]",
         "11": "\u8a2d\u7f6e"
     },
     "RepairText": {
+        "0": "[BLANK]",
         "11": "\u4fee\u5fa9"
     },
     "RewindText": {
+        "0": "[BLANK]",
         "11": "\u5dfb\u304d\u623b\u3059"
     },
     "SampleText": {
+        "0": "[BLANK]",
         "11": "\u30b5\u30f3\u30d7\u30eb"
     },
     "SeerText": {
+        "0": "[BLANK]",
         "11": "\u898b\u305b\u308b"
     },
     "ShieldText": {
+        "0": "[BLANK]",
         "11": "\u30b7\u30fc\u30eb\u30c9"
     },
     "ShiftText": {
+        "0": "[BLANK]",
         "11": "\u30b7\u30d5\u30c8"
     },
     "SidekickText": {
+        "0": "[BLANK]",
         "11": "\u30b5\u30a4\u30c9\u30ad\u30c3\u30af"
     },
     "TimeShieldText": {
+        "0": "[BLANK]",
         "11": "\u30b7\u30fc\u30eb\u30c9"
     },
     "TrackerText": {
+        "0": "[BLANK]",
         "11": "\u30c8\u30e9\u30c3\u30af"
     },
     "TricksterVentText": {
+        "0": "[BLANK]",
         "11": "\u30d9\u30f3\u30c8"
     },
     "VampireText": {
+        "0": "[BLANK]",
         "11": "\u565b\u3080"
     },
     "VultureText": {
+        "0": "[BLANK]",
         "11": "\u55b0\u3089\u3046"
     },
     "MediumText": {
+        "0": "[BLANK]",
         "11": "\u970a\u80fd\u529b"
     },
     "PathfindText": {
+        "0": "[BLANK]",
         "11": "\u63a2\u3059"
     },
     "PursuerText": {
+        "0": "[BLANK]",
         "11": "\u7a7a\u5305"
     },
     "WitchText": {
+        "0": "[BLANK]",
         "11": "\u9b54\u8853"
     },
     "NinjaText": {
@@ -2559,38 +2637,6 @@
         "0": "GM Edition Exclusive",
         "11": "GM\u30a8\u30c7\u30a3\u30b7\u30e7\u30f3\u9650\u5b9a"
     },
-    "nekoKabocha": {
-        "0": "Neko-Kabocha",
-        "11": "\u30cd\u30b3\u30ab\u30dc\u30c1\u30e3"
-    },
-    "nekoKabochaIntroDesc": {
-        "0": "You will never die alone",
-        "11": "\u72ec\u308a\u3067\u306f\u7d76\u5bfe\u306b\u6b7b\u306d\u306a\u3044"
-    },
-    "nekoKabochaShortDesc": {
-        "0": "You will never die alone",
-        "11": "\u72ec\u308a\u3067\u306f\u7d76\u5bfe\u306b\u6b7b\u306d\u306a\u3044"
-    },
-    "nekoKabochaFullDesc": {
-        "0": "An Impostor capable of revenge-killing their killer.",
-        "11": "\u30fb\u6bba\u3055\u308c\u305f\u3089\u3001\u6bba\u3057\u305f\u4eba\u3092\u9053\u9023\u308c\u306b\u3067\u304d\u308b\u30a4\u30f3\u30dd\u30b9\u30bf\u30fc"
-    },
-    "nekoKabochaRevengeCrew": {
-        "0": "Take Revenge on Crew Killer",
-        "11": "\u30af\u30eb\u30fc\u306b\u6bba\u3055\u308c\u305f\u3089\u3001\u9053\u9023\u308c\u306b\u3059\u308b"
-    },
-    "nekoKabochaRevengeNeutral": {
-        "0": "Take Revenge on Neutral Killer",
-        "11": "\u305d\u306e\u4ed6\u9663\u55b6\u306b\u6bba\u3055\u308c\u305f\u3089\u3001\u9053\u9023\u308c\u306b\u3059\u308b"
-    },
-    "nekoKabochaRevengeImpostor": {
-        "0": "Take Revenge on Impostor Killer",
-        "11": "\u30a4\u30f3\u30dd\u30b9\u30bf\u30fc\u306b\u6bba\u3055\u308c\u305f\u3089\u3001\u9053\u9023\u308c\u306b\u3059\u308b"
-    },
-    "nekoKabochaRevengeExile": {
-        "0": "Take Revenge When Exiled",
-        "11": "\u8ffd\u653e\u3055\u308c\u305f\u3089\u3001\u30e9\u30f3\u30c0\u30e0\u306b\u9053\u9023\u308c\u306b\u3059\u308b"
-    },
     "watcher": {
         "0": "Watcher",
         "11": "\u30a6\u30a9\u30c3\u30c1\u30e3\u30fc"
@@ -2626,10 +2672,6 @@
     "roleImpChance": {
         "0": "Impostor Chance",
         "11": "\u30a4\u30f3\u30dd\u30b9\u30bf\u30fc\u306b\u306a\u308b\u78ba\u7387"
-    },
-    "hideOutOfSightNametags": {
-        "0": "Hide Out-Of-Sight Nametags",
-        "11": "\u8996\u754c\u5916\u306e\u30d7\u30ec\u30a4\u30e4\u30fc\u306e\u540d\u524d\u3092\u975e\u8868\u793a\u306b\u3059\u308b"
     },
     "fox": {
         "0": "Fox",
@@ -2698,5 +2740,33 @@
     "fortuneTellerDistance": {
         "0": "Divination Range",
         "11": "\u63a5\u89e6\u5224\u5b9a\u8ddd\u96e2"
+    },
+    "fortuneTellerDivinedSomeone": {
+        "0": "Someone Was Just Divined",
+        "11": "\u5360\u3044\u5e2b\u304c\u8ab0\u304b\u3092\u5360\u3063\u305f"
+    },
+    "fortuneTellerDivinedYou": {
+        "0": "You Were Just Divined",
+        "11": "\u5360\u3044\u5e2b\u304c\u3042\u306a\u305f\u3092\u5360\u3063\u305f"
+    },
+    "divineCrew": {
+        "0": "Crewmate",
+        "11": "\u30af\u30eb\u30fc"
+    },
+    "divineNeutral": {
+        "0": "Neutral",
+        "11": "\u305d\u306e\u4ed6"
+    },
+    "divineImpostor": {
+        "0": "Impostor",
+        "11": "\u30a4\u30f3\u30dd\u30b9\u30bf\u30fc"
+    },
+    "divineMessageTeam": {
+        "0": "{0} is a(n) {1}",
+        "11": "{0} \u306f{1}\u9663\u55b6"
+    },
+    "divineMessageRole": {
+        "0": "{0}'s role is {1}",
+        "11": "{0} \u306e\u30ed\u30fc\u30eb\u306f\u306f\u300c{1}\u300d"
     }
 }

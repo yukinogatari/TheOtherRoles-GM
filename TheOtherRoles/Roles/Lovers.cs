@@ -109,7 +109,7 @@ namespace TheOtherRoles
         {
             get
             {
-                return !separateTeam || tasksCount;
+                return tasksCount;
             }
         }
 

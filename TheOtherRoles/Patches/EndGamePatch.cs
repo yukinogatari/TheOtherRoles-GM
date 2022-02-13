@@ -24,7 +24,7 @@ namespace TheOtherRoles.Patches
         VultureWin = 15,
         LawyerSoloWin = 16,
         PlagueDoctorWin = 17,
-        FoxWin = 18
+        FoxWin = 18,
     }
 
     enum WinCondition
@@ -43,7 +43,9 @@ namespace TheOtherRoles.Patches
         AdditionalLawyerStolenWin,
         AdditionalAlivePursuerWin,
         PlagueDoctorWin,
-        FoxWin
+        FoxWin,
+
+        EveryoneDied,
     }
 
     enum FinalStatus
@@ -57,6 +59,7 @@ namespace TheOtherRoles.Patches
         Suicide,
         Misfire,
         Revenge,
+        Diseased,
         GMExecuted,
         Disconnected
     }
@@ -134,7 +137,6 @@ namespace TheOtherRoles.Patches
             }
             AdditionalTempData.clear();
 
-
             //foreach (var pc in PlayerControl.AllPlayerControls)
             var hideRoles = new RoleType[] { RoleType.Lovers };
             foreach (var p in GameData.Instance.AllPlayers)
@@ -165,6 +167,7 @@ namespace TheOtherRoles.Patches
             AdditionalTempData.isGM = CustomOptionHolder.gmEnabled.getBool() && PlayerControl.LocalPlayer.isGM();
             AdditionalTempData.plagueDoctorInfected = PlagueDoctor.infected;
             AdditionalTempData.plagueDoctorProgress = PlagueDoctor.progress;
+
 
             // Remove Jester, Arsonist, Vulture, Jackal, former Jackals and Sidekick from winners (if they win, they'll be readded)
             List<PlayerControl> notWinners = new List<PlayerControl>();
@@ -216,10 +219,15 @@ namespace TheOtherRoles.Patches
             bool lawyerSoloWin = Lawyer.lawyer != null && gameOverReason == (GameOverReason)CustomGameOverReason.LawyerSoloWin;
             bool plagueDoctorWin = PlagueDoctor.exists && gameOverReason == (GameOverReason)CustomGameOverReason.PlagueDoctorWin;
             bool foxWin = Fox.exists && gameOverReason == (GameOverReason)CustomGameOverReason.FoxWin;
+            bool everyoneDead = AdditionalTempData.playerRoles.All(x => x.Status != FinalStatus.Alive);
 
-
+            if (everyoneDead && !plagueDoctorWin)
+            {
+                TempData.winners = new Il2CppSystem.Collections.Generic.List<WinningPlayerData>();
+                AdditionalTempData.winCondition = WinCondition.EveryoneDied;
+            }
             // Mini lose
-            if (miniLose)
+            else if (miniLose)
             {
                 TempData.winners = new Il2CppSystem.Collections.Generic.List<WinningPlayerData>();
                 WinningPlayerData wpd = new WinningPlayerData(Mini.mini.Data);
@@ -546,6 +554,12 @@ namespace TheOtherRoles.Patches
                         bonusText = "jackalWin";
                         textRenderer.color = Jackal.color;
                         __instance.BackgroundBar.material.SetColor("_Color", Jackal.color);
+                    }
+                    else if (AdditionalTempData.winCondition == WinCondition.EveryoneDied)
+                    {
+                        bonusText = "everyoneDied";
+                        textRenderer.color = Palette.DisabledGrey;
+                        __instance.BackgroundBar.material.SetColor("_Color", Palette.DisabledGrey);
                     }
                     else if (AdditionalTempData.winCondition == WinCondition.MiniLose)
                     {

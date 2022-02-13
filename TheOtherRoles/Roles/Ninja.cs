@@ -237,7 +237,7 @@ namespace TheOtherRoles
                 if (isRole(__instance.myPlayer))
                 {
                     var ninja = __instance.myPlayer;
-                    if (ninja == null) return;
+                    if (ninja == null || ninja.isDead()) return;
 
                     bool canSee = 
                         PlayerControl.LocalPlayer.isImpostor() ||
