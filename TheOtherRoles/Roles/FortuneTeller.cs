@@ -1,13 +1,10 @@
 using HarmonyLib;
 using Hazel;
 using System;
-using System.Linq;
 using System.Collections.Generic;
+using System.Linq;
 using TheOtherRoles.Objects;
 using UnityEngine;
-using static TheOtherRoles.TheOtherRoles;
-using static TheOtherRoles.Patches.PlayerControlFixedUpdatePatch;
-using System.Text.RegularExpressions;
 
 namespace TheOtherRoles
 {
@@ -16,10 +13,10 @@ namespace TheOtherRoles
     {
         public static Color color = new Color32(175, 198, 241, byte.MaxValue);
         public static int numUsed = 0;
-        public static int numTasks {get { return (int)CustomOptionHolder.fortuneTellerNumTasks.getFloat();}}
-        public static bool resultIsCrewOrNot {get { return CustomOptionHolder.fortuneTellerResultIsCrewOrNot.getBool();}}
-        public static float duration {get { return CustomOptionHolder.fortuneTellerDuration.getFloat();}}
-        public static float distance {get { return CustomOptionHolder.fortuneTellerDistance.getFloat();}}
+        public static int numTasks { get { return (int)CustomOptionHolder.fortuneTellerNumTasks.getFloat(); } }
+        public static bool resultIsCrewOrNot { get { return CustomOptionHolder.fortuneTellerResultIsCrewOrNot.getBool(); } }
+        public static float duration { get { return CustomOptionHolder.fortuneTellerDuration.getFloat(); } }
+        public static float distance { get { return CustomOptionHolder.fortuneTellerDistance.getFloat(); } }
 
         public static Dictionary<byte, float> progress = new Dictionary<byte, float>();
         public static bool impostorArrowFlag = false;
@@ -47,7 +44,7 @@ namespace TheOtherRoles
                     meetingFlag = false;
                 }
             })));
-            foreach(var p in PlayerControl.AllPlayerControls)
+            foreach (var p in PlayerControl.AllPlayerControls)
             {
                 playerStatus[p.PlayerId] = p.isAlive();
             }
@@ -66,12 +63,13 @@ namespace TheOtherRoles
         public static bool isCompletedNumTasks(PlayerControl p)
         {
             var (tasksCompleted, tasksTotal) = TasksHandler.taskInfo(p.Data);
-            return  tasksCompleted >= numTasks;
+            return tasksCompleted >= numTasks;
         }
         public static bool canDivine(byte index)
         {
             bool status = true;
-            if (playerStatus.ContainsKey(index)){
+            if (playerStatus.ContainsKey(index))
+            {
                 status = playerStatus[index];
             }
             return FortuneTeller.progress[index] >= FortuneTeller.duration || !status;
@@ -92,7 +90,7 @@ namespace TheOtherRoles
             {
                 return () =>
                 {
-                    if(PlayerControl.LocalPlayer.CanMove && numUsed < 1 && canDivine(index))
+                    if (PlayerControl.LocalPlayer.CanMove && numUsed < 1 && canDivine(index))
                     {
                         PlayerControl p = Helpers.playerById(index);
                         FortuneTeller.divine(p, resultIsCrewOrNot);
@@ -110,12 +108,12 @@ namespace TheOtherRoles
                         && MapOptions.playerIcons.ContainsKey(index) && isCompletedNumTasks(p) && numUsed < 1)
                     {
                         return true;
-                    } 
+                    }
                     else
                     {
-                        if(MapOptions.playerIcons.ContainsKey(index))
+                        if (MapOptions.playerIcons.ContainsKey(index))
                             MapOptions.playerIcons[index].gameObject.SetActive(false);
-                        if(fortuneTellerButtons.Count > index)
+                        if (fortuneTellerButtons.Count > index)
                             fortuneTellerButtons[index].setActive(false);
 
                         return false;
@@ -150,7 +148,7 @@ namespace TheOtherRoles
                     //　占い師以外の場合、リソースがない場合はボタンを表示しない
                     var p = Helpers.playerById(index);
                     if (!MapOptions.playerIcons.ContainsKey(index) ||
-                        !PlayerControl.LocalPlayer.isRole(RoleType.FortuneTeller)) 
+                        !PlayerControl.LocalPlayer.isRole(RoleType.FortuneTeller))
                     {
                         return false;
                     }
@@ -161,10 +159,11 @@ namespace TheOtherRoles
 
                     // ボタンにテキストを設定
                     bool status = true;
-                    if (playerStatus.ContainsKey(index)){
+                    if (playerStatus.ContainsKey(index))
+                    {
                         status = playerStatus[index];
                     }
-                    if(status)
+                    if (status)
                     {
                         fortuneTellerButtons[index].buttonText = $"{FortuneTeller.progress[index]:.0}/{FortuneTeller.duration}";
                     }
@@ -175,7 +174,7 @@ namespace TheOtherRoles
 
                     // アイコンの位置と透明度を変更
                     setIconPos(index, !canDivine(index));
-                    
+
                     return PlayerControl.LocalPlayer.CanMove && numUsed < 1 && canDivine(index);
                 };
             }
@@ -213,18 +212,18 @@ namespace TheOtherRoles
 
         private static void fortuneTellerUpdate()
         {
-            if(meetingFlag) return;
-            if(!PlayerControl.LocalPlayer.isRole(RoleType.FortuneTeller)) return;
+            if (meetingFlag) return;
+            if (!PlayerControl.LocalPlayer.isRole(RoleType.FortuneTeller)) return;
 
             foreach (PlayerControl p in PlayerControl.AllPlayerControls)
             {
-                if(!progress.ContainsKey(p.PlayerId)) progress[p.PlayerId] = 0f;
+                if (!progress.ContainsKey(p.PlayerId)) progress[p.PlayerId] = 0f;
                 if (p.isDead()) continue;
                 var fortuneTeller = PlayerControl.LocalPlayer;
                 float distance = Vector3.Distance(p.transform.position, fortuneTeller.transform.position);
                 // 障害物判定
                 bool anythingBetween = PhysicsHelpers.AnythingBetween(p.GetTruePosition(), fortuneTeller.GetTruePosition(), Constants.ShipAndObjectsMask, false);
-                if(!anythingBetween && distance <= FortuneTeller.distance && progress[p.PlayerId] < duration)
+                if (!anythingBetween && distance <= FortuneTeller.distance && progress[p.PlayerId] < duration)
                 {
                     progress[p.PlayerId] += Time.fixedDeltaTime;
                 }
@@ -235,16 +234,18 @@ namespace TheOtherRoles
         public static float updateTimer = 0f;
         public static void impostorArrowUpdate()
         {
-            if(!PlayerControl.LocalPlayer.isImpostor()) return;
-            else if(!impostorArrowFlag) return;
+            if (!PlayerControl.LocalPlayer.isImpostor()) return;
+            else if (!impostorArrowFlag) return;
             // 前フレームからの経過時間をマイナスする
             updateTimer -= Time.fixedDeltaTime;
 
             // 1秒経過したらArrowを更新
-            if(updateTimer <= 0.0f){
+            if (updateTimer <= 0.0f)
+            {
 
                 // 前回のArrowをすべて破棄する
-                foreach(Arrow arrow in arrows){
+                foreach (Arrow arrow in arrows)
+                {
                     arrow.arrow.SetActive(false);
                     UnityEngine.Object.Destroy(arrow.arrow);
                 }
@@ -253,11 +254,13 @@ namespace TheOtherRoles
                 arrows = new List<Arrow>();
 
                 // 占い師の位置を示すArrorwを描画
-                foreach(PlayerControl p in PlayerControl.AllPlayerControls){
-                    if(p.Data.IsDead) continue;
+                foreach (PlayerControl p in PlayerControl.AllPlayerControls)
+                {
+                    if (p.Data.IsDead) continue;
                     Arrow arrow;
                     // float distance = Vector2.Distance(p.transform.position, PlayerControl.LocalPlayer.transform.position);
-                    if(p.isRole(RoleType.FortuneTeller)){
+                    if (p.isRole(RoleType.FortuneTeller))
+                    {
                         arrow = new Arrow(FortuneTeller.color);
                         arrow.arrow.SetActive(true);
                         arrow.Update(p.transform.position);
@@ -268,12 +271,12 @@ namespace TheOtherRoles
                 // タイマーに時間をセット
                 updateTimer = 0.5f;
             }
-            
+
         }
         public static void Clear()
         {
             players = new List<FortuneTeller>();
-            progress = new Dictionary<byte,float>();
+            progress = new Dictionary<byte, float>();
             arrows = new List<Arrow>();
             impostorArrowFlag = false;
             numUsed = 0;
@@ -284,33 +287,43 @@ namespace TheOtherRoles
 
         public static void divine(PlayerControl p, bool isTwoSelections)
         {
-            string msg = "";
+            string msgBase = "";
+            string msgInfo = "";
             Color color = Color.white;
-            if(!isTwoSelections){
-                string roleNames = String.Join(" ", RoleInfo.getRoleInfoForPlayer(p).Select(x => Helpers.cs(x.color, x.name)).ToArray());
-                // roleNames = Regex.Replace(roleNames, "<[^>]*>", "");
-                msg = $"{p.name}は{roleNames}";
-            }else{
-                string ret;
-                if(p.isCrew())
+
+            if (!isTwoSelections)
+            {
+                msgBase = "divineMessageRole";
+                msgInfo = String.Join(" ", RoleInfo.getRoleInfoForPlayer(p).Select(x => Helpers.cs(x.color, x.name)).ToArray());
+            }
+            else
+            {
+                msgBase = "divineMessageTeam";
+                if (p.isCrew())
                 {
-                    ret = "クルー";
+                    msgInfo = ModTranslation.getString("divineCrew");
                     color = Color.white;
+                }
+                else if (p.isNeutral())
+                {
+                    msgInfo = ModTranslation.getString("divineNeutral");
+                    color = Color.yellow;
                 }
                 else
                 {
-                    ret = "クルー以外";
+                    msgInfo = ModTranslation.getString("divineImpostor");
                     color = Palette.ImpostorRed;
                 }
-                msg = $"{p.name}は{ret}";
             }
 
+            string msg = string.Format(ModTranslation.getString(msgBase), p.name, msgInfo);
             if (!string.IsNullOrWhiteSpace(msg))
-            {   
+            {
                 fortuneTellerMessage(msg, 5f, color);
-                
+
             }
-            if(Constants.ShouldPlaySfx()) SoundManager.Instance.PlaySound(DestroyableSingleton<HudManager>.Instance.TaskCompleteSound, false, 0.8f);
+
+            if (Constants.ShouldPlaySfx()) SoundManager.Instance.PlaySound(DestroyableSingleton<HudManager>.Instance.TaskCompleteSound, false, 0.8f);
             numUsed += 1;
 
             // 占いを実行したことで発火される処理を他クライアントに通知
@@ -323,11 +336,13 @@ namespace TheOtherRoles
 
 
         private static TMPro.TMP_Text text;
-        public static void fortuneTellerMessage(string message, float duration, Color color) {
-            RoomTracker roomTracker =  HudManager.Instance?.roomTracker;
-            if (roomTracker != null) {
+        public static void fortuneTellerMessage(string message, float duration, Color color)
+        {
+            RoomTracker roomTracker = HudManager.Instance?.roomTracker;
+            if (roomTracker != null)
+            {
                 GameObject gameObject = UnityEngine.Object.Instantiate(roomTracker.gameObject);
-                
+
                 gameObject.transform.SetParent(HudManager.Instance.transform);
                 UnityEngine.Object.DestroyImmediate(gameObject.GetComponent<RoomTracker>());
                 text = gameObject.GetComponent<TMPro.TMP_Text>();
@@ -338,8 +353,10 @@ namespace TheOtherRoles
                 text.text = message;
                 text.color = color;
 
-                HudManager.Instance.StartCoroutine(Effects.Lerp(duration, new Action<float>((p) => {
-                    if (p == 1f && text != null && text.gameObject != null) {
+                HudManager.Instance.StartCoroutine(Effects.Lerp(duration, new Action<float>((p) =>
+                {
+                    if (p == 1f && text != null && text.gameObject != null)
+                    {
                         UnityEngine.Object.Destroy(text.gameObject);
                     }
                 })));
@@ -351,7 +368,7 @@ namespace TheOtherRoles
         {
             public static void Prefix(IntroCutscene __instance)
             {
-                
+
                 HudManager.Instance.StartCoroutine(Effects.Lerp(20.0f, new Action<float>((p) =>
                 {
                     if (p == 1f)
@@ -367,7 +384,7 @@ namespace TheOtherRoles
 
             public static void Prefix(AmongUsClient __instance, [HarmonyArgument(0)] ref EndGameResult endGameResult)
             {
-                    FortuneTeller.endGameFlag = true;
+                FortuneTeller.endGameFlag = true;
             }
         }
     }
