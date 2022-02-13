@@ -600,6 +600,15 @@ namespace TheOtherRoles.Patches
             SecurityGuard.ventTarget = target;
         }
 
+        public static void securityGuardUpdate() {
+            if (SecurityGuard.securityGuard == null || PlayerControl.LocalPlayer != SecurityGuard.securityGuard || SecurityGuard.securityGuard.Data.IsDead) return;
+            var (playerCompleted, _) = TasksHandler.taskInfo(SecurityGuard.securityGuard.Data);
+            if (playerCompleted == SecurityGuard.rechargedTasks) {
+                SecurityGuard.rechargedTasks += SecurityGuard.rechargeTasksNumber;
+                if (SecurityGuard.maxCharges > SecurityGuard.charges) SecurityGuard.charges++;
+            }
+        }
+
         public static void arsonistSetTarget()
         {
             if (Arsonist.arsonist == null || Arsonist.arsonist != PlayerControl.LocalPlayer) return;
@@ -698,7 +707,7 @@ namespace TheOtherRoles.Patches
                 var possibleTargets = new List<PlayerControl>();
                 foreach (PlayerControl p in PlayerControl.AllPlayerControls)
                 {
-                    if (!p.Data.IsDead && !p.Data.Disconnected && !p.Data.Role.IsImpostor && p != Spy.spy && (p != Mini.mini || Mini.isGrownUp()) && !p.isGM()) possibleTargets.Add(p);
+                    if (!p.Data.IsDead && !p.Data.Disconnected && !p.Data.Role.IsImpostor && p != Spy.spy && (p != Mini.mini || Mini.isGrownUp()) && !p.isGM() && BountyHunter.bountyHunter.getPartner() != p) possibleTargets.Add(p);
                 }
                 BountyHunter.bounty = possibleTargets[TheOtherRoles.rnd.Next(0, possibleTargets.Count)];
                 if (BountyHunter.bounty == null) return;
@@ -985,6 +994,7 @@ namespace TheOtherRoles.Patches
                 sidekickCheckPromotion();
                 // SecurityGuard
                 securityGuardSetTarget();
+                securityGuardUpdate();
                 // Arsonist
                 arsonistSetTarget();
                 // Snitch

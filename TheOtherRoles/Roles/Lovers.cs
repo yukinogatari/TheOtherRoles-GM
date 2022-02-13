@@ -104,6 +104,7 @@ namespace TheOtherRoles
         // Making this closer to the au.libhalt.net version of Lovers
         public static bool separateTeam { get { return CustomOptionHolder.loversSeparateTeam.getBool(); } }
         public static bool tasksCount { get { return CustomOptionHolder.loversTasksCount.getBool(); } }
+        public static bool enableChat { get { return CustomOptionHolder.loversEnableChat.getBool(); } }
 
         public static bool hasTasks
         {

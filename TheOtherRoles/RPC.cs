@@ -96,6 +96,7 @@ namespace TheOtherRoles
         UncheckedCmdReportDeadBody,
         OverrideNativeRole,
         UncheckedExilePlayer,
+        DynamicMapOption,
 
         // Role functionality
 
@@ -278,6 +279,10 @@ namespace TheOtherRoles
         {
             PlayerControl target = Helpers.playerById(targetId);
             if (target != null) target.Exiled();
+        }
+
+        public static void dynamicMapOption(byte mapId) {
+            PlayerControl.GameOptions.MapId = mapId;
         }
 
         // Role functionality
@@ -714,7 +719,7 @@ namespace TheOtherRoles
                 DestroyableSingleton<RoleManager>.Instance.SetRole(player, RoleTypes.Crewmate);
                 erasePlayerRoles(player.PlayerId, true);
                 Sidekick.sidekick = player;
-                // 狐が一人もいなくなったら背徳者は死亡する
+                if (player.PlayerId == PlayerControl.LocalPlayer.PlayerId) PlayerControl.LocalPlayer.moveable = true; 
                 if(Fox.exists && !Fox.isFoxAlive())
                 {
                     foreach(var immoralist in Immoralist.allPlayers)
@@ -980,6 +985,14 @@ namespace TheOtherRoles
                         pva.SetDead(pva.DidReport, true);
                         pva.Overlay.gameObject.SetActive(true);
                     }
+
+                    //Give players back their vote if target is shot dead
+                    if (pva.VotedFor != dyingTargetId || pva.VotedFor != partnerId) continue;
+                    pva.UnsetVote();
+                    var voteAreaPlayer = Helpers.playerById(pva.TargetPlayerId);
+                    if (!voteAreaPlayer.AmOwner) continue;
+                    MeetingHud.Instance.ClearVote();
+
                 }
                 if (AmongUsClient.Instance.AmHost)
                     MeetingHud.Instance.CheckForEndVoting();
@@ -1268,6 +1281,10 @@ namespace TheOtherRoles
                         byte reportTarget = reader.ReadByte();
                         RPCProcedure.uncheckedCmdReportDeadBody(reportSource, reportTarget);
                         break;
+	                case (byte)CustomRPC.DynamicMapOption:
+	                    byte mapId = reader.ReadByte();
+	                    RPCProcedure.dynamicMapOption(mapId);
+	                    break;
 
                     // Role functionality
 

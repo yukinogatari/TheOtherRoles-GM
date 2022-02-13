@@ -279,7 +279,7 @@ namespace TheOtherRoles.Patches {
             }
 
             // Hacker and Detective
-            if (PlayerControl.LocalPlayer != null && PlayerControl.LocalPlayer.isAlive() && (PlayerControl.LocalPlayer == Hacker.hacker || PlayerControl.LocalPlayer == Detective.detective || PlayerControl.LocalPlayer == Medium.medium)) {
+            if (PlayerControl.LocalPlayer != null && MapOptions.showLighterDarker) {
                 if (meetingShow) {
                     foreach (PlayerVoteArea player in MeetingHud.Instance.playerStates) {
                         var target = Helpers.playerById(player.TargetPlayerId);

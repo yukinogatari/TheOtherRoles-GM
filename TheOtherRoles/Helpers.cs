@@ -364,7 +364,6 @@ namespace TheOtherRoles {
             if (source.isImpostor() && (target.isImpostor() || target.isRole(RoleType.Spy))) return false; // Members of team Impostors see the names of Impostors/Spies
             if (source.getPartner() == target) return false; // Members of team Lovers see the names of each other
             if ((source.isRole(RoleType.Jackal) || source.isRole(RoleType.Sidekick)) && (target.isRole(RoleType.Jackal) || target.isRole(RoleType.Sidekick) || target == Jackal.fakeSidekick)) return false; // Members of team Jackal see the names of each other
-            if ((source.isRole(RoleType.Fox) || source.isRole(RoleType.Immoralist)) && (target.isRole(RoleType.Fox) || target.isRole(RoleType.Immoralist))) return false; // Members of team Fox see the names of each other
             return true;
         }
 
