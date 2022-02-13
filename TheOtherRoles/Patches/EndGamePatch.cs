@@ -24,7 +24,6 @@ namespace TheOtherRoles.Patches
         VultureWin = 15,
         LawyerSoloWin = 16,
         PlagueDoctorWin = 17,
-        FoxWin = 18,
     }
 
     enum WinCondition
@@ -43,7 +42,6 @@ namespace TheOtherRoles.Patches
         AdditionalLawyerStolenWin,
         AdditionalAlivePursuerWin,
         PlagueDoctorWin,
-        FoxWin,
 
         EveryoneDied,
     }
@@ -115,26 +113,6 @@ namespace TheOtherRoles.Patches
         public static void Postfix(AmongUsClient __instance, [HarmonyArgument(0)] ref EndGameResult endGameResult)
         {
             var gameOverReason = AdditionalTempData.gameOverReason;
-            // 狐の勝利条件を満たしたか確認する
-            Boolean isFoxAlive = Fox.isFoxAlive();
-
-            Boolean isFoxCompletedTasks = Fox.isFoxCompletedTasks(); // 生存中の狐が1匹でもタスクを全て終えていること
-            if(isFoxAlive && isFoxCompletedTasks){
-                // タスク勝利の場合はオプションの設定次第
-                if(gameOverReason == GameOverReason.HumansByTask && !Fox.crewWinsByTasks)
-                {
-                    gameOverReason = (GameOverReason)CustomGameOverReason.FoxWin;
-                }
-                // 第三陣営の勝利以外の場合に狐が生存していたら狐の勝ち
-                else if(gameOverReason != (GameOverReason)CustomGameOverReason.PlagueDoctorWin &&
-                gameOverReason != (GameOverReason)CustomGameOverReason.ArsonistWin &&
-                gameOverReason != (GameOverReason)CustomGameOverReason.JesterWin &&
-                gameOverReason != (GameOverReason)CustomGameOverReason.VultureWin &&
-                gameOverReason != (GameOverReason)GameOverReason.HumansByTask)
-                {
-                    gameOverReason = (GameOverReason)CustomGameOverReason.FoxWin;
-                }
-            }
             AdditionalTempData.clear();
 
             //foreach (var pc in PlayerControl.AllPlayerControls)
@@ -183,8 +161,6 @@ namespace TheOtherRoles.Patches
             notWinners.AddRange(Madmate.allPlayers);
             notWinners.AddRange(Opportunist.allPlayers);
             notWinners.AddRange(PlagueDoctor.allPlayers);
-            notWinners.AddRange(Fox.allPlayers);
-            notWinners.AddRange(Immoralist.allPlayers);
 
             // Neutral shifter can't win
             if (Shifter.shifter != null && Shifter.isNeutral) notWinners.Add(Shifter.shifter);
@@ -218,7 +194,6 @@ namespace TheOtherRoles.Patches
             bool vultureWin = Vulture.vulture != null && gameOverReason == (GameOverReason)CustomGameOverReason.VultureWin;
             bool lawyerSoloWin = Lawyer.lawyer != null && gameOverReason == (GameOverReason)CustomGameOverReason.LawyerSoloWin;
             bool plagueDoctorWin = PlagueDoctor.exists && gameOverReason == (GameOverReason)CustomGameOverReason.PlagueDoctorWin;
-            bool foxWin = Fox.exists && gameOverReason == (GameOverReason)CustomGameOverReason.FoxWin;
             bool everyoneDead = AdditionalTempData.playerRoles.All(x => x.Status != FinalStatus.Alive);
 
             if (everyoneDead && !plagueDoctorWin)
@@ -330,21 +305,6 @@ namespace TheOtherRoles.Patches
                     TempData.winners.Add(wpd);
                     AdditionalTempData.winCondition = WinCondition.PlagueDoctorWin;
                 }
-            }
-            else if (foxWin)
-            {
-                TempData.winners = new Il2CppSystem.Collections.Generic.List<WinningPlayerData>();
-                foreach (var fox in Fox.players)
-                {
-                    WinningPlayerData wpd = new WinningPlayerData(fox.player.Data);
-                    TempData.winners.Add(wpd);
-                }
-                foreach (var immoralist in Immoralist.players)
-                {
-                    WinningPlayerData wpd = new WinningPlayerData(immoralist.player.Data);
-                    TempData.winners.Add(wpd);
-                }
-                AdditionalTempData.winCondition = WinCondition.FoxWin;
             }
 
             // Madmate win with impostors
@@ -530,12 +490,6 @@ namespace TheOtherRoles.Patches
                         bonusText = "plagueDoctorWin";
                         textRenderer.color = PlagueDoctor.color;
                         __instance.BackgroundBar.material.SetColor("_Color", PlagueDoctor.color);
-                    }
-                    else if (AdditionalTempData.winCondition == WinCondition.FoxWin)
-                    {
-                        bonusText = "foxWin";
-                        textRenderer.color = Fox.color;
-                        __instance.BackgroundBar.material.SetColor("_Color", Fox.color);
                     }
                     else if (AdditionalTempData.winCondition == WinCondition.LoversTeamWin)
                     {
@@ -816,35 +770,6 @@ namespace TheOtherRoles.Patches
                         return true;
                     }
 
-                    if (Fox.exists)
-                    {
-                        // 狐生存かつタスク完了時に生存中のクルーがタスクを全て終わらせたら勝ち
-                        // 死んだプレイヤーが意図的にタスクを終了させないのを防止するため
-                        bool isFoxAlive = Fox.isFoxAlive();
-                        bool isFoxCompletedtasks = Fox.isFoxCompletedTasks();
-                        int numDeadPlayerUncompletedTasks = 0;
-                        foreach (var player in PlayerControl.AllPlayerControls)
-                        {
-                            foreach (var task in player.Data.Tasks)
-                            {
-                                if (player.Data.IsDead && player.isCrew() && !player.isRole(RoleType.Madmate))
-                                {
-                                    if (!task.Complete)
-                                    {
-                                        numDeadPlayerUncompletedTasks++;
-                                    }
-                                }
-                            }
-                        }
-
-                        if (isFoxCompletedtasks && isFoxAlive && GameData.Instance.TotalTasks > 0 && GameData.Instance.TotalTasks <= GameData.Instance.CompletedTasks + numDeadPlayerUncompletedTasks)
-                        {
-                            __instance.enabled = false;
-                            ShipStatus.RpcEndGame(GameOverReason.HumansByTask, false);
-                            return true;
-                        }
-                    }
-
                     return false;
                 }
 
@@ -861,7 +786,7 @@ namespace TheOtherRoles.Patches
 
                 private static bool CheckAndEndGameForJackalWin(ShipStatus __instance, PlayerStatistics statistics)
                 {
-                    if (statistics.TeamJackalAlive >= statistics.TotalAlive - statistics.TeamJackalAlive - statistics.FoxAlive && statistics.TeamImpostorsAlive == 0 && statistics.TeamJackalLovers >= statistics.CouplesAlive * 2)
+                    if (statistics.TeamJackalAlive >= statistics.TotalAlive - statistics.TeamJackalAlive && statistics.TeamImpostorsAlive == 0 && statistics.TeamJackalLovers >= statistics.CouplesAlive * 2)
                     {
                         __instance.enabled = false;
                         ShipStatus.RpcEndGame((GameOverReason)CustomGameOverReason.TeamJackalWin, false);
@@ -872,7 +797,7 @@ namespace TheOtherRoles.Patches
 
                 private static bool CheckAndEndGameForImpostorWin(ShipStatus __instance, PlayerStatistics statistics)
                 {
-                    if (statistics.TeamImpostorsAlive >= statistics.TotalAlive - statistics.TeamImpostorsAlive - statistics.FoxAlive && statistics.TeamJackalAlive == 0 && statistics.TeamImpostorLovers >= statistics.CouplesAlive * 2)
+                    if (statistics.TeamImpostorsAlive >= statistics.TotalAlive - statistics.TeamImpostorsAlive && statistics.TeamJackalAlive == 0 && statistics.TeamImpostorLovers >= statistics.CouplesAlive * 2)
                     {
                         __instance.enabled = false;
                         GameOverReason endReason;
@@ -925,7 +850,6 @@ namespace TheOtherRoles.Patches
                 public int TotalAlive { get; set; }
                 public int TeamImpostorLovers { get; set; }
                 public int TeamJackalLovers { get; set; }
-                public int FoxAlive { get; set; }
 
                 public PlayerStatistics(ShipStatus __instance)
                 {
@@ -1009,7 +933,6 @@ namespace TheOtherRoles.Patches
                     CouplesAlive = numCouplesAlive;
                     TeamImpostorLovers = impLovers;
                     TeamJackalLovers = jackalLovers;
-                    FoxAlive = Fox.livingPlayers.Count;
                 }
             }
         }

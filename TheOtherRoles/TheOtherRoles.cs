@@ -82,6 +82,7 @@ namespace TheOtherRoles
             public static bool triggerJesterWin = false;
             public static bool canCallEmergency = true;
             public static bool canSabotage = true;
+            public static bool hasImpostorVision = false;
 
             public static void clearAndReload()
             {
@@ -89,6 +90,7 @@ namespace TheOtherRoles
                 triggerJesterWin = false;
                 canCallEmergency = CustomOptionHolder.jesterCanCallEmergency.getBool();
                 canSabotage = CustomOptionHolder.jesterCanSabotage.getBool();
+                hasImpostorVision = CustomOptionHolder.jesterHasImpostorVision.getBool();
             }
         }
 
@@ -315,6 +317,7 @@ namespace TheOtherRoles
             public static int rechargedTasks = 2;
             public static int chargesVitals = 1;
             public static int chargesAdminTable = 1;
+        public static bool cantMove = true;
 
             private static Sprite buttonSprite;
             private static Sprite vitalsSprite;
@@ -365,6 +368,7 @@ namespace TheOtherRoles
                 rechargedTasks = Mathf.RoundToInt(CustomOptionHolder.hackerRechargeTasksNumber.getFloat());
                 chargesVitals = Mathf.RoundToInt(CustomOptionHolder.hackerToolsNumber.getFloat()) / 2;
                 chargesAdminTable = Mathf.RoundToInt(CustomOptionHolder.hackerToolsNumber.getFloat()) / 2;
+            cantMove = CustomOptionHolder.hackerNoMove.getBool();
             }
         }
 
@@ -553,7 +557,6 @@ namespace TheOtherRoles
             public static Sprite buttonSprite;
             public static bool jackalPromotedFromSidekickCanCreateSidekick = true;
             public static bool canCreateSidekickFromImpostor = true;
-            public static bool canCreateSidekickFromFox = true;
             public static bool hasImpostorVision = false;
 
             public static Sprite getSidekickButtonSprite()
@@ -793,7 +796,14 @@ namespace TheOtherRoles
             public static int ventPrice = 1;
             public static int camPrice = 2;
             public static int placedCameras = 0;
+        public static float duration = 10f;
+        public static int maxCharges = 5;
+        public static int rechargeTasksNumber = 3;
+        public static int rechargedTasks = 3;
+        public static int charges = 1;
+        public static bool cantMove = true;
             public static Vent ventTarget = null;
+        public static Minigame minigame = null;
 
             private static Sprite closeVentButtonSprite;
             public static Sprite getCloseVentButtonSprite()
@@ -827,15 +837,36 @@ namespace TheOtherRoles
                 return staticVentSealedSprite;
             }
 
+        private static Sprite camSprite;
+        public static Sprite getCamSprite() {
+            if (camSprite) return camSprite;
+            camSprite = HudManager.Instance.UseButton.fastUseSettings[ImageNames.CamsButton].Image;
+            return camSprite;
+        }
+
+        private static Sprite logSprite;
+        public static Sprite getLogSprite() {
+            if (logSprite) return logSprite;
+            logSprite = HudManager.Instance.UseButton.fastUseSettings[ImageNames.DoorLogsButton].Image;
+            return logSprite;
+        }
+
             public static void clearAndReload()
             {
                 securityGuard = null;
                 ventTarget = null;
+            minigame = null;
+            duration = CustomOptionHolder.securityGuardCamDuration.getFloat();
+            maxCharges = Mathf.RoundToInt(CustomOptionHolder.securityGuardCamMaxCharges.getFloat());
+            rechargeTasksNumber = Mathf.RoundToInt(CustomOptionHolder.securityGuardCamRechargeTasksNumber.getFloat());
+            rechargedTasks = Mathf.RoundToInt(CustomOptionHolder.securityGuardCamRechargeTasksNumber.getFloat());
+            charges = Mathf.RoundToInt(CustomOptionHolder.securityGuardCamMaxCharges.getFloat()) /2;
                 placedCameras = 0;
                 cooldown = CustomOptionHolder.securityGuardCooldown.getFloat();
                 totalScrews = remainingScrews = Mathf.RoundToInt(CustomOptionHolder.securityGuardTotalScrews.getFloat());
                 camPrice = Mathf.RoundToInt(CustomOptionHolder.securityGuardCamPrice.getFloat());
                 ventPrice = Mathf.RoundToInt(CustomOptionHolder.securityGuardVentPrice.getFloat());
+            cantMove = CustomOptionHolder.securityGuardNoMove.getBool();
             }
         }
 
@@ -948,7 +979,7 @@ namespace TheOtherRoles
             public static bool showInfoInGhostChat = true;
             public static bool killsThroughShield = true;
             public static bool evilGuesserCanGuessSpy = true;
-
+        public static bool guesserCantGuessSnitch = false;
             public static Sprite getTargetSprite()
             {
                 if (targetSprite) return targetSprite;
@@ -981,7 +1012,7 @@ namespace TheOtherRoles
             {
                 niceGuesser = null;
                 evilGuesser = null;
-
+            guesserCantGuessSnitch = CustomOptionHolder.guesserCantGuessSnitchIfTaksDone.getBool();
                 remainingShotsEvilGuesser = Mathf.RoundToInt(CustomOptionHolder.guesserNumberOfShots.getFloat());
                 remainingShotsNiceGuesser = Mathf.RoundToInt(CustomOptionHolder.guesserNumberOfShots.getFloat());
                 onlyAvailableRoles = CustomOptionHolder.guesserOnlyAvailableRoles.getBool();

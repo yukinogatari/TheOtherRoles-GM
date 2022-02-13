@@ -36,8 +36,6 @@ namespace TheOtherRoles
             PlagueDoctor.Clear();
             Lighter.Clear();
             SerialKiller.Clear();
-            Fox.Clear();
-            FortuneTeller.Clear();
             Role.ClearAll();
         }
 

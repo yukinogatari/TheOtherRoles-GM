@@ -87,12 +87,7 @@ namespace TheOtherRoles
         public static RoleInfo ninja = new RoleInfo("ninja", Ninja.color, CustomOptionHolder.ninjaSpawnRate, RoleType.Ninja);
         public static RoleInfo plagueDoctor = new RoleInfo("plagueDoctor", PlagueDoctor.color, CustomOptionHolder.plagueDoctorSpawnRate, RoleType.PlagueDoctor);
         public static RoleInfo nekoKabocha = new RoleInfo("nekoKabocha", NekoKabocha.color, CustomOptionHolder.nekoKabochaSpawnRate, RoleType.NekoKabocha);
-        public static RoleInfo niceWatcher = new RoleInfo("niceWatcher", Watcher.color, CustomOptionHolder.watcherSpawnRate, RoleType.Watcher);
-        public static RoleInfo evilWatcher = new RoleInfo("evilWatcher", Palette.ImpostorRed, CustomOptionHolder.watcherSpawnRate, RoleType.Watcher);
         public static RoleInfo serialKiller = new RoleInfo("serialKiller", SerialKiller.color, CustomOptionHolder.serialKillerSpawnRate, RoleType.SerialKiller);
-        public static RoleInfo fox = new RoleInfo("fox", Fox.color, CustomOptionHolder.foxSpawnRate, RoleType.Fox);
-        public static RoleInfo immoralist = new RoleInfo("immoralist", Immoralist.color, CustomOptionHolder.foxSpawnRate, RoleType.Immoralist);
-        public static RoleInfo fortuneTeller = new RoleInfo("fortuneTeller", FortuneTeller.color, CustomOptionHolder.fortuneTellerSpawnRate, RoleType.FortuneTeller);
 
         public static List<RoleInfo> allRoleInfos = new List<RoleInfo>() {
                 impostor,
@@ -147,11 +142,6 @@ namespace TheOtherRoles
 	            medium,
                 plagueDoctor,
                 nekoKabocha,
-                niceWatcher,
-                evilWatcher,
-                fox,
-                immoralist,
-                fortuneTeller
             };
 
         public static string tl(string key)
@@ -210,25 +200,6 @@ namespace TheOtherRoles
             if (p.isRole(RoleType.PlagueDoctor)) infos.Add(plagueDoctor);
             if (p.isRole(RoleType.NekoKabocha)) infos.Add(nekoKabocha);
             if (p.isRole(RoleType.SerialKiller)) infos.Add(serialKiller);
-            if (p.isRole(RoleType.Watcher))
-            {
-                if (p.isImpostor()) infos.Add(evilWatcher);
-                else infos.Add(niceWatcher);
-            }
-            if (p.isRole(RoleType.Fox)) infos.Add(fox);
-            if (p.isRole(RoleType.Immoralist)) infos.Add(immoralist);
-            if(p.isRole(RoleType.FortuneTeller))
-            {
-                if(PlayerControl.LocalPlayer.Data.IsDead || FortuneTeller.endGameFlag)
-                {
-                    infos.Add(fortuneTeller);
-                }
-                else
-                {
-                    var info = FortuneTeller.isCompletedNumTasks(p) ? fortuneTeller: crewmate;
-                    infos.Add(info);
-                }
-            }
 
 
             // Default roles

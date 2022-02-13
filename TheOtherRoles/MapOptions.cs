@@ -32,6 +32,7 @@ namespace TheOtherRoles{
         public static bool showRoleSummary = true;
         public static bool hideNameplates = false;
         public static bool allowParallelMedBayScans = false;
+        public static bool showLighterDarker = true;
 
         // Updating values
         public static int meetingsCount = 0;
@@ -69,6 +70,7 @@ namespace TheOtherRoles{
             ghostsSeeVotes = TheOtherRolesPlugin.GhostsSeeVotes.Value;
             showRoleSummary = TheOtherRolesPlugin.ShowRoleSummary.Value;
             hideNameplates = TheOtherRolesPlugin.HideNameplates.Value;
+            showLighterDarker = TheOtherRolesPlugin.ShowLighterDarker.Value;
         }
 
         public static void resetDeviceTimes()
@@ -126,4 +128,4 @@ namespace TheOtherRoles{
             }
         }
     }
-} 
+}

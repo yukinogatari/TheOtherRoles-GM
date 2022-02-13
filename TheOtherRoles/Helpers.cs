@@ -239,8 +239,6 @@ namespace TheOtherRoles {
                     player.isRole(RoleType.Jester) ||
                     player.isRole(RoleType.Opportunist) ||
                     player.isRole(RoleType.PlagueDoctor) ||
-                    player.isRole(RoleType.Fox) ||
-                    player.isRole(RoleType.Immoralist) ||
                     player.isRole(RoleType.Vulture) ||
                     player.isRole(RoleType.Lawyer) ||
                     player.isRole(RoleType.Pursuer) ||
@@ -351,7 +349,6 @@ namespace TheOtherRoles {
             if (target.isDead()) return true;
             if (Camouflager.camouflageTimer > 0f) return true; // No names are visible
             if (!source.isImpostor() && Ninja.isStealthed(target)) return true; // Hide ninja nametags from non-impostors
-            if (!source.isRole(RoleType.Fox) && !source.Data.IsDead && Fox.isStealthed(target)) return true;
             if (MapOptions.hideOutOfSightNametags && GameStarted && ShipStatus.Instance != null && source.transform != null && target.transform != null)
             {
                 float distMod = 1.025f;
@@ -364,7 +361,6 @@ namespace TheOtherRoles {
             if (source.isImpostor() && (target.isImpostor() || target.isRole(RoleType.Spy))) return false; // Members of team Impostors see the names of Impostors/Spies
             if (source.getPartner() == target) return false; // Members of team Lovers see the names of each other
             if ((source.isRole(RoleType.Jackal) || source.isRole(RoleType.Sidekick)) && (target.isRole(RoleType.Jackal) || target.isRole(RoleType.Sidekick) || target == Jackal.fakeSidekick)) return false; // Members of team Jackal see the names of each other
-            if ((source.isRole(RoleType.Fox) || source.isRole(RoleType.Immoralist)) && (target.isRole(RoleType.Fox) || target.isRole(RoleType.Immoralist))) return false; // Members of team Fox see the names of each other
             return true;
         }
 

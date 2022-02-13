@@ -155,18 +155,6 @@ namespace TheOtherRoles.Patches {
             {
                 setPlayerNameColor(PlayerControl.LocalPlayer, PlagueDoctor.color);
             }
-            else if (PlayerControl.LocalPlayer.isRole(RoleType.Fox))
-            {
-                setPlayerNameColor(PlayerControl.LocalPlayer, Fox.color);
-            }
-            else if (PlayerControl.LocalPlayer.isRole(RoleType.Immoralist))
-            {
-                setPlayerNameColor(PlayerControl.LocalPlayer, Immoralist.color);
-            }
-            else if (PlayerControl.LocalPlayer.isRole(RoleType.FortuneTeller) && (FortuneTeller.isCompletedNumTasks(PlayerControl.LocalPlayer) || PlayerControl.LocalPlayer.Data.IsDead))
-            {
-                setPlayerNameColor(PlayerControl.LocalPlayer, FortuneTeller.color);
-            }
 
             if (GM.gm != null) {
                 setPlayerNameColor(GM.gm, GM.color);
@@ -184,22 +172,6 @@ namespace TheOtherRoles.Patches {
             // No else if here, as the Impostors need the Spy name to be colored
             if (Spy.spy != null && PlayerControl.LocalPlayer.Data.Role.IsImpostor) {
                 setPlayerNameColor(Spy.spy, Spy.color);
-            }
-
-            if (Immoralist.exists && PlayerControl.LocalPlayer.isRole(RoleType.Fox))
-            {
-                foreach(var immoralist in Immoralist.allPlayers)
-                {
-                    setPlayerNameColor(immoralist, Immoralist.color);
-                }
-            }
-
-            if (PlayerControl.LocalPlayer.isRole(RoleType.Immoralist))
-            {
-                foreach(var fox in Fox.allPlayers)
-                {
-                    setPlayerNameColor(fox, Fox.color);
-                }
             }
 
             // Crewmate roles with no changes: Mini
@@ -279,7 +251,7 @@ namespace TheOtherRoles.Patches {
             }
 
             // Hacker and Detective
-            if (PlayerControl.LocalPlayer != null && PlayerControl.LocalPlayer.isAlive() && (PlayerControl.LocalPlayer == Hacker.hacker || PlayerControl.LocalPlayer == Detective.detective || PlayerControl.LocalPlayer == Medium.medium)) {
+            if (PlayerControl.LocalPlayer != null && MapOptions.showLighterDarker) {
                 if (meetingShow) {
                     foreach (PlayerVoteArea player in MeetingHud.Instance.playerStates) {
                         var target = Helpers.playerById(player.TargetPlayerId);

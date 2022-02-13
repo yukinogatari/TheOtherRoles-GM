@@ -47,12 +47,6 @@ namespace TheOtherRoles.Patches
                 }
             }
 
-            // Can't target stealthed Fox
-            foreach (Fox f in Fox.players)
-            {
-                if(f.stealthed) untargetablePlayers.Add(f.player);
-            }
-
 
             Vector2 truePosition = targetingPlayer.GetTruePosition();
             Il2CppSystem.Collections.Generic.List<GameData.PlayerInfo> allPlayers = GameData.Instance.AllPlayers;
@@ -600,6 +594,15 @@ namespace TheOtherRoles.Patches
             SecurityGuard.ventTarget = target;
         }
 
+        public static void securityGuardUpdate() {
+            if (SecurityGuard.securityGuard == null || PlayerControl.LocalPlayer != SecurityGuard.securityGuard || SecurityGuard.securityGuard.Data.IsDead) return;
+            var (playerCompleted, _) = TasksHandler.taskInfo(SecurityGuard.securityGuard.Data);
+            if (playerCompleted == SecurityGuard.rechargedTasks) {
+                SecurityGuard.rechargedTasks += SecurityGuard.rechargeTasksNumber;
+                if (SecurityGuard.maxCharges > SecurityGuard.charges) SecurityGuard.charges++;
+            }
+        }
+
         public static void arsonistSetTarget()
         {
             if (Arsonist.arsonist == null || Arsonist.arsonist != PlayerControl.LocalPlayer) return;
@@ -640,17 +643,13 @@ namespace TheOtherRoles.Patches
                 {
                     bool arrowForImp = p.Data.Role.IsImpostor;
                     bool arrowForTeamJackal = Snitch.includeTeamJackal && (p == Jackal.jackal || p == Sidekick.sidekick);
-                    bool arrowForFox = p.isRole(RoleType.Fox) || p.isRole(RoleType.Immoralist);
 
                     // Update the arrows' color every time bc things go weird when you add a sidekick or someone dies
                     Color c = Palette.ImpostorRed;
                     if(arrowForTeamJackal){
                         c = Jackal.color;
                     }
-                    else if(arrowForFox){
-                        c = Fox.color;
-                    }
-                    if (!p.Data.IsDead && (arrowForImp || arrowForTeamJackal || arrowForFox))
+                    if (!p.Data.IsDead && (arrowForImp || arrowForTeamJackal))
                     {
                         if (arrowIndex >= Snitch.localArrows.Count)
                         {
@@ -698,7 +697,7 @@ namespace TheOtherRoles.Patches
                 var possibleTargets = new List<PlayerControl>();
                 foreach (PlayerControl p in PlayerControl.AllPlayerControls)
                 {
-                    if (!p.Data.IsDead && !p.Data.Disconnected && !p.Data.Role.IsImpostor && p != Spy.spy && (p != Mini.mini || Mini.isGrownUp()) && !p.isGM()) possibleTargets.Add(p);
+                    if (!p.Data.IsDead && !p.Data.Disconnected && !p.Data.Role.IsImpostor && p != Spy.spy && (p != Mini.mini || Mini.isGrownUp()) && !p.isGM() && BountyHunter.bountyHunter.getPartner() != p) possibleTargets.Add(p);
                 }
                 BountyHunter.bounty = possibleTargets[TheOtherRoles.rnd.Next(0, possibleTargets.Count)];
                 if (BountyHunter.bounty == null) return;
@@ -985,6 +984,7 @@ namespace TheOtherRoles.Patches
                 sidekickCheckPromotion();
                 // SecurityGuard
                 securityGuardSetTarget();
+                securityGuardUpdate();
                 // Arsonist
                 arsonistSetTarget();
                 // Snitch

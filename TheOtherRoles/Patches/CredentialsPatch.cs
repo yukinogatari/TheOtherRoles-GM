@@ -44,7 +44,7 @@ namespace TheOtherRoles.Patches {
                 __instance.text.alignment = TMPro.TextAlignmentOptions.TopRight;
                 if (AmongUsClient.Instance.GameState == InnerNet.InnerNetClient.GameStates.Started) {
                     __instance.text.text = $"{baseCredentials}\n{__instance.text.text}";
-                    if (PlayerControl.LocalPlayer.Data.IsDead) {
+                    if (PlayerControl.LocalPlayer.Data.IsDead || (!(PlayerControl.LocalPlayer == null) && PlayerControl.LocalPlayer.isLovers())) {
                         __instance.transform.localPosition = new Vector3(3.45f, __instance.transform.localPosition.y, __instance.transform.localPosition.z);
                     } else {
                         __instance.transform.localPosition = new Vector3(4.2f, __instance.transform.localPosition.y, __instance.transform.localPosition.z);
@@ -71,7 +71,7 @@ namespace TheOtherRoles.Patches {
                 var torLogo = new GameObject("bannerLogo_TOR");
                 torLogo.transform.position = Vector3.up;
                 var renderer = torLogo.AddComponent<SpriteRenderer>();
-                renderer.sprite = ModTranslation.getImage("Banner", 300f);                                
+                renderer.sprite = Helpers.loadSpriteFromResources("TheOtherRoles.Resources.Banner.png", 300f);
             }
         }
     }

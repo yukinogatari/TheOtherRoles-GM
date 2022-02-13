@@ -27,7 +27,6 @@ namespace TheOtherRoles
             // Crew
             { RoleType.Sheriff, typeof(RoleBase<Sheriff>) },
             { RoleType.Lighter, typeof(RoleBase<Lighter>) },
-            { RoleType.FortuneTeller, typeof(RoleBase<FortuneTeller>) },
             { RoleType.Madmate, typeof(RoleBase<Madmate>) },
 
             // Impostor
@@ -38,11 +37,6 @@ namespace TheOtherRoles
             // Neutral
             { RoleType.Opportunist, typeof(RoleBase<Opportunist>) },
             { RoleType.PlagueDoctor, typeof(RoleBase<PlagueDoctor>) },
-            { RoleType.Fox, typeof(RoleBase<Fox>) },
-            { RoleType.Immoralist, typeof(RoleBase<Immoralist>) },
-
-            // Other
-            { RoleType.Watcher, typeof(RoleBase<Watcher>) },
         };
     }
 
