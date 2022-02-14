@@ -1207,7 +1207,8 @@ namespace TheOtherRoles
                         byte reportSource = reader.ReadByte();
                         byte reportTarget = reader.ReadByte();
                         RPCProcedure.uncheckedCmdReportDeadBody(reportSource, reportTarget);
-	                case (byte)CustomRPC.DynamicMapOption:
+                        break;
+                    case (byte)CustomRPC.DynamicMapOption:
 	                    byte mapId = reader.ReadByte();
 	                    RPCProcedure.dynamicMapOption(mapId);
 	                    break;
