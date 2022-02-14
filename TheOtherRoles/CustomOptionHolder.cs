@@ -79,6 +79,7 @@ namespace TheOtherRoles {
         public static CustomRoleOption arsonistSpawnRate;
         public static CustomOption arsonistCooldown;
         public static CustomOption arsonistDuration;
+        public static CustomOption arsonistCanBeLovers;
 
         public static CustomRoleOption jackalSpawnRate;
         public static CustomOption jackalKillCooldown;
@@ -312,7 +313,6 @@ namespace TheOtherRoles {
         public static CustomOption serialKillerResetTimer;
 
         internal static Dictionary<byte, byte[]> blockedRolePairings = new Dictionary<byte, byte[]>();
-        internal static List<byte> blockLovers = new List<byte>();
 
         public static string cs(Color c, string s) {
             return string.Format("<color=#{0:X2}{1:X2}{2:X2}{3:X2}>{4}</color>", ToByte(c.r), ToByte(c.g), ToByte(c.b), ToByte(c.a), s);
@@ -436,7 +436,7 @@ namespace TheOtherRoles {
             loversCanHaveAnotherRole = CustomOption.Create(53, "loversCanHaveAnotherRole", true, loversSpawnRate);
             loversSeparateTeam = CustomOption.Create(56, "loversSeparateTeam", true, loversSpawnRate);
             loversTasksCount = CustomOption.Create(55, "loversTasksCount", false, loversSpawnRate);
-			loversEnableChat = CustomOption.Create(54, "Enable Lover Chat", true, loversSpawnRate);
+			loversEnableChat = CustomOption.Create(54, "loversEnableChat", true, loversSpawnRate);
 
             guesserSpawnRate = new CustomRoleOption(310, "guesser", Guesser.color, 1);
             guesserIsImpGuesserRate = CustomOption.Create(311, "guesserIsImpGuesserRate", rates, guesserSpawnRate);
@@ -446,8 +446,8 @@ namespace TheOtherRoles {
             guesserHasMultipleShotsPerMeeting = CustomOption.Create(314, "guesserHasMultipleShotsPerMeeting", false, guesserSpawnRate);
             guesserShowInfoInGhostChat = CustomOption.Create(315, "guesserToGhostChat", true, guesserSpawnRate);
             guesserKillsThroughShield = CustomOption.Create(316, "guesserPierceShield", true, guesserSpawnRate);
-            guesserEvilCanKillSpy = CustomOption.Create(316, "guesserEvilCanKillSpy", true, guesserSpawnRate);
-			guesserCantGuessSnitchIfTaksDone = CustomOption.Create(318, "Guesser Can't Guess Snitch When Tasks Completed", true, guesserSpawnRate);
+            guesserEvilCanKillSpy = CustomOption.Create(318, "guesserEvilCanKillSpy", true, guesserSpawnRate);
+			guesserCantGuessSnitchIfTaksDone = CustomOption.Create(319, "guesserCantGuessSnitchIfTaksDone", true, guesserSpawnRate);
 
             swapperSpawnRate = new CustomRoleOption(150, "swapper", Swapper.color, 1);
             swapperIsImpRate = CustomOption.Create(153, "swapperIsImpRate", rates, swapperSpawnRate);
@@ -458,11 +458,12 @@ namespace TheOtherRoles {
             jesterSpawnRate = new CustomRoleOption(60, "jester", Jester.color, 1);
             jesterCanCallEmergency = CustomOption.Create(61, "jesterCanCallEmergency", true, jesterSpawnRate);
 			jesterCanSabotage = CustomOption.Create(62, "jesterCanSabotage", true, jesterSpawnRate);
-            jesterHasImpostorVision = CustomOption.Create(63, "Jester Has Impostor Vision", false, jesterSpawnRate);
+            jesterHasImpostorVision = CustomOption.Create(63, "jesterHasImpostorVision", false, jesterSpawnRate);
 
             arsonistSpawnRate = new CustomRoleOption(290, "arsonist", Arsonist.color, 1);
             arsonistCooldown = CustomOption.Create(291, "arsonistCooldown", 12.5f, 2.5f, 60f, 2.5f, arsonistSpawnRate, format: "unitSeconds");
             arsonistDuration = CustomOption.Create(292, "arsonistDuration", 3f, 0f, 10f, 1f, arsonistSpawnRate, format: "unitSeconds");
+            arsonistCanBeLovers = CustomOption.Create(293, "arsonistCanBeLovers", false, arsonistSpawnRate);
 
             opportunistSpawnRate = new CustomRoleOption(380, "opportunist", Opportunist.color);
 
@@ -558,10 +559,10 @@ namespace TheOtherRoles {
             hackerOnlyColorType = CustomOption.Create(173, "hackerOnlyColorType", false, hackerSpawnRate);
             hackerToolsNumber = CustomOption.Create(174, "hackerToolsNumber", 5f, 1f, 30f, 1f, hackerSpawnRate);
             hackerRechargeTasksNumber = CustomOption.Create(175, "hackerRechargeTasksNumber", 2f, 1f, 5f, 1f, hackerSpawnRate);
-            hackerNoMove = CustomOption.Create(176, "Cant Move During Mobile Gadget Duration", true, hackerSpawnRate);
+            hackerNoMove = CustomOption.Create(176, "hackerNoMove", true, hackerSpawnRate);
 
             trackerSpawnRate = new CustomRoleOption(200, "tracker", Tracker.color, 1);
-            trackerUpdateIntervall = CustomOption.Create(201, "Tracker Update Intervall", 5f, 1f, 30f, 1f, trackerSpawnRate);
+            trackerUpdateIntervall = CustomOption.Create(201, "trackerUpdateIntervall", 5f, 2.5f, 30f, 2.5f, trackerSpawnRate, format: "unitSeconds");
             trackerResetTargetAfterMeeting = CustomOption.Create(202, "trackerResetTargetAfterMeeting", false, trackerSpawnRate);
             trackerCanTrackCorpses = CustomOption.Create(203, "trackerTrackCorpses", true, trackerSpawnRate);
             trackerCorpsesTrackingCooldown = CustomOption.Create(204, "trackerCorpseCooldown", 30f, 0f, 120f, 5f, trackerCanTrackCorpses, format: "unitSeconds");
@@ -583,10 +584,10 @@ namespace TheOtherRoles {
             securityGuardTotalScrews = CustomOption.Create(282, "securityGuardTotalScrews", 7f, 1f, 15f, 1f, securityGuardSpawnRate, format: "unitScrews");
             securityGuardCamPrice = CustomOption.Create(283, "securityGuardCamPrice", 2f, 1f, 15f, 1f, securityGuardSpawnRate, format: "unitScrews");
             securityGuardVentPrice = CustomOption.Create(284, "securityGuardVentPrice", 1f, 1f, 15f, 1f, securityGuardSpawnRate, format: "unitScrews");
-            securityGuardCamDuration = CustomOption.Create(285, "Security Guard Duration", 10f, 2.5f, 60f, 2.5f, securityGuardSpawnRate);
-            securityGuardCamMaxCharges = CustomOption.Create(286, "Gadged Max Charges", 5f, 1f, 30f, 1f, securityGuardSpawnRate);
-            securityGuardCamRechargeTasksNumber = CustomOption.Create(287, "Number Of Tasks Needed For Recharging", 3f, 1f, 10f, 1f, securityGuardSpawnRate);
-            securityGuardNoMove = CustomOption.Create(288, "Cant Move During Cam Duration", true, securityGuardSpawnRate);
+            securityGuardCamDuration = CustomOption.Create(285, "securityGuardCamDuration", 10f, 2.5f, 60f, 2.5f, securityGuardSpawnRate, format: "unitSeconds");
+            securityGuardCamMaxCharges = CustomOption.Create(286, "securityGuardCamMaxCharges", 5f, 1f, 30f, 1f, securityGuardSpawnRate);
+            securityGuardCamRechargeTasksNumber = CustomOption.Create(287, "securityGuardCamRechargeTasksNumber", 3f, 1f, 10f, 1f, securityGuardSpawnRate);
+            securityGuardNoMove = CustomOption.Create(288, "securityGuardNoMove", true, securityGuardSpawnRate);
 
             baitSpawnRate = new CustomRoleOption(330, "bait", Bait.color, 1);
             baitHighlightAllVents = CustomOption.Create(331, "baitHighlightAllVents", false, baitSpawnRate);
@@ -614,11 +615,11 @@ namespace TheOtherRoles {
 
             uselessOptions = CustomOption.Create(530, "uselessOptions", false, null, isHeader: true);
             dynamicMap = CustomOption.Create(8, "playRandomMaps", false, uselessOptions);
-            dynamicMapEnableSkeld = CustomOption.Create(501, "Enable Skeld Rotation", true, dynamicMap, false);
-            dynamicMapEnableMira = CustomOption.Create(502, "Enable Mira Rotation", true, dynamicMap, false);
-            dynamicMapEnablePolus = CustomOption.Create(503, "Enable Polus Rotation", true, dynamicMap, false);
-            dynamicMapEnableAirShip = CustomOption.Create(504, "Enable Airship Rotation", true, dynamicMap, false);
-            dynamicMapEnableDleks = CustomOption.Create(505, "Enable dlekS Rotation", false, dynamicMap, false);
+            dynamicMapEnableSkeld = CustomOption.Create(531, "dynamicMapEnableSkeld", true, dynamicMap, false);
+            dynamicMapEnableMira = CustomOption.Create(532, "dynamicMapEnableMira", true, dynamicMap, false);
+            dynamicMapEnablePolus = CustomOption.Create(533, "dynamicMapEnablePolus", true, dynamicMap, false);
+            dynamicMapEnableAirShip = CustomOption.Create(534, "dynamicMapEnableAirShip", true, dynamicMap, false);
+            dynamicMapEnableDleks = CustomOption.Create(535, "dynamicMapEnableDleks", false, dynamicMap, false);
 			
             disableVents = CustomOption.Create(504, "disableVents", false, uselessOptions);
             hidePlayerNames = CustomOption.Create(6, "hidePlayerNames", false, uselessOptions);
@@ -631,8 +632,6 @@ namespace TheOtherRoles {
             blockedRolePairings.Add((byte)RoleType.Mini, new [] { (byte)RoleType.Spy});
             blockedRolePairings.Add((byte)RoleType.Vulture, new [] { (byte)RoleType.Cleaner});
             blockedRolePairings.Add((byte)RoleType.Cleaner, new [] { (byte)RoleType.Vulture});
-
-            blockLovers.Add((byte)RoleType.Snitch);
         }
     }
 

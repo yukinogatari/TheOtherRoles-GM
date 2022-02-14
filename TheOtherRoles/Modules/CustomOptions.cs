@@ -67,6 +67,11 @@ namespace TheOtherRoles
             {
                 entry = TheOtherRolesPlugin.Instance.Config.Bind($"Preset{preset}", id.ToString(), defaultSelection);
                 selection = Mathf.Clamp(entry.Value, 0, selections.Length - 1);
+
+                if (options.Any(x => x.id == id))
+                {
+                    TheOtherRolesPlugin.Instance.Log.LogWarning($"CustomOption id {id} is used in multiple places.");
+                }
             }
             options.Add(this);
         }

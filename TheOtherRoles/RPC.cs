@@ -895,13 +895,11 @@ namespace TheOtherRoles
         public static void arsonistWin()
         {
             Arsonist.triggerArsonistWin = true;
-            foreach (PlayerControl p in PlayerControl.AllPlayerControls)
+            var livingPlayers = PlayerControl.AllPlayerControls.ToArray().Where(p => !p.isRole(RoleType.Arsonist) && p.isAlive());
+            foreach (PlayerControl p in livingPlayers)
             {
-                if (p != Arsonist.arsonist && !p.Data.IsDead)
-                {
-                    p.Exiled();
-                    finalStatuses[p.PlayerId] = FinalStatus.Torched;
-                }
+                p.Exiled();
+                finalStatuses[p.PlayerId] = FinalStatus.Torched;
             }
         }
 
@@ -1100,13 +1098,13 @@ namespace TheOtherRoles
         public static void plagueDoctorWin()
         {
             PlagueDoctor.triggerPlagueDoctorWin = true;
-            foreach (PlayerControl p in PlayerControl.AllPlayerControls)
+            var livingPlayers = PlayerControl.AllPlayerControls.ToArray().Where(p => !p.isRole(RoleType.PlagueDoctor) && p.isAlive());
+            foreach (PlayerControl p in livingPlayers)
             {
-                if (!p.isRole(RoleType.PlagueDoctor) && p.isAlive())
-                {
+                // Check again so we don't re-kill any lovers
+                if (p.isAlive())
                     p.Exiled();
-                    finalStatuses[p.PlayerId] = FinalStatus.Diseased;
-                }
+                finalStatuses[p.PlayerId] = FinalStatus.Diseased;
             }
         }
 
@@ -1209,7 +1207,6 @@ namespace TheOtherRoles
                         byte reportSource = reader.ReadByte();
                         byte reportTarget = reader.ReadByte();
                         RPCProcedure.uncheckedCmdReportDeadBody(reportSource, reportTarget);
-                        break;
 	                case (byte)CustomRPC.DynamicMapOption:
 	                    byte mapId = reader.ReadByte();
 	                    RPCProcedure.dynamicMapOption(mapId);

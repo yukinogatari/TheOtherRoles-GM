@@ -25,6 +25,7 @@ namespace TheOtherRoles.Patches
     [HarmonyPatch(typeof(RoleManager), nameof(RoleManager.SelectRoles))]
     class RoleManagerSelectRolesPatch
     {
+        private static List<byte> blockLovers = new List<byte>();
         public static int blockedAssignments = 0;
         public static int maxBlocks = 10;
 
@@ -75,6 +76,12 @@ namespace TheOtherRoles.Patches
                         RPCProcedure.overrideNativeRole(newImp.PlayerId, (byte)RoleTypes.Impostor);
                     }
                 }
+            }
+
+            blockLovers = new List<byte> { (byte)RoleType.Snitch };
+            if (!CustomOptionHolder.arsonistCanBeLovers.getBool())
+            {
+                blockLovers.Add((byte)RoleType.Arsonist);
             }
 
             var data = getRoleAssignmentData();
@@ -540,10 +547,8 @@ namespace TheOtherRoles.Patches
             var index = rnd.Next(0, playerList.Count);
             byte playerId = playerList[index].PlayerId;
             if (RoleInfo.lovers.enabled &&
-                CustomOptionHolder.blockLovers.Contains(roleId) &&
-                CustomOptionHolder.loversSeparateTeam.getBool() &&
-                !CustomOptionHolder.loversTasksCount.getBool() &&
-                Helpers.playerById(playerId)?.isLovers() == true)
+                Helpers.playerById(playerId)?.isLovers() == true &&
+                blockLovers.Contains(roleId))
             {
                 return byte.MaxValue;
             }
