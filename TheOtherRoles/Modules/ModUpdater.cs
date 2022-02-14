@@ -137,10 +137,7 @@ namespace TheOtherRoles.Modules {
                 int diff = TheOtherRolesPlugin.Version.CompareTo(ver);
                 if (diff < 0) { // Update required
                     hasUpdate = true;
-                    announcement = $@"<size=150%>A new <color=#FC0303>THE OTHER ROLES</color>
-update to v{ver} is available</size>
-
-{announcement}";
+                    announcement = string.Format(ModTranslation.getString("announcementUpdate"), ver, announcement);
 
                     JToken assets = data["assets"];
                     if (!assets.HasValues)
@@ -157,9 +154,7 @@ update to v{ver} is available</size>
                         }
                     }
                 }  else {
-                    announcement = $@"<size=150%><color=#FC0303>THE OTHER ROLES</color> Version {ver}:</size>
-
-{announcement}";
+                    announcement = string.Format(ModTranslation.getString("announcementChangelog"), ver, announcement);
                 }
             } catch (System.Exception ex) {
                 TheOtherRolesPlugin.Instance.Log.LogError(ex.ToString());

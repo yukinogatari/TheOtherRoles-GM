@@ -407,6 +407,10 @@
         "0": "Tasks Are Counted While Alive",
         "11": "\u751f\u5b58\u6642\u3001\u30bf\u30b9\u30af\u304c\u30ab\u30a6\u30f3\u30c8\u3055\u308c\u308b"
     },
+    "loversEnableChat": {
+        "0": "Enable Lover Chat",
+        "11": "\u30e9\u30d0\u30fc\u30ba\u30c1\u30e3\u30c3\u30c8"
+    },
     "guesser": {
         "0": "Guesser",
         "11": "\u30b2\u30c3\u30b5\u30fc"
@@ -467,6 +471,10 @@
         "0": "Both Guesser Spawn Rate",
         "11": "\u30ca\u30a4\u30b9\u30fb\u30a4\u30d3\u30eb\u4e21\u65b9\u51fa\u73fe\u7387"
     },
+    "guesserCantGuessSnitchIfTaksDone": {
+        "0": "Can't Guess Snitch When Tasks Completed",
+        "11": "\u30bf\u30b9\u30af\u3092\u5b8c\u4e86\u3057\u305f\u30b9\u30cb\u30c3\u30c1\u3092\u6483\u3066\u306a\u3044"
+    },
     "guesserGuessChat": {
         "0": "Guesser guessed the role {0} for {1}!",
         "11": "\u30b2\u30c3\u30b5\u30fc\u306f\u300c{1}\u300d\u306e\u30ed\u30fc\u30eb\u304c\u300c{0}\u300d\u3060\u3068\u63a8\u6e2c\u3057\u305f\uff01"
@@ -495,6 +503,10 @@
         "0": "Can Sabotage",
         "11": "\u30b5\u30dc\u30bf\u30fc\u30b8\u30e5\u3067\u304d\u308b"
     },
+    "jesterHasImpostorVision": {
+        "0": "Has Impostor Vision",
+        "11": "\u30a4\u30f3\u30dd\u30b9\u30bf\u30fc\u3068\u540c\u3058\u8996\u91ce"
+    },
     "arsonist": {
         "0": "Arsonist",
         "11": "\u30a2\u30fc\u30bd\u30cb\u30b9\u30c8"
@@ -514,6 +526,10 @@
     "arsonistDuration": {
         "0": "Douse Duration",
         "11": "\u706f\u6cb9\u304b\u3051\u6642\u9593"
+    },
+    "arsonistCanBeLovers": {
+        "0": "Can Be Lovers",
+        "11": "\u30e9\u30d0\u30fc\u30ba\u306b\u306a\u308c\u308b"
     },
     "jackal": {
         "0": "Jackal",
@@ -995,6 +1011,10 @@
         "0": "Number Of Tasks Needed For Recharging",
         "11": "\u5145\u96fb\u306b\u5fc5\u8981\u306a\u30bf\u30b9\u30af\u6570"
     },
+    "hackerNoMove": {
+        "0": "Can't Move During Mobile Gadget Duration",
+        "11": "\u643a\u5e2f\u88c5\u7f6e\u4f7f\u7528\u6642\u3001\u79fb\u52d5\u4e0d\u80fd"
+    },
     "hackerChargesText": {
         "0": "Charges: {0}/{1}",
         "11": "\u30c1\u30e3\u30fc\u30b8\u6570: {0}/{1}"
@@ -1110,6 +1130,22 @@
     "securityGuardVentPrice": {
         "0": "Screws Per Vent",
         "11": "\u30d9\u30f3\u30c8\u5c01\u9396\u306b\u8981\u3059\u308b\u30cd\u30b8\u6570"
+    },
+    "securityGuardCamDuration": {
+        "0": "Camera Duration",
+        "11": "\u643a\u5e2f\u30ab\u30e1\u30e9\u4f7f\u7528\u53ef\u80fd\u6642\u9593"
+    },
+    "securityGuardCamMaxCharges": {
+        "0": "Max Mobile Gadget Charges",
+        "11": "\u6700\u5927\u30c1\u30e3\u30fc\u30b8\u6570"
+    },
+    "securityGuardCamRechargeTasksNumber": {
+        "0": "Number Of Tasks Needed For Recharging",
+        "11": "\u5145\u96fb\u306b\u5fc5\u8981\u306a\u30bf\u30b9\u30af\u6570"
+    },
+    "securityGuardNoMove": {
+        "0": "Can't Move During Camera Duration",
+        "11": "\u643a\u5e2f\u30ab\u30e1\u30e9\u4f7f\u7528\u6642\u3001\u79fb\u52d5\u4e0d\u80fd"
     },
     "securityGuardScrews": {
         "0": "Screws: {0}",
@@ -1656,6 +1692,26 @@
         "0": "Play On A Random Map",
         "11": "\u6bce\u56de\u30de\u30c3\u30d7\u304c\u30e9\u30f3\u30c0\u30e0\u306b"
     },
+    "dynamicMapEnableSkeld": {
+        "0": "Enable Skeld Rotation",
+        "11": "\u30e9\u30f3\u30c0\u30e0\u306bSkeld\u304c\u542b\u307e\u308c\u308b"
+    },
+    "dynamicMapEnableMira": {
+        "0": "Enable Mira Rotation",
+        "11": "\u30e9\u30f3\u30c0\u30e0\u306bMira\u304c\u542b\u307e\u308c\u308b"
+    },
+    "dynamicMapEnablePolus": {
+        "0": "Enable Polus Rotation",
+        "11": "\u30e9\u30f3\u30c0\u30e0\u306bPolus\u304c\u542b\u307e\u308c\u308b"
+    },
+    "dynamicMapEnableAirShip": {
+        "0": "Enable Airship Rotation",
+        "11": "\u30e9\u30f3\u30c0\u30e0\u306bAirship\u304c\u542b\u307e\u308c\u308b"
+    },
+    "dynamicMapEnableDleks": {
+        "0": "Enable dlekS Rotation",
+        "11": "\u30e9\u30f3\u30c0\u30e0\u306bdkelS\u304c\u542b\u307e\u308c\u308b"
+    },
     "roleNumAssigned": {
         "0": "Role Count",
         "11": "\u4eba\u6570"
@@ -2007,6 +2063,14 @@
     "updateFailed": {
         "0": "Update failed.\nTry again later,\nor update manually.",
         "11": "\u81ea\u52d5\u30a2\u30c3\u30d7\u30c7\u30fc\u30c8\u304c\n\u3067\u304d\u307e\u305b\u3093\u3067\u3057\u305f\n\u624b\u52d5\u3067\u66f4\u65b0\u3057\u3066\u304f\u3060\u3055\u3044"
+    },
+    "announcementUpdate": {
+        "0": "<size=150%>A new <color=#FC0303>TheOtherRoles GM Edition</color> update to v{ver} is available:</size>\n\n{1}",
+        "11": "<size=125%><color=#FC0303>TheOtherRoles GM\u30a8\u30c7\u30a3\u30b7\u30e7\u30f3</color> v{0}\u306e\u66f4\u65b0\u304c\u3042\u308a\u307e\u3059:</size>\n\n{1}"
+    },
+    "announcementChangelog": {
+        "0": "<size=150%><color=#FC0303>TheOtherRoles GM Edition</color> Version {0}:</size>\n\n{1}",
+        "11": "<size=125%><color=#FC0303>TheOtherRoles GM\u30a8\u30c7\u30a3\u30b7\u30e7\u30f3</color> v{0}:</size>\n\n{1}"
     },
     "jesterFullDesc": {
         "0": "The Jester does not have any tasks.\nThey win the game as a solo if they get voted out during a meeting.",
