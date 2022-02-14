@@ -43,6 +43,11 @@ namespace TheOtherRoles
 
         public static void Clear()
         {
+            foreach(Arrow arrow in arrows){
+                arrow.arrow.SetActive(false);
+                UnityEngine.Object.Destroy(arrow.arrow);
+            }
+            arrows = new List<Arrow>();
             players = new List<Immoralist>();
         }
         public static void suicide() {
