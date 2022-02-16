@@ -24,7 +24,7 @@ namespace TheOtherRoles.Patches
                 MeetingHudPatch.nameplatesChanged = true;
                 return MapOptions.hideNameplates;
             }, TheOtherRolesPlugin.HideNameplates.Value),
-            new SelectionBehaviour("Show Lighter / Darker", () => MapOptions.showLighterDarker = TheOtherRolesPlugin.ShowLighterDarker.Value = !TheOtherRolesPlugin.ShowLighterDarker.Value, TheOtherRolesPlugin.ShowLighterDarker.Value),
+            new SelectionBehaviour("showLighterDarker", () => MapOptions.showLighterDarker = TheOtherRolesPlugin.ShowLighterDarker.Value = !TheOtherRolesPlugin.ShowLighterDarker.Value, TheOtherRolesPlugin.ShowLighterDarker.Value),
         };
         
         private static GameObject popUp;

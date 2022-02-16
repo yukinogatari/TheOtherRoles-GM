@@ -31,7 +31,7 @@ namespace TheOtherRoles.Modules {
                             }
                         }
                     } else if (text.ToLower().StartsWith("/ban ")) {
-                        string playerName = text.Substring(6);
+                        string playerName = text.Substring(5);
                         PlayerControl target = PlayerControl.AllPlayerControls.ToArray().ToList().FirstOrDefault(x => x.Data.PlayerName.Equals(playerName));
                         if (target != null && AmongUsClient.Instance != null && AmongUsClient.Instance.CanBan()) {
                             var client = AmongUsClient.Instance.GetClient(target.OwnerId);
@@ -76,10 +76,11 @@ namespace TheOtherRoles.Modules {
                 return !handled;
             }
         }
+
         [HarmonyPatch(typeof(HudManager), nameof(HudManager.Update))]
         public static class EnableChat {
             public static void Postfix(HudManager __instance) {
-                if (__instance?.Chat?.isActiveAndEnabled == false && AmongUsClient.Instance?.GameMode == GameModes.FreePlay || (PlayerControl.LocalPlayer.isLovers() && Lovers.enableChat))
+                if (__instance?.Chat?.isActiveAndEnabled == false && (AmongUsClient.Instance?.GameMode == GameModes.FreePlay || (PlayerControl.LocalPlayer.isLovers() && Lovers.enableChat)))
                     __instance?.Chat?.SetVisible(true);
             }
         }
@@ -93,13 +94,12 @@ namespace TheOtherRoles.Modules {
         }
 
         [HarmonyPatch(typeof(ChatController), nameof(ChatController.AddChat))]
-        public static class AddChat {
+        public static class AddChatPatch {
             public static bool Prefix(ChatController __instance, [HarmonyArgument(0)] PlayerControl sourcePlayer) {
                 if (__instance != DestroyableSingleton<HudManager>.Instance.Chat)
                     return true;
                 PlayerControl localPlayer = PlayerControl.LocalPlayer;
                 return localPlayer == null || (MeetingHud.Instance != null || LobbyBehaviour.Instance != null || (localPlayer.Data.IsDead || localPlayer.isLovers() && Lovers.enableChat) || (int)sourcePlayer.PlayerId == (int)PlayerControl.LocalPlayer.PlayerId);
-
             }
         }
     }

@@ -153,6 +153,7 @@ namespace TheOtherRoles
         FortuneTellerUsedDivine,
         FoxStealth,
         FoxCreatesImmoralist,
+        SwapperAnimate,
     }
 
     public static class RPCProcedure
@@ -657,6 +658,11 @@ namespace TheOtherRoles
                 Swapper.playerId1 = playerId1;
                 Swapper.playerId2 = playerId2;
             }
+        }
+
+        public static void swapperAnimate()
+        {
+            MeetingHudPatch.animateSwap = true;
         }
 
         public static void morphlingMorph(byte playerId)
@@ -1180,9 +1186,9 @@ namespace TheOtherRoles
             if (target == null) return;
             if (target.isDead()) return;
             // 呪殺
-            if(target.isRole(RoleType.Fox)){
+            if (target.isRole(RoleType.Fox)) {
                 KillAnimationCoPerformKillPatch.hideNextAnimation = true;
-                if(PlayerControl.LocalPlayer.isRole(RoleType.FortuneTeller))
+                if (PlayerControl.LocalPlayer.isRole(RoleType.FortuneTeller))
                 {
                     // 狐を殺せたことを分からなくするためにキル音を鳴らさないための処置
                     target.MurderPlayer(target);
@@ -1191,16 +1197,19 @@ namespace TheOtherRoles
                 {
                     fortuneTeller.MurderPlayer(target);
                 }
+                finalStatuses[targetId] = FinalStatus.Divined;
             }
+
             // インポスターの場合は占い師の位置に矢印を表示
-            if(PlayerControl.LocalPlayer.isImpostor()){
-                FortuneTeller.fortuneTellerMessage("fortuneTellerDivinedSomeone", 5f, Color.white);
-                FortuneTeller.impostorArrowFlag = true;
+            if (PlayerControl.LocalPlayer.isImpostor()) {
+                FortuneTeller.fortuneTellerMessage(ModTranslation.getString("fortuneTellerDivinedSomeone"), 5f, Color.white);
+                FortuneTeller.setDivinedFlag(fortuneTeller, true);
             }
+
             // 占われたのが背徳者の場合は通知を表示
-            if(target.isRole(RoleType.Immoralist) && target == PlayerControl.LocalPlayer)
+            if (target.isRole(RoleType.Immoralist) && target == PlayerControl.LocalPlayer)
             {
-                FortuneTeller.fortuneTellerMessage("fortuneTellerDivinedYou", 5f, Color.white);
+                FortuneTeller.fortuneTellerMessage(ModTranslation.getString("fortuneTellerDivinedYou"), 5f, Color.white);
             }
         }
 
@@ -1445,6 +1454,9 @@ namespace TheOtherRoles
                         break;
                     case (byte)CustomRPC.SerialKillerSuicide:
                         RPCProcedure.serialKillerSuicide(reader.ReadByte());
+                        break;
+                    case (byte)CustomRPC.SwapperAnimate:
+                        RPCProcedure.swapperAnimate();
                         break;
                     case (byte)CustomRPC.FortuneTellerUsedDivine:
                         byte fId = reader.ReadByte();
