@@ -67,7 +67,7 @@ namespace TheOtherRoles.Objects {
 
         void onClickEvent()
         {
-            if ((this.Timer < 0f || (this.HasEffect && this.isEffectActive && this.effectCancellable) && HasButton() && CouldUse()))
+            if ((this.Timer < 0f && HasButton() && CouldUse()) || (this.HasEffect && this.isEffectActive && this.effectCancellable))
             {
                 actionButton.graphic.color = new Color(1f, 1f, 1f, 0.3f);
                 this.OnClick();

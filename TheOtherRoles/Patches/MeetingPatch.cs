@@ -22,7 +22,7 @@ namespace TheOtherRoles.Patches {
         private const float scale = 0.65f;
         private static Sprite blankNameplate = null;
         public static bool nameplatesChanged = true;
-        public static bool didSwap = false;
+        public static bool animateSwap = false;
 
         static TMPro.TextMeshPro meetingInfoText;
 
@@ -117,7 +117,6 @@ namespace TheOtherRoles.Patches {
                 }
 
                 // Swapper swap votes
-                didSwap = false;
                 if (Swapper.swapper != null && !Swapper.swapper.Data.IsDead) {
                     PlayerVoteArea swapped1 = null;
                     PlayerVoteArea swapped2 = null;
@@ -132,7 +131,13 @@ namespace TheOtherRoles.Patches {
                         int tmp = dictionary[swapped1.TargetPlayerId];
                         dictionary[swapped1.TargetPlayerId] = dictionary[swapped2.TargetPlayerId];
                         dictionary[swapped2.TargetPlayerId] = tmp;
-                        didSwap = true;
+
+                        if (AmongUsClient.Instance.AmHost)
+                        {
+                            MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.SwapperAnimate, Hazel.SendOption.Reliable, -1);
+                            AmongUsClient.Instance.FinishRpcImmediately(writer);
+                            RPCProcedure.swapperAnimate();
+                        }
                     }
                 }
 
@@ -207,7 +212,7 @@ namespace TheOtherRoles.Patches {
                     if (playerVoteArea.TargetPlayerId == Swapper.playerId1) swapped1 = playerVoteArea;
                     if (playerVoteArea.TargetPlayerId == Swapper.playerId2) swapped2 = playerVoteArea;
                 }
-                bool doSwap = didSwap && swapped1 != null && swapped2 != null && Swapper.swapper != null && !Swapper.swapper.Data.IsDead;
+                bool doSwap = animateSwap && swapped1 != null && swapped2 != null && Swapper.swapper != null && !Swapper.swapper.Data.IsDead;
                 if (doSwap) {
                     __instance.StartCoroutine(Effects.Slide3D(swapped1.transform, swapped1.transform.localPosition, swapped2.transform.localPosition, 1.5f));
                     __instance.StartCoroutine(Effects.Slide3D(swapped2.transform, swapped2.transform.localPosition, swapped1.transform.localPosition, 1.5f));
@@ -647,6 +652,7 @@ namespace TheOtherRoles.Patches {
 
         public static void startMeeting()
         {
+            animateSwap = false;
             CustomOverlays.showBlackBG();
             CustomOverlays.hideInfoOverlay();
             TheOtherRolesGM.OnMeetingStart();

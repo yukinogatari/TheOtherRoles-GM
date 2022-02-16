@@ -32,7 +32,7 @@ namespace TheOtherRoles{
         public static bool showRoleSummary = true;
         public static bool hideNameplates = false;
         public static bool allowParallelMedBayScans = false;
-        public static bool showLighterDarker = true;
+        public static bool showLighterDarker = false;
 
         // Updating values
         public static int meetingsCount = 0;
