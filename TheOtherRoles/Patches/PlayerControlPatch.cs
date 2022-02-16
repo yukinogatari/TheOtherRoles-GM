@@ -24,7 +24,7 @@ namespace TheOtherRoles.Patches
             float num = GameOptionsData.KillDistances[Mathf.Clamp(PlayerControl.GameOptions.KillDistance, 0, 2)];
             if (!ShipStatus.Instance) return result;
             if (targetingPlayer == null) targetingPlayer = PlayerControl.LocalPlayer;
-            if (targetingPlayer.Data.IsDead || targetingPlayer.inVent) return result;
+            if (targetingPlayer.isDead() || targetingPlayer.inVent) return result;
             if (targetingPlayer.isGM()) return result;
 
             if (untargetablePlayers == null)
@@ -50,7 +50,7 @@ namespace TheOtherRoles.Patches
             // Can't target stealthed Fox
             foreach (Fox f in Fox.players)
             {
-                if(f.stealthed) untargetablePlayers.Add(f.player);
+                if (f.stealthed) untargetablePlayers.Add(f.player);
             }
 
 

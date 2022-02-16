@@ -344,7 +344,7 @@ namespace TheOtherRoles.Patches
                 if (PlayerControl.LocalPlayer.isRole(RoleType.FortuneTeller) && FortuneTeller.isCompletedNumTasks(PlayerControl.LocalPlayer))
                 {
                     roleCanCallEmergency = false;
-                    statusText = ModTranslation.getString("占い師は会議ボタンを押せない");
+                    statusText = ModTranslation.getString("fortuneTellerMeetingButton");
                 }
 
                 // Deactivate emergency button for Swapper

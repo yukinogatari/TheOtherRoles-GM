@@ -1,12 +1,14 @@
 using HarmonyLib;
 using Hazel;
 using System;
-using System.Linq;
 using System.Collections.Generic;
+using System.Linq;
 using TheOtherRoles.Objects;
 using UnityEngine;
-using static TheOtherRoles.TheOtherRoles;
 using static TheOtherRoles.Patches.PlayerControlFixedUpdatePatch;
+using static TheOtherRoles.TheOtherRoles;
+using static TheOtherRoles.GameHistory;
+using TheOtherRoles.Patches;
 
 namespace TheOtherRoles
 {
@@ -19,20 +21,24 @@ namespace TheOtherRoles
         private static CustomButton foxImmoralistButton;
         public static List<Arrow> arrows = new List<Arrow>();
         public static float updateTimer = 0f;
-        public static bool canFixReactorAndO2 {get { return CustomOptionHolder.foxCanFixReactorAndO2.getBool();}}
+
+        public static bool canFixReactorAndO2 { get { return CustomOptionHolder.foxCanFixReactorAndO2.getBool(); } }
         public static float arrowUpdateInterval = 0.5f;
-        public static bool crewWinsByTasks {get { return CustomOptionHolder.foxCrewWinsByTasks.getBool();}}
-        public static float stealthCooldown {get {return CustomOptionHolder.foxStealthCooldown.getFloat();}}
-        public static float stealthDuration {get {return CustomOptionHolder.foxStealthDuration.getFloat();}}
-        public static int numCommonTasks {get {return (int)CustomOptionHolder.foxNumCommonTasks.getFloat();}}
-        public static int numLongTasks {get {return (int)CustomOptionHolder.foxNumLongTasks.getFloat();}}
-        public static int numShortTasks {get {return (int)CustomOptionHolder.foxNumShortTasks.getFloat();}}
+        public static bool crewWinsByTasks { get { return CustomOptionHolder.foxCrewWinsByTasks.getBool(); } }
+        public static float stealthCooldown { get { return CustomOptionHolder.foxStealthCooldown.getFloat(); } }
+        public static float stealthDuration { get { return CustomOptionHolder.foxStealthDuration.getFloat(); } }
+        public static int numCommonTasks { get { return (int)CustomOptionHolder.foxNumCommonTasks.getFloat(); } }
+        public static int numLongTasks { get { return (int)CustomOptionHolder.foxNumLongTasks.getFloat(); } }
+        public static int numShortTasks { get { return (int)CustomOptionHolder.foxNumShortTasks.getFloat(); } }
+
         public bool stealthed = false;
         public DateTime stealthedAt = DateTime.UtcNow;
         public static float fadeTime = 1f;
-        public static int optNumRepair {get {return (int)CustomOptionHolder.foxNumRepair.getFloat();}}
+
+        public static int optNumRepair { get { return (int)CustomOptionHolder.foxNumRepair.getFloat(); } }
         public static int numRepair = 0;
-        public static bool canCreateImmoralist {get {return CustomOptionHolder.foxCanCreateImmoralist.getBool();}}
+
+        public static bool canCreateImmoralist { get { return CustomOptionHolder.foxCanCreateImmoralist.getBool(); } }
         public static PlayerControl currentTarget;
         public static PlayerControl immoralist;
         public static List<byte> exiledFox = new List<byte>();
@@ -56,19 +62,20 @@ namespace TheOtherRoles
             foxButton.Timer = foxButton.MaxTimer = stealthCooldown;
         }
 
-        public override void OnMeetingEnd() {}
+        public override void OnMeetingEnd() { }
         public override void OnKill(PlayerControl target) { }
         public override void HandleDisconnect(PlayerControl player, DisconnectReasons reason) { }
         public override void OnDeath(PlayerControl killer = null)
         {
             exiledFox.Add(player.PlayerId);
             player.clearAllTasks();
-            if(!Fox.isFoxAlive())
+            if (!Fox.isFoxAlive())
             {
-                foreach(var immoralist in Immoralist.allPlayers)
+                foreach (var immoralist in Immoralist.allPlayers)
                 {
-                    if(immoralist.isAlive()){
-                        if(killer == null)
+                    if (immoralist.isAlive())
+                    {
+                        if (killer == null)
                         {
                             immoralist.Exiled();
                         }
@@ -76,6 +83,7 @@ namespace TheOtherRoles
                         {
                             immoralist.MurderPlayer(immoralist);
                         }
+                        finalStatuses[immoralist.PlayerId] = FinalStatus.Suicide;
                     }
                 }
             }
@@ -83,28 +91,29 @@ namespace TheOtherRoles
 
         public override void FixedUpdate()
         {
-            if(PlayerControl.LocalPlayer.isRole(RoleType.Fox))
-            {
+            if (player == PlayerControl.LocalPlayer) {
                 arrowUpdate();
-            }
-            if (player.isAlive())
-            {
-                List<PlayerControl> untargetablePlayers =  new List<PlayerControl>();
-                foreach(var p in PlayerControl.AllPlayerControls)
+                if (player.isAlive())
                 {
-                    if(p.isImpostor() || p.isRole(RoleType.Jackal) || p.isRole(RoleType.Sheriff))
+                    List<PlayerControl> untargetablePlayers = new List<PlayerControl>();
+                    foreach (var p in PlayerControl.AllPlayerControls)
                     {
-                        untargetablePlayers.Add(p);
+                        if (p.isImpostor() || p.isRole(RoleType.Jackal) || p.isRole(RoleType.Sheriff))
+                        {
+                            untargetablePlayers.Add(p);
+                        }
                     }
+                    currentTarget = setTarget(untargetablePlayers: untargetablePlayers);
+                    setPlayerOutline(currentTarget, Fox.color);
                 }
-                currentTarget = setTarget(untargetablePlayers: untargetablePlayers);
-                setPlayerOutline(currentTarget, Fox.color);
             }
         }
+
         public static void Clear()
         {
             players = new List<Fox>();
-            foreach(Arrow arrow in arrows){
+            foreach (Arrow arrow in arrows)
+            {
                 arrow.arrow.SetActive(false);
                 UnityEngine.Object.Destroy(arrow.arrow);
             }
@@ -112,27 +121,31 @@ namespace TheOtherRoles
             Immoralist.Clear();
         }
 
-        private static Sprite buttonSprite;
+        private static Sprite hideButtonSprite;
         private static Sprite repairButtonSprite;
         private static Sprite immoralistButtonSprite;
-         public static Sprite getButtonSprite()
+
+        public static Sprite getHideButtonSprite()
         {
-            if (buttonSprite) return buttonSprite;
-            buttonSprite = Helpers.loadSpriteFromResources("TheOtherRoles.Resources.NinjaButton.png", 115f);
-            return buttonSprite;
+            if (hideButtonSprite) return hideButtonSprite;
+            hideButtonSprite = Helpers.loadSpriteFromResources("TheOtherRoles.Resources.FoxHideButton.png", 115f);
+            return hideButtonSprite;
         }
-         public static Sprite getRepairButtonSprite()
+
+        public static Sprite getRepairButtonSprite()
         {
             if (repairButtonSprite) return repairButtonSprite;
             repairButtonSprite = Helpers.loadSpriteFromResources("TheOtherRoles.Resources.RepairButton.png", 115f);
             return repairButtonSprite;
         }
-         public static Sprite getImmoralistButtonSprite()
+
+        public static Sprite getImmoralistButtonSprite()
         {
             if (immoralistButtonSprite) return immoralistButtonSprite;
-            immoralistButtonSprite = Helpers.loadSpriteFromResources("TheOtherRoles.Resources.ImmoralistButton.png", 115f);
+            immoralistButtonSprite = Helpers.loadSpriteFromResources("TheOtherRoles.Resources.SidekickButton.png", 115f);
             return immoralistButtonSprite;
         }
+
         public static float stealthFade(PlayerControl player)
         {
             if (isRole(player) && fadeTime > 0f && player.isAlive())
@@ -168,7 +181,8 @@ namespace TheOtherRoles
         {
             // Fox stealth
             foxButton = new CustomButton(
-                () => {
+                () =>
+                {
                     if (foxButton.isEffectActive)
                     {
                         foxButton.Timer = 0;
@@ -182,28 +196,31 @@ namespace TheOtherRoles
                     RPCProcedure.foxStealth(PlayerControl.LocalPlayer.PlayerId, true);
                 },
                 () => { return PlayerControl.LocalPlayer.isRole(RoleType.Fox) && !PlayerControl.LocalPlayer.Data.IsDead; },
-                () => {
+                () =>
+                {
                     if (foxButton.isEffectActive)
                     {
-                        foxButton.buttonText = ModTranslation.getString("NinjaUnstealthText");
+                        foxButton.buttonText = ModTranslation.getString("FoxUnstealthText");
                     }
                     else
                     {
-                        foxButton.buttonText = ModTranslation.getString("NinjaText");
+                        foxButton.buttonText = ModTranslation.getString("FoxStealthText");
                     }
                     return PlayerControl.LocalPlayer.CanMove;
                 },
-                () => {
+                () =>
+                {
                     foxButton.Timer = foxButton.MaxTimer = Fox.stealthCooldown;
                 },
-                Fox.getButtonSprite(),
+                Fox.getHideButtonSprite(),
                 new Vector3(-1.8f, -0.06f, 0),
                 hm,
-                hm.KillButton,
+                hm.AbilityButton,
                 KeyCode.F,
                 true,
                 Fox.stealthDuration,
-                () => {
+                () =>
+                {
                     foxButton.Timer = foxButton.MaxTimer = Fox.stealthCooldown;
                     MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.FoxStealth, Hazel.SendOption.Reliable, -1);
                     writer.Write(PlayerControl.LocalPlayer.PlayerId);
@@ -212,7 +229,7 @@ namespace TheOtherRoles
                     RPCProcedure.foxStealth(PlayerControl.LocalPlayer.PlayerId, false);
                 }
             );
-            foxButton.buttonText = ModTranslation.getString("NinjaText");
+            foxButton.buttonText = ModTranslation.getString("FoxStealthText");
             foxButton.effectCancellable = true;
 
             foxRepairButton = new CustomButton(
@@ -222,7 +239,7 @@ namespace TheOtherRoles
                     foreach (PlayerTask task in PlayerControl.LocalPlayer.myTasks)
                         if (task.TaskType == TaskTypes.FixLights || task.TaskType == TaskTypes.RestoreOxy || task.TaskType == TaskTypes.ResetReactor || task.TaskType == TaskTypes.ResetSeismic || task.TaskType == TaskTypes.FixComms || task.TaskType == TaskTypes.StopCharles)
                             sabotageActive = true;
-                    if(!sabotageActive) return;
+                    if (!sabotageActive) return;
 
                     foreach (PlayerTask task in PlayerControl.LocalPlayer.myTasks)
                     {
@@ -258,7 +275,7 @@ namespace TheOtherRoles
                     }
                     numRepair -= 1;
                 },
-                () => { return PlayerControl.LocalPlayer.isRole(RoleType.Fox)  && PlayerControl.LocalPlayer.isAlive() && numRepair > 0; },
+                () => { return PlayerControl.LocalPlayer.isRole(RoleType.Fox) && PlayerControl.LocalPlayer.isAlive() && numRepair > 0; },
                 () =>
                 {
                     bool sabotageActive = false;
@@ -269,12 +286,12 @@ namespace TheOtherRoles
                 },
                 () => { },
                 Fox.getRepairButtonSprite(),
-                new Vector3(-2.7f, -0.06f, 0),
+                new Vector3(-0.9f, 1f, 0),
                 hm,
                 hm.AbilityButton,
                 KeyCode.G
             );
-            foxRepairButton.buttonText = " ";
+            foxRepairButton.buttonText = ModTranslation.getString("FoxRepairText"); ;
 
             foxImmoralistButton = new CustomButton(
                 () =>
@@ -288,24 +305,27 @@ namespace TheOtherRoles
                 () => { return canCreateImmoralist && Fox.currentTarget != null && PlayerControl.LocalPlayer.CanMove; },
                 () => { foxImmoralistButton.Timer = 20; },
                 getImmoralistButtonSprite(),
-                new Vector3(-3.6f, -0.06f, 0),
+                new Vector3(-1.8f, 1f, 0),
                 hm,
-                hm.KillButton,
-                KeyCode.F
+                hm.AbilityButton,
+                KeyCode.I
             );
-            foxImmoralistButton.buttonText = ModTranslation.getString("背徳者");
+            foxImmoralistButton.buttonText = ModTranslation.getString("FoxImmoralistText");
         }
 
-        static void arrowUpdate(){
+        static void arrowUpdate()
+        {
 
             // 前フレームからの経過時間をマイナスする
             updateTimer -= Time.fixedDeltaTime;
 
             // 1秒経過したらArrowを更新
-            if(updateTimer <= 0.0f){
+            if (updateTimer <= 0.0f)
+            {
 
                 // 前回のArrowをすべて破棄する
-                foreach(Arrow arrow in arrows){
+                foreach (Arrow arrow in arrows)
+                {
                     arrow.arrow.SetActive(false);
                     UnityEngine.Object.Destroy(arrow.arrow);
                 }
@@ -314,19 +334,27 @@ namespace TheOtherRoles
                 arrows = new List<Arrow>();
 
                 // インポスターの位置を示すArrorwを描画
-                foreach(PlayerControl p in PlayerControl.AllPlayerControls){
-                    if(p.Data.IsDead) continue;
+                foreach (PlayerControl p in PlayerControl.AllPlayerControls)
+                {
+                    if (p.isDead()) continue;
                     Arrow arrow;
                     // float distance = Vector2.Distance(p.transform.position, PlayerControl.LocalPlayer.transform.position);
-                    if(p.Data.Role.IsImpostor || p.isRole(RoleType.Jackal) || p.isRole(RoleType.Sheriff)){
-                        if(p.Data.Role.IsImpostor){
+                    if (p.Data.Role.IsImpostor || p.isRole(RoleType.Jackal) || p.isRole(RoleType.Sheriff))
+                    {
+                        if (p.Data.Role.IsImpostor)
+                        {
                             arrow = new Arrow(Color.red);
                         }
-                        else if(p.isRole(RoleType.Jackal)){
+                        else if (p.isRole(RoleType.Jackal))
+                        {
                             arrow = new Arrow(Jackal.color);
-                        }else if(p.isRole(RoleType.Sheriff)){
+                        }
+                        else if (p.isRole(RoleType.Sheriff))
+                        {
                             arrow = new Arrow(Sheriff.color);
-                        }else{
+                        }
+                        else
+                        {
                             arrow = new Arrow(Color.black);
                         }
                         arrow.arrow.SetActive(true);
@@ -338,13 +366,17 @@ namespace TheOtherRoles
                 // タイマーに時間をセット
                 updateTimer = arrowUpdateInterval;
             }
+            else
+            {
+                arrows.Do(x => x.Update());
+            }
         }
         public static bool isFoxAlive()
         {
             bool isAlive = false;
-            foreach(var fox in Fox.allPlayers)
+            foreach (var fox in Fox.allPlayers)
             {
-                if(fox.isAlive() && !exiledFox.Contains(fox.PlayerId))
+                if (fox.isAlive() && !exiledFox.Contains(fox.PlayerId))
                 {
                     isAlive = true;
                 }
@@ -356,10 +388,12 @@ namespace TheOtherRoles
         {
             // 生存中の狐が1匹でもタスクを終了しているかを確認
             bool isCompleted = false;
-            foreach(var fox in allPlayers)
+            foreach (var fox in allPlayers)
             {
-                if(fox.isAlive()){
-                    if(isCompletedTasks(fox)){
+                if (fox.isAlive())
+                {
+                    if (isCompletedTasks(fox))
+                    {
                         isCompleted = true;
                         break;
                     }
@@ -372,16 +406,18 @@ namespace TheOtherRoles
         {
             int counter = 0;
             int totalTasks = numCommonTasks + numLongTasks + numShortTasks;
-            if(totalTasks == 0) return true;
-            foreach(var task in p.Data.Tasks){
+            if (totalTasks == 0) return true;
+            foreach (var task in p.Data.Tasks)
+            {
 
-                if(task.Complete){
+                if (task.Complete)
+                {
                     counter++;
                 }
             }
-            return  counter == totalTasks;
+            return counter == totalTasks;
         }
-         public static void SetFoxTasks()
+        public static void SetFoxTasks()
         {
             PlayerControl me = PlayerControl.LocalPlayer;
             if (me == null)
@@ -392,7 +428,7 @@ namespace TheOtherRoles
             me.clearAllTasks();
 
             int totalTasks = numCommonTasks + numLongTasks + numShortTasks;
-            if(totalTasks == 0) return;
+            if (totalTasks == 0) return;
 
             List<byte> list = new List<byte>(10);
             SetTasksToList(
@@ -410,11 +446,13 @@ namespace TheOtherRoles
 
             byte[] taskTypeIds = list.ToArray();
             playerById.Tasks = new Il2CppSystem.Collections.Generic.List<GameData.TaskInfo>(taskTypeIds.Length);
-            for (int i = 0; i < taskTypeIds.Length; i++) {
+            for (int i = 0; i < taskTypeIds.Length; i++)
+            {
                 playerById.Tasks.Add(new GameData.TaskInfo(taskTypeIds[i], (uint)i));
                 playerById.Tasks[i].Id = (uint)i;
             }
-            for (int i = 0; i < playerById.Tasks.Count; i++) {
+            for (int i = 0; i < playerById.Tasks.Count; i++)
+            {
                 GameData.TaskInfo taskInfo = playerById.Tasks[i];
                 NormalPlayerTask normalPlayerTask = UnityEngine.Object.Instantiate<NormalPlayerTask>(ShipStatus.Instance.GetTaskById(taskInfo.TypeId), me.transform);
                 normalPlayerTask.Id = taskInfo.Id;
@@ -431,14 +469,17 @@ namespace TheOtherRoles
         {
             playerTasks.shuffle(0);
             int numTasks = Math.Min(playerTasks.Count, numConfiguredTasks);
-            for (int i = 0; i < numTasks; i++) {
+            for (int i = 0; i < numTasks; i++)
+            {
                 list.Add((byte)playerTasks[i].Index);
             }
         }
 
         [HarmonyPatch(typeof(IntroCutscene), nameof(IntroCutscene.BeginCrewmate))]
-        class BeginCrewmatePatch {
-            public static void Postfix(IntroCutscene __instance, ref  Il2CppSystem.Collections.Generic.List<PlayerControl> yourTeam) {
+        class BeginCrewmatePatch
+        {
+            public static void Postfix(IntroCutscene __instance, ref Il2CppSystem.Collections.Generic.List<PlayerControl> yourTeam)
+            {
                 if (PlayerControl.LocalPlayer.isRole(RoleType.Fox))
                 {
                     SetFoxTasks();
@@ -446,14 +487,13 @@ namespace TheOtherRoles
             }
         }
 
-
         // 狐のタスクをカウントから外す
         [HarmonyPatch(typeof(GameData), nameof(GameData.RecomputeTaskCounts))]
         class GameDataRecomputeTaskCountsPatch
         {
             static void Postfix(GameData __instance)
             {
-                for (int i = 0;  i < __instance.AllPlayers.Count; i++)
+                for (int i = 0; i < __instance.AllPlayers.Count; i++)
                 {
                     GameData.PlayerInfo playerInfo = __instance.AllPlayers[i];
                     PlayerControl player = Helpers.playerById(playerInfo.PlayerId);
@@ -474,6 +514,7 @@ namespace TheOtherRoles
                 }
             }
         }
+
         // 狐のタスクをカウントから外す
         [HarmonyPatch(typeof(GameData), nameof(GameData.CompleteTask))]
         class GameDataCompleteTaskPatch
@@ -497,9 +538,15 @@ namespace TheOtherRoles
                 if (isRole(__instance.myPlayer))
                 {
                     var fox = __instance.myPlayer;
-                    if (fox == null) return;
+                    if (fox == null || fox.isDead()) return;
 
-                    var opacity = 0.0f;
+                    bool canSee =
+                        PlayerControl.LocalPlayer.isRole(RoleType.Fox) ||
+                        PlayerControl.LocalPlayer.isRole(RoleType.Immoralist) ||
+                        PlayerControl.LocalPlayer.isDead() ||
+                        (Lighter.canSeeNinja && PlayerControl.LocalPlayer.isRole(RoleType.Lighter) && Lighter.isLightActive(PlayerControl.LocalPlayer));
+
+                    var opacity = canSee ? 0.1f : 0.0f;
 
                     if (isStealthed(fox))
                     {
@@ -511,28 +558,7 @@ namespace TheOtherRoles
                         opacity = Math.Max(opacity, stealthFade(fox));
                     }
 
-                    // Sometimes it just doesn't work?
-                    var color = Color.Lerp(Palette.ClearWhite, Palette.White, opacity);
-                    try
-                    {
-                        if (fox.MyPhysics?.rend != null)
-                            fox.MyPhysics.rend.color = color;
-
-                        if (fox.MyPhysics?.Skin?.layer != null)
-                            fox.MyPhysics.Skin.layer.color = color;
-
-                        if (fox.HatRenderer != null)
-                            fox.HatRenderer.color = color;
-
-                        if (fox.CurrentPet?.rend != null)
-                            fox.CurrentPet.rend.color = color;
-
-                        if (fox.CurrentPet?.shadowRend != null)
-                            fox.CurrentPet.shadowRend.color = color;
-
-                        if (fox.VisorSlot != null)
-                            fox.VisorSlot.color = color;
-                    } catch { }
+                    Ninja.setOpacity(fox, opacity);
                 }
             }
         }

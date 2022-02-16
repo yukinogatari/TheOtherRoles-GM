@@ -13,6 +13,10 @@ namespace TheOtherRoles
         public static Color color = Fox.color;
         private static CustomButton immoralistButton;
 
+        public static List<Arrow> arrows = new List<Arrow>();
+        public static float updateTimer = 0f;
+        public static float arrowUpdateInterval = 1f;
+
         public Immoralist()
         {
             RoleType = roleId = RoleType.Immoralist;
@@ -20,6 +24,7 @@ namespace TheOtherRoles
 
         public override void OnMeetingStart() { }
         public override void OnMeetingEnd() { }
+
         public override void FixedUpdate()
         {
             if (PlayerControl.LocalPlayer.isRole(RoleType.Immoralist))
@@ -27,24 +32,28 @@ namespace TheOtherRoles
                 arrowUpdate();
             }
         }
+
         public override void OnKill(PlayerControl target) { }
+
         public override void OnDeath(PlayerControl killer = null)
         {
             player.clearAllTasks();
         }
+
         public override void HandleDisconnect(PlayerControl player, DisconnectReasons reason) { }
 
         public static void SetButtonCooldowns() { }
 
         public static void Clear()
         {
-            foreach(Arrow arrow in arrows){
+            foreach(Arrow arrow in arrows) {
                 arrow.arrow.SetActive(false);
                 UnityEngine.Object.Destroy(arrow.arrow);
             }
             arrows = new List<Arrow>();
             players = new List<Immoralist>();
         }
+
         public static void suicide()
         {
             byte targetId = PlayerControl.LocalPlayer.PlayerId;
@@ -57,9 +66,10 @@ namespace TheOtherRoles
         public static Sprite getButtonSprite()
         {
             if (buttonSprite) return buttonSprite;
-            buttonSprite = Helpers.loadSpriteFromResources("TheOtherRoles.Resources.CurseButton.png", 115f);
+            buttonSprite = Helpers.loadSpriteFromResources("TheOtherRoles.Resources.SuicideButton.png", 115f);
             return buttonSprite;
         }
+
         public static void MakeButtons(HudManager hm)
         {
             // Fox stealth
@@ -72,7 +82,7 @@ namespace TheOtherRoles
                 () => { return true; },
                 () =>
                 {
-                    immoralistButton.Timer = immoralistButton.MaxTimer = 20;
+                    immoralistButton.Timer = immoralistButton.MaxTimer = 20f;
                 },
                 getButtonSprite(),
                 new Vector3(-1.8f, -0.06f, 0),
@@ -83,22 +93,18 @@ namespace TheOtherRoles
                 0,
                 () => { }
             );
-            immoralistButton.buttonText = ModTranslation.getString("自殺");
+            immoralistButton.buttonText = ModTranslation.getString("immoralistSuicideText");
             immoralistButton.effectCancellable = true;
         }
-        public static List<Arrow> arrows = new List<Arrow>();
-        public static float updateTimer = 0f;
-        public static float arrowUpdateInterval = 0.5f;
+
         static void arrowUpdate()
         {
-
             // 前フレームからの経過時間をマイナスする
             updateTimer -= Time.fixedDeltaTime;
 
             // 1秒経過したらArrowを更新
             if (updateTimer <= 0.0f)
             {
-
                 // 前回のArrowをすべて破棄する
                 foreach (Arrow arrow in arrows)
                 {
@@ -106,10 +112,10 @@ namespace TheOtherRoles
                     UnityEngine.Object.Destroy(arrow.arrow);
                 }
 
-                // Arrorw一覧
+                // Arrow一覧
                 arrows = new List<Arrow>();
 
-                // 狐の位置を示すArrorwを描画
+                // 狐の位置を示すArrowを描画
                 foreach (PlayerControl p in PlayerControl.AllPlayerControls)
                 {
                     if (p.Data.IsDead) continue;
@@ -122,11 +128,15 @@ namespace TheOtherRoles
                         arrows.Add(arrow);
                     }
                 }
-
                 // タイマーに時間をセット
                 updateTimer = arrowUpdateInterval;
             }
+            else
+            {
+                arrows.Do(x => x.Update());
+            }
         }
+
         [HarmonyPatch(typeof(PlayerControl), nameof(PlayerControl.MurderPlayer))]
         public static class MurderPlayerPatch
         {
@@ -135,7 +145,6 @@ namespace TheOtherRoles
                 PlayerControl player = PlayerControl.LocalPlayer;
                 if (player.isRole(RoleType.Immoralist) && player.isAlive())
                 {
-
                     HudManager.Instance.FullScreen.enabled = true;
                     HudManager.Instance.StartCoroutine(Effects.Lerp(1f, new Action<float>((p) =>
                     {

@@ -117,7 +117,7 @@ namespace TheOtherRoles {
 
         public static CustomRoleOption fortuneTellerSpawnRate;
         public static CustomOption fortuneTellerNumTasks;
-        public static CustomOption fortuneTellerResultIsCrewOrNot;
+        public static CustomOption fortuneTellerResults;
         public static CustomOption fortuneTellerDistance;
         public static CustomOption fortuneTellerDuration;
 
@@ -546,9 +546,9 @@ namespace TheOtherRoles {
             foxNumRepair = CustomOption.Create(919, "foxNumRepair", 1f, 0f, 5f, 1f, foxSpawnRate);
 
 
-            fortuneTellerSpawnRate = new CustomRoleOption(940, "fortuneTeller", FortuneTeller.color, 1);
-            fortuneTellerNumTasks = CustomOption.Create(941, "fortuneTellerNumTasks", 4f, 1f, 10f, 1f, fortuneTellerSpawnRate);
-            fortuneTellerResultIsCrewOrNot = CustomOption.Create(942, "fortuneTellerResultIsCrewOrNot ", true, fortuneTellerSpawnRate);
+            fortuneTellerSpawnRate = new CustomRoleOption(940, "fortuneTeller", FortuneTeller.color, 15);
+            fortuneTellerNumTasks = CustomOption.Create(941, "fortuneTellerNumTasks", 4f, 0f, 25f, 1f, fortuneTellerSpawnRate);
+            fortuneTellerResults = CustomOption.Create(942, "fortuneTellerResults ", new string[] { "fortuneTellerResultCrew", "fortuneTellerResultTeam", "fortuneTellerResultRole" }, fortuneTellerSpawnRate);
             fortuneTellerDuration = CustomOption.Create(943, "fortuneTellerDuration ", 20f, 1f, 50f, 0.5f, fortuneTellerSpawnRate, format: "unitSeconds");
             fortuneTellerDistance = CustomOption.Create(944, "fortuneTellerDistance ", 2.5f, 1f, 10f, 0.5f, fortuneTellerSpawnRate, format: "unitMeters");
 

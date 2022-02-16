@@ -1768,6 +1768,10 @@
         "0": "Show Role Summary",
         "11": "\u6700\u7d42\u7d50\u679c\u3092\u8868\u793a"
     },
+    "showLighterDarker": {
+        "0": "Show Lighter / Darker",
+        "11": "\u6de1\u3044\u30fb\u6fc3\u3044\u3092\u8868\u793a\u3059\u308b"
+    },
     "modOptionsText": {
         "0": "Mod Options...",
         "11": "MOD\u306e\u8a2d\u5b9a"
@@ -2785,6 +2789,10 @@
         "0": "Immoralist",
         "11": "\u80cc\u5fb3\u8005"
     },
+    "immoralistSuicideText": {
+        "0": "Suicide",
+        "11": "\u81ea\u6bba"
+    },
     "fortuneTeller": {
         "0": "Fortune Teller",
         "11": "\u5360\u3044\u5e2b"
@@ -2793,9 +2801,21 @@
         "0": "Number of Tasks to Divine",
         "11": "\u5360\u3044\u306b\u5fc5\u8981\u306a\u30bf\u30b9\u30af\u6570"
     },
-    "fortuneTellerResultIsCrewOrNot": {
-        "0": "Divination Only Reveals Crew or Not",
-        "11": "\u5360\u3044\u7d50\u679c\u304c\u767d\u9ed2\u306e\u307f"
+    "fortuneTellerResults": {
+        "0": "Divination Results",
+        "11": "\u5360\u3044\u7d50\u679c"
+    },
+    "fortuneTellerResultCrew": {
+        "0": "Crew or Not",
+        "11": "\u767d\u9ed2\u306e\u307f"
+    },
+    "fortuneTellerResultTeam": {
+        "0": "Team",
+        "11": "\u9663\u55b6\u306e\u307f"
+    },
+    "fortuneTellerResultRole": {
+        "0": "Role",
+        "11": "\u30ed\u30fc\u30eb"
     },
     "fortuneTellerDuration": {
         "0": "Time to Divine",
@@ -2813,6 +2833,14 @@
         "0": "You Were Just Divined",
         "11": "\u5360\u3044\u5e2b\u304c\u3042\u306a\u305f\u3092\u5360\u3063\u305f"
     },
+    "fortuneTellerDead": {
+        "0": "Dead",
+        "11": "\u6b7b\u4ea1"
+    },
+    "fortuneTellerMeetingButton": {
+        "0": "The Fortune Teller can't call meetings.",
+        "11": "\u5360\u3044\u5e2b\u306f\u7dca\u6025\u4f1a\u8b70\u3092\u958b\u3051\u307e\u305b\u3093"
+    },
     "divineCrew": {
         "0": "Crewmate",
         "11": "\u30af\u30eb\u30fc"
@@ -2825,12 +2853,40 @@
         "0": "Impostor",
         "11": "\u30a4\u30f3\u30dd\u30b9\u30bf\u30fc"
     },
+    "divineMessageIsCrew": {
+        "0": "{0} is a Crewmate",
+        "11": "{0} \u306f\u30af\u30eb\u30fc"
+    },
+    "divineMessageIsntCrew": {
+        "0": "{0} is not a Crewmate",
+        "11": "{0} \u306f\u30af\u30eb\u30fc\u3067\u306f\u306a\u3044"
+    },
     "divineMessageTeam": {
         "0": "{0} is a(n) {1}",
         "11": "{0} \u306f{1}\u9663\u55b6"
     },
     "divineMessageRole": {
         "0": "{0}'s role is {1}",
-        "11": "{0} \u306e\u30ed\u30fc\u30eb\u306f\u306f\u300c{1}\u300d"
+        "11": "{0} \u306e\u30ed\u30fc\u30eb\u306f\u300c{1}\u300d"
+    },
+    "roleSummaryDivined": {
+        "0": "Divined",
+        "11": "\u546a\u6bba"
+    },
+    "FoxStealthText": {
+        "0": "Hide",
+        "11": "\u59ff\u3092\u6d88\u3059"
+    },
+    "FoxUnstealthText": {
+        "0": "Unhide",
+        "11": "\u59ff\u3092\u73fe\u3059"
+    },
+    "FoxRepairText": {
+        "0": "[BLANK]",
+        "11": "\u30ea\u30da\u30a2"
+    },
+    "FoxImmoralistText": {
+        "0": "Immoralist",
+        "11": "\u80cc\u5fb3\u8005"
     }
 }

@@ -217,9 +217,9 @@ namespace TheOtherRoles
             }
             if (p.isRole(RoleType.Fox)) infos.Add(fox);
             if (p.isRole(RoleType.Immoralist)) infos.Add(immoralist);
-            if(p.isRole(RoleType.FortuneTeller))
+            if (p.isRole(RoleType.FortuneTeller))
             {
-                if(PlayerControl.LocalPlayer.Data.IsDead || FortuneTeller.endGameFlag)
+                if (PlayerControl.LocalPlayer.Data.IsDead || FortuneTeller.endGameFlag)
                 {
                     infos.Add(fortuneTeller);
                 }
