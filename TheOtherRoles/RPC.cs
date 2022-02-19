@@ -92,6 +92,7 @@ namespace TheOtherRoles
         UncheckedCmdReportDeadBody,
         OverrideNativeRole,
         UncheckedExilePlayer,
+        UncheckedEndGame,
         DynamicMapOption,
 
         // Role functionality
@@ -273,6 +274,30 @@ namespace TheOtherRoles
         {
             PlayerControl target = Helpers.playerById(targetId);
             if (target != null) target.Exiled();
+        }
+
+        public static void uncheckedEndGame(byte reason)
+        {
+            AmongUsClient.Instance.GameState = InnerNet.InnerNetClient.GameStates.Ended;
+            var obj2 = AmongUsClient.Instance.allClients;
+            lock (obj2)
+            {
+                AmongUsClient.Instance.allClients.Clear();
+            }
+
+            var obj = AmongUsClient.Instance.Dispatcher;
+            lock (obj)
+            {
+                AmongUsClient.Instance.Dispatcher.Add(new Action(() =>
+                {
+                    ShipStatus.Instance.enabled = false;
+                    ShipStatus.Instance.BeginCalled = false;
+                    AmongUsClient.Instance.OnGameEnd(new EndGameResult((GameOverReason)reason, false));
+
+                    if (AmongUsClient.Instance.AmHost)
+                        ShipStatus.RpcEndGame((GameOverReason)reason, false);
+                }));
+            }
         }
 
         public static void dynamicMapOption(byte mapId) {
@@ -1213,6 +1238,9 @@ namespace TheOtherRoles
                         byte reportSource = reader.ReadByte();
                         byte reportTarget = reader.ReadByte();
                         RPCProcedure.uncheckedCmdReportDeadBody(reportSource, reportTarget);
+                        break;
+                    case (byte)CustomRPC.UncheckedEndGame:
+                        RPCProcedure.uncheckedEndGame(reader.ReadByte());
                         break;
                     case (byte)CustomRPC.DynamicMapOption:
 	                    byte mapId = reader.ReadByte();
