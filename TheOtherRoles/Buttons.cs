@@ -1019,8 +1019,8 @@ namespace TheOtherRoles
                         securityGuardChargesText.text = securityGuardChargesText.text = String.Format(ModTranslation.getString("hackerChargesText"), SecurityGuard.charges, SecurityGuard.maxCharges);
                     securityGuardCamButton.actionButton.graphic.sprite = PlayerControl.GameOptions.MapId == 1 ? SecurityGuard.getLogSprite() : SecurityGuard.getCamSprite();
                     securityGuardCamButton.actionButton.OverrideText(PlayerControl.GameOptions.MapId == 1 ?
-                        TranslationController.Instance.GetString(StringNames.DoorlogLabel) :
-                        TranslationController.Instance.GetString(StringNames.VitalsLabel));
+                        TranslationController.Instance.GetString(StringNames.SecurityLogsSystem) :
+                        TranslationController.Instance.GetString(StringNames.SecurityCamsSystem));
                     return PlayerControl.LocalPlayer.CanMove && SecurityGuard.charges > 0;
                 },
                 () => {
@@ -1044,8 +1044,8 @@ namespace TheOtherRoles
                 },
                 false,
                 PlayerControl.GameOptions.MapId == 1 ?
-                    TranslationController.Instance.GetString(StringNames.DoorlogLabel) :
-                    TranslationController.Instance.GetString(StringNames.VitalsLabel)
+                    TranslationController.Instance.GetString(StringNames.SecurityLogsSystem) :
+                    TranslationController.Instance.GetString(StringNames.SecurityCamsSystem)
             );
 
             // Security Guard cam button charges

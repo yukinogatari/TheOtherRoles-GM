@@ -59,7 +59,7 @@ namespace TheOtherRoles.Patches {
         [HarmonyPatch(typeof(MainMenuManager), nameof(MainMenuManager.Start))]
         private static class LogoPatch
         {
-            static void Postfix(PingTracker __instance) {
+            static void Postfix(MainMenuManager __instance) {
                 DestroyableSingleton<ModManager>.Instance.ShowModStamp();
 
                 var amongUsLogo = GameObject.Find("bannerLogo_AmongUs");

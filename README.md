@@ -10,6 +10,8 @@ This fork introduces a number of changes to [The Other Roles](https://github.com
   * [Evil Swapper](#swapper) by [Virtual_Dusk](https://twitter.com/Virtual_Dusk)
   * [Chain-Shifter](#shifter) by [Virtual_Dusk](https://twitter.com/Virtual_Dusk)
   * [Plague Doctor](#plague-doctor) by [haoming37](https://github.com/haoming37)
+  * [Serial Killer](#serial-killer) by [haoming37](https://github.com/haoming37)
+  * [Neko-Kabocha](#neko-kabocha) by [Virtual_Dusk](https://twitter.com/Virtual_Dusk)
 * Pluralized Roles
   * Lovers (up to 7 couples)
   * Sheriff
@@ -43,8 +45,8 @@ Even more roles are coming soon :)
 | [Witch](#witch) | [Spy](#spy) |  |  |
 | [Ninja](#ninja) | [Nice Swapper](#swapper) |  |  |
 | [Evil Swapper](#swapper) | [Time Master](#time-master) |  |  |
-|  |  [Tracker](#tracker) |  |  |
-|  |  [Bait](#bait) |  |  |
+| [Serial Killer](#serial-killer) |  [Tracker](#tracker) |  |  |
+| [Neko-Kabocha](#neko-kabocha) |  [Bait](#bait) |  |  |
 |  |  [Madmate](#madmate)  |  |  |
 |  |  [Medium](#medium) |  |  |
 
@@ -53,6 +55,9 @@ The [Role Assignment](#role-assignment) sections explains how the roles are bein
 # Releases
 | Among Us - Version | Mod Version | Link |
 |----------|-------------|-----------------|
+| 2022.2.8s | v3.5.2 GM | [Download](https://github.com/yukinogatari/TheOtherRoles-GM/releases/download/v3.5.2/TheOtherRoles-GM.v3.5.2.zip)
+| 2021.12.15s (build num: 1421) | v3.5.1 GM | [Download](https://github.com/yukinogatari/TheOtherRoles-GM/releases/download/v3.5.1/TheOtherRoles-GM.v3.5.1.zip)
+| 2021.12.15s (build num: 1421) | v3.5.0 GM | [Download](https://github.com/yukinogatari/TheOtherRoles-GM/releases/download/v3.5.0/TheOtherRoles-GM.v3.5.0.zip)
 | 2021.12.15s (build num: 1421) | v3.4.1 GM | [Download](https://github.com/yukinogatari/TheOtherRoles-GM/releases/download/v3.4.1/TheOtherRoles-GM.v3.4.1.zip)
 | 2021.12.15s (build num: 1421) | v3.4.0 GM | [Download](https://github.com/yukinogatari/TheOtherRoles-GM/releases/download/v3.4.0/TheOtherRoles-GM.v3.4.0.zip)
 | 2021.12.15s (build num: 1421) | v3.3.3.1 GM | [Download](https://github.com/yukinogatari/TheOtherRoles-GM/releases/download/v3.3.3.1/TheOtherRoles-GM.v3.3.3.1.zip)
@@ -876,6 +881,18 @@ Created by [Virtual_Dusk](https://twitter.com/Virtual_Dusk)
 Original Idea by [うるさくてすみま船](https://twitter.com/nakanocchi2)
 
 The Ninja is an Impostor that can turn invisible. While stealthed, the Ninja moves faster than a normal Crewmate, and kills don't cause them to warp. However, using their stealth ability increases their kill cooldown--a penalty for killing while invisible, and a short penalty applied after unstealthing.
+
+## Serial Killer
+### **Team: Impostors**
+Created by [haoming37](https://github.com/haoming37)
+
+The Serial Killer is an Impostor that has a reduced kill cooldown at the cost of their own life. Once the Serial Killer has their first taste of blood, they must kill again within a set time or be driven crazy by bloodlust and commit suicide.
+
+## Neko-Kabocha
+### **Team: Impostors**
+Created by [Virtual_Dusk](https://twitter.com/Virtual_Dusk)
+
+The Neko-Kabocha is an Impostor capable of taking revenge on their killer. If killed by a Sheriff, Jackal, or other player, the killer will die alongside the Neko-Kabocha.
 
 ## Guesser
 ### **Team: Crewmates or Impostors**
