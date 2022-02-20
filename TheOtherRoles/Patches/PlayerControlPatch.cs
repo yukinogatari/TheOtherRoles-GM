@@ -1232,6 +1232,12 @@ namespace TheOtherRoles.Patches
                 })));
             }
 
+            // impostor promote to last impostor
+            if(target.isImpostor() && AmongUsClient.Instance.AmHost)
+            {
+                LastImpostor.promoteToLastImpostor();
+            }
+
             __instance.OnKill(target);
             target.OnDeath(__instance);
         }
@@ -1320,6 +1326,12 @@ namespace TheOtherRoles.Patches
                 MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.LawyerPromotesToPursuer, Hazel.SendOption.Reliable, -1);
                 AmongUsClient.Instance.FinishRpcImmediately(writer);
                 RPCProcedure.lawyerPromotesToPursuer();
+            }
+
+            // impostor promote to last impostor
+            if(__instance.isImpostor() && AmongUsClient.Instance.AmHost)
+            {
+                LastImpostor.promoteToLastImpostor();
             }
         }
     }

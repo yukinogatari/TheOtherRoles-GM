@@ -51,6 +51,7 @@ namespace TheOtherRoles
         Ninja,
         Madmate,
         SerialKiller,
+        LastImpostor,
 
 
         Mini = 150,
@@ -148,6 +149,7 @@ namespace TheOtherRoles
         FortuneTellerUsedDivine,
         FoxStealth,
         FoxCreatesImmoralist,
+        ImpostorPromotesToLastImpostor,
     }
 
     public static class RPCProcedure {
@@ -582,6 +584,9 @@ namespace TheOtherRoles
                     case RoleId.FortuneTeller:
                         FortuneTeller.swapRole(player, oldShifter);
                         break;
+                    case RoleId.LastImpostor:
+                        LastImpostor.swapRole(player, oldShifter);
+                        break;
                 }
             }
 
@@ -885,12 +890,21 @@ namespace TheOtherRoles
 
         public static void guesserShoot(byte killerId, byte dyingTargetId, byte guessedTargetId, byte guessedRoleId) {
             PlayerControl dyingTarget = Helpers.playerById(dyingTargetId);
+            PlayerControl killer = Helpers.playerById(killerId);
             if (dyingTarget == null) return;
             dyingTarget.Exiled();
             PlayerControl dyingLoverPartner = Lovers.bothDie ? dyingTarget.getPartner() : null; // Lover check
             byte partnerId = dyingLoverPartner != null ? dyingLoverPartner.PlayerId : dyingTargetId;
 
-            Guesser.remainingShots(killerId, true);
+            if(killer.isRole(RoleId.LastImpostor))
+            {
+                Mathf.Max(0, LastImpostor.remainingShots - 1);
+            }
+            else
+            {
+                Guesser.remainingShots(killerId, true);
+            }
+
             if (Constants.ShouldPlaySfx()) SoundManager.Instance.PlaySound(dyingTarget.KillSfx, false, 0.8f);
             if (MeetingHud.Instance) {
                 foreach (PlayerVoteArea pva in MeetingHud.Instance.playerStates) {
@@ -1088,6 +1102,11 @@ namespace TheOtherRoles
             {
                 FortuneTeller.fortuneTellerMessage("占い師に占われた", 5f, Color.white);
             }
+        }
+        public static void impostorPromotesToLastImpostor(byte targetId)
+        {
+            PlayerControl player = Helpers.playerById(targetId);
+            player.setRole(RoleId.LastImpostor);
         }
     }   
 
@@ -1333,6 +1352,9 @@ namespace TheOtherRoles
                     break;
                 case (byte)CustomRPC.FoxCreatesImmoralist:
                     RPCProcedure.foxCreatesImmoralist(reader.ReadByte());
+                    break;
+                case (byte)CustomRPC.ImpostorPromotesToLastImpostor:
+                    RPCProcedure.impostorPromotesToLastImpostor(reader.ReadByte());
                     break;
             }
         }

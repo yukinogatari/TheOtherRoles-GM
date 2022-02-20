@@ -34,6 +34,7 @@ namespace TheOtherRoles
             { typeof(RoleBase<Fox>), RoleId.Fox},
             { typeof(RoleBase<Immoralist>), RoleId.Immoralist},
             { typeof(RoleBase<FortuneTeller>), RoleId.FortuneTeller},
+            { typeof(RoleBase<LastImpostor>), RoleId.LastImpostor},
         };
     }
 

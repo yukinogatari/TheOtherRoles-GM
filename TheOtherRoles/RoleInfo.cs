@@ -90,6 +90,7 @@ namespace TheOtherRoles
         public static RoleInfo fox = new RoleInfo("妖狐", Fox.color, CustomOptionHolder.foxSpawnRate, RoleId.Fox);
         public static RoleInfo immoralist = new RoleInfo("背徳者", Immoralist.color, CustomOptionHolder.foxSpawnRate, RoleId.Immoralist);
         public static RoleInfo fortuneTeller= new RoleInfo("占い師", FortuneTeller.color, CustomOptionHolder.fortuneTellerSpawnRate, RoleId.FortuneTeller);
+        public static RoleInfo lastImpostor = new RoleInfo("ラストインポスター", LastImpostor.color, CustomOptionHolder.foxSpawnRate, RoleId.LastImpostor);
 
         public static List<RoleInfo> allRoleInfos = new List<RoleInfo>() {
                 impostor,
@@ -145,7 +146,8 @@ namespace TheOtherRoles
                 plagueDoctor,
                 fox,
                 immoralist,
-                fortuneTeller
+                fortuneTeller,
+                lastImpostor
             };
 
         public static string tl(string key)
@@ -217,11 +219,18 @@ namespace TheOtherRoles
                     infos.Add(info);
                 }
             }
+            
+            if (p.isRole(RoleId.LastImpostor)) infos.Add(lastImpostor); // 一番最後にしておかないといけない
 
 
             // Default roles
             if (infos.Count == 0 && p.Data.Role.IsImpostor) infos.Add(impostor); // Just Impostor
             if (infos.Count == 0 && !p.Data.Role.IsImpostor) infos.Add(crewmate); // Just Crewmate
+            if (infos.Count == 1 && infos[0] == lastImpostor)
+            {
+                infos[0] = impostor;
+                infos.Add(lastImpostor);
+            }
 
             // Modifier
             if (p.isLovers()) infos.Add(lovers);

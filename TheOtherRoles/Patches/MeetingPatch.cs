@@ -409,7 +409,8 @@ namespace TheOtherRoles.Patches {
                     roleInfo == RoleInfo.niceMini || 
 					(!Guesser.evilGuesserCanGuessSpy && guesserRole == RoleId.EvilGuesser && roleInfo.roleId == RoleId.Spy) ||
                     roleInfo == RoleInfo.gm ||
-                    (Guesser.onlyAvailableRoles && !roleInfo.enabled && !MapOptions.hideSettings))
+                    roleInfo == RoleInfo.lastImpostor ||
+                    (Guesser.onlyAvailableRoles && !roleInfo.enabled && !MapOptions.hideSettings)) 
                     continue; // Not guessable roles
                 Transform buttonParent = (new GameObject()).transform;
                 buttonParent.SetParent(container);
@@ -455,7 +456,7 @@ namespace TheOtherRoles.Patches {
                         // Reset the GUI
                         __instance.playerStates.ToList().ForEach(x => x.gameObject.SetActive(true));
                         UnityEngine.Object.Destroy(container.gameObject);
-                        if (Guesser.hasMultipleShotsPerMeeting && Guesser.remainingShots(PlayerControl.LocalPlayer.PlayerId) > 1 && dyingTarget != PlayerControl.LocalPlayer)
+                        if (Guesser.hasMultipleShotsPerMeeting && (Guesser.remainingShots(PlayerControl.LocalPlayer.PlayerId) > 1 || LastImpostor.remainingShots > 1) && dyingTarget != PlayerControl.LocalPlayer)
                         {
                             __instance.playerStates.ToList().ForEach(x => { if (x.TargetPlayerId == dyingTarget.PlayerId && x.transform.FindChild("ShootButton") != null) UnityEngine.Object.Destroy(x.transform.FindChild("ShootButton").gameObject); });
                         }
@@ -560,7 +561,9 @@ namespace TheOtherRoles.Patches {
             }
 
             // Add Guesser Buttons
-            if (Guesser.isGuesser(PlayerControl.LocalPlayer.PlayerId) && PlayerControl.LocalPlayer.isAlive() && Guesser.remainingShots(PlayerControl.LocalPlayer.PlayerId) > 0) {
+            bool isGuesserButton = Guesser.isGuesser(PlayerControl.LocalPlayer.PlayerId) && PlayerControl.LocalPlayer.isAlive() && Guesser.remainingShots(PlayerControl.LocalPlayer.PlayerId) > 0;
+            bool isLastImpostorButton = PlayerControl.LocalPlayer.isRole(RoleId.LastImpostor) && LastImpostor.remainingShots > 0 && LastImpostor.selectedFunction == 1 && LastImpostor.isCounterMax();
+            if (isGuesserButton || isLastImpostorButton) {
                 for (int i = 0; i < __instance.playerStates.Length; i++) {
                     PlayerVoteArea playerVoteArea = __instance.playerStates[i];
                     if (playerVoteArea.AmDead || playerVoteArea.TargetPlayerId == PlayerControl.LocalPlayer.PlayerId || playerVoteArea.TargetPlayerId == GM.gm?.PlayerId) continue;

@@ -81,6 +81,12 @@ namespace TheOtherRoles.Patches {
                 HudManager.Instance.roomTracker.text.SetText("");
                 HudManager.Instance.roomTracker.enabled = false;
             }
+
+            // 最初から一人の場合はLast Impostorになる
+            if(AmongUsClient.Instance.AmHost)
+            {
+                LastImpostor.promoteToLastImpostor();
+            }
         }
     }
 

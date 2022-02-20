@@ -306,6 +306,13 @@ namespace TheOtherRoles {
         public static CustomOption foxNumLongTasks;
         public static CustomOption foxNumShortTasks;
 
+        public static CustomOption lastImpostorOptions;
+        public static CustomOption lastImpostorEnable;
+        public static CustomOption lastImpostorNumKills;
+        public static CustomOption lastImpostorFunctions;
+        public static CustomOption lastImpostorResultIsCrewOrNot;
+        public static CustomOption lastImpostorNumShots;
+
         internal static Dictionary<byte, byte[]> blockedRolePairings = new Dictionary<byte, byte[]>();
         internal static List<byte> blockLovers = new List<byte>();
 
@@ -405,6 +412,14 @@ namespace TheOtherRoles {
             serialKillerKillCooldown = CustomOption.Create(1012, "serialKillerKillCooldown", 15f, 2.5f, 60f, 2.5f, serialKillerSpawnRate, format: "unitSeconds");
             serialKillerSuicideTimer = CustomOption.Create(1013, "serialKillerSuicideTimer", 40f, 2.5f, 60f, 2.5f, serialKillerSpawnRate, format: "unitSeconds");
             serialKillerResetTimer = CustomOption.Create(1014, "serialKillerResetTimer", true, serialKillerSpawnRate);
+
+            lastImpostorOptions = new CustomOptionBlank(null);
+            lastImpostorEnable = CustomOption.Create(9900, "ラストインポスター有効化", true, lastImpostorOptions, true);
+            lastImpostorFunctions = CustomOption.Create(9901, "ラストインポスター時に有効になる能力", new string[]{"占い", "ゲッサー"}, lastImpostorEnable);
+            lastImpostorNumKills = CustomOption.Create(9902, "能力発動に必要なキル数", 3f, 1f, 10f, 1.0f, lastImpostorEnable);
+            lastImpostorResultIsCrewOrNot = CustomOption.Create(9903, "占い結果がクルーとクルー以外になる", true, lastImpostorEnable);
+            lastImpostorNumShots = CustomOption.Create(9904, "ゲッサー弾丸数", 1f, 1f, 15f, 1f, lastImpostorEnable );
+            
 
             madmateSpawnRate = new CustomRoleOption(360, "madmate", Madmate.color);
             madmateCanDieToSheriff = CustomOption.Create(361, "madmateCanDieToSheriff", false, madmateSpawnRate);
