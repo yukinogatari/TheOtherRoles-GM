@@ -65,6 +65,50 @@ namespace TheOtherRoles {
             TheOtherRolesPlugin.Instance.Log.LogInfo(msg);
         }
 
+        public static List<byte> generateTasks(int numCommon, int numShort, int numLong)
+        {
+            if (numCommon + numShort + numLong <= 0)
+            {
+                numShort = 1;
+            }
+
+            var tasks = new Il2CppSystem.Collections.Generic.List<byte>();
+            var hashSet = new Il2CppSystem.Collections.Generic.HashSet<TaskTypes>();
+
+            var commonTasks = new Il2CppSystem.Collections.Generic.List<NormalPlayerTask>();
+            foreach (var task in ShipStatus.Instance.CommonTasks.OrderBy(x => rnd.Next())) commonTasks.Add(task);
+
+            var shortTasks = new Il2CppSystem.Collections.Generic.List<NormalPlayerTask>();
+            foreach (var task in ShipStatus.Instance.NormalTasks.OrderBy(x => rnd.Next())) shortTasks.Add(task);
+
+            var longTasks = new Il2CppSystem.Collections.Generic.List<NormalPlayerTask>();
+            foreach (var task in ShipStatus.Instance.LongTasks.OrderBy(x => rnd.Next())) longTasks.Add(task);
+
+            int start = 0;
+            ShipStatus.Instance.AddTasksFromList(ref start, numCommon, tasks, hashSet, commonTasks);
+
+            start = 0;
+            ShipStatus.Instance.AddTasksFromList(ref start, numShort, tasks, hashSet, shortTasks);
+
+            start = 0;
+            ShipStatus.Instance.AddTasksFromList(ref start, numLong, tasks, hashSet, longTasks);
+
+            return tasks.ToArray().ToList();
+        }
+
+        public static void generateAndAssignTasks(this PlayerControl player, int numCommon, int numShort, int numLong)
+        {
+            if (player == null) return;
+
+            List<byte> taskTypeIds = generateTasks(numCommon, numShort, numLong);
+
+            MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.UncheckedSetTasks, Hazel.SendOption.Reliable, -1);
+            writer.Write(player.PlayerId);
+            writer.WriteBytesAndSize(taskTypeIds.ToArray());
+            AmongUsClient.Instance.FinishRpcImmediately(writer);
+            RPCProcedure.uncheckedSetTasks(player.PlayerId, taskTypeIds.ToArray());
+        }
+
         public static void setSkinWithAnim(PlayerPhysics playerPhysics, string SkinId)
         {
             SkinData nextSkin = DestroyableSingleton<HatManager>.Instance.GetSkinById(SkinId);

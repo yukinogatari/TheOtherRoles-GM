@@ -27,9 +27,9 @@ namespace TheOtherRoles
         public static bool crewWinsByTasks { get { return CustomOptionHolder.foxCrewWinsByTasks.getBool(); } }
         public static float stealthCooldown { get { return CustomOptionHolder.foxStealthCooldown.getFloat(); } }
         public static float stealthDuration { get { return CustomOptionHolder.foxStealthDuration.getFloat(); } }
-        public static int numCommonTasks { get { return (int)CustomOptionHolder.foxNumCommonTasks.getFloat(); } }
-        public static int numLongTasks { get { return (int)CustomOptionHolder.foxNumLongTasks.getFloat(); } }
-        public static int numShortTasks { get { return (int)CustomOptionHolder.foxNumShortTasks.getFloat(); } }
+        public static int numCommonTasks { get { return Mathf.RoundToInt(CustomOptionHolder.foxNumCommonTasks.getFloat()); } }
+        public static int numLongTasks { get { return Mathf.RoundToInt(CustomOptionHolder.foxNumLongTasks.getFloat()); } }
+        public static int numShortTasks { get { return Mathf.RoundToInt(CustomOptionHolder.foxNumShortTasks.getFloat()); } }
 
         public bool stealthed = false;
         public DateTime stealthedAt = DateTime.UtcNow;
@@ -343,7 +343,7 @@ namespace TheOtherRoles
                     {
                         if (p.Data.Role.IsImpostor)
                         {
-                            arrow = new Arrow(Color.red);
+                            arrow = new Arrow(Palette.ImpostorRed);
                         }
                         else if (p.isRole(RoleType.Jackal))
                         {
@@ -351,11 +351,11 @@ namespace TheOtherRoles
                         }
                         else if (p.isRole(RoleType.Sheriff))
                         {
-                            arrow = new Arrow(Sheriff.color);
+                            arrow = new Arrow(Palette.White);
                         }
                         else
                         {
-                            arrow = new Arrow(Color.black);
+                            arrow = new Arrow(Palette.Black);
                         }
                         arrow.arrow.SetActive(true);
                         arrow.Update(p.transform.position);
@@ -371,6 +371,7 @@ namespace TheOtherRoles
                 arrows.Do(x => x.Update());
             }
         }
+
         public static bool isFoxAlive()
         {
             bool isAlive = false;
@@ -418,57 +419,20 @@ namespace TheOtherRoles
             return counter == totalTasks;
         }
 
-        public void SetFoxTasks()
+        public void setFoxTasks()
         {
-            if (player == null) return;
-            player.clearAllTasks();
-
-            int totalTasks = numCommonTasks + numLongTasks + numShortTasks;
-            if (totalTasks == 0) return;
-
-            List<byte> list = new List<byte>(10);
-            SetTasksToList(
-                ref list,
-                ShipStatus.Instance.CommonTasks.ToList<NormalPlayerTask>(),
-                Mathf.RoundToInt(numCommonTasks));
-            SetTasksToList(
-                ref list,
-                ShipStatus.Instance.LongTasks.ToList<NormalPlayerTask>(),
-                Mathf.RoundToInt(numLongTasks));
-            SetTasksToList(
-                ref list,
-                ShipStatus.Instance.NormalTasks.ToList<NormalPlayerTask>(),
-                Mathf.RoundToInt(numShortTasks));
-
-            byte[] taskTypeIds = list.ToArray();
-
-            MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.UncheckedSetTasks, Hazel.SendOption.Reliable, -1);
-            writer.Write(player.PlayerId);
-            writer.WriteBytesAndSize(taskTypeIds);
-            AmongUsClient.Instance.FinishRpcImmediately(writer);
-            RPCProcedure.uncheckedSetTasks(player.PlayerId, taskTypeIds);
-        }
-
-        private static void SetTasksToList(
-            ref List<byte> list,
-            List<NormalPlayerTask> playerTasks,
-            int numConfiguredTasks)
-        {
-            playerTasks.shuffle(0);
-            int numTasks = Math.Min(playerTasks.Count, numConfiguredTasks);
-            for (int i = 0; i < numTasks; i++)
-            {
-                list.Add((byte)playerTasks[i].Index);
-            }
+            player.generateAndAssignTasks(numCommonTasks, numShortTasks, numLongTasks);
         }
 
         [HarmonyPatch(typeof(IntroCutscene), nameof(IntroCutscene.BeginCrewmate))]
         class BeginCrewmatePatch
         {
-            public static void Postfix(IntroCutscene __instance, ref Il2CppSystem.Collections.Generic.List<PlayerControl> yourTeam)
+            public static void Postfix(ShipStatus __instance)
             {
-                foreach (Fox f in players)
-                    f.SetFoxTasks();
+                if (PlayerControl.LocalPlayer.isRole(RoleType.Fox))
+                {
+                    local.setFoxTasks();
+                }
             }
         }
 
@@ -529,7 +493,7 @@ namespace TheOtherRoles
                         PlayerControl.LocalPlayer.isRole(RoleType.Fox) ||
                         PlayerControl.LocalPlayer.isRole(RoleType.Immoralist) ||
                         PlayerControl.LocalPlayer.isDead() ||
-                        (Lighter.canSeeNinja && PlayerControl.LocalPlayer.isRole(RoleType.Lighter) && Lighter.isLightActive(PlayerControl.LocalPlayer));
+                        (PlayerControl.LocalPlayer.isRole(RoleType.Lighter) && Lighter.isLightActive(PlayerControl.LocalPlayer));
 
                     var opacity = canSee ? 0.1f : 0.0f;
 

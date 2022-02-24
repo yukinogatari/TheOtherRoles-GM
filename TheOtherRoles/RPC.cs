@@ -310,6 +310,9 @@ namespace TheOtherRoles
 
         public static void uncheckedSetTasks(byte playerId, byte[] taskTypeIds)
         {
+            var player = Helpers.playerById(playerId);
+            player.clearAllTasks();
+
             GameData.Instance.SetTasks(playerId, taskTypeIds);
         }
 
