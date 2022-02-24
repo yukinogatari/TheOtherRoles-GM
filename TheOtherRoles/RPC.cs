@@ -97,6 +97,7 @@ namespace TheOtherRoles
         OverrideNativeRole,
         UncheckedExilePlayer,
         UncheckedEndGame,
+        UncheckedSetTasks,
         DynamicMapOption,
 
         // Role functionality
@@ -305,6 +306,11 @@ namespace TheOtherRoles
                         ShipStatus.RpcEndGame((GameOverReason)reason, false);
                 }));
             }
+        }
+
+        public static void uncheckedSetTasks(byte playerId, byte[] taskTypeIds)
+        {
+            GameData.Instance.SetTasks(playerId, taskTypeIds);
         }
 
         public static void dynamicMapOption(byte mapId) {
@@ -1315,6 +1321,9 @@ namespace TheOtherRoles
                         break;
                     case (byte)CustomRPC.UncheckedEndGame:
                         RPCProcedure.uncheckedEndGame(reader.ReadByte());
+                        break;
+                    case (byte)CustomRPC.UncheckedSetTasks:
+                        RPCProcedure.uncheckedSetTasks(reader.ReadByte(), reader.ReadBytesAndSize());
                         break;
                     case (byte)CustomRPC.DynamicMapOption:
 	                    byte mapId = reader.ReadByte();

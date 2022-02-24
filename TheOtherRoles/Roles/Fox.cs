@@ -417,15 +417,11 @@ namespace TheOtherRoles
             }
             return counter == totalTasks;
         }
-        public static void SetFoxTasks()
+
+        public void SetFoxTasks()
         {
-            PlayerControl me = PlayerControl.LocalPlayer;
-            if (me == null)
-                return;
-            GameData.PlayerInfo playerById = GameData.Instance.GetPlayerById(me.PlayerId);
-            if (playerById == null)
-                return;
-            me.clearAllTasks();
+            if (player == null) return;
+            player.clearAllTasks();
 
             int totalTasks = numCommonTasks + numLongTasks + numShortTasks;
             if (totalTasks == 0) return;
@@ -445,21 +441,12 @@ namespace TheOtherRoles
                 Mathf.RoundToInt(numShortTasks));
 
             byte[] taskTypeIds = list.ToArray();
-            playerById.Tasks = new Il2CppSystem.Collections.Generic.List<GameData.TaskInfo>(taskTypeIds.Length);
-            for (int i = 0; i < taskTypeIds.Length; i++)
-            {
-                playerById.Tasks.Add(new GameData.TaskInfo(taskTypeIds[i], (uint)i));
-                playerById.Tasks[i].Id = (uint)i;
-            }
-            for (int i = 0; i < playerById.Tasks.Count; i++)
-            {
-                GameData.TaskInfo taskInfo = playerById.Tasks[i];
-                NormalPlayerTask normalPlayerTask = UnityEngine.Object.Instantiate<NormalPlayerTask>(ShipStatus.Instance.GetTaskById(taskInfo.TypeId), me.transform);
-                normalPlayerTask.Id = taskInfo.Id;
-                normalPlayerTask.Owner = me;
-                normalPlayerTask.Initialize();
-                me.myTasks.Add(normalPlayerTask);
-            }
+
+            MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.UncheckedSetTasks, Hazel.SendOption.Reliable, -1);
+            writer.Write(player.PlayerId);
+            writer.WriteBytesAndSize(taskTypeIds);
+            AmongUsClient.Instance.FinishRpcImmediately(writer);
+            RPCProcedure.uncheckedSetTasks(player.PlayerId, taskTypeIds);
         }
 
         private static void SetTasksToList(
@@ -480,10 +467,8 @@ namespace TheOtherRoles
         {
             public static void Postfix(IntroCutscene __instance, ref Il2CppSystem.Collections.Generic.List<PlayerControl> yourTeam)
             {
-                if (PlayerControl.LocalPlayer.isRole(RoleType.Fox))
-                {
-                    SetFoxTasks();
-                }
+                foreach (Fox f in players)
+                    f.SetFoxTasks();
             }
         }
 

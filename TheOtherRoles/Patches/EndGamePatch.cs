@@ -110,7 +110,6 @@ namespace TheOtherRoles.Patches
 
             AdditionalTempData.gameOverReason = endGameResult.GameOverReason;
             if ((int)endGameResult.GameOverReason >= 10) endGameResult.GameOverReason = GameOverReason.ImpostorByKill;
-
         }
 
         public static void Postfix(AmongUsClient __instance, [HarmonyArgument(0)] ref EndGameResult endGameResult)
@@ -122,7 +121,7 @@ namespace TheOtherRoles.Patches
             Boolean isFoxCompletedTasks = Fox.isFoxCompletedTasks(); // 生存中の狐が1匹でもタスクを全て終えていること
             if(isFoxAlive && isFoxCompletedTasks){
                 // タスク勝利の場合はオプションの設定次第
-                if(gameOverReason == GameOverReason.HumansByTask && !Fox.crewWinsByTasks)
+                if (gameOverReason == GameOverReason.HumansByTask && !Fox.crewWinsByTasks)
                 {
                     gameOverReason = (GameOverReason)CustomGameOverReason.FoxWin;
                 }
@@ -835,8 +834,7 @@ namespace TheOtherRoles.Patches
 
                         if (isFoxCompletedtasks && isFoxAlive && GameData.Instance.TotalTasks > 0 && GameData.Instance.TotalTasks <= GameData.Instance.CompletedTasks + numDeadPlayerUncompletedTasks)
                         {
-                            __instance.enabled = false;
-                            ShipStatus.RpcEndGame(GameOverReason.HumansByTask, false);
+                            UncheckedEndGame(GameOverReason.HumansByTask);
                             return true;
                         }
                     }
