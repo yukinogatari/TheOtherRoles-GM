@@ -2745,6 +2745,14 @@
         "0": "Fox",
         "11": "\u5996\u72d0"
     },
+    "foxIntroDesc": {
+        "0": "Use your powers to hide from the Crew",
+        "11": "\u4e0d\u601d\u8b70\u306a\u529b\u3092\u4f7f\u3063\u3066\u6751\u3092\u6b3a\u3053\u3046"
+    },
+    "foxShortDesc": {
+        "0": "Use your powers to hide from the Crew",
+        "11": "\u4e0d\u601d\u8b70\u306a\u529b\u3092\u4f7f\u3063\u3066\u6751\u3092\u6b3a\u3053\u3046"
+    },
     "foxCanFixReactorAndO2": {
         "0": "Can Fix Reactor/O2",
         "11": "\u30ea\u30a2\u30af\u30bf\u30fc\u3068O2\u3092\u76f4\u305b\u308b"
@@ -2779,7 +2787,7 @@
     },
     "foxNumRepair": {
         "0": "Number of Repairs",
-        "11": "\u30ea\u30da\u30a2\u56de\u6570"
+        "11": "\u30b5\u30dc\u30bf\u30fc\u30b8\u30e5\u3092\u76f4\u305b\u308b\u56de\u6570"
     },
     "jackalCanCreateSidekickFromFox": {
         "0": "Can Make Fox Into Sidekick",
@@ -2789,6 +2797,14 @@
         "0": "Immoralist",
         "11": "\u80cc\u5fb3\u8005"
     },
+    "immoralistIntroDesc": {
+        "0": "Support the Fox at all costs, even your life",
+        "11": "\u547d\u3092\u6368\u3066\u3066\u3067\u3082\u5996\u72d0\u3092\u5b88\u308d\u3046"
+    },
+    "immoralistShortDesc": {
+        "0": "Support the Fox at all costs, even your life",
+        "11": "\u547d\u3092\u6368\u3066\u3066\u3067\u3082\u5996\u72d0\u3092\u5b88\u308d\u3046"
+    },
     "immoralistSuicideText": {
         "0": "Suicide",
         "11": "\u81ea\u6bba"
@@ -2796,6 +2812,14 @@
     "fortuneTeller": {
         "0": "Fortune Teller",
         "11": "\u5360\u3044\u5e2b"
+    },
+    "fortuneTellerIntroDesc": {
+        "0": "May your divination reveal your enemies",
+        "11": "\u5360\u3044\u306e\u529b\u3092\u4f7f\u7528\u3057\u3066\u4eba\u5916\u3092\u7099\u308a\u51fa\u305d\u3046"
+    },
+    "fortuneTellerShortDesc": {
+        "0": "May your divination reveal your enemies",
+        "11": "\u5360\u3044\u306e\u529b\u3092\u4f7f\u7528\u3057\u3066\u4eba\u5916\u3092\u7099\u308a\u51fa\u305d\u3046"
     },
     "fortuneTellerNumTasks": {
         "0": "Number of Tasks to Divine",
@@ -2883,10 +2907,18 @@
     },
     "FoxRepairText": {
         "0": "[BLANK]",
-        "11": "\u30ea\u30da\u30a2"
+        "11": "\u4fee\u5fa9"
     },
     "FoxImmoralistText": {
         "0": "Immoralist",
         "11": "\u80cc\u5fb3\u8005"
+    },
+    "foxWin": {
+        "0": "Fox Wins",
+        "11": "\u5996\u72d0\u52dd\u5229"
+    },
+    "foxWinExtra": {
+        "0": "Fox {0} Win",
+        "11": "\u5996\u72d0{0}\u52dd\u5229"
     }
 }

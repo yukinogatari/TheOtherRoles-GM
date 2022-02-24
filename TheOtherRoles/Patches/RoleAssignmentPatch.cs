@@ -78,7 +78,11 @@ namespace TheOtherRoles.Patches
                 }
             }
 
-            blockLovers = new List<byte> { (byte)RoleType.Snitch };
+            blockLovers = new List<byte> {
+                (byte)RoleType.Snitch,
+                (byte)RoleType.Bait,
+            };
+
             if (!CustomOptionHolder.arsonistCanBeLovers.getBool())
             {
                 blockLovers.Add((byte)RoleType.Arsonist);
