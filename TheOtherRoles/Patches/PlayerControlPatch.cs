@@ -501,8 +501,13 @@ namespace TheOtherRoles.Patches
 
             foreach (PlayerControl p in PlayerControl.AllPlayerControls)
             {
-                if (p != PlayerControl.LocalPlayer && PlayerControl.LocalPlayer.isAlive() && !p.isGM() && !PlayerControl.LocalPlayer.isGM()) continue;
-                if ((Lawyer.lawyerKnowsRole && PlayerControl.LocalPlayer == Lawyer.lawyer && p == Lawyer.target) || p == PlayerControl.LocalPlayer || PlayerControl.LocalPlayer.Data.IsDead)
+                var canSeeInfo =
+                    p == PlayerControl.LocalPlayer ||
+                    PlayerControl.LocalPlayer.isDead() ||
+                    p.isGM() || PlayerControl.LocalPlayer.isGM() ||
+                    (Lawyer.lawyerKnowsRole && PlayerControl.LocalPlayer == Lawyer.lawyer && p == Lawyer.target);
+
+                if (canSeeInfo)
                 {
                     Transform playerInfoTransform = p.nameText.transform.parent.FindChild("Info");
                     TMPro.TextMeshPro playerInfo = playerInfoTransform != null ? playerInfoTransform.GetComponent<TMPro.TextMeshPro>() : null;

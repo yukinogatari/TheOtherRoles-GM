@@ -460,6 +460,58 @@ namespace TheOtherRoles
             }
         }
 
+        public static void swapRoles(this PlayerControl player, PlayerControl target)
+        {
+            foreach (var t in RoleData.allRoleTypes)
+            {
+                if (player.isRole(t.Key))
+                {
+                    t.Value.GetMethod("swapRole", BindingFlags.Public | BindingFlags.Static)?.Invoke(null, new object[] { player, target });
+                }
+            }
+
+            if (player.isRole(RoleType.Mayor)) Mayor.mayor = target;
+            if (player.isRole(RoleType.Engineer)) Engineer.engineer = target;
+            if (player.isRole(RoleType.Detective)) Detective.detective = target;
+            if (player.isRole(RoleType.TimeMaster)) TimeMaster.timeMaster = target;
+            if (player.isRole(RoleType.Medic)) Medic.medic = target;
+            if (player.isRole(RoleType.Swapper)) Swapper.swapper = target;
+            if (player.isRole(RoleType.Seer)) Seer.seer = target;
+            if (player.isRole(RoleType.Hacker)) Hacker.hacker = target;
+            if (player.isRole(RoleType.Tracker)) Tracker.tracker = target;
+            if (player.isRole(RoleType.Snitch)) Snitch.snitch = target;
+            if (player.isRole(RoleType.Spy)) Spy.spy = target;
+            if (player.isRole(RoleType.SecurityGuard)) SecurityGuard.securityGuard = target;
+            if (player.isRole(RoleType.Bait))
+            {
+                Bait.bait = target;
+                if (Bait.bait.Data.IsDead) Bait.reported = true;
+            }
+            if (player.isRole(RoleType.Medium)) Medium.medium = target;
+            if (player.isRole(RoleType.Godfather)) Godfather.godfather = target;
+            if (player.isRole(RoleType.Mafioso)) Mafioso.mafioso = target;
+            if (player.isRole(RoleType.Janitor)) Janitor.janitor = target;
+            if (player.isRole(RoleType.Morphling)) Morphling.morphling = target;
+            if (player.isRole(RoleType.Camouflager)) Camouflager.camouflager = target;
+            if (player.isRole(RoleType.Vampire)) Vampire.vampire = target;
+            if (player.isRole(RoleType.Eraser)) Eraser.eraser = target;
+            if (player.isRole(RoleType.Trickster)) Trickster.trickster = target;
+            if (player.isRole(RoleType.Cleaner)) Cleaner.cleaner = target;
+            if (player.isRole(RoleType.Warlock)) Warlock.warlock = target;
+            if (player.isRole(RoleType.BountyHunter)) BountyHunter.bountyHunter = target;
+            if (player.isRole(RoleType.Witch)) Witch.witch = target;
+            if (player.isRole(RoleType.Mini)) Mini.mini = target;
+            if (player.isRole(RoleType.EvilGuesser)) Guesser.evilGuesser = target;
+            if (player.isRole(RoleType.NiceGuesser)) Guesser.niceGuesser = target;
+            if (player.isRole(RoleType.Jester)) Jester.jester = target;
+            if (player.isRole(RoleType.Arsonist)) Arsonist.arsonist = target;
+            if (player.isRole(RoleType.Jackal)) Jackal.jackal = target;
+            if (player.isRole(RoleType.Sidekick)) Sidekick.sidekick = target;
+            if (player.isRole(RoleType.Vulture)) Vulture.vulture = target;
+            if (player.isRole(RoleType.Lawyer)) Lawyer.lawyer = target;
+            if (player.isRole(RoleType.Pursuer)) Pursuer.pursuer = target;
+        }
+
         public static void OnKill(this PlayerControl player, PlayerControl target)
         {
             foreach (var r in Role.allRoles)
