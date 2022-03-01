@@ -349,6 +349,8 @@ namespace TheOtherRoles.Patches
             // Assign any dual role types
             foreach (var option in CustomDualRoleOption.dualRoles)
             {
+                if (option.count <= 0 || !option.roleEnabled) continue;
+
                 int niceCount = 0;
                 int evilCount = 0;
                 while (niceCount + evilCount < option.count)

@@ -27,9 +27,9 @@ namespace TheOtherRoles
         public static bool crewWinsByTasks { get { return CustomOptionHolder.foxCrewWinsByTasks.getBool(); } }
         public static float stealthCooldown { get { return CustomOptionHolder.foxStealthCooldown.getFloat(); } }
         public static float stealthDuration { get { return CustomOptionHolder.foxStealthDuration.getFloat(); } }
-        public static int numCommonTasks { get { return Mathf.RoundToInt(CustomOptionHolder.foxNumCommonTasks.getFloat()); } }
-        public static int numLongTasks { get { return Mathf.RoundToInt(CustomOptionHolder.foxNumLongTasks.getFloat()); } }
-        public static int numShortTasks { get { return Mathf.RoundToInt(CustomOptionHolder.foxNumShortTasks.getFloat()); } }
+        public static int numCommonTasks { get { return CustomOptionHolder.foxTasks.commonTasks; } }
+        public static int numLongTasks { get { return CustomOptionHolder.foxTasks.longTasks; } }
+        public static int numShortTasks { get { return CustomOptionHolder.foxTasks.shortTasks; } }
 
         public bool stealthed = false;
         public DateTime stealthedAt = DateTime.UtcNow;
@@ -142,7 +142,7 @@ namespace TheOtherRoles
         public static Sprite getImmoralistButtonSprite()
         {
             if (immoralistButtonSprite) return immoralistButtonSprite;
-            immoralistButtonSprite = Helpers.loadSpriteFromResources("TheOtherRoles.Resources.SidekickButton.png", 115f);
+            immoralistButtonSprite = Helpers.loadSpriteFromResources("TheOtherRoles.Resources.FoxImmoralistButton.png", 115f);
             return immoralistButtonSprite;
         }
 

@@ -320,17 +320,15 @@ namespace TheOtherRoles {
         public static CustomOption serialKillerKillCooldown;
         public static CustomOption serialKillerSuicideTimer;
         public static CustomOption serialKillerResetTimer;
+
         public static CustomRoleOption foxSpawnRate;
         public static CustomOption foxCanFixReactorAndO2;
         public static CustomOption foxCanCreateImmoralist;
         public static CustomOption foxNumRepair;
-
         public static CustomOption foxCrewWinsByTasks;
         public static CustomOption foxStealthCooldown;
         public static CustomOption foxStealthDuration;
-        public static CustomOption foxNumCommonTasks;
-        public static CustomOption foxNumLongTasks;
-        public static CustomOption foxNumShortTasks;
+        public static CustomTasksOption foxTasks;
 
         internal static Dictionary<byte, byte[]> blockedRolePairings = new Dictionary<byte, byte[]>();
 
@@ -531,15 +529,13 @@ namespace TheOtherRoles {
             plagueDoctorWinDead = CustomOption.Create(908, "plagueDoctorWinDead", true, plagueDoctorSpawnRate);
 
 
-            watcherSpawnRate = new CustomDualRoleOption(1040, "watcher", Watcher.color, RoleType.Watcher, 15);
+            watcherSpawnRate = new CustomDualRoleOption(1040, "watcher", Watcher.color, RoleType.Watcher, 15, roleEnabled: false);
 
 
             foxSpawnRate = new CustomRoleOption(910, "fox", Fox.color, 1);
             foxCanFixReactorAndO2 = CustomOption.Create(911, "foxCanFixReactorAndO2", false, foxSpawnRate);
             foxCrewWinsByTasks = CustomOption.Create(912, "foxCrewWinsByTasks", true, foxSpawnRate);
-            foxNumCommonTasks = CustomOption.Create(913, "foxNumCommonTasks", 1f, 0f, 4f, 1f, foxSpawnRate);
-            foxNumLongTasks = CustomOption.Create(914, "foxNumLongTasks", 1f, 0f, 15f, 1f, foxSpawnRate);
-            foxNumShortTasks = CustomOption.Create(915, "foxNumShortTasks", 3f, 0f, 23f, 1f, foxSpawnRate);
+            foxTasks = new CustomTasksOption(913, 1, 1, 3, foxSpawnRate);
             foxStealthCooldown = CustomOption.Create(916, "foxStealthCooldown", 15f, 1f, 30f, 1f, foxSpawnRate, format: "unitSeconds");
             foxStealthDuration = CustomOption.Create(917, "foxStealthDuration", 15f, 1f, 30f, 1f, foxSpawnRate, format: "unitSeconds");
             foxCanCreateImmoralist = CustomOption.Create(918, "foxCanCreateImmoralist", true, foxSpawnRate);

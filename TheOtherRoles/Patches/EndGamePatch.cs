@@ -903,10 +903,11 @@ namespace TheOtherRoles.Patches
 
                 private static void UncheckedEndGame(GameOverReason reason)
                 {
-                    MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.UncheckedEndGame, Hazel.SendOption.Reliable, -1);
+                    ShipStatus.RpcEndGame(reason, false);
+                    /*MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.UncheckedEndGame, Hazel.SendOption.Reliable, -1);
                     writer.Write((byte)reason);
                     AmongUsClient.Instance.FinishRpcImmediately(writer);
-                    RPCProcedure.uncheckedEndGame((byte)reason);
+                    RPCProcedure.uncheckedEndGame((byte)reason);*/
                 }
 
                 private static void UncheckedEndGame(CustomGameOverReason reason)
