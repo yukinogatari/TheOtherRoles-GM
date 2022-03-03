@@ -68,7 +68,7 @@ namespace TheOtherRoles
                         byte targetId = local.currentTarget.PlayerId; ;
                         if ((local.currentTarget.Data.Role.IsImpostor && (local.currentTarget != Mini.mini || Mini.isGrownUp())) ||
                             (Sheriff.spyCanDieToSheriff && Spy.spy == local.currentTarget) ||
-                            (Sheriff.madmateCanDieToSheriff && local.currentTarget.isRole(RoleType.Madmate)) ||
+                            (Sheriff.madmateCanDieToSheriff && local.currentTarget.hasModifier(ModifierType.Madmate)) ||
                             (Sheriff.canKillNeutrals && local.currentTarget.isNeutral()) ||
                             (Jackal.jackal == local.currentTarget || Sidekick.sidekick == local.currentTarget))
                         {
@@ -78,6 +78,12 @@ namespace TheOtherRoles
                         else
                         {
                             //targetId = PlayerControl.LocalPlayer.PlayerId;
+                            misfire = true;
+                        }
+
+                        // Mad sheriff always misfires.
+                        if (local.player.hasModifier(ModifierType.Madmate))
+                        {
                             misfire = true;
                         }
                         MessageWriter killWriter = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.SheriffKill, Hazel.SendOption.Reliable, -1);

@@ -266,6 +266,10 @@ namespace TheOtherRoles {
         public static CustomOption madmateHasImpostorVision;
         public static CustomOption madmateCanSabotage;
         public static CustomOption madmateCanFixComm;
+        public static CustomOption madmateType;
+        public static CustomRoleSelectionOption madmateRole;
+        public static CustomOption madmateAbility;
+        public static CustomTasksOption madmateTasks;
 
         public static CustomRoleOption opportunistSpawnRate;
 
@@ -437,6 +441,10 @@ namespace TheOtherRoles {
 
 
             madmateSpawnRate = new CustomRoleOption(360, "madmate", Madmate.color);
+            madmateType = CustomOption.Create(366, "madmateType", new string[] { "madmateDefault", "madmateWithRole", "madmateRandom" }, madmateSpawnRate);
+            madmateRole = new CustomRoleSelectionOption(369, "madmateRole", Madmate.validRoles, madmateType);
+            madmateAbility = CustomOption.Create(367, "madmateAbility", new string[] { "madmateNone", "madmateFanatic" }, madmateSpawnRate);
+            madmateTasks = new CustomTasksOption(368, 1, 1, 3, madmateAbility);
             madmateCanDieToSheriff = CustomOption.Create(361, "madmateCanDieToSheriff", false, madmateSpawnRate);
             madmateCanEnterVents = CustomOption.Create(362, "madmateCanEnterVents", false, madmateSpawnRate);
             madmateHasImpostorVision = CustomOption.Create(363, "madmateHasImpostorVision", false, madmateSpawnRate);
@@ -529,7 +537,7 @@ namespace TheOtherRoles {
             plagueDoctorWinDead = CustomOption.Create(908, "plagueDoctorWinDead", true, plagueDoctorSpawnRate);
 
 
-            watcherSpawnRate = new CustomDualRoleOption(1040, "watcher", Watcher.color, RoleType.Watcher, 15, roleEnabled: false);
+            watcherSpawnRate = new CustomDualRoleOption(1040, "watcher", Watcher.color, RoleType.Watcher, 15);
 
 
             foxSpawnRate = new CustomRoleOption(910, "fox", Fox.color, 1);

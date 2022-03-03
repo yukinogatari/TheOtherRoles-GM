@@ -2932,5 +2932,37 @@
     "foxWinExtra": {
         "0": "Fox {0} Win",
         "11": "\u5996\u72d0{0}\u52dd\u5229"
+    },
+    "madmateType": {
+        "0": "Madmate Type",
+        "11": "\u30de\u30c3\u30c9\u306e\u7a2e\u985e"
+    },
+    "madmateDefault": {
+        "0": "Default",
+        "11": "\u5f79\u8077\u306a\u3057"
+    },
+    "madmateWithRole": {
+        "0": "With Role",
+        "11": "\u5f79\u8077\u3042\u308a"
+    },
+    "madmateRandom": {
+        "0": "Random",
+        "11": "\u30e9\u30f3\u30c0\u30e0"
+    },
+    "madmateAbility": {
+        "0": "Ability",
+        "11": "\u80fd\u529b"
+    },
+    "madmateNone": {
+        "0": "None",
+        "11": "\u306a\u3057"
+    },
+    "madmateFanatic": {
+        "0": "Fanatic",
+        "11": "\u72c2\u4fe1\u8005"
+    },
+    "madmatePrefix": {
+        "0": "Mad ",
+        "11": "\u30de\u30c3\u30c9"
     }
 }

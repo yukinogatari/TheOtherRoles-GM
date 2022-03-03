@@ -19,6 +19,73 @@ using System.Reflection;
 
 namespace TheOtherRoles
 {
+    public enum RoleType
+    {
+        Crewmate = 0,
+        Shifter,
+        Mayor,
+        Engineer,
+        Sheriff,
+        Lighter,
+        Detective,
+        TimeMaster,
+        Medic,
+        Swapper,
+        Seer,
+        Hacker,
+        Tracker,
+        Snitch,
+        Spy,
+        SecurityGuard,
+        Bait,
+        Medium,
+        FortuneTeller,
+
+
+        Impostor = 100,
+        Godfather,
+        Mafioso,
+        Janitor,
+        Morphling,
+        Camouflager,
+        Vampire,
+        Eraser,
+        Trickster,
+        Cleaner,
+        Warlock,
+        BountyHunter,
+        Witch,
+        Ninja,
+        NekoKabocha,
+        Madmate,
+        SerialKiller,
+
+
+        Mini = 150,
+        Lovers,
+        EvilGuesser,
+        NiceGuesser,
+        Jester,
+        Arsonist,
+        Jackal,
+        Sidekick,
+        Opportunist,
+        Vulture,
+        Lawyer,
+        Pursuer,
+        PlagueDoctor,
+        Watcher,
+        Fox,
+        Immoralist,
+
+
+        GM = 200,
+
+
+        // don't put anything below this
+        NoRole = int.MaxValue
+    }
+
     [HarmonyPatch]
     public static class RoleData
     {
@@ -28,7 +95,6 @@ namespace TheOtherRoles
             { RoleType.Sheriff, typeof(RoleBase<Sheriff>) },
             { RoleType.Lighter, typeof(RoleBase<Lighter>) },
             { RoleType.FortuneTeller, typeof(RoleBase<FortuneTeller>) },
-            { RoleType.Madmate, typeof(RoleBase<Madmate>) },
 
             // Impostor
             { RoleType.Ninja, typeof(RoleBase<Ninja>) },
@@ -113,7 +179,7 @@ namespace TheOtherRoles
 
         public static bool exists
         {
-            get { return players.Count > 0; }
+            get { return Helpers.RolesEnabled && players.Count > 0; }
         }
 
         public static T getRole(PlayerControl player = null)
@@ -514,24 +580,14 @@ namespace TheOtherRoles
 
         public static void OnKill(this PlayerControl player, PlayerControl target)
         {
-            foreach (var r in Role.allRoles)
-            {
-                if (r.player == player)
-                {
-                    r.OnKill(target);
-                }
-            }
+            Role.allRoles.DoIf(x => x.player == player, x => x.OnKill(target));
+            Modifier.allModifiers.DoIf(x => x.player == player, x => x.OnKill(target));
         }
 
         public static void OnDeath(this PlayerControl player, PlayerControl killer)
         {
-            foreach (var r in Role.allRoles)
-            {
-                if (r.player == player)
-                {
-                    r.OnDeath(killer);
-                }
-            }
+            Role.allRoles.DoIf(x => x.player == player, x => x.OnDeath(killer));
+            Modifier.allModifiers.DoIf(x => x.player == player, x => x.OnDeath(killer));
 
             // Lover suicide trigger on exile/death
             if (player.isLovers())

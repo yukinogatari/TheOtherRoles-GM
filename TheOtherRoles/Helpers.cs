@@ -42,6 +42,14 @@ namespace TheOtherRoles {
             }
         }
 
+        public static bool RolesEnabled
+        {
+            get
+            {
+                return CustomOptionHolder.activateRoles.getBool();
+            }
+        }
+
         public static void destroyList<T>(Il2CppSystem.Collections.Generic.List<T> items) where T : UnityEngine.Object
         {
             if (items == null) return;
@@ -235,7 +243,7 @@ namespace TheOtherRoles {
                 var task = new GameObject("RoleTask").AddComponent<ImportantTextTask>();
                 task.transform.SetParent(player.transform, false);
 
-                if (roleInfo.roleId == RoleType.Jackal) {
+                if (roleInfo.roleType == RoleType.Jackal) {
                     if (Jackal.canCreateSidekick)
                     {
                         task.Text = cs(roleInfo.color, $"{roleInfo.name}: " + ModTranslation.getString("jackalWithSidekick"));
@@ -293,7 +301,7 @@ namespace TheOtherRoles {
 
         public static bool isCrew(this PlayerControl player)
         {
-            return player != null && !player.isImpostor() && !player.isNeutral();
+            return player != null && !player.isImpostor() && !player.isNeutral() && !player.isGM();
         }
 
         public static bool isImpostor(this PlayerControl player)
@@ -303,7 +311,7 @@ namespace TheOtherRoles {
 
         public static bool hasFakeTasks(this PlayerControl player) {
             return (player.isNeutral() && !player.neutralHasTasks()) || 
-                    player.isRole(RoleType.Madmate) || 
+                   (player.hasModifier(ModifierType.Madmate) && !Madmate.hasTasks) || 
                    (player.isLovers() && Lovers.separateTeam && !Lovers.tasksCount);
         }
 
@@ -456,7 +464,7 @@ namespace TheOtherRoles {
                 roleCouldUse = true;
             else if (Spy.canEnterVents && player.isRole(RoleType.Spy))
                 roleCouldUse = true;
-            else if (Madmate.canEnterVents && player.isRole(RoleType.Madmate))
+            else if (Madmate.canEnterVents && player.hasModifier(ModifierType.Madmate))
                 roleCouldUse = true;
             else if (Vulture.canUseVents && player.isRole(RoleType.Vulture))
                 roleCouldUse = true;
@@ -477,7 +485,7 @@ namespace TheOtherRoles {
         public static bool roleCanSabotage(this PlayerControl player)
         {
             bool roleCouldUse = false;
-            if (Madmate.canSabotage && player.isRole(RoleType.Madmate))
+            if (Madmate.canSabotage && player.hasModifier(ModifierType.Madmate))
                 roleCouldUse = true;
             else if (Jester.canSabotage && player.isRole(RoleType.Jester))
                 roleCouldUse = true;

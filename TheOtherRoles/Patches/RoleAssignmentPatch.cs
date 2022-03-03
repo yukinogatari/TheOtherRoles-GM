@@ -94,6 +94,7 @@ namespace TheOtherRoles.Patches
             assignEnsuredRoles(data); // Assign roles that should always be in the game next
             assignChanceRoles(data); // Assign roles that may or may not be in the game last
             assignRoleTargets(data);
+            assignRoleModifiers(data);
         }
 
         private static RoleAssignmentData getRoleAssignmentData()
@@ -166,7 +167,6 @@ namespace TheOtherRoles.Patches
             crewSettings.Add((byte)RoleType.Tracker, CustomOptionHolder.trackerSpawnRate.data);
             crewSettings.Add((byte)RoleType.Snitch, CustomOptionHolder.snitchSpawnRate.data);
             crewSettings.Add((byte)RoleType.Bait, CustomOptionHolder.baitSpawnRate.data);
-            crewSettings.Add((byte)RoleType.Madmate, CustomOptionHolder.madmateSpawnRate.data);
             crewSettings.Add((byte)RoleType.SecurityGuard, CustomOptionHolder.securityGuardSpawnRate.data);
             crewSettings.Add((byte)RoleType.Medium, CustomOptionHolder.mediumSpawnRate.data);
             if (impostors.Count > 1)
@@ -550,6 +550,34 @@ namespace TheOtherRoles.Patches
             }
         }
 
+        private static void assignRoleModifiers(RoleAssignmentData data)
+        {
+            // Madmate
+            for (int i = 0; i < CustomOptionHolder.madmateSpawnRate.count; i++)
+            {
+                if (rnd.Next(1, 100) <= CustomOptionHolder.madmateSpawnRate.rate * 10)
+                {
+                    var candidates = Madmate.candidates;
+                    if (candidates.Count <= 0)
+                    {
+                        Helpers.log("No madmate candidates??");
+                        break;
+                    }
+
+                    if (Madmate.madmateType == Madmate.MadmateType.Simple)
+                    {
+                        if (data.maxCrewmateRoles <= 0) break;
+                        setModifierToRandomPlayer((byte)ModifierType.Madmate, Madmate.candidates);
+                        data.maxCrewmateRoles--;
+                    }
+                    else
+                    {
+                        setModifierToRandomPlayer((byte)ModifierType.Madmate, Madmate.candidates);
+                    }
+                }
+            }
+        }
+
         private static byte setRoleToRandomPlayer(byte roleId, List<PlayerControl> playerList, byte flag = 0, bool removePlayer = true)
         {
             var index = rnd.Next(0, playerList.Count);
@@ -569,6 +597,24 @@ namespace TheOtherRoles.Patches
             writer.Write(flag);
             AmongUsClient.Instance.FinishRpcImmediately(writer);
             RPCProcedure.setRole(roleId, playerId, flag);
+            return playerId;
+        }
+
+        private static byte setModifierToRandomPlayer(byte modId, List<PlayerControl> playerList)
+        {
+            if (playerList.Count <= 0)
+            {
+                return byte.MaxValue;
+            }
+
+            var index = rnd.Next(0, playerList.Count);
+            byte playerId = playerList[index].PlayerId;
+
+            MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.AddModifier, Hazel.SendOption.Reliable, -1);
+            writer.Write(modId);
+            writer.Write(playerId);
+            AmongUsClient.Instance.FinishRpcImmediately(writer);
+            RPCProcedure.addModifier(modId, playerId);
             return playerId;
         }
 

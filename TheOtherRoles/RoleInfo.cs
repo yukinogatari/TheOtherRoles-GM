@@ -23,17 +23,17 @@ namespace TheOtherRoles
                 return GameOptionsDataPatch.optionsToString(baseOption, true);
             }
         }
-        public bool enabled { get { return baseOption == null || baseOption.enabled; } }
-        public RoleType roleId;
+        public bool enabled { get { return Helpers.RolesEnabled && (baseOption == null || baseOption.enabled); } }
+        public RoleType roleType;
 
         private string nameKey;
         private CustomOption baseOption;
 
-        RoleInfo(string name, Color color, CustomOption baseOption, RoleType roleId) {
+        RoleInfo(string name, Color color, CustomOption baseOption, RoleType roleType) {
             this.color = color;
             this.nameKey = name;
             this.baseOption = baseOption;
-            this.roleId = roleId;
+            this.roleType = roleType;
         }
 
         public static RoleInfo jester = new RoleInfo("jester", Jester.color, CustomOptionHolder.jesterSpawnRate, RoleType.Jester);
@@ -73,7 +73,6 @@ namespace TheOtherRoles
         public static RoleInfo niceGuesser = new RoleInfo("niceGuesser", Guesser.color, CustomOptionHolder.guesserSpawnRate, RoleType.NiceGuesser);
         public static RoleInfo evilGuesser = new RoleInfo("evilGuesser", Palette.ImpostorRed, CustomOptionHolder.guesserSpawnRate, RoleType.EvilGuesser);
         public static RoleInfo bait = new RoleInfo("bait", Bait.color, CustomOptionHolder.baitSpawnRate, RoleType.Bait);
-        public static RoleInfo madmate = new RoleInfo("madmate", Madmate.color, CustomOptionHolder.madmateSpawnRate, RoleType.Madmate);
         public static RoleInfo impostor = new RoleInfo("impostor", Palette.ImpostorRed,null, RoleType.Impostor);
         public static RoleInfo lawyer = new RoleInfo("lawyer", Lawyer.color, CustomOptionHolder.lawyerSpawnRate, RoleType.Lawyer);
         public static RoleInfo pursuer = new RoleInfo("pursuer", Pursuer.color, CustomOptionHolder.lawyerSpawnRate, RoleType.Pursuer);
@@ -141,7 +140,6 @@ namespace TheOtherRoles
                 spy,
                 securityGuard,
                 bait,
-                madmate,
                 gm,
                 opportunist,
 	            medium,
@@ -199,7 +197,6 @@ namespace TheOtherRoles
             if (p.isRole(RoleType.EvilGuesser)) infos.Add(evilGuesser);
             if (p.isRole(RoleType.BountyHunter)) infos.Add(bountyHunter);
             if (p.isRole(RoleType.Bait)) infos.Add(bait);
-            if (p.isRole(RoleType.Madmate)) infos.Add(madmate);
             if (p.isRole(RoleType.GM)) infos.Add(gm);
             if (p.isRole(RoleType.Opportunist)) infos.Add(opportunist);
             if (p.isRole(RoleType.Vulture)) infos.Add(vulture);
@@ -239,17 +236,32 @@ namespace TheOtherRoles
             if (p.isLovers()) infos.Add(lovers);
 
             if (excludeRoles != null)
-                infos.RemoveAll(x => excludeRoles.Contains(x.roleId));
+                infos.RemoveAll(x => excludeRoles.Contains(x.roleType));
 
             return infos;
         }
 
         public static String GetRolesString(PlayerControl p, bool useColors, RoleType[] excludeRoles = null) {
-            string roleName = "";
-            if (p?.Data?.Disconnected != false) return roleName;
+            if (p?.Data?.Disconnected != false) return "";
 
-            roleName = String.Join(" ", getRoleInfoForPlayer(p, excludeRoles).Select(x => useColors ? Helpers.cs(x.color, x.name) : x.name).ToArray());
+            var roleInfo = getRoleInfoForPlayer(p, excludeRoles);
+            string roleName = String.Join(" ", roleInfo.Select(x => useColors ? Helpers.cs(x.color, x.name) : x.name).ToArray());
             if (Lawyer.target != null && p?.PlayerId == Lawyer.target.PlayerId && PlayerControl.LocalPlayer != Lawyer.target) roleName += (useColors ? Helpers.cs(Pursuer.color, " §") : " §");
+
+            if (p.hasModifier(ModifierType.Madmate))
+            {
+                // Madmate only
+                if (roleInfo.Contains(crewmate))
+                {
+                    roleName = useColors ? Helpers.cs(Madmate.color, Madmate.fullName) : Madmate.fullName;
+                }
+                else
+                {
+                    string prefix = useColors ? Helpers.cs(Madmate.color, Madmate.prefix) : Madmate.prefix;
+                    roleName = String.Join(" ", roleInfo.Select(x => useColors ? Helpers.cs(Madmate.color, x.name) : x.name).ToArray());
+                    roleName = prefix + roleName;
+                }
+            }
             return roleName;
         }
     }

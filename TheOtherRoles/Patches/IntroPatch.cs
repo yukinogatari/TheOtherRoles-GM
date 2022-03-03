@@ -121,7 +121,7 @@ namespace TheOtherRoles.Patches {
 
         public static void setupIntroTeam(IntroCutscene __instance, ref  Il2CppSystem.Collections.Generic.List<PlayerControl> yourTeam) {
             List<RoleInfo> infos = RoleInfo.getRoleInfoForPlayer(PlayerControl.LocalPlayer);
-            RoleInfo roleInfo = infos.Where(info => info.roleId != RoleType.Lovers).FirstOrDefault();
+            RoleInfo roleInfo = infos.Where(info => info.roleType != RoleType.Lovers).FirstOrDefault();
             if (roleInfo == null) return;
             if (PlayerControl.LocalPlayer.isNeutral() || PlayerControl.LocalPlayer.isGM())
             {
@@ -137,8 +137,8 @@ namespace TheOtherRoles.Patches {
             public static void Postfix(IntroCutscene __instance) {
                 if (!CustomOptionHolder.activateRoles.getBool()) return; // Don't override the intro of the vanilla roles
 
-                List<RoleInfo> infos = RoleInfo.getRoleInfoForPlayer(PlayerControl.LocalPlayer);
-                RoleInfo roleInfo = infos.Where(info => info.roleId != RoleType.Lovers).FirstOrDefault();
+                List<RoleInfo> infos = RoleInfo.getRoleInfoForPlayer(PlayerControl.LocalPlayer, new RoleType[] { RoleType.Lovers });
+                RoleInfo roleInfo = infos.FirstOrDefault();
 
                 if (roleInfo != null && roleInfo != RoleInfo.crewmate && roleInfo != RoleInfo.impostor && !(roleInfo == RoleInfo.fortuneTeller && FortuneTeller.numTasks > 0)) {
                     __instance.YouAreText.color = roleInfo.color;
@@ -148,7 +148,23 @@ namespace TheOtherRoles.Patches {
                     __instance.RoleBlurbText.color = roleInfo.color;
                 }
 
-                if (infos.Any(info => info.roleId == RoleType.Lovers)) {
+                if (PlayerControl.LocalPlayer.hasModifier(ModifierType.Madmate))
+                {
+                    if (roleInfo == RoleInfo.crewmate)
+                    {
+                        __instance.RoleText.text = ModTranslation.getString("madmate");
+                    }
+                    else
+                    {
+                        __instance.RoleText.text = ModTranslation.getString("madmatePrefix") + __instance.RoleText.text;
+                    }
+                    __instance.YouAreText.color = Madmate.color;
+                    __instance.RoleText.color = Madmate.color;
+                    __instance.RoleBlurbText.text = ModTranslation.getString("madmateIntroDesc");
+                    __instance.RoleBlurbText.color = Madmate.color;
+                }
+
+                if (infos.Any(info => info.roleType == RoleType.Lovers)) {
                     PlayerControl otherLover = PlayerControl.LocalPlayer.getPartner();
                 	__instance.RoleBlurbText.text += "\n" + Helpers.cs(Lovers.color, String.Format(ModTranslation.getString("loversFlavor"), otherLover?.Data?.PlayerName ?? ""));
                 } 

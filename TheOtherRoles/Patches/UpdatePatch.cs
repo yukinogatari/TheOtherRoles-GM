@@ -127,10 +127,6 @@ namespace TheOtherRoles.Patches {
             {
                 setPlayerNameColor(PlayerControl.LocalPlayer, Bait.color);
             }
-            else if (PlayerControl.LocalPlayer.isRole(RoleType.Madmate))
-            {
-                setPlayerNameColor(PlayerControl.LocalPlayer, Madmate.color);
-            }
             else if (PlayerControl.LocalPlayer.isRole(RoleType.Opportunist))
             {
                 setPlayerNameColor(PlayerControl.LocalPlayer, Opportunist.color);
@@ -168,6 +164,22 @@ namespace TheOtherRoles.Patches {
                 setPlayerNameColor(PlayerControl.LocalPlayer, FortuneTeller.color);
             }
 
+            if (PlayerControl.LocalPlayer.hasModifier(ModifierType.Madmate))
+            {
+                setPlayerNameColor(PlayerControl.LocalPlayer, Madmate.color);
+
+                if (Madmate.knowsImpostors(PlayerControl.LocalPlayer))
+                {
+                    foreach (var p in PlayerControl.AllPlayerControls)
+                    {
+                        if (p.isImpostor() || p.isRole(RoleType.Spy))
+                        {
+                            setPlayerNameColor(p, Palette.ImpostorRed);
+                        }
+                    }
+                }
+            }
+
             if (GM.gm != null) {
                 setPlayerNameColor(GM.gm, GM.color);
             }
@@ -188,7 +200,7 @@ namespace TheOtherRoles.Patches {
 
             if (Immoralist.exists && PlayerControl.LocalPlayer.isRole(RoleType.Fox))
             {
-                foreach(var immoralist in Immoralist.allPlayers)
+                foreach (var immoralist in Immoralist.allPlayers)
                 {
                     setPlayerNameColor(immoralist, Immoralist.color);
                 }

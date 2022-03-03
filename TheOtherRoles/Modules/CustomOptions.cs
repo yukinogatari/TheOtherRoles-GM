@@ -46,6 +46,11 @@ namespace TheOtherRoles
 
         public CustomOption(int id, string name, System.Object[] selections, System.Object defaultValue, CustomOption parent, bool isHeader, bool isHidden, string format)
         {
+            Init(id, name, selections, defaultValue, parent, isHeader, isHidden, format);
+        }
+
+        public void Init(int id, string name, System.Object[] selections, System.Object defaultValue, CustomOption parent, bool isHeader, bool isHidden, string format)
+        {
             this.id = id;
             this.name = name;
             this.format = format;
@@ -268,11 +273,30 @@ namespace TheOtherRoles
             return Helpers.generateTasks(commonTasks, shortTasks, longTasks);
         }
 
-        public CustomTasksOption(int id, int commonDef, int longDef, int shortDef, CustomOption parent)
+        public CustomTasksOption(int id, int commonDef, int longDef, int shortDef, CustomOption parent = null)
         {
             commonTasksOption = Create(id + 20000, "numCommonTasks", commonDef, 0f, 4f, 1f, parent);
             longTasksOption = Create(id + 20001, "numLongTasks", longDef, 0f, 15f, 1f, parent);
             shortTasksOption = Create(id + 20002, "numShortTasks", shortDef, 0f, 23f, 1f, parent);
+        }
+    }
+
+    public class CustomRoleSelectionOption : CustomOption
+    {
+        public List<RoleType> roleTypes;
+
+        public CustomRoleSelectionOption(int id, string name, List<RoleType> roleTypes = null, CustomOption parent = null)
+        {
+            if (roleTypes == null)
+            {
+                roleTypes = Enum.GetValues(typeof(RoleType)).Cast<RoleType>().ToList();
+                roleTypes.Remove(RoleType.NoRole);
+            }
+
+            this.roleTypes = roleTypes;
+            var strings = roleTypes.Select(x => RoleInfo.allRoleInfos.First(y => y.roleType == x).nameColored).ToArray();
+
+            Init(id, name, strings, 0, parent, false, false, "");
         }
     }
 
