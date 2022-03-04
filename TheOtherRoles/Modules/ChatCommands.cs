@@ -99,7 +99,10 @@ namespace TheOtherRoles.Modules {
                 if (__instance != DestroyableSingleton<HudManager>.Instance.Chat)
                     return true;
                 PlayerControl localPlayer = PlayerControl.LocalPlayer;
-                return localPlayer == null || (MeetingHud.Instance != null || LobbyBehaviour.Instance != null || (localPlayer.Data.IsDead || localPlayer.isLovers() && Lovers.enableChat) || (int)sourcePlayer.PlayerId == (int)PlayerControl.LocalPlayer.PlayerId);
+                return localPlayer == null ||
+                    (MeetingHud.Instance != null || LobbyBehaviour.Instance != null ||
+                    localPlayer.isDead() || localPlayer.PlayerId == sourcePlayer.PlayerId ||
+                    (Lovers.enableChat && localPlayer.getPartner() == sourcePlayer));
             }
         }
     }

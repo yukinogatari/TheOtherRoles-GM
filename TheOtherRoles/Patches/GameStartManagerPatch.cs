@@ -159,7 +159,7 @@ namespace TheOtherRoles.Patches {
                         }
                     }
 
-                    if (CustomOptionHolder.dynamicMap.getBool() && continueStart) {
+                    if (CustomOptionHolder.uselessOptions.getBool() && CustomOptionHolder.dynamicMap.getBool() && continueStart) {
                         // 0 = Skeld
                         // 1 = Mira HQ
                         // 2 = Polus

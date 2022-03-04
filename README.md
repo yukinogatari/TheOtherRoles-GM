@@ -12,6 +12,8 @@ This fork introduces a number of changes to [The Other Roles](https://github.com
   * [Plague Doctor](#plague-doctor) by [haoming37](https://github.com/haoming37)
   * [Serial Killer](#serial-killer) by [haoming37](https://github.com/haoming37)
   * [Neko-Kabocha](#neko-kabocha) by [Virtual_Dusk](https://twitter.com/Virtual_Dusk)
+  * [Fox & Immoralist](#fox) by [haoming37](https://github.com/haoming37)
+  * [Fortune Teller](#serial-killer) by [haoming37](https://github.com/haoming37)
 * Pluralized Roles
   * Lovers (up to 7 couples)
   * Sheriff
@@ -39,7 +41,7 @@ Even more roles are coming soon :)
 | [Mafioso (Mafia)](#mafia) | [Medic](#medic) | [Lawyer](#lawyer) |  |
 | [Janitor (Mafia)](#mafia)  | [Security Guard](#security-guard) | [Chain-Shifter](#shifter) |  |
 | [Morphling](#morphling) | [Seer](#seer) | [Plague Doctor](#plague-doctor) |  |
-| [Trickster](#trickster) | [Sheriff](#sheriff) |  |  |
+| [Trickster](#trickster) | [Sheriff](#sheriff) | [Fox & Immoralist](#fox) |  |
 | [Vampire](#vampire) | [Shifter](#shifter) |  |  |
 | [Warlock](#warlock) | [Snitch](#snitch) |  |  |
 | [Witch](#witch) | [Spy](#spy) |  |  |
@@ -49,12 +51,14 @@ Even more roles are coming soon :)
 | [Neko-Kabocha](#neko-kabocha) |  [Bait](#bait) |  |  |
 |  |  [Madmate](#madmate)  |  |  |
 |  |  [Medium](#medium) |  |  |
+|  |  [Fortune Teller](#fortune-teller) |  |  |
 
 The [Role Assignment](#role-assignment) sections explains how the roles are being distributed among the players.
 
 # Releases
 | Among Us - Version | Mod Version | Link |
 |----------|-------------|-----------------|
+| 2022.2.24s | v3.5.3 GM | [Download](https://github.com/yukinogatari/TheOtherRoles-GM/releases/download/v3.5.3/TheOtherRoles-GM.v3.5.3.zip)
 | 2022.2.8s | v3.5.2 GM | [Download](https://github.com/yukinogatari/TheOtherRoles-GM/releases/download/v3.5.2/TheOtherRoles-GM.v3.5.2.zip)
 | 2021.12.15s (build num: 1421) | v3.5.1 GM | [Download](https://github.com/yukinogatari/TheOtherRoles-GM/releases/download/v3.5.1/TheOtherRoles-GM.v3.5.1.zip)
 | 2021.12.15s (build num: 1421) | v3.5.0 GM | [Download](https://github.com/yukinogatari/TheOtherRoles-GM/releases/download/v3.5.0/TheOtherRoles-GM.v3.5.0.zip)
@@ -1490,6 +1494,27 @@ The Plague Doctor is a neutral role whose goal is to infect every living player.
 The Plague Doctor is still able to win even if dead. Furthermore, if killed, their killer is automatically infected.
 
 A set period of time after each meeting, players are immune from infection, letting them get safely away from potentially infected players.
+
+## Fox
+### **Team: Neutral**
+
+Created by [haoming37](https://github.com/haoming37)
+
+The Fox is a Neutral role whose goal is to keep themselves hidden from both the Crew and Impostors while completing their own tasks. The Fox is always aware of where any threats are, and has numerous abilities to protect themselves.
+
+## Immoralist
+### **Team: Neutral**
+
+Created by [haoming37](https://github.com/haoming37)
+
+The Immoralist's objective is to support the Fox in any way they can, even if it means sacrificing their own life.
+
+## Fortune Teller
+### **Team: Crewmate**
+
+Created by [haoming37](https://github.com/haoming37)
+
+The Fortune Teller is a Crewmate with the power to divine a single player's role. They start out believing themselves to be an ordinary Crewmate, only awakening to their powers after completing a designated number of tasks.
 
 # Source code
 It's bad I know, this is a side project and my second week of modding. So there are no best practices around here.

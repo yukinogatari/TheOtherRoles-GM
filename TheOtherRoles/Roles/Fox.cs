@@ -393,7 +393,7 @@ namespace TheOtherRoles
             {
                 if (fox.isAlive())
                 {
-                    if (isCompletedTasks(fox))
+                    if (tasksComplete(fox))
                     {
                         isCompleted = true;
                         break;
@@ -403,7 +403,7 @@ namespace TheOtherRoles
             return isCompleted;
         }
 
-        private static bool isCompletedTasks(PlayerControl p)
+        private static bool tasksComplete(PlayerControl p)
         {
             int counter = 0;
             int totalTasks = numCommonTasks + numLongTasks + numShortTasks;
@@ -419,7 +419,7 @@ namespace TheOtherRoles
             return counter == totalTasks;
         }
 
-        public void setFoxTasks()
+        public void assignTasks()
         {
             player.generateAndAssignTasks(numCommonTasks, numShortTasks, numLongTasks);
         }
@@ -431,50 +431,8 @@ namespace TheOtherRoles
             {
                 if (PlayerControl.LocalPlayer.isRole(RoleType.Fox))
                 {
-                    local.setFoxTasks();
+                    local.assignTasks();
                 }
-            }
-        }
-
-        // 狐のタスクをカウントから外す
-        [HarmonyPatch(typeof(GameData), nameof(GameData.RecomputeTaskCounts))]
-        class GameDataRecomputeTaskCountsPatch
-        {
-            static void Postfix(GameData __instance)
-            {
-                for (int i = 0; i < __instance.AllPlayers.Count; i++)
-                {
-                    GameData.PlayerInfo playerInfo = __instance.AllPlayers[i];
-                    PlayerControl player = Helpers.playerById(playerInfo.PlayerId);
-                    if (player.isRole(RoleType.Fox))
-                    {
-                        if (!playerInfo.Disconnected && playerInfo.Tasks != null && playerInfo.Object && (PlayerControl.GameOptions.GhostsDoTasks || !playerInfo.IsDead) && playerInfo.Role && playerInfo.Role.TasksCountTowardProgress)
-                        {
-                            for (int j = 0; j < playerInfo.Tasks.Count; j++)
-                            {
-                                __instance.TotalTasks--;
-                                if (playerInfo.Tasks[j].Complete)
-                                {
-                                    __instance.CompletedTasks--;
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        // 狐のタスクをカウントから外す
-        [HarmonyPatch(typeof(GameData), nameof(GameData.CompleteTask))]
-        class GameDataCompleteTaskPatch
-        {
-            static void Postfix(GameData __instance, PlayerControl pc, uint taskId)
-            {
-                if (pc.isRole(RoleType.Fox))
-                {
-                    __instance.CompletedTasks--;
-                }
-
             }
         }
 

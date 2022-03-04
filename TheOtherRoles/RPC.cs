@@ -14,72 +14,6 @@ using System;
 
 namespace TheOtherRoles
 {
-    public enum RoleType
-    {
-        Crewmate = 0,
-        Shifter,
-        Mayor,
-        Engineer,
-        Sheriff,
-        Lighter,
-        Detective,
-        TimeMaster,
-        Medic,
-        Swapper,
-        Seer,
-        Hacker,
-        Tracker,
-        Snitch,
-        Spy,
-        SecurityGuard,
-        Bait,
-        Medium,
-
-
-        Impostor = 100,
-        Godfather,
-        Mafioso,
-        Janitor,
-        Morphling,
-        Camouflager,
-        Vampire,
-        Eraser,
-        Trickster,
-        Cleaner,
-        Warlock,
-        BountyHunter,
-        Witch,
-        Ninja,
-        NekoKabocha,
-        Madmate,
-        SerialKiller,
-
-
-        Mini = 150,
-        Lovers,
-        EvilGuesser,
-        NiceGuesser,
-        Jester,
-        Arsonist,
-        Jackal,
-        Sidekick,
-        Opportunist,
-        Vulture,
-        Lawyer,
-        Pursuer,
-        PlagueDoctor,
-        Watcher,
-        Fox,
-        Immoralist,
-        FortuneTeller,
-
-
-        GM = 200,
-
-
-        // don't put anything below this
-        NoRole = int.MaxValue
-    }
 
     enum CustomRPC
     {
@@ -138,6 +72,7 @@ namespace TheOtherRoles
         SetBlanked,
 
         // GM Edition functionality
+        AddModifier,
         NinjaStealth,
         SetShifterType,
         GMKill,
@@ -213,13 +148,18 @@ namespace TheOtherRoles
 
         public static void setRole(byte roleId, byte playerId, byte flag)
         {
-            foreach (PlayerControl player in PlayerControl.AllPlayerControls)
-            {
-                if (player.PlayerId == playerId)
-                {
-                    player.setRole((RoleType)roleId);
-                }
-            }
+            PlayerControl.AllPlayerControls.ToArray().DoIf(
+                x => x.PlayerId == playerId,
+                x => x.setRole((RoleType)roleId)
+            );
+        }
+
+        public static void addModifier(byte modId, byte playerId)
+        {
+            PlayerControl.AllPlayerControls.ToArray().DoIf(
+                x => x.PlayerId == playerId,
+                x => x.addModifier((ModifierType)modId)
+            );
         }
 
         public static void setLovers(byte playerId1, byte playerId2)
@@ -454,7 +394,7 @@ namespace TheOtherRoles
             }
 
             // Suicide (exile) when impostor or impostor variants
-            if (!Shifter.isNeutral && (player.Data.Role.IsImpostor || player.isNeutral() || player.isRole(RoleType.Madmate)))
+            if (!Shifter.isNeutral && (player.Data.Role.IsImpostor || player.isNeutral() || player.hasModifier(ModifierType.Madmate)))
             {
                 oldShifter.Exiled();
                 finalStatuses[oldShifter.PlayerId] = FinalStatus.Suicide;
@@ -473,6 +413,7 @@ namespace TheOtherRoles
                     Medic.shielded = player;
                 }
 
+                player.swapModifiers(oldShifter);
                 Lovers.swapLovers(oldShifter, player);
             }
 
@@ -606,6 +547,7 @@ namespace TheOtherRoles
                 player.clearAllTasks();
 
             player.eraseAllRoles();
+            player.eraseAllModifiers();
 
             if (!ignoreLovers && player.isLovers())
             { // The whole Lover couple is being erased
@@ -861,7 +803,7 @@ namespace TheOtherRoles
             PlayerControl guessedTarget = Helpers.playerById(guessedTargetId);
             if (Guesser.showInfoInGhostChat && PlayerControl.LocalPlayer.Data.IsDead && guessedTarget != null)
             {
-                RoleInfo roleInfo = RoleInfo.allRoleInfos.FirstOrDefault(x => (byte)x.roleId == guessedRoleId);
+                RoleInfo roleInfo = RoleInfo.allRoleInfos.FirstOrDefault(x => (byte)x.roleType == guessedRoleId);
                 string msg = string.Format(ModTranslation.getString("guesserGuessChat"), roleInfo.name, guessedTarget.Data.PlayerName);
                 if (AmongUsClient.Instance.AmClient && DestroyableSingleton<HudManager>.Instance)
                     DestroyableSingleton<HudManager>.Instance.Chat.AddChat(guesser, msg);
@@ -1265,6 +1207,9 @@ namespace TheOtherRoles
                         break;
 
                     // GM functionality
+                    case (byte)CustomRPC.AddModifier:
+                        RPCProcedure.addModifier(reader.ReadByte(), reader.ReadByte());
+                        break;
                     case (byte)CustomRPC.SetShifterType:
                         RPCProcedure.setShifterType(reader.ReadBoolean());
                         break;

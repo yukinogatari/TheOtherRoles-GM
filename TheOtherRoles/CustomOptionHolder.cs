@@ -26,7 +26,13 @@ namespace TheOtherRoles {
         public static CustomOption impostorRolesCountMax;
 
         public static CustomRoleOption mafiaSpawnRate;
+        public static CustomOption mafiosoCanSabotage;
+        public static CustomOption mafiosoCanRepair;
+        public static CustomOption mafiosoCanVent;
         public static CustomOption janitorCooldown;
+        public static CustomOption janitorCanSabotage;
+        public static CustomOption janitorCanRepair;
+        public static CustomOption janitorCanVent;
 
         public static CustomRoleOption morphlingSpawnRate;
         public static CustomOption morphlingCooldown;
@@ -266,6 +272,10 @@ namespace TheOtherRoles {
         public static CustomOption madmateHasImpostorVision;
         public static CustomOption madmateCanSabotage;
         public static CustomOption madmateCanFixComm;
+        public static CustomOption madmateType;
+        public static CustomRoleSelectionOption madmateRole;
+        public static CustomOption madmateAbility;
+        public static CustomTasksOption madmateTasks;
 
         public static CustomRoleOption opportunistSpawnRate;
 
@@ -366,7 +376,13 @@ namespace TheOtherRoles {
 
 
             mafiaSpawnRate = new CustomRoleOption(10, "mafia", Janitor.color, 1);
-            janitorCooldown = CustomOption.Create(11, "janitorCooldown", 30f, 2.5f, 60f, 2.5f, mafiaSpawnRate, format : "unitSeconds");
+            mafiosoCanSabotage = CustomOption.Create(12, "mafiosoCanSabotage", false, mafiaSpawnRate);
+            mafiosoCanRepair = CustomOption.Create(13, "mafiosoCanRepair", false, mafiaSpawnRate);
+            mafiosoCanVent = CustomOption.Create(14, "mafiosoCanVent", false, mafiaSpawnRate);
+            janitorCooldown = CustomOption.Create(11, "janitorCooldown", 30f, 2.5f, 60f, 2.5f, mafiaSpawnRate, format: "unitSeconds");
+            janitorCanSabotage = CustomOption.Create(15, "janitorCanSabotage", false, mafiaSpawnRate);
+            janitorCanRepair = CustomOption.Create(16, "janitorCanRepair", false, mafiaSpawnRate);
+            janitorCanVent = CustomOption.Create(17, "janitorCanVent", false, mafiaSpawnRate);
 
             morphlingSpawnRate = new CustomRoleOption(20, "morphling", Morphling.color, 1);
             morphlingCooldown = CustomOption.Create(21, "morphlingCooldown", 30f, 2.5f, 60f, 2.5f, morphlingSpawnRate, format: "unitSeconds");
@@ -437,6 +453,10 @@ namespace TheOtherRoles {
 
 
             madmateSpawnRate = new CustomRoleOption(360, "madmate", Madmate.color);
+            //madmateType = CustomOption.Create(366, "madmateType", new string[] { "madmateDefault", "madmateWithRole", "madmateRandom" }, madmateSpawnRate);
+            //madmateRole = new CustomRoleSelectionOption(369, "madmateRole", Madmate.validRoles, madmateType);
+            madmateAbility = CustomOption.Create(367, "madmateAbility", new string[] { "madmateNone", "madmateFanatic" }, madmateSpawnRate);
+            madmateTasks = new CustomTasksOption(368, 1, 1, 3, madmateAbility);
             madmateCanDieToSheriff = CustomOption.Create(361, "madmateCanDieToSheriff", false, madmateSpawnRate);
             madmateCanEnterVents = CustomOption.Create(362, "madmateCanEnterVents", false, madmateSpawnRate);
             madmateHasImpostorVision = CustomOption.Create(363, "madmateHasImpostorVision", false, madmateSpawnRate);

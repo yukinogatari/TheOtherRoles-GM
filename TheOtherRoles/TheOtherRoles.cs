@@ -148,6 +148,10 @@ namespace TheOtherRoles
         {
             public static PlayerControl mafioso;
             public static Color color = Palette.ImpostorRed;
+            public static bool canSabotage { get { return canKill || CustomOptionHolder.mafiosoCanSabotage.getBool(); } }
+            public static bool canRepair { get { return canKill || CustomOptionHolder.mafiosoCanRepair.getBool(); } }
+            public static bool canVent { get { return canKill || CustomOptionHolder.mafiosoCanVent.getBool();  } }
+            public static bool canKill { get { return Godfather.godfather == null || Godfather.godfather.isDead(); } }
 
             public static void clearAndReload()
             {
@@ -161,7 +165,10 @@ namespace TheOtherRoles
             public static PlayerControl janitor;
             public static Color color = Palette.ImpostorRed;
 
-            public static float cooldown = 30f;
+            public static float cooldown { get { return CustomOptionHolder.janitorCooldown.getFloat(); } }
+            public static bool canSabotage { get { return CustomOptionHolder.janitorCanSabotage.getBool(); } }
+            public static bool canRepair { get { return CustomOptionHolder.janitorCanRepair.getBool(); } }
+            public static bool canVent { get { return CustomOptionHolder.janitorCanVent.getBool(); } }
 
             private static Sprite buttonSprite;
             public static Sprite getButtonSprite()
@@ -174,7 +181,6 @@ namespace TheOtherRoles
             public static void clearAndReload()
             {
                 janitor = null;
-                cooldown = CustomOptionHolder.janitorCooldown.getFloat();
             }
         }
 

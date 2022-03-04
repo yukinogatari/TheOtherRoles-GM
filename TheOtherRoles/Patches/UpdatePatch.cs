@@ -127,10 +127,6 @@ namespace TheOtherRoles.Patches {
             {
                 setPlayerNameColor(PlayerControl.LocalPlayer, Bait.color);
             }
-            else if (PlayerControl.LocalPlayer.isRole(RoleType.Madmate))
-            {
-                setPlayerNameColor(PlayerControl.LocalPlayer, Madmate.color);
-            }
             else if (PlayerControl.LocalPlayer.isRole(RoleType.Opportunist))
             {
                 setPlayerNameColor(PlayerControl.LocalPlayer, Opportunist.color);
@@ -168,6 +164,22 @@ namespace TheOtherRoles.Patches {
                 setPlayerNameColor(PlayerControl.LocalPlayer, FortuneTeller.color);
             }
 
+            if (PlayerControl.LocalPlayer.hasModifier(ModifierType.Madmate))
+            {
+                setPlayerNameColor(PlayerControl.LocalPlayer, Madmate.color);
+
+                if (Madmate.knowsImpostors(PlayerControl.LocalPlayer))
+                {
+                    foreach (var p in PlayerControl.AllPlayerControls)
+                    {
+                        if (p.isImpostor() || p.isRole(RoleType.Spy))
+                        {
+                            setPlayerNameColor(p, Palette.ImpostorRed);
+                        }
+                    }
+                }
+            }
+
             if (GM.gm != null) {
                 setPlayerNameColor(GM.gm, GM.color);
             }
@@ -188,7 +200,7 @@ namespace TheOtherRoles.Patches {
 
             if (Immoralist.exists && PlayerControl.LocalPlayer.isRole(RoleType.Fox))
             {
-                foreach(var immoralist in Immoralist.allPlayers)
+                foreach (var immoralist in Immoralist.allPlayers)
                 {
                     setPlayerNameColor(immoralist, Immoralist.color);
                 }
@@ -213,20 +225,20 @@ namespace TheOtherRoles.Patches {
                 {
                     if (player.nameText.text == "") continue;
                     if (Godfather.godfather != null && Godfather.godfather == player)
-                        player.nameText.text = player.Data.PlayerName + " (G)";
+                        player.nameText.text = player.Data.PlayerName + $" ({ModTranslation.getString("mafiaG")})";
                     else if (Mafioso.mafioso != null && Mafioso.mafioso == player)
-                        player.nameText.text = player.Data.PlayerName + " (M)";
+                        player.nameText.text = player.Data.PlayerName + $" ({ModTranslation.getString("mafiaM")})";
                     else if (Janitor.janitor != null && Janitor.janitor == player)
-                        player.nameText.text = player.Data.PlayerName + " (J)";
+                        player.nameText.text = player.Data.PlayerName + $" ({ModTranslation.getString("mafiaJ")})";
                 }
                 if (MeetingHud.Instance != null)
                     foreach (PlayerVoteArea player in MeetingHud.Instance.playerStates)
                         if (Godfather.godfather != null && Godfather.godfather.PlayerId == player.TargetPlayerId)
-                            player.NameText.text = Godfather.godfather.Data.PlayerName + " (G)";
+                            player.NameText.text = Godfather.godfather.Data.PlayerName + $" ({ModTranslation.getString("mafiaG")})";
                         else if (Mafioso.mafioso != null && Mafioso.mafioso.PlayerId == player.TargetPlayerId)
-                            player.NameText.text = Mafioso.mafioso.Data.PlayerName + " (M)";
+                            player.NameText.text = Mafioso.mafioso.Data.PlayerName + $" ({ModTranslation.getString("mafiaM")})";
                         else if (Janitor.janitor != null && Janitor.janitor.PlayerId == player.TargetPlayerId)
-                            player.NameText.text = Janitor.janitor.Data.PlayerName + " (J)";
+                            player.NameText.text = Janitor.janitor.Data.PlayerName + $" ({ModTranslation.getString("mafiaJ")})";
             }
 
             bool meetingShow = MeetingHud.Instance != null && 
@@ -328,11 +340,11 @@ namespace TheOtherRoles.Patches {
         static void updateImpostorKillButton(HudManager __instance) {
             if (!PlayerControl.LocalPlayer.Data.Role.IsImpostor || MeetingHud.Instance) return;
             bool enabled = Helpers.ShowButtons;
-            if (Vampire.vampire != null && Vampire.vampire == PlayerControl.LocalPlayer)
+            if (PlayerControl.LocalPlayer.isRole(RoleType.Vampire))
                 enabled &= false;
-            else if (Mafioso.mafioso != null && Mafioso.mafioso == PlayerControl.LocalPlayer && Godfather.godfather != null && !Godfather.godfather.Data.IsDead)
+            else if (PlayerControl.LocalPlayer.isRole(RoleType.Mafioso) && !Mafioso.canKill)
                 enabled &= false;
-            else if (Janitor.janitor != null && Janitor.janitor == PlayerControl.LocalPlayer)
+            else if (PlayerControl.LocalPlayer.isRole(RoleType.Janitor))
                 enabled &= false;
             
             if (enabled) __instance.KillButton.Show();

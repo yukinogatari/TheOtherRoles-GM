@@ -151,6 +151,8 @@ namespace TheOtherRoles.Patches
                     gameOverReason == GameOverReason.ImpostorBySabotage && !p.Role.IsImpostor ? FinalStatus.Sabotage :
                     FinalStatus.Alive;
 
+                if (gameOverReason == GameOverReason.HumansByTask && p.Object.isCrew()) tasksCompleted = tasksTotal;
+
                 AdditionalTempData.playerRoles.Add(new AdditionalTempData.PlayerRoleInfo()
                 {
                     PlayerName = p.PlayerName,
@@ -159,7 +161,7 @@ namespace TheOtherRoles.Patches
                     Roles = roles,
                     RoleString = RoleInfo.GetRolesString(p.Object, true, hideRoles),
                     TasksTotal = tasksTotal,
-                    TasksCompleted = gameOverReason == GameOverReason.HumansByTask ? tasksTotal : tasksCompleted,
+                    TasksCompleted = tasksCompleted,
                     Status = finalStatus,
                 });
             }
@@ -484,7 +486,7 @@ namespace TheOtherRoles.Patches
                         foreach (var data in AdditionalTempData.playerRoles)
                         {
                             if (data.PlayerName != winningPlayerData2.PlayerName) continue;
-                            poolablePlayer.NameText.text += data.NameSuffix + $"\n<size=80%>{string.Join("\n", data.Roles.Select(x => Helpers.cs(x.color, x.name)))}</size>";
+                            poolablePlayer.NameText.text += data.NameSuffix + $"\n<size=80%>{data.RoleString}</size>";
                         }
                     }
 
@@ -634,8 +636,8 @@ namespace TheOtherRoles.Patches
                         {
                             RoleInfo roleX = x.Roles.FirstOrDefault();
                             RoleInfo roleY = y.Roles.FirstOrDefault();
-                            RoleType idX = roleX == null ? RoleType.NoRole : roleX.roleId;
-                            RoleType idY = roleY == null ? RoleType.NoRole : roleY.roleId;
+                            RoleType idX = roleX == null ? RoleType.NoRole : roleX.roleType;
+                            RoleType idY = roleY == null ? RoleType.NoRole : roleY.roleType;
 
                             if (x.Status == y.Status)
                             {
@@ -822,7 +824,7 @@ namespace TheOtherRoles.Patches
                         {
                             foreach (var task in player.Data.Tasks)
                             {
-                                if (player.Data.IsDead && player.isCrew() && !player.isRole(RoleType.Madmate))
+                                if (player.Data.IsDead && player.isCrew() && !player.hasModifier(ModifierType.Madmate))
                                 {
                                     if (!task.Complete)
                                     {
@@ -854,7 +856,10 @@ namespace TheOtherRoles.Patches
 
                 private static bool CheckAndEndGameForJackalWin(ShipStatus __instance, PlayerStatistics statistics)
                 {
-                    if (statistics.TeamJackalAlive >= statistics.TotalAlive - statistics.TeamJackalAlive - statistics.FoxAlive && statistics.TeamImpostorsAlive == 0 && statistics.TeamJackalLovers >= statistics.CouplesAlive * 2)
+                    if (statistics.TeamJackalAlive >= statistics.TotalAlive - statistics.TeamJackalAlive - statistics.FoxAlive &&
+                        statistics.TeamImpostorsAlive == 0 && 
+                        (statistics.TeamJackalLovers == 0 || statistics.TeamJackalLovers >= statistics.CouplesAlive * 2)
+                       )
                     {
                         UncheckedEndGame(CustomGameOverReason.TeamJackalWin);
                         return true;
@@ -864,7 +869,10 @@ namespace TheOtherRoles.Patches
 
                 private static bool CheckAndEndGameForImpostorWin(ShipStatus __instance, PlayerStatistics statistics)
                 {
-                    if (statistics.TeamImpostorsAlive >= statistics.TotalAlive - statistics.TeamImpostorsAlive - statistics.FoxAlive && statistics.TeamJackalAlive == 0 && statistics.TeamImpostorLovers >= statistics.CouplesAlive * 2)
+                    if (statistics.TeamImpostorsAlive >= statistics.TotalAlive - statistics.TeamImpostorsAlive - statistics.FoxAlive &&
+                        statistics.TeamJackalAlive == 0 &&
+                        (statistics.TeamImpostorLovers == 0 || statistics.TeamImpostorLovers >= statistics.CouplesAlive * 2)
+                       )
                     {
                         GameOverReason endReason;
                         switch (TempData.LastDeathReason)

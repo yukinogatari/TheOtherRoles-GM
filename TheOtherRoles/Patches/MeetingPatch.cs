@@ -409,17 +409,17 @@ namespace TheOtherRoles.Patches {
             {
                 RoleType guesserRole = (Guesser.niceGuesser != null && PlayerControl.LocalPlayer.PlayerId == Guesser.niceGuesser.PlayerId) ? RoleType.NiceGuesser : RoleType.EvilGuesser;
                 if (roleInfo == null || 
-                    roleInfo.roleId == RoleType.Lovers || 
-                    roleInfo.roleId == guesserRole || 
+                    roleInfo.roleType == RoleType.Lovers || 
+                    roleInfo.roleType == guesserRole || 
                     roleInfo == RoleInfo.niceMini || 
-					(!Guesser.evilGuesserCanGuessSpy && guesserRole == RoleType.EvilGuesser && roleInfo.roleId == RoleType.Spy) ||
+					(!Guesser.evilGuesserCanGuessSpy && guesserRole == RoleType.EvilGuesser && roleInfo.roleType == RoleType.Spy) ||
                     roleInfo == RoleInfo.gm ||
                     (Guesser.onlyAvailableRoles && !roleInfo.enabled && !MapOptions.hideSettings))
                     continue; // Not guessable roles
 				if (Guesser.guesserCantGuessSnitch && Snitch.snitch != null) {
                     var (playerCompleted, playerTotal) = TasksHandler.taskInfo(Snitch.snitch.Data);
                     int numberOfLeftTasks = playerTotal - playerCompleted;
-                    if (numberOfLeftTasks <= 0 && roleInfo.roleId == RoleType.Snitch) continue;
+                    if (numberOfLeftTasks <= 0 && roleInfo.roleType == RoleType.Snitch) continue;
                 }
                 Transform buttonParent = (new GameObject()).transform;
                 buttonParent.SetParent(container);
@@ -479,9 +479,9 @@ namespace TheOtherRoles.Patches {
                         writer.Write(PlayerControl.LocalPlayer.PlayerId);
                         writer.Write(dyingTarget.PlayerId);
                         writer.Write(focusedTarget.PlayerId);
-                        writer.Write((byte)roleInfo.roleId);
+                        writer.Write((byte)roleInfo.roleType);
                         AmongUsClient.Instance.FinishRpcImmediately(writer);
-                        RPCProcedure.guesserShoot(PlayerControl.LocalPlayer.PlayerId, dyingTarget.PlayerId, focusedTarget.PlayerId, (byte)roleInfo.roleId);
+                        RPCProcedure.guesserShoot(PlayerControl.LocalPlayer.PlayerId, dyingTarget.PlayerId, focusedTarget.PlayerId, (byte)roleInfo.roleType);
                     }
                 }));
 

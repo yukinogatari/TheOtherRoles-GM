@@ -26,7 +26,7 @@ namespace TheOtherRoles.Patches
                 return true;
             }
 
-            if (pc.isRole(RoleType.Madmate) && (isLights || (isComms && !Madmate.canFixComm)))
+            if (pc.hasModifier(ModifierType.Madmate) && (isLights || (isComms && !Madmate.canFixComm)))
             {
                 return true;
             }
@@ -36,13 +36,23 @@ namespace TheOtherRoles.Patches
                 return true;
             }
 
+            if (pc.isRole(RoleType.Mafioso) && !Mafioso.canRepair && (isLights || isComms))
+            {
+                return true;
+            }
+
+            if (pc.isRole(RoleType.Janitor) && !Janitor.canRepair && (isLights || isComms))
+            {
+                return true;
+            }
+
             if (pc.isRole(RoleType.Fox) && (isLights || isComms || isReactor || isO2))
             {
-                if(isLights|| isComms)
+                if (isLights|| isComms)
                 {
                     return true;
                 }
-                else if((isO2 || isReactor) && !Fox.canFixReactorAndO2)
+                else if ((isO2 || isReactor) && !Fox.canFixReactorAndO2)
                 {
                     return true;
                 }
@@ -168,7 +178,7 @@ namespace TheOtherRoles.Patches
                 bool canUse;
                 bool couldUse;
                 __instance.CanUse(PlayerControl.LocalPlayer.Data, out canUse, out couldUse);
-                bool canMoveInVents = PlayerControl.LocalPlayer != Spy.spy && !PlayerControl.LocalPlayer.isRole(RoleType.Madmate);
+                bool canMoveInVents = PlayerControl.LocalPlayer != Spy.spy && !PlayerControl.LocalPlayer.hasModifier(ModifierType.Madmate);
                 if (!canUse) return false; // No need to execute the native method as using is disallowed anyways
 
                 bool isEnter = !PlayerControl.LocalPlayer.inVent;
@@ -280,8 +290,8 @@ namespace TheOtherRoles.Patches
             static void Postfix()
             {
                 // Mafia disable sabotage button for Janitor and sometimes for Mafioso
-                bool blockSabotageJanitor = (Janitor.janitor != null && Janitor.janitor == PlayerControl.LocalPlayer);
-                bool blockSabotageMafioso = (Mafioso.mafioso != null && Mafioso.mafioso == PlayerControl.LocalPlayer && Godfather.godfather != null && !Godfather.godfather.Data.IsDead);
+                bool blockSabotageJanitor = (PlayerControl.LocalPlayer.isRole(RoleType.Janitor) && !Janitor.canSabotage);
+                bool blockSabotageMafioso = (PlayerControl.LocalPlayer.isRole(RoleType.Mafioso) && !Mafioso.canSabotage);
                 if (blockSabotageJanitor || blockSabotageMafioso)
                 {
                     HudManager.Instance.SabotageButton.SetDisabled();
