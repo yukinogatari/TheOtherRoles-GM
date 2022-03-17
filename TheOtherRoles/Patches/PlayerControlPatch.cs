@@ -762,7 +762,8 @@ namespace TheOtherRoles.Patches
                     if (Bait.bait.hasModifier(ModifierType.Madmate))
                     {
                         var candidates = PlayerControl.AllPlayerControls.ToArray().Where(x => x.isAlive() && !x.isImpostor() && !x.isDummy).ToList();
-                        reporter = candidates.Count > 0 ? (byte)rnd.Next(0, candidates.Count) : deadPlayer.killerIfExisting.PlayerId;
+                        int i = rnd.Next(0, candidates.Count);
+                        reporter = candidates.Count > 0 ? candidates[i].PlayerId : deadPlayer.killerIfExisting.PlayerId;
                     }
 
                     MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.UncheckedCmdReportDeadBody, Hazel.SendOption.Reliable, -1);

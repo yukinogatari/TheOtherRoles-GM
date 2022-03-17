@@ -195,7 +195,7 @@ namespace TheOtherRoles
         {
             get
             {
-                return Helpers.RolesEnabled && roleEnabled && this.getBool();
+                return Helpers.RolesEnabled && roleEnabled && selection > 0;
             }
         }
 
@@ -203,7 +203,7 @@ namespace TheOtherRoles
         {
             get
             {
-                return enabled ? getSelection() : 0;
+                return enabled ? selection : 0;
             }
         }
 
@@ -293,16 +293,27 @@ namespace TheOtherRoles
     {
         public List<RoleType> roleTypes;
 
+        public RoleType role
+        {
+            get
+            {
+                return roleTypes[selection];
+            }
+        }
+
         public CustomRoleSelectionOption(int id, string name, List<RoleType> roleTypes = null, CustomOption parent = null)
         {
             if (roleTypes == null)
             {
                 roleTypes = Enum.GetValues(typeof(RoleType)).Cast<RoleType>().ToList();
-                roleTypes.Remove(RoleType.NoRole);
             }
 
             this.roleTypes = roleTypes;
-            var strings = roleTypes.Select(x => RoleInfo.allRoleInfos.First(y => y.roleType == x).nameColored).ToArray();
+            var strings = roleTypes.Select(
+                x => 
+                    x == RoleType.NoRole ? "optionOff" :
+                    RoleInfo.allRoleInfos.First(y => y.roleType == x).nameColored
+                ).ToArray();
 
             Init(id, name, strings, 0, parent, false, false, "");
         }

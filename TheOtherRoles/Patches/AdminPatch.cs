@@ -39,7 +39,7 @@ namespace TheOtherRoles.Patches {
                 MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.UseAdminTime, Hazel.SendOption.Reliable, -1);
                 writer.Write(adminTimer);
                 AmongUsClient.Instance.FinishRpcImmediately(writer);
-                RPCProcedure.UseAdminTime(adminTimer);
+                RPCProcedure.useAdminTime(adminTimer);
             }
             adminTimer = 0f;
         }
@@ -49,9 +49,6 @@ namespace TheOtherRoles.Patches {
         {
             public static bool Prefix(ref float __result, MapConsole __instance, [HarmonyArgument(0)] GameData.PlayerInfo pc, [HarmonyArgument(1)] out bool canUse, [HarmonyArgument(2)] out bool couldUse)
             {
-                // temp fix for the admin bug on airship
-                if (PlayerControl.GameOptions.MapId == 4)
-                    __instance.useIcon = ImageNames.PolusAdminButton;
                 canUse = couldUse = false;
                 return true;
             }

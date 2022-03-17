@@ -20,25 +20,45 @@ namespace TheOtherRoles
         public static bool revengeImpostor { get { return CustomOptionHolder.nekoKabochaRevengeImpostor.getBool(); } }
         public static bool revengeExile { get { return CustomOptionHolder.nekoKabochaRevengeExile.getBool(); } }
 
+        public PlayerControl meetingKiller = null;
+
         public NekoKabocha()
         {
             RoleType = roleId = RoleType.NekoKabocha;
         }
 
-        public override void OnMeetingStart() { }
-        public override void OnMeetingEnd() { }
+        public override void OnMeetingStart() {
+            meetingKiller = null;
+        }
+
+        public override void OnMeetingEnd()
+        {
+            meetingKiller = null;
+        }
+
         public override void FixedUpdate() { }
         public override void OnKill(PlayerControl target) { }
         
         public override void OnDeath(PlayerControl killer = null)
         {
+            killer = killer ?? meetingKiller;
             if (killer != null && killer != player && killer.isAlive() && !killer.isGM())
             {
                 if ((revengeCrew && killer.isCrew()) ||
                     (revengeNeutral && killer.isNeutral()) ||
                     (revengeImpostor && killer.isImpostor()))
                 {
-                    player.MurderPlayer(killer);
+                    if (meetingKiller == null)
+                    {
+                        player.MurderPlayer(killer);
+                    }
+                    else
+                    {
+                        killer.Exiled();
+                        if (PlayerControl.LocalPlayer == killer)
+                            HudManager.Instance.KillOverlay.ShowKillAnimation(player.Data, killer.Data);
+                    }
+
                     finalStatuses[killer.PlayerId] = FinalStatus.Revenge;
                 }
             }
@@ -52,6 +72,16 @@ namespace TheOtherRoles
                 writer.Write(target.PlayerId);
                 AmongUsClient.Instance.FinishRpcImmediately(writer);
                 RPCProcedure.nekoKabochaExile(target.PlayerId);
+            }
+            meetingKiller = null;
+        }
+
+        public static void meetingKill(PlayerControl player, PlayerControl killer)
+        {
+            if (isRole(player))
+            {
+                NekoKabocha n = players.First(x => x.player == player);
+                n.meetingKiller = killer;
             }
         }
 

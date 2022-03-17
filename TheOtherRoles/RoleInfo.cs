@@ -23,6 +23,7 @@ namespace TheOtherRoles
                 return GameOptionsDataPatch.optionsToString(baseOption, true);
             }
         }
+
         public bool enabled { get { return Helpers.RolesEnabled && (baseOption == null || baseOption.enabled); } }
         public RoleType roleType;
 
@@ -157,7 +158,7 @@ namespace TheOtherRoles
             return ModTranslation.getString(key);
         }
 
-        public static List<RoleInfo> getRoleInfoForPlayer(PlayerControl p, RoleType[] excludeRoles = null) {
+        public static List<RoleInfo> getRoleInfoForPlayer(PlayerControl p, RoleType[] excludeRoles = null, bool includeHidden = false) {
             List<RoleInfo> infos = new List<RoleInfo>();
             if (p == null) return infos;
 
@@ -216,7 +217,7 @@ namespace TheOtherRoles
             if (p.isRole(RoleType.Immoralist)) infos.Add(immoralist);
             if (p.isRole(RoleType.FortuneTeller))
             {
-                if (PlayerControl.LocalPlayer.Data.IsDead || FortuneTeller.endGameFlag)
+                if (includeHidden || PlayerControl.LocalPlayer.Data.IsDead)
                 {
                     infos.Add(fortuneTeller);
                 }
@@ -241,10 +242,10 @@ namespace TheOtherRoles
             return infos;
         }
 
-        public static String GetRolesString(PlayerControl p, bool useColors, RoleType[] excludeRoles = null) {
+        public static String GetRolesString(PlayerControl p, bool useColors, RoleType[] excludeRoles = null, bool includeHidden = false) {
             if (p?.Data?.Disconnected != false) return "";
 
-            var roleInfo = getRoleInfoForPlayer(p, excludeRoles);
+            var roleInfo = getRoleInfoForPlayer(p, excludeRoles, includeHidden);
             string roleName = String.Join(" ", roleInfo.Select(x => useColors ? Helpers.cs(x.color, x.name) : x.name).ToArray());
             if (Lawyer.target != null && p?.PlayerId == Lawyer.target.PlayerId && PlayerControl.LocalPlayer != Lawyer.target) roleName += (useColors ? Helpers.cs(Pursuer.color, " §") : " §");
 

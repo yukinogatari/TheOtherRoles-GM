@@ -114,8 +114,11 @@ namespace TheOtherRoles
             players = new List<Fox>();
             foreach (Arrow arrow in arrows)
             {
-                arrow.arrow.SetActive(false);
-                UnityEngine.Object.Destroy(arrow.arrow);
+                if (arrow?.arrow != null)
+                {
+                    arrow.arrow.SetActive(false);
+                    UnityEngine.Object.Destroy(arrow.arrow);
+                }
             }
             arrows = new List<Arrow>();
             Immoralist.Clear();
@@ -326,8 +329,11 @@ namespace TheOtherRoles
                 // 前回のArrowをすべて破棄する
                 foreach (Arrow arrow in arrows)
                 {
-                    arrow.arrow.SetActive(false);
-                    UnityEngine.Object.Destroy(arrow.arrow);
+                    if (arrow?.arrow != null)
+                    {
+                        arrow.arrow.SetActive(false);
+                        UnityEngine.Object.Destroy(arrow.arrow);
+                    }
                 }
 
                 // Arrorw一覧

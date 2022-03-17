@@ -50,6 +50,14 @@ namespace TheOtherRoles {
             }
         }
 
+        public static bool RefundVotes
+        {
+            get
+            {
+                return CustomOptionHolder.refundVotesOnDeath.getBool();
+            }
+        }
+
         public static void destroyList<T>(Il2CppSystem.Collections.Generic.List<T> items) where T : UnityEngine.Object
         {
             if (items == null) return;

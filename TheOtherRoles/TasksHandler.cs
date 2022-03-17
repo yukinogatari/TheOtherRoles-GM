@@ -15,8 +15,8 @@ namespace TheOtherRoles {
         {
             public static void Postfix(NormalPlayerTask __instance)
             {
-                if (__instance.IsComplete && __instance.Arrow?.isActiveAndEnabled == true)
-                    __instance.Arrow?.gameObject?.SetActive(false);
+                bool showArrows = !MapOptions.hideTaskArrows && !__instance.IsComplete && __instance.TaskStep > 0;
+                __instance.Arrow?.gameObject?.SetActive(showArrows);
             }
         }
 
@@ -25,8 +25,35 @@ namespace TheOtherRoles {
         {
             public static void Postfix(AirshipUploadTask __instance)
             {
-                if (__instance.IsComplete)
-                    __instance.Arrows?.DoIf(x => x != null && x.isActiveAndEnabled, x => x.gameObject?.SetActive(false));
+                bool showArrows = !MapOptions.hideTaskArrows && !__instance.IsComplete && __instance.TaskStep > 0;
+                __instance.Arrows?.DoIf(x => x != null, x => x.gameObject?.SetActive(showArrows));
+            }
+        }
+
+        [HarmonyPatch(typeof(NormalPlayerTask), nameof(NormalPlayerTask.UpdateArrow))]
+        public static class NormalPlayerTaskUpdateArrowPatch
+        {
+            public static void Postfix(NormalPlayerTask __instance)
+            {
+                if (MapOptions.hideTaskArrows)
+                {
+                    __instance.Arrow?.gameObject?.SetActive(false);
+                }
+            }
+        }
+
+        [HarmonyPatch(typeof(AirshipUploadTask), nameof(AirshipUploadTask.UpdateArrow))]
+        public static class AirshipUploadTaskUpdateArrowPatch
+        {
+            public static bool Prefix(AirshipUploadTask __instance)
+            {
+                if (MapOptions.hideTaskArrows)
+                {
+                    __instance.Arrows?.DoIf(x => x != null, x => x.gameObject?.SetActive(false));
+                    return false;
+                }
+
+                return true;
             }
         }
 

@@ -35,7 +35,7 @@ namespace TheOtherRoles.Patches
                 MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.UseVitalsTime, Hazel.SendOption.Reliable, -1);
                 writer.Write(vitalsTimer);
                 AmongUsClient.Instance.FinishRpcImmediately(writer);
-                RPCProcedure.UseVitalsTime(vitalsTimer);
+                RPCProcedure.useVitalsTime(vitalsTimer);
             }
             vitalsTimer = 0f;
         }

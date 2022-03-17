@@ -221,7 +221,10 @@ namespace TheOtherRoles
         public static void uncheckedExilePlayer(byte targetId)
         {
             PlayerControl target = Helpers.playerById(targetId);
-            if (target != null) target.Exiled();
+            if (target != null)
+            {
+                target.Exiled();
+            }
         }
 
         public static void uncheckedEndGame(byte reason)
@@ -764,35 +767,19 @@ namespace TheOtherRoles
 
         public static void guesserShoot(byte killerId, byte dyingTargetId, byte guessedTargetId, byte guessedRoleId)
         {
+            PlayerControl killer = Helpers.playerById(killerId);
             PlayerControl dyingTarget = Helpers.playerById(dyingTargetId);
             if (dyingTarget == null) return;
+            if (dyingTarget.isRole(RoleType.NekoKabocha))
+            {
+                NekoKabocha.meetingKill(dyingTarget, killer);
+            }
             dyingTarget.Exiled();
             PlayerControl dyingLoverPartner = Lovers.bothDie ? dyingTarget.getPartner() : null; // Lover check
-            byte partnerId = dyingLoverPartner != null ? dyingLoverPartner.PlayerId : dyingTargetId;
 
             Guesser.remainingShots(killerId, true);
             if (Constants.ShouldPlaySfx()) SoundManager.Instance.PlaySound(dyingTarget.KillSfx, false, 0.8f);
-            if (MeetingHud.Instance)
-            {
-                foreach (PlayerVoteArea pva in MeetingHud.Instance.playerStates)
-                {
-                    if (pva.TargetPlayerId == dyingTargetId || pva.TargetPlayerId == partnerId)
-                    {
-                        pva.SetDead(pva.DidReport, true);
-                        pva.Overlay.gameObject.SetActive(true);
-                    }
 
-                    //Give players back their vote if target is shot dead
-                    if (pva.VotedFor != dyingTargetId || pva.VotedFor != partnerId) continue;
-                    pva.UnsetVote();
-                    var voteAreaPlayer = Helpers.playerById(pva.TargetPlayerId);
-                    if (!voteAreaPlayer.AmOwner) continue;
-                    MeetingHud.Instance.ClearVote();
-
-                }
-                if (AmongUsClient.Instance.AmHost)
-                    MeetingHud.Instance.CheckForEndVoting();
-            }
             PlayerControl guesser = Helpers.playerById(killerId);
             if (HudManager.Instance != null && guesser != null)
                 if (PlayerControl.LocalPlayer == dyingTarget)
@@ -858,14 +845,12 @@ namespace TheOtherRoles
             if (target == null) return;
             target.MyPhysics.ExitAllVents();
             target.Exiled();
-            GMUpdateMeeting(targetId, true);
             finalStatuses[target.PlayerId] = FinalStatus.GMExecuted;
 
             PlayerControl partner = target.getPartner(); // Lover check
             if (partner != null)
             {
                 partner?.MyPhysics.ExitAllVents();
-                GMUpdateMeeting(partner.PlayerId, true);
                 finalStatuses[partner.PlayerId] = FinalStatus.GMExecuted;
             }
 
@@ -883,14 +868,14 @@ namespace TheOtherRoles
             PlayerControl target = Helpers.playerById(targetId);
             if (target == null) return;
             target.Revive();
-            GMUpdateMeeting(targetId, false);
+            updateMeeting(targetId, false);
             finalStatuses[target.PlayerId] = FinalStatus.Alive;
 
             PlayerControl partner = target.getPartner(); // Lover check
             if (partner != null)
             {
                 partner.Revive();
-                GMUpdateMeeting(partner.PlayerId, false);
+                updateMeeting(partner.PlayerId, false);
                 finalStatuses[partner.PlayerId] = FinalStatus.Alive;
             }
 
@@ -900,7 +885,7 @@ namespace TheOtherRoles
             }
         }
 
-        public static void GMUpdateMeeting(byte targetId, bool dead)
+        public static void updateMeeting(byte targetId, bool dead = true)
         {
             if (MeetingHud.Instance)
             {
@@ -911,23 +896,34 @@ namespace TheOtherRoles
                         pva.SetDead(pva.DidReport, dead);
                         pva.Overlay.gameObject.SetActive(dead);
                     }
+
+                    // Give players back their vote if target is shot dead
+                    if (Helpers.RefundVotes && dead)
+                    {
+                        if (pva.VotedFor != targetId) continue;
+                        pva.UnsetVote();
+                        var voteAreaPlayer = Helpers.playerById(pva.TargetPlayerId);
+                        if (!voteAreaPlayer.AmOwner) continue;
+                        MeetingHud.Instance.ClearVote();
+                    }
                 }
+
                 if (AmongUsClient.Instance.AmHost)
                     MeetingHud.Instance.CheckForEndVoting();
             }
         }
 
-        public static void UseAdminTime(float time)
+        public static void useAdminTime(float time)
         {
             MapOptions.restrictAdminTime -= time;
         }
 
-        public static void UseCameraTime(float time)
+        public static void useCameraTime(float time)
         {
             MapOptions.restrictCamerasTime -= time;
         }
 
-        public static void UseVitalsTime(float time)
+        public static void useVitalsTime(float time)
         {
             MapOptions.restrictVitalsTime -= time;
         }
@@ -1230,13 +1226,13 @@ namespace TheOtherRoles
                         RPCProcedure.GMRevive(reader.ReadByte());
                         break;
                     case (byte)CustomRPC.UseAdminTime:
-                        RPCProcedure.UseAdminTime(reader.ReadSingle());
+                        RPCProcedure.useAdminTime(reader.ReadSingle());
                         break;
                     case (byte)CustomRPC.UseCameraTime:
-                        RPCProcedure.UseCameraTime(reader.ReadSingle());
+                        RPCProcedure.useCameraTime(reader.ReadSingle());
                         break;
                     case (byte)CustomRPC.UseVitalsTime:
-                        RPCProcedure.UseVitalsTime(reader.ReadSingle());
+                        RPCProcedure.useVitalsTime(reader.ReadSingle());
                         break;
                     case (byte)CustomRPC.PlagueDoctorWin:
                         RPCProcedure.plagueDoctorWin();

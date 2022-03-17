@@ -268,8 +268,11 @@ namespace TheOtherRoles
                     // 前回のArrowをすべて破棄する
                     foreach (Arrow arrow in arrows)
                     {
-                        arrow.arrow.SetActive(false);
-                        UnityEngine.Object.Destroy(arrow.arrow);
+                        if (arrow?.arrow != null)
+                        {
+                            arrow.arrow.SetActive(false);
+                            UnityEngine.Object.Destroy(arrow.arrow);
+                        }
                     }
 
                     // Arrow一覧
@@ -301,7 +304,6 @@ namespace TheOtherRoles
             players = new List<FortuneTeller>();
             arrows = new List<Arrow>();
             meetingFlag = true;
-            endGameFlag = false;
         }
 
         public void divine(PlayerControl p)
@@ -405,15 +407,6 @@ namespace TheOtherRoles
                         meetingFlag = false;
                     }
                 })));
-            }
-        }
-        [HarmonyPatch(typeof(AmongUsClient), nameof(AmongUsClient.OnGameEnd))]
-        public class OnGameEndPatch
-        {
-
-            public static void Prefix(AmongUsClient __instance, [HarmonyArgument(0)] ref EndGameResult endGameResult)
-            {
-                FortuneTeller.endGameFlag = true;
             }
         }
     }
