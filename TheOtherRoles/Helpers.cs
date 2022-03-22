@@ -288,8 +288,8 @@ namespace TheOtherRoles {
 
         public static bool isDead(this PlayerControl player)
         {
-            return player?.Data?.IsDead == true || player?.Data?.Disconnected == true ||
-                  (finalStatuses.ContainsKey(player.PlayerId) && finalStatuses[player.PlayerId] != FinalStatus.Alive);
+            return player == null || player?.Data?.IsDead == true || player?.Data?.Disconnected == true ||
+                  (finalStatuses != null && finalStatuses.ContainsKey(player.PlayerId) && finalStatuses[player.PlayerId] != FinalStatus.Alive);
         }
 
         public static bool isAlive(this PlayerControl player)

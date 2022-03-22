@@ -416,7 +416,6 @@ namespace TheOtherRoles
             if (totalTasks == 0) return true;
             foreach (var task in p.Data.Tasks)
             {
-
                 if (task.Complete)
                 {
                     counter++;

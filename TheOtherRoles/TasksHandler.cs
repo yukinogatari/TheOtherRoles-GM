@@ -45,15 +45,12 @@ namespace TheOtherRoles {
         [HarmonyPatch(typeof(AirshipUploadTask), nameof(AirshipUploadTask.UpdateArrow))]
         public static class AirshipUploadTaskUpdateArrowPatch
         {
-            public static bool Prefix(AirshipUploadTask __instance)
+            public static void Postfix(AirshipUploadTask __instance)
             {
                 if (MapOptions.hideTaskArrows)
                 {
                     __instance.Arrows?.DoIf(x => x != null, x => x.gameObject?.SetActive(false));
-                    return false;
                 }
-
-                return true;
             }
         }
 

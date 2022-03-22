@@ -499,12 +499,14 @@ namespace TheOtherRoles.Patches
                 }
             }
 
+            var canSeeEverything = PlayerControl.LocalPlayer.isDead() || PlayerControl.LocalPlayer.isGM();
             foreach (PlayerControl p in PlayerControl.AllPlayerControls)
             {
+                if (p == null) continue;
+
                 var canSeeInfo =
-                    p == PlayerControl.LocalPlayer ||
-                    PlayerControl.LocalPlayer.isDead() ||
-                    p.isGM() || PlayerControl.LocalPlayer.isGM() ||
+                    canSeeEverything ||
+                    p == PlayerControl.LocalPlayer || p.isGM() || 
                     (Lawyer.lawyerKnowsRole && PlayerControl.LocalPlayer == Lawyer.lawyer && p == Lawyer.target);
 
                 if (canSeeInfo)

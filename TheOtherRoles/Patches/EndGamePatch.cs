@@ -115,22 +115,23 @@ namespace TheOtherRoles.Patches
         public static void Postfix(AmongUsClient __instance, [HarmonyArgument(0)] ref EndGameResult endGameResult)
         {
             var gameOverReason = AdditionalTempData.gameOverReason;
-            // 狐の勝利条件を満たしたか確認する
-            Boolean isFoxAlive = Fox.isFoxAlive();
 
-            Boolean isFoxCompletedTasks = Fox.isFoxCompletedTasks(); // 生存中の狐が1匹でもタスクを全て終えていること
-            if(isFoxAlive && isFoxCompletedTasks){
+            // 狐の勝利条件を満たしたか確認する
+            bool isFoxAlive = Fox.isFoxAlive();
+            bool isFoxCompletedTasks = Fox.isFoxCompletedTasks(); // 生存中の狐が1匹でもタスクを全て終えていること
+            if (isFoxAlive && isFoxCompletedTasks) {
                 // タスク勝利の場合はオプションの設定次第
                 if (gameOverReason == GameOverReason.HumansByTask && !Fox.crewWinsByTasks)
                 {
                     gameOverReason = (GameOverReason)CustomGameOverReason.FoxWin;
                 }
+
                 // 第三陣営の勝利以外の場合に狐が生存していたら狐の勝ち
-                else if(gameOverReason != (GameOverReason)CustomGameOverReason.PlagueDoctorWin &&
-                gameOverReason != (GameOverReason)CustomGameOverReason.ArsonistWin &&
-                gameOverReason != (GameOverReason)CustomGameOverReason.JesterWin &&
-                gameOverReason != (GameOverReason)CustomGameOverReason.VultureWin &&
-                gameOverReason != (GameOverReason)GameOverReason.HumansByTask)
+                else if (gameOverReason != (GameOverReason)CustomGameOverReason.PlagueDoctorWin &&
+                    gameOverReason != (GameOverReason)CustomGameOverReason.ArsonistWin &&
+                    gameOverReason != (GameOverReason)CustomGameOverReason.JesterWin &&
+                    gameOverReason != (GameOverReason)CustomGameOverReason.VultureWin &&
+                    gameOverReason != (GameOverReason)GameOverReason.HumansByTask)
                 {
                     gameOverReason = (GameOverReason)CustomGameOverReason.FoxWin;
                 }
@@ -814,7 +815,7 @@ namespace TheOtherRoles.Patches
                         return true;
                     }
 
-                    if (Fox.exists)
+                    if (Fox.exists && !Fox.crewWinsByTasks)
                     {
                         // 狐生存かつタスク完了時に生存中のクルーがタスクを全て終わらせたら勝ち
                         // 死んだプレイヤーが意図的にタスクを終了させないのを防止するため
@@ -825,7 +826,7 @@ namespace TheOtherRoles.Patches
                         {
                             foreach (var task in player.Data.Tasks)
                             {
-                                if (player.Data.IsDead && player.isCrew() && !player.hasModifier(ModifierType.Madmate))
+                                if (player.Data.IsDead && player.isCrew())
                                 {
                                     if (!task.Complete)
                                     {

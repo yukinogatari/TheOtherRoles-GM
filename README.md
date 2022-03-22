@@ -14,6 +14,7 @@ This fork introduces a number of changes to [The Other Roles](https://github.com
   * [Neko-Kabocha](#neko-kabocha) by [Virtual_Dusk](https://twitter.com/Virtual_Dusk)
   * [Fox & Immoralist](#fox) by [haoming37](https://github.com/haoming37)
   * [Fortune Teller](#serial-killer) by [haoming37](https://github.com/haoming37)
+  * [Watcher](#watcher) by [Virtual_Dusk](https://twitter.com/Virtual_Dusk)
 * Pluralized Roles
   * Lovers (up to 7 couples)
   * Sheriff
@@ -49,15 +50,17 @@ Even more roles are coming soon :)
 | [Evil Swapper](#swapper) | [Time Master](#time-master) |  |  |
 | [Serial Killer](#serial-killer) |  [Tracker](#tracker) |  |  |
 | [Neko-Kabocha](#neko-kabocha) |  [Bait](#bait) |  |  |
-|  |  [Madmate](#madmate)  |  |  |
+| [Evil Watcher](#Watcher) |  [Madmate](#madmate)  |  |  |
 |  |  [Medium](#medium) |  |  |
 |  |  [Fortune Teller](#fortune-teller) |  |  |
+|  |  [Nice Watcher](#Watcher) |  |  |
 
 The [Role Assignment](#role-assignment) sections explains how the roles are being distributed among the players.
 
 # Releases
 | Among Us - Version | Mod Version | Link |
 |----------|-------------|-----------------|
+| 2022.2.24s | v3.5.4 GM | [Download](https://github.com/yukinogatari/TheOtherRoles-GM/releases/download/v3.5.4/TheOtherRoles-GM.v3.5.4.zip)
 | 2022.2.24s | v3.5.3 GM | [Download](https://github.com/yukinogatari/TheOtherRoles-GM/releases/download/v3.5.3/TheOtherRoles-GM.v3.5.3.zip)
 | 2022.2.8s | v3.5.2 GM | [Download](https://github.com/yukinogatari/TheOtherRoles-GM/releases/download/v3.5.2/TheOtherRoles-GM.v3.5.2.zip)
 | 2021.12.15s (build num: 1421) | v3.5.1 GM | [Download](https://github.com/yukinogatari/TheOtherRoles-GM/releases/download/v3.5.1/TheOtherRoles-GM.v3.5.1.zip)
@@ -1515,6 +1518,12 @@ The Immoralist's objective is to support the Fox in any way they can, even if it
 Created by [haoming37](https://github.com/haoming37)
 
 The Fortune Teller is a Crewmate with the power to divine a single player's role. They start out believing themselves to be an ordinary Crewmate, only awakening to their powers after completing a designated number of tasks.
+
+## Watcher
+### **Team: Crewmate or Impostors**
+Created by [Virtual_Dusk](https://twitter.com/Virtual_Dusk)
+
+The Watcher is a player capable of seeing everyone's votes during meetings.
 
 # Source code
 It's bad I know, this is a side project and my second week of modding. So there are no best practices around here.
