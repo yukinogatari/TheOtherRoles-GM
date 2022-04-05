@@ -29,6 +29,7 @@ namespace TheOtherRoles
             Lighter.SetButtonCooldowns();
             SerialKiller.SetButtonCooldowns();
             Immoralist.SetButtonCooldowns();
+            Sprinter.SetButtonCooldowns();
 
             foreach (CustomButton gmButton in gmButtons)
             {
@@ -53,6 +54,7 @@ namespace TheOtherRoles
             Fox.MakeButtons(hm);
             Immoralist.MakeButtons(hm);
             FortuneTeller.MakeButtons(hm);
+            Sprinter.MakeButtons(hm);
 
             gmButtons = new List<CustomButton>();
             gmKillButtons = new List<CustomButton>();

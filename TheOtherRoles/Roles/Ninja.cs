@@ -249,7 +249,7 @@ namespace TheOtherRoles
                     if (isStealthed(ninja))
                     {
                         opacity = Math.Max(opacity, 1.0f - stealthFade(ninja));
-                        ninja.myRend.material.SetFloat("_Outline", 0f);
+                        ninja.MyRend.material.SetFloat("_Outline", 0f);
                     }
                     else
                     {

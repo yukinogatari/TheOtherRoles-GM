@@ -1,6 +1,7 @@
 ﻿using HarmonyLib;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.ResourceManagement.AsyncOperations;
 
 namespace TheOtherRoles
 {
@@ -22,15 +23,16 @@ namespace TheOtherRoles
             pc.RawSetColor(outfit.ColorId);
             Helpers.setSkinWithAnim(pc.MyPhysics, outfit.SkinId);
 
-            if (pc.CurrentPet) UnityEngine.Object.Destroy(pc.CurrentPet.gameObject);
-            if (!pc.Data.IsDead)
+            // idk how to handle pets right now, so just not doing it
+            // TODO: FIX PETS
+/*            if (!pc.Data.IsDead)
             {
-                pc.CurrentPet = UnityEngine.Object.Instantiate<PetBehaviour>(DestroyableSingleton<HatManager>.Instance.GetPetById(outfit.PetId).PetPrefab);
+                pc.CurrentPet.Data = HatManager.Instance.GetPetById(outfit.PetId);
                 pc.CurrentPet.transform.position = pc.transform.position;
                 pc.CurrentPet.Source = pc;
                 pc.CurrentPet.Visible = visible;
                 PlayerControl.SetPlayerMaterialColors(outfit.ColorId, pc.CurrentPet.rend);
-            }
+            }*/
         }
 
         public static void resetMorph(this PlayerControl pc)

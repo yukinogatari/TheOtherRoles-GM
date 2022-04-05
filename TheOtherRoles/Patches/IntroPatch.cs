@@ -132,53 +132,62 @@ namespace TheOtherRoles.Patches {
             }
         }
 
-        [HarmonyPatch(typeof(IntroCutscene), nameof(IntroCutscene.SetUpRoleText))]
-        class SetUpRoleTextPatch {
-            public static void Postfix(IntroCutscene __instance) {
+        [HarmonyPatch(typeof(IntroCutscene), nameof(IntroCutscene.ShowRole))]
+        class ShowRolePatch
+        {
+            public static void Postfix(IntroCutscene __instance)
+            {
                 if (!CustomOptionHolder.activateRoles.getBool()) return; // Don't override the intro of the vanilla roles
 
                 List<RoleInfo> infos = RoleInfo.getRoleInfoForPlayer(PlayerControl.LocalPlayer, new RoleType[] { RoleType.Lovers });
                 RoleInfo roleInfo = infos.FirstOrDefault();
 
-                if (roleInfo != null && roleInfo != RoleInfo.crewmate && roleInfo != RoleInfo.impostor && !(roleInfo == RoleInfo.fortuneTeller && FortuneTeller.numTasks > 0)) {
-                    __instance.YouAreText.color = roleInfo.color;
-                    __instance.RoleText.text = roleInfo.name;
-                    __instance.RoleText.color = roleInfo.color;
-                    __instance.RoleBlurbText.text = roleInfo.introDescription;
-                    __instance.RoleBlurbText.color = roleInfo.color;
-                }
-
-                if (PlayerControl.LocalPlayer.hasModifier(ModifierType.Madmate))
+                Color color = new Color(__instance.YouAreText.color.r, __instance.YouAreText.color.g, __instance.YouAreText.color.b, 0f);
+                __instance.StartCoroutine(Effects.Lerp(0.5f, new Action<float>((t) =>
                 {
-                    if (roleInfo == RoleInfo.crewmate)
+                    if (roleInfo != null && roleInfo != RoleInfo.crewmate && roleInfo != RoleInfo.impostor && !(roleInfo == RoleInfo.fortuneTeller && FortuneTeller.numTasks > 0))
                     {
-                        __instance.RoleText.text = ModTranslation.getString("madmate");
+                        __instance.RoleText.text = roleInfo.name;
+                        __instance.RoleBlurbText.text = roleInfo.introDescription;
+                        color = roleInfo.color;
                     }
-                    else
-                    {
-                        __instance.RoleText.text = ModTranslation.getString("madmatePrefix") + __instance.RoleText.text;
-                    }
-                    __instance.YouAreText.color = Madmate.color;
-                    __instance.RoleText.color = Madmate.color;
-                    __instance.RoleBlurbText.text = ModTranslation.getString("madmateIntroDesc");
-                    __instance.RoleBlurbText.color = Madmate.color;
-                }
 
-                if (infos.Any(info => info.roleType == RoleType.Lovers)) {
-                    PlayerControl otherLover = PlayerControl.LocalPlayer.getPartner();
-                	__instance.RoleBlurbText.text += "\n" + Helpers.cs(Lovers.color, String.Format(ModTranslation.getString("loversFlavor"), otherLover?.Data?.PlayerName ?? ""));
-                } 
+                    if (PlayerControl.LocalPlayer.hasModifier(ModifierType.Madmate))
+                    {
+                        if (roleInfo == RoleInfo.crewmate)
+                        {
+                            __instance.RoleText.text = ModTranslation.getString("madmate");
+                        }
+                        else
+                        {
+                            __instance.RoleText.text = ModTranslation.getString("madmatePrefix") + __instance.RoleText.text;
+                        }
+                        __instance.RoleBlurbText.text = ModTranslation.getString("madmateIntroDesc");
+                        color = Madmate.color;
+                    }
+
+                    if (infos.Any(info => info.roleType == RoleType.Lovers))
+                    {
+                        PlayerControl otherLover = PlayerControl.LocalPlayer.getPartner();
+                        __instance.RoleBlurbText.text += "\n" + Helpers.cs(Lovers.color, String.Format(ModTranslation.getString("loversFlavor"), otherLover?.Data?.PlayerName ?? ""));
+                    }
+
+                    color.a = t;
+                    __instance.YouAreText.color = color;
+                    __instance.RoleText.color = color;
+                    __instance.RoleBlurbText.color = color;
+                })));
             }
         }
 
         [HarmonyPatch(typeof(IntroCutscene), nameof(IntroCutscene.BeginCrewmate))]
         class BeginCrewmatePatch {
-            public static void Prefix(IntroCutscene __instance, ref  Il2CppSystem.Collections.Generic.List<PlayerControl> yourTeam) {
-                setupIntroTeamIcons(__instance, ref yourTeam);
+            public static void Prefix(IntroCutscene __instance, ref  Il2CppSystem.Collections.Generic.List<PlayerControl> teamToDisplay) {
+                setupIntroTeamIcons(__instance, ref teamToDisplay);
             }
 
-            public static void Postfix(IntroCutscene __instance, ref  Il2CppSystem.Collections.Generic.List<PlayerControl> yourTeam) {
-                setupIntroTeam(__instance, ref yourTeam);
+            public static void Postfix(IntroCutscene __instance, ref  Il2CppSystem.Collections.Generic.List<PlayerControl> teamToDisplay) {
+                setupIntroTeam(__instance, ref teamToDisplay);
             }
         }
 

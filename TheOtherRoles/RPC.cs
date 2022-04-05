@@ -91,6 +91,7 @@ namespace TheOtherRoles
         FoxStealth,
         FoxCreatesImmoralist,
         SwapperAnimate,
+        SprinterSprint,
     }
 
     public static class RPCProcedure
@@ -823,6 +824,13 @@ namespace TheOtherRoles
             PlayerControl player = Helpers.playerById(playerId);
             Ninja.setStealthed(player, stealthed);
         }
+
+        public static void sprinterSprint(byte playerId, bool sprinting)
+        {
+            PlayerControl player = Helpers.playerById(playerId);
+            Sprinter.setSprinting(player, sprinting);
+        }
+
         public static void foxStealth(byte playerId, bool stealthed)
         {
             PlayerControl player = Helpers.playerById(playerId);
@@ -1217,6 +1225,9 @@ namespace TheOtherRoles
                         break;
                     case (byte)CustomRPC.VultureEat:
                         RPCProcedure.vultureEat(reader.ReadByte());
+                        break;
+                    case (byte)CustomRPC.SprinterSprint:
+                        RPCProcedure.sprinterSprint(reader.ReadByte(), reader.ReadBoolean());
                         break;
 
                     case (byte)CustomRPC.GMKill:

@@ -40,6 +40,7 @@ namespace TheOtherRoles
         Bait,
         Medium,
         FortuneTeller,
+        Sprinter,
 
 
         Impostor = 100,
@@ -95,6 +96,7 @@ namespace TheOtherRoles
             { RoleType.Sheriff, typeof(RoleBase<Sheriff>) },
             { RoleType.Lighter, typeof(RoleBase<Lighter>) },
             { RoleType.FortuneTeller, typeof(RoleBase<FortuneTeller>) },
+            { RoleType.Sprinter, typeof(RoleBase<Sprinter>) },
 
             // Impostor
             { RoleType.Ninja, typeof(RoleBase<Ninja>) },
@@ -125,6 +127,7 @@ namespace TheOtherRoles
         public abstract void OnDeath(PlayerControl killer = null);
         public abstract void HandleDisconnect(PlayerControl player, DisconnectReasons reason);
         public virtual void ResetRole() { }
+        public virtual void PostInit() { }
 
         public static void ClearAll()
         {
@@ -143,6 +146,7 @@ namespace TheOtherRoles
             this.player = player;
             players.Add((T)this);
             allRoles.Add(this);
+            PostInit();
         }
 
         public static T local

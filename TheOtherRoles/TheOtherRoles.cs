@@ -363,7 +363,7 @@ namespace TheOtherRoles
             {
                 hacker = null;
                 vitals = null;
-            doorLog = null;
+                doorLog = null;
                 hackerTimer = 0f;
                 adminSprite = null;
                 cooldown = CustomOptionHolder.hackerCooldown.getFloat();

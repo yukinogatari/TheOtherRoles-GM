@@ -79,6 +79,7 @@ namespace TheOtherRoles
             RoleType.Mini,
             RoleType.NiceGuesser,
             RoleType.Watcher,
+            RoleType.Sprinter,
         };
 
         public static List<PlayerControl> candidates
@@ -169,7 +170,7 @@ namespace TheOtherRoles
                     counter++;
                 }
             }
-            return counter == totalTasks;
+            return counter >= totalTasks;
         }
 
         public static void Clear()

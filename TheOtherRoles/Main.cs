@@ -21,7 +21,7 @@ namespace TheOtherRoles
     public class TheOtherRolesPlugin : BasePlugin
     {
         public const string Id = "me.eisbison.theotherroles";
-        public const string VersionString = "3.5.4";
+        public const string VersionString = "3.5.5";
         public static System.Version Version = System.Version.Parse(VersionString);
         internal static BepInEx.Logging.ManualLogSource Logger;
 
@@ -141,23 +141,23 @@ namespace TheOtherRoles
                 GameData.Instance.AddPlayer(playerControl);
                 AmongUsClient.Instance.Spawn(playerControl, -2, InnerNet.SpawnFlags.None);
 
-                int hat = random.Next(HatManager.Instance.AllHats.Count);
-                int pet = random.Next(HatManager.Instance.AllPets.Count);
-                int skin = random.Next(HatManager.Instance.AllSkins.Count);
-                int visor = random.Next(HatManager.Instance.AllVisors.Count);
+                int hat = random.Next(HatManager.Instance.allHats.Count);
+                int pet = random.Next(HatManager.Instance.allPets.Count);
+                int skin = random.Next(HatManager.Instance.allSkins.Count);
+                int visor = random.Next(HatManager.Instance.allVisors.Count);
                 int color = random.Next(Palette.PlayerColors.Length);
-                int nameplate = random.Next(HatManager.Instance.AllNamePlates.Count);
+                int nameplate = random.Next(HatManager.Instance.allNamePlates.Count);
 
                 playerControl.transform.position = PlayerControl.LocalPlayer.transform.position;
                 playerControl.GetComponent<DummyBehaviour>().enabled = true;
                 playerControl.NetTransform.enabled = false;
                 playerControl.SetName(RandomString(10));
                 playerControl.SetColor(color);
-                playerControl.SetHat(HatManager.Instance.AllHats[hat].ProductId, color);
-                playerControl.SetPet(HatManager.Instance.AllPets[pet].ProductId, color);
-                playerControl.SetVisor(HatManager.Instance.AllVisors[visor].ProductId);
-                playerControl.SetSkin(HatManager.Instance.AllSkins[skin].ProductId);
-                playerControl.SetNamePlate(HatManager.Instance.AllNamePlates[nameplate].ProductId);
+                playerControl.SetHat(HatManager.Instance.allHats[hat].ProductId, color);
+                playerControl.SetPet(HatManager.Instance.allPets[pet].ProductId, color);
+                playerControl.SetVisor(HatManager.Instance.allVisors[visor].ProductId);
+                playerControl.SetSkin(HatManager.Instance.allSkins[skin].ProductId, color);
+                playerControl.SetNamePlate(HatManager.Instance.allNamePlates[nameplate].ProductId);
                 GameData.Instance.RpcSetTasks(playerControl.PlayerId, new byte[0]);
             }
 

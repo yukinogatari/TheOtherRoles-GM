@@ -93,6 +93,7 @@ namespace TheOtherRoles
         public static RoleInfo fox = new RoleInfo("fox", Fox.color, CustomOptionHolder.foxSpawnRate, RoleType.Fox);
         public static RoleInfo immoralist = new RoleInfo("immoralist", Immoralist.color, CustomOptionHolder.foxSpawnRate, RoleType.Immoralist);
         public static RoleInfo fortuneTeller = new RoleInfo("fortuneTeller", FortuneTeller.color, CustomOptionHolder.fortuneTellerSpawnRate, RoleType.FortuneTeller);
+        public static RoleInfo sprinter = new RoleInfo("sprinter", Sprinter.color, CustomOptionHolder.sprinterSpawnRate, RoleType.Sprinter);
 
         public static List<RoleInfo> allRoleInfos = new List<RoleInfo>() {
                 impostor,
@@ -150,7 +151,8 @@ namespace TheOtherRoles
                 evilWatcher,
                 fox,
                 immoralist,
-                fortuneTeller
+                fortuneTeller,
+                sprinter
             };
 
         public static string tl(string key)
@@ -227,6 +229,7 @@ namespace TheOtherRoles
                     infos.Add(info);
                 }
             }
+            if (p.isRole(RoleType.Sprinter)) infos.Add(sprinter);
 
 
             // Default roles

@@ -258,8 +258,8 @@ namespace TheOtherRoles
 
         public CustomDualRoleOption(int id, string name, Color color, RoleType roleType, int max = 15, bool roleEnabled = true) : base(id, name, color, max, roleEnabled)
         {
-            roleAssignEqually = new CustomOption(id + 10011, "roleAssignEqually", new string[] { "optionOn", "optionOff" }, "optionOff", this, false, isHidden, "");
-            roleImpChance = Create(id + 10010, "roleImpChance", CustomOptionHolder.rates, roleAssignEqually, false, isHidden);
+            roleAssignEqually = new CustomOption(id + 15001, "roleAssignEqually", new string[] { "optionOn", "optionOff" }, "optionOff", this, false, isHidden, "");
+            roleImpChance = Create(id + 15000, "roleImpChance", CustomOptionHolder.rates, roleAssignEqually, false, isHidden);
 
             this.roleType = roleType;
             dualRoles.Add(this);
@@ -609,6 +609,9 @@ namespace TheOtherRoles
             var options = new Il2CppSystem.Collections.Generic.List<Il2CppSystem.Collections.Generic.KeyValuePair<string, int>>();
             for (int i = 0; i < Constants.MapNames.Length; i++)
             {
+                // Dleks was removed from the game, so remove it from our selections.
+                if (i == (int)MapNames.Dleks) continue;
+
                 var kvp = new Il2CppSystem.Collections.Generic.KeyValuePair<string, int>();
                 kvp.key = Constants.MapNames[i];
                 kvp.value = i;
@@ -857,16 +860,6 @@ namespace TheOtherRoles
         public static void Prefix(HudManager __instance)
         {
             if (__instance.GameSettings != null) __instance.GameSettings.fontSize = 1.2f;
-        }
-    }
-
-    [HarmonyPatch(typeof(CreateOptionsPicker), nameof(CreateOptionsPicker.Start))]
-    public class CreateOptionsPickerPatch
-    {
-        public static void Postfix(CreateOptionsPicker __instance)
-        {
-            int numImpostors = Math.Clamp(__instance.GetTargetOptions().NumImpostors, 1, 3);
-            __instance.SetImpostorButtons(numImpostors);
         }
     }
 }

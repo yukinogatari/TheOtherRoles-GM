@@ -3769,5 +3769,37 @@
         "0": "GM Edition Exclusive",
         "11": "GM\u30a8\u30c7\u30a3\u30b7\u30e7\u30f3\u9650\u5b9a",
         "13": "GM\u7248\u9650\u5b9a"
+    },
+    "sprinter": {
+        "0": "Sprinter",
+        "11": "\u30b9\u30d7\u30ea\u30f3\u30bf\u30fc"
+    },
+    "sprinterIntroDesc": {
+        "0": "Run from the Impostors",
+        "11": "\u8d70\u3063\u3066\u30a4\u30f3\u30dd\u30b9\u30bf\u30fc\u304b\u3089\u9003\u3052\u3088\u3046"
+    },
+    "sprinterShortDesc": {
+        "0": "Run from the Impostors",
+        "11": "\u8d70\u3063\u3066\u30a4\u30f3\u30dd\u30b9\u30bf\u30fc\u304b\u3089\u9003\u3052\u3088\u3046"
+    },
+    "sprinterCooldown": {
+        "0": "Sprint Cooldown",
+        "11": "\u30b9\u30d7\u30ea\u30f3\u30c8\u30af\u30fc\u30eb\u30c0\u30a6\u30f3"
+    },
+    "sprinterDuration": {
+        "0": "Sprint Duration",
+        "11": "\u30b9\u30d7\u30ea\u30f3\u30c8\u6301\u7d9a\u6642\u9593"
+    },
+    "sprinterSpeedBonus": {
+        "0": "Sprint Speed Bonus",
+        "11": "\u30b9\u30d7\u30ea\u30f3\u30c8\u4e2d\u79fb\u52d5\u901f\u5ea6"
+    },
+    "SprinterText": {
+        "0": "Sprint",
+        "11": "\u30b9\u30d7\u30ea\u30f3\u30c8"
+    },
+    "SprinterStopText": {
+        "0": "Rest",
+        "11": "\u4f11\u3080"
     }
 }

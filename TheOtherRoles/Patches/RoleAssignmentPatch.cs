@@ -138,7 +138,8 @@ namespace TheOtherRoles.Patches
             Dictionary<byte, (int rate, int count)> neutralSettings = new Dictionary<byte, (int, int)>();
             Dictionary<byte, (int rate, int count)> crewSettings = new Dictionary<byte, (int, int)>();
 
-            impSettings.Add((byte)RoleType.Morphling, CustomOptionHolder.morphlingSpawnRate.data);
+            // TODO: reenable morphling once I figure out how to make it work again
+            //impSettings.Add((byte)RoleType.Morphling, CustomOptionHolder.morphlingSpawnRate.data);
             impSettings.Add((byte)RoleType.Camouflager, CustomOptionHolder.camouflagerSpawnRate.data);
             impSettings.Add((byte)RoleType.Vampire, CustomOptionHolder.vampireSpawnRate.data);
             impSettings.Add((byte)RoleType.Eraser, CustomOptionHolder.eraserSpawnRate.data);
@@ -160,6 +161,7 @@ namespace TheOtherRoles.Patches
             neutralSettings.Add((byte)RoleType.PlagueDoctor, CustomOptionHolder.plagueDoctorSpawnRate.data);
             neutralSettings.Add((byte)RoleType.Fox, CustomOptionHolder.foxSpawnRate.data);
 
+            crewSettings.Add((byte)RoleType.Sprinter, CustomOptionHolder.sprinterSpawnRate.data);
             crewSettings.Add((byte)RoleType.FortuneTeller, CustomOptionHolder.fortuneTellerSpawnRate.data);
             crewSettings.Add((byte)RoleType.Mayor, CustomOptionHolder.mayorSpawnRate.data);
             crewSettings.Add((byte)RoleType.Engineer, CustomOptionHolder.engineerSpawnRate.data);

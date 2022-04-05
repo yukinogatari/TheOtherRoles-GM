@@ -341,6 +341,11 @@ namespace TheOtherRoles {
         public static CustomOption foxStealthDuration;
         public static CustomTasksOption foxTasks;
 
+        public static CustomRoleOption sprinterSpawnRate;
+        public static CustomOption sprinterCooldown;
+        public static CustomOption sprinterDuration;
+        public static CustomOption sprinterSpeedBonus;
+
         internal static Dictionary<byte, byte[]> blockedRolePairings = new Dictionary<byte, byte[]>();
 
         public static string cs(Color c, string s) {
@@ -385,7 +390,7 @@ namespace TheOtherRoles {
             janitorCanRepair = CustomOption.Create(16, "janitorCanRepair", false, mafiaSpawnRate);
             janitorCanVent = CustomOption.Create(17, "janitorCanVent", false, mafiaSpawnRate);
 
-            morphlingSpawnRate = new CustomRoleOption(20, "morphling", Morphling.color, 1);
+            morphlingSpawnRate = new CustomRoleOption(20, "morphling", Morphling.color, 1, roleEnabled: false);
             morphlingCooldown = CustomOption.Create(21, "morphlingCooldown", 30f, 2.5f, 60f, 2.5f, morphlingSpawnRate, format: "unitSeconds");
             morphlingDuration = CustomOption.Create(22, "morphlingDuration", 10f, 1f, 20f, 0.5f, morphlingSpawnRate, format: "unitSeconds");
 
@@ -660,6 +665,11 @@ namespace TheOtherRoles {
             mediumDuration = CustomOption.Create(372, "mediumDuration", 3f, 0f, 15f, 1f, mediumSpawnRate, format: "unitSeconds");
             mediumOneTimeUse = CustomOption.Create(373, "mediumOneTimeUse", false, mediumSpawnRate);
 
+            sprinterSpawnRate = new CustomRoleOption(1050, "sprinter", Sprinter.color, 15);
+            sprinterCooldown = CustomOption.Create(1051, "sprinterCooldown", 30f, 2.5f, 60f, 2.5f, sprinterSpawnRate, format: "unitSeconds");
+            sprinterDuration = CustomOption.Create(1052, "sprinterDuration", 15f, 2.5f, 60f, 2.5f, sprinterSpawnRate, format: "unitSeconds");
+            sprinterSpeedBonus = CustomOption.Create(1053, "sprinterSpeedBonus", 125f, 50f, 200f, 5f, sprinterSpawnRate, format: "unitPercent");
+
             // Other options
             specialOptions = new CustomOptionBlank(null);
             maxNumberOfMeetings = CustomOption.Create(3, "maxNumberOfMeetings", 10, 0, 15, 1, specialOptions, true);
@@ -681,7 +691,7 @@ namespace TheOtherRoles {
             dynamicMapEnableMira = CustomOption.Create(532, "dynamicMapEnableMira", true, dynamicMap, false);
             dynamicMapEnablePolus = CustomOption.Create(533, "dynamicMapEnablePolus", true, dynamicMap, false);
             dynamicMapEnableAirShip = CustomOption.Create(534, "dynamicMapEnableAirShip", true, dynamicMap, false);
-            dynamicMapEnableDleks = CustomOption.Create(535, "dynamicMapEnableDleks", false, dynamicMap, false);
+            //dynamicMapEnableDleks = CustomOption.Create(535, "dynamicMapEnableDleks", false, dynamicMap, false);
 			
             disableVents = CustomOption.Create(504, "disableVents", false, uselessOptions);
             hidePlayerNames = CustomOption.Create(6, "hidePlayerNames", false, uselessOptions);

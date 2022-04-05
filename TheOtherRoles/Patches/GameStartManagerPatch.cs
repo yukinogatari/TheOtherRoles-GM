@@ -163,7 +163,7 @@ namespace TheOtherRoles.Patches {
                         // 0 = Skeld
                         // 1 = Mira HQ
                         // 2 = Polus
-                        // 3 = Dleks - deactivated
+                        // 3 = Dleks - Removed from the game
                         // 4 = Airship
                         List<byte> possibleMaps = new List<byte>();
                         if (CustomOptionHolder.dynamicMapEnableSkeld.getBool())
@@ -172,8 +172,8 @@ namespace TheOtherRoles.Patches {
                             possibleMaps.Add(1);
                         if (CustomOptionHolder.dynamicMapEnablePolus.getBool())
                             possibleMaps.Add(2);
-                        if (CustomOptionHolder.dynamicMapEnableDleks.getBool())
-                            possibleMaps.Add(3);
+                        //if (CustomOptionHolder.dynamicMapEnableDleks.getBool())
+                            //possibleMaps.Add(3);
                         if (CustomOptionHolder.dynamicMapEnableAirShip.getBool())
                             possibleMaps.Add(4);
                         byte chosenMapId  = possibleMaps[TheOtherRoles.rnd.Next(possibleMaps.Count)];

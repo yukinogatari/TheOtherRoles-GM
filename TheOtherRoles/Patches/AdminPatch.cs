@@ -186,9 +186,9 @@ namespace TheOtherRoles.Patches {
                                     {
                                         num2--;
                                     }
-                                    else if (component?.myRend?.material != null)
+                                    else if (component?.MyRend?.material != null)
                                     {
-                                        Color color = component.myRend.material.GetColor("_BodyColor");
+                                        Color color = component.MyRend.material.GetColor("_BodyColor");
                                         if (Hacker.onlyColorType)
                                         {
                                             var id = Mathf.Max(0, Palette.PlayerColors.IndexOf(color));
