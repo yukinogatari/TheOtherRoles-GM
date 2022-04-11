@@ -426,7 +426,7 @@ namespace TheOtherRoles.Patches {
                 Transform button = UnityEngine.Object.Instantiate(buttonTemplate, buttonParent);
                 Transform buttonMask = UnityEngine.Object.Instantiate(maskTemplate, buttonParent);
                 TMPro.TextMeshPro label = UnityEngine.Object.Instantiate(textTemplate, button);
-                button.GetComponent<SpriteRenderer>().sprite = DestroyableSingleton<HatManager>.Instance.AllNamePlates[0].viewData.viewData.Image;
+                button.GetComponent<SpriteRenderer>().sprite = DestroyableSingleton<HatManager>.Instance.GetNamePlateById("nameplate_NoPlate")?.viewData?.viewData?.Image;
                 buttons.Add(button);
                 int row = i/5, col = i%5;
                 buttonParent.localPosition = new Vector3(-3.47f + 1.75f * col, 1.5f - 0.45f * row, -200f);
@@ -606,28 +606,14 @@ namespace TheOtherRoles.Patches {
             meetingInfoText.text = "";
             meetingInfoText.gameObject.SetActive(false);
 
-            if (MeetingHud.Instance.state != MeetingHud.VoteStates.Voted &&
-                MeetingHud.Instance.state != MeetingHud.VoteStates.NotVoted &&
-                MeetingHud.Instance.state != MeetingHud.VoteStates.Discussion)
-                return;
-
-            if (PlayerControl.LocalPlayer.isRole(RoleType.Swapper) && Swapper.numSwaps > 0 && !Swapper.swapper.Data.IsDead)
+            if (Helpers.ShowMeetingText)
             {
-                meetingInfoText.text = String.Format(ModTranslation.getString("swapperSwapsLeft"), Swapper.numSwaps);
-                meetingInfoText.gameObject.SetActive(true);
-            }
-
-            var numGuesses = Guesser.remainingShots(PlayerControl.LocalPlayer.PlayerId);
-            if (Guesser.isGuesser(PlayerControl.LocalPlayer.PlayerId) && PlayerControl.LocalPlayer.isAlive() && numGuesses > 0)
-            {
-                meetingInfoText.text = String.Format(ModTranslation.getString("guesserGuessesLeft"), numGuesses);
-                meetingInfoText.gameObject.SetActive(true);
-            }
-
-            if (PlayerControl.LocalPlayer.isRole(RoleType.Shifter) && Shifter.futureShift != null)
-            {
-                meetingInfoText.text = String.Format(ModTranslation.getString("shifterTargetInfo"), Shifter.futureShift.Data.PlayerName);
-                meetingInfoText.gameObject.SetActive(true);
+                var infoText = PlayerControl.LocalPlayer.meetingInfoText();
+                if (infoText != "")
+                {
+                    meetingInfoText.text = infoText;
+                    meetingInfoText.gameObject.SetActive(true);
+                }
             }
         }
 

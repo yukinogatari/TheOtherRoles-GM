@@ -22,6 +22,8 @@ namespace TheOtherRoles
     public enum ModifierType
     {
         Madmate = 0,
+        AkujoHonmei,
+        AkujoKeep,
 
         // don't put anything below this
         NoModifier = int.MaxValue
@@ -33,6 +35,8 @@ namespace TheOtherRoles
         public static Dictionary<ModifierType, Type> allModTypes = new Dictionary<ModifierType, Type>
         {
             { ModifierType.Madmate, typeof(ModifierBase<Madmate>) },
+            { ModifierType.AkujoHonmei, typeof(ModifierBase<AkujoHonmei>) },
+            { ModifierType.AkujoKeep, typeof(ModifierBase<AkujoKeep>) },
         };
     }
 
@@ -50,6 +54,10 @@ namespace TheOtherRoles
         public abstract void HandleDisconnect(PlayerControl player, DisconnectReasons reason);
         public virtual void ResetModifier() { }
 
+        public virtual string modifyNameText(string nameText) { return nameText; }
+        public virtual string modifyRoleText(string roleText, List<RoleInfo> roleInfo, bool useColors = true, bool includeHidden = false) { return roleText; }
+        public virtual string meetingInfoText() { return ""; }
+
         public static void ClearAll()
         {
             allModifiers = new List<Modifier>();
@@ -61,6 +69,13 @@ namespace TheOtherRoles
     {
         public static List<T> players = new List<T>();
         public static ModifierType ModType;
+
+        public static class persistRoleChange
+        {
+            public static bool sidekick = false;
+            public static bool immoralist = false;
+            public static bool shifter = false;
+        }
 
         public void Init(PlayerControl player)
         {
@@ -117,10 +132,11 @@ namespace TheOtherRoles
             return players.Any(x => x.player == player);
         }
 
-        public static void addModifier(PlayerControl player)
+        public static T addModifier(PlayerControl player)
         {
             T mod = new T();
             mod.Init(player);
+            return mod;
         }
 
         public static void eraseModifier(PlayerControl player)
@@ -183,11 +199,17 @@ namespace TheOtherRoles
             }
         }
 
-        public static void eraseAllModifiers(this PlayerControl player)
+        public static void eraseAllModifiers(this PlayerControl player, bool roleChange = false)
         {
             foreach (var t in ModifierData.allModTypes)
             {
-                t.Value.GetMethod("eraseModifier", BindingFlags.Public | BindingFlags.Static)?.Invoke(null, new object[] { player });
+                t.Value.GetMethod("eraseModifier", BindingFlags.Public | BindingFlags.Static)?.Invoke(null, new object[] { player, roleChange });
+            }
+
+            // The whole Lover couple is being erased
+            if (!roleChange && player.isLovers())
+            {
+                Lovers.eraseCouple(player);
             }
         }
 

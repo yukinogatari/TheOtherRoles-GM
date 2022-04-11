@@ -3801,5 +3801,59 @@
     "SprinterStopText": {
         "0": "Rest",
         "11": "\u4f11\u3080"
+    },
+    "akujo": {
+        "0": "Akujo",
+        "11": "\u60aa\u5973"
+    },
+    "akujoIntroDesc": {
+        "11": "\u30af\u30eb\u30fc\u3092\u8a91\u304b\u3057\u3066\u6700\u5f8c\u307e\u3067\u751f\u304d\u6b8b\u308d\u3046"
+    },
+    "akujoShortDesc": {
+        "11": "\u30af\u30eb\u30fc\u3092\u8a91\u304b\u3057\u3066\u6700\u5f8c\u307e\u3067\u751f\u304d\u6b8b\u308d\u3046"
+    },
+    "akujoTimeLimit": {
+        "0": "Time Limit",
+        "11": "\u30d1\u30fc\u30c8\u30ca\u30fc\u9078\u3073\u306e\u6642\u9593\u5236\u9650"
+    },
+    "akujoKnowsRoles": {
+        "0": "Knows Partners' Roles",
+        "11": "\u30d1\u30fc\u30c8\u30ca\u30fc\u306e\u30ed\u30fc\u30eb\u304c\u898b\u3048\u308b"
+    },
+    "akujoNumKeeps": {
+        "0": "Max Keeps",
+        "11": "\u30ad\u30fc\u30d7\u306e\u6700\u5927\u4eba\u6570"
+    },
+    "akujoHonmei": {
+        "0": "Honmei",
+        "11": "\u672c\u547d"
+    },
+    "akujoKeep": {
+        "0": "Keep",
+        "11": "\u30ad\u30fc\u30d7"
+    },
+    "akujoKeepsLeft": {
+        "0": "Keeps Left: {0}",
+        "11": "\u6b8b\u308a {0}\u4eba"
+    },
+    "AkujoHonmeiText": {
+        "0": "Honmei",
+        "11": "\u672c\u547d\u306b\u3059\u308b"
+    },
+    "AkujoKeepText": {
+        "0": "Keep",
+        "11": "\u30ad\u30fc\u30d7\u306b\u3059\u308b"
+    },
+    "akujoWin": {
+        "0": "Akujo Wins",
+        "11": "\u60aa\u5973\u52dd\u5229"
+    },
+    "akujoWinExtra": {
+        "0": "Akujo {0} Win",
+        "11": "\u60aa\u5973{0}\u52dd\u5229"
+    },
+    "roleSummaryLoneliness": {
+        "0": "Alone",
+        "11": "\u5b64\u72ec\u6b7b"
     }
 }

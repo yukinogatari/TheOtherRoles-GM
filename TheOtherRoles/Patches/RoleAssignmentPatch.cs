@@ -139,7 +139,7 @@ namespace TheOtherRoles.Patches
             Dictionary<byte, (int rate, int count)> crewSettings = new Dictionary<byte, (int, int)>();
 
             // TODO: reenable morphling once I figure out how to make it work again
-            //impSettings.Add((byte)RoleType.Morphling, CustomOptionHolder.morphlingSpawnRate.data);
+            impSettings.Add((byte)RoleType.Morphling, CustomOptionHolder.morphlingSpawnRate.data);
             impSettings.Add((byte)RoleType.Camouflager, CustomOptionHolder.camouflagerSpawnRate.data);
             impSettings.Add((byte)RoleType.Vampire, CustomOptionHolder.vampireSpawnRate.data);
             impSettings.Add((byte)RoleType.Eraser, CustomOptionHolder.eraserSpawnRate.data);
@@ -160,6 +160,7 @@ namespace TheOtherRoles.Patches
             neutralSettings.Add((byte)RoleType.Lawyer, CustomOptionHolder.lawyerSpawnRate.data);
             neutralSettings.Add((byte)RoleType.PlagueDoctor, CustomOptionHolder.plagueDoctorSpawnRate.data);
             neutralSettings.Add((byte)RoleType.Fox, CustomOptionHolder.foxSpawnRate.data);
+            neutralSettings.Add((byte)RoleType.Akujo, CustomOptionHolder.akujoSpawnRate.data);
 
             crewSettings.Add((byte)RoleType.Sprinter, CustomOptionHolder.sprinterSpawnRate.data);
             crewSettings.Add((byte)RoleType.FortuneTeller, CustomOptionHolder.fortuneTellerSpawnRate.data);
@@ -227,60 +228,63 @@ namespace TheOtherRoles.Patches
                 }
             }
 
-            // Assign Lovers
-            for (int i = 0; i < CustomOptionHolder.loversNumCouples.getFloat(); i++)
+            // Assign lovers, but only if akujo isn't enabled.
+            if (CustomOptionHolder.loversSpawnRate.enabled && !CustomOptionHolder.akujoSpawnRate.enabled)
             {
-                var singleCrew = data.crewmates.FindAll(x => !x.isLovers());
-                var singleImps = data.impostors.FindAll(x => !x.isLovers());
-
-                bool isOnlyRole = !CustomOptionHolder.loversCanHaveAnotherRole.getBool();
-                if (rnd.Next(1, 101) <= CustomOptionHolder.loversSpawnRate.getSelection() * 10)
+                for (int i = 0; i < CustomOptionHolder.loversNumCouples.getFloat(); i++)
                 {
-                    int lover1 = -1;
-                    int lover2 = -1;
-                    int lover1Index = -1;
-                    int lover2Index = -1;
-                    if (singleImps.Count > 0 && singleCrew.Count > 0 && (!isOnlyRole || (data.maxCrewmateRoles > 0 && data.maxImpostorRoles > 0)) && rnd.Next(1, 101) <= CustomOptionHolder.loversImpLoverRate.getSelection() * 10)
+                    var singleCrew = data.crewmates.FindAll(x => !x.isLovers());
+                    var singleImps = data.impostors.FindAll(x => !x.isLovers());
+
+                    bool isOnlyRole = !CustomOptionHolder.loversCanHaveAnotherRole.getBool();
+                    if (rnd.Next(1, 101) <= CustomOptionHolder.loversSpawnRate.getSelection() * 10)
                     {
-                        lover1Index = rnd.Next(0, singleImps.Count);
-                        lover1 = singleImps[lover1Index].PlayerId;
-
-                        lover2Index = rnd.Next(0, singleCrew.Count);
-                        lover2 = singleCrew[lover2Index].PlayerId;
-
-                        if (isOnlyRole)
+                        int lover1 = -1;
+                        int lover2 = -1;
+                        int lover1Index = -1;
+                        int lover2Index = -1;
+                        if (singleImps.Count > 0 && singleCrew.Count > 0 && (!isOnlyRole || (data.maxCrewmateRoles > 0 && data.maxImpostorRoles > 0)) && rnd.Next(1, 101) <= CustomOptionHolder.loversImpLoverRate.getSelection() * 10)
                         {
-                            data.maxImpostorRoles--;
-                            data.maxCrewmateRoles--;
+                            lover1Index = rnd.Next(0, singleImps.Count);
+                            lover1 = singleImps[lover1Index].PlayerId;
 
-                            data.impostors.RemoveAll(x => x.PlayerId == lover1);
-                            data.crewmates.RemoveAll(x => x.PlayerId == lover2);
+                            lover2Index = rnd.Next(0, singleCrew.Count);
+                            lover2 = singleCrew[lover2Index].PlayerId;
+
+                            if (isOnlyRole)
+                            {
+                                data.maxImpostorRoles--;
+                                data.maxCrewmateRoles--;
+
+                                data.impostors.RemoveAll(x => x.PlayerId == lover1);
+                                data.crewmates.RemoveAll(x => x.PlayerId == lover2);
+                            }
                         }
-                    }
 
-                    else if (singleCrew.Count >= 2 && (isOnlyRole || data.maxCrewmateRoles >= 2))
-                    {
-                        lover1Index = rnd.Next(0, singleCrew.Count);
-                        while (lover2Index == lover1Index || lover2Index < 0) lover2Index = rnd.Next(0, singleCrew.Count);
-
-                        lover1 = singleCrew[lover1Index].PlayerId;
-                        lover2 = singleCrew[lover2Index].PlayerId;
-
-                        if (isOnlyRole)
+                        else if (singleCrew.Count >= 2 && (isOnlyRole || data.maxCrewmateRoles >= 2))
                         {
-                            data.maxCrewmateRoles -= 2;
-                            data.crewmates.RemoveAll(x => x.PlayerId == lover1);
-                            data.crewmates.RemoveAll(x => x.PlayerId == lover2);
-                        }
-                    }
+                            lover1Index = rnd.Next(0, singleCrew.Count);
+                            while (lover2Index == lover1Index || lover2Index < 0) lover2Index = rnd.Next(0, singleCrew.Count);
 
-                    if (lover1 >= 0 && lover2 >= 0)
-                    {
-                        MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.SetLovers, Hazel.SendOption.Reliable, -1);
-                        writer.Write((byte)lover1);
-                        writer.Write((byte)lover2);
-                        AmongUsClient.Instance.FinishRpcImmediately(writer);
-                        RPCProcedure.setLovers((byte)lover1, (byte)lover2);
+                            lover1 = singleCrew[lover1Index].PlayerId;
+                            lover2 = singleCrew[lover2Index].PlayerId;
+
+                            if (isOnlyRole)
+                            {
+                                data.maxCrewmateRoles -= 2;
+                                data.crewmates.RemoveAll(x => x.PlayerId == lover1);
+                                data.crewmates.RemoveAll(x => x.PlayerId == lover2);
+                            }
+                        }
+
+                        if (lover1 >= 0 && lover2 >= 0)
+                        {
+                            MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.SetLovers, Hazel.SendOption.Reliable, -1);
+                            writer.Write((byte)lover1);
+                            writer.Write((byte)lover2);
+                            AmongUsClient.Instance.FinishRpcImmediately(writer);
+                            RPCProcedure.setLovers((byte)lover1, (byte)lover2);
+                        }
                     }
                 }
             }

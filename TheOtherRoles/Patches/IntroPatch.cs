@@ -141,10 +141,9 @@ namespace TheOtherRoles.Patches {
 
                 List<RoleInfo> infos = RoleInfo.getRoleInfoForPlayer(PlayerControl.LocalPlayer, new RoleType[] { RoleType.Lovers });
                 RoleInfo roleInfo = infos.FirstOrDefault();
-
-                Color color = new Color(__instance.YouAreText.color.r, __instance.YouAreText.color.g, __instance.YouAreText.color.b, 0f);
                 __instance.StartCoroutine(Effects.Lerp(0.5f, new Action<float>((t) =>
                 {
+                    Color color = __instance.YouAreText.color;
                     if (roleInfo != null && roleInfo != RoleInfo.crewmate && roleInfo != RoleInfo.impostor && !(roleInfo == RoleInfo.fortuneTeller && FortuneTeller.numTasks > 0))
                     {
                         __instance.RoleText.text = roleInfo.name;
@@ -172,7 +171,6 @@ namespace TheOtherRoles.Patches {
                         __instance.RoleBlurbText.text += "\n" + Helpers.cs(Lovers.color, String.Format(ModTranslation.getString("loversFlavor"), otherLover?.Data?.PlayerName ?? ""));
                     }
 
-                    color.a = t;
                     __instance.YouAreText.color = color;
                     __instance.RoleText.color = color;
                     __instance.RoleBlurbText.color = color;

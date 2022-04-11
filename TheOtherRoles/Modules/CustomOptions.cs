@@ -309,13 +309,23 @@ namespace TheOtherRoles
             }
 
             this.roleTypes = roleTypes;
-            var strings = roleTypes.Select(
-                x => 
-                    x == RoleType.NoRole ? "optionOff" :
-                    RoleInfo.allRoleInfos.First(y => y.roleType == x).nameColored
-                ).ToArray();
+            var strings = new string[] { "optionOff" };
 
             Init(id, name, strings, 0, parent, false, false, "");
+        }
+
+        public override void updateSelection(int newSelection)
+        {
+            if (roleTypes.Count > 0)
+            {
+                selections = roleTypes.Select(
+                    x =>
+                        x == RoleType.NoRole ? "optionOff" :
+                        RoleInfo.allRoleInfos.First(y => y.roleType == x).nameColored
+                    ).ToArray();
+            }
+
+            base.updateSelection(newSelection);
         }
     }
 
@@ -603,7 +613,7 @@ namespace TheOtherRoles
         public static void Postfix(GameSettingMenu __instance)
         {
             // Setup mapNameTransform
-            var mapNameTransform = __instance.AllItems.FirstOrDefault(x => x.gameObject.activeSelf && x.name.Equals("MapName", StringComparison.OrdinalIgnoreCase));
+            var mapNameTransform = __instance.AllItems.FirstOrDefault(x => x.name.Equals("MapName", StringComparison.OrdinalIgnoreCase));
             if (mapNameTransform == null) return;
 
             var options = new Il2CppSystem.Collections.Generic.List<Il2CppSystem.Collections.Generic.KeyValuePair<string, int>>();
@@ -618,6 +628,7 @@ namespace TheOtherRoles
                 options.Add(kvp);
             }
             mapNameTransform.GetComponent<KeyValueOption>().Values = options;
+            mapNameTransform.gameObject.active = true;
         }
     }
 
@@ -652,6 +663,19 @@ namespace TheOtherRoles
             }
         }
     }
+    [HarmonyPatch(typeof(Constants), nameof(Constants.ShouldHorseAround))]
+    class ConstantsShouldHorseAroundPatch
+    {
+        public static bool Prefix(ref bool __result)
+        {
+            if (Helpers.GameStarted && CustomOptionHolder.enabledHorseMode.getBool())
+            {
+                __result = true;
+                return false;
+            }
+            return true;
+        }
+    }
 
     [HarmonyPatch(typeof(FreeWeekendShower), nameof(FreeWeekendShower.Start))]
     class FreeWeekendShowerPatch
@@ -683,7 +707,11 @@ namespace TheOtherRoles
 
         public static string optionsToString(CustomOption option, bool skipFirst = false)
         {
-            if (option == null) return "";
+            if (option == null)
+            {
+                Helpers.log("no option?");
+                return "";
+            }
 
             List<string> options = new List<string>();
             if (!option.isHidden && !skipFirst) options.Add(optionToString(option));

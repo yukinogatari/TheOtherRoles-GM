@@ -346,6 +346,13 @@ namespace TheOtherRoles {
         public static CustomOption sprinterDuration;
         public static CustomOption sprinterSpeedBonus;
 
+        public static CustomRoleOption akujoSpawnRate;
+        public static CustomOption akujoTimeLimit;
+        public static CustomOption akujoKnowsRoles;
+        public static CustomOption akujoNumKeeps;
+
+        public static CustomOption enabledHorseMode;
+
         internal static Dictionary<byte, byte[]> blockedRolePairings = new Dictionary<byte, byte[]>();
 
         public static string cs(Color c, string s) {
@@ -390,7 +397,7 @@ namespace TheOtherRoles {
             janitorCanRepair = CustomOption.Create(16, "janitorCanRepair", false, mafiaSpawnRate);
             janitorCanVent = CustomOption.Create(17, "janitorCanVent", false, mafiaSpawnRate);
 
-            morphlingSpawnRate = new CustomRoleOption(20, "morphling", Morphling.color, 1, roleEnabled: false);
+            morphlingSpawnRate = new CustomRoleOption(20, "morphling", Morphling.color, 1, roleEnabled: true);
             morphlingCooldown = CustomOption.Create(21, "morphlingCooldown", 30f, 2.5f, 60f, 2.5f, morphlingSpawnRate, format: "unitSeconds");
             morphlingDuration = CustomOption.Create(22, "morphlingDuration", 10f, 1f, 20f, 0.5f, morphlingSpawnRate, format: "unitSeconds");
 
@@ -558,6 +565,12 @@ namespace TheOtherRoles {
             watcherSpawnRate = new CustomDualRoleOption(1040, "watcher", Watcher.color, RoleType.Watcher, 15);
 
 
+            akujoSpawnRate = new CustomRoleOption(1060, "akujo", Akujo.color, 7);
+            akujoTimeLimit = CustomOption.Create(1061, "akujoTimeLimit", 300f, 30f, 1200f, 30f, akujoSpawnRate, format: "unitSeconds");
+            akujoKnowsRoles = CustomOption.Create(1062, "akujoKnowsRoles", false, akujoSpawnRate);
+            akujoNumKeeps = CustomOption.Create(1063, "akujoNumKeeps", 1f, 1f, 15f, 1f, akujoSpawnRate, format: "unitPlayers");
+
+
             foxSpawnRate = new CustomRoleOption(910, "fox", Fox.color, 1);
             foxCanFixReactorAndO2 = CustomOption.Create(911, "foxCanFixReactorAndO2", false, foxSpawnRate);
             foxCrewWinsByTasks = CustomOption.Create(912, "foxCrewWinsByTasks", true, foxSpawnRate);
@@ -679,6 +692,7 @@ namespace TheOtherRoles {
             refundVotesOnDeath = CustomOption.Create(551, "refundVotesOnDeath", true, specialOptions);
             allowParallelMedBayScans = CustomOption.Create(540, "parallelMedbayScans", false, specialOptions);
             hideSettings = CustomOption.Create(520, "hideSettings", false, specialOptions);
+            enabledHorseMode = CustomOption.Create(552, "ウマングアス", false, specialOptions);
 
             restrictDevices = CustomOption.Create(510, "restrictDevices", new string[] { "optionOff", "restrictPerTurn", "restrictPerGame" }, specialOptions);
             restrictAdmin = CustomOption.Create(501, "disableAdmin", 30f, 0f, 600f, 5f, restrictDevices, format: "unitSeconds");
@@ -704,6 +718,10 @@ namespace TheOtherRoles {
             blockedRolePairings.Add((byte)RoleType.Mini, new [] { (byte)RoleType.Spy});
             blockedRolePairings.Add((byte)RoleType.Vulture, new [] { (byte)RoleType.Cleaner});
             blockedRolePairings.Add((byte)RoleType.Cleaner, new [] { (byte)RoleType.Vulture});
+
+            // RoleInfo is dependent on our options, so make sure not to initialize it until
+            // *after* all the options have been created (lmao programming sucks ass)
+            RoleInfo.Init();
         }
     }
 

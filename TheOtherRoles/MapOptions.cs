@@ -66,6 +66,7 @@ namespace TheOtherRoles{
             disableVents = CustomOptionHolder.disableVents.getBool();
 
             allowParallelMedBayScans = CustomOptionHolder.allowParallelMedBayScans.getBool();
+
             ghostsSeeRoles = TheOtherRolesPlugin.GhostsSeeRoles.Value;
             ghostsSeeTasks = TheOtherRolesPlugin.GhostsSeeTasks.Value;
             ghostsSeeVotes = TheOtherRolesPlugin.GhostsSeeVotes.Value;
