@@ -6,6 +6,7 @@ using TheOtherRoles.Objects;
 using TheOtherRoles.Patches;
 using static TheOtherRoles.TheOtherRoles;
 using static TheOtherRoles.GameHistory;
+using System;
 
 namespace TheOtherRoles
 {
@@ -25,6 +26,8 @@ namespace TheOtherRoles
         {
             None = 0,
             Fanatic = 1,
+            Kuroneko = 2,
+            Obstructor = 3,
         }
 
         public static bool canEnterVents { get { return CustomOptionHolder.madmateCanEnterVents.getBool(); } }
@@ -171,6 +174,26 @@ namespace TheOtherRoles
                 }
             }
             return counter >= totalTasks;
+        }
+
+        public override string modifyNameText(string nameText)
+        {
+            return nameText;
+        }
+
+        public override string modifyRoleText(string roleText, List<RoleInfo> roleInfo, bool useColors = true, bool includeHidden = false)
+        {
+            if (roleInfo.Contains(RoleInfo.crewmate))
+            {
+                roleText = useColors ? Helpers.cs(Madmate.color, Madmate.fullName) : Madmate.fullName;
+            }
+            else
+            {
+                string prefix = useColors ? Helpers.cs(Madmate.color, Madmate.prefix) : Madmate.prefix;
+                roleText = String.Join(" ", roleInfo.Select(x => useColors ? Helpers.cs(Madmate.color, x.name) : x.name).ToArray());
+                roleText = prefix + roleText;
+            }
+            return roleText;
         }
 
         public static void Clear()

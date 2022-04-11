@@ -92,6 +92,9 @@ namespace TheOtherRoles
         FoxCreatesImmoralist,
         SwapperAnimate,
         SprinterSprint,
+        AkujoSetHonmei,
+        AkujoSetKeep,
+        AkujoSuicide,
     }
 
     public static class RPCProcedure
@@ -320,6 +323,7 @@ namespace TheOtherRoles
             }
             HudManager.Instance.FullScreen.color = new Color(0f, 0.5f, 0.8f, 0.3f);
             HudManager.Instance.FullScreen.enabled = true;
+            HudManager.Instance.FullScreen.gameObject.SetActive(true);
             HudManager.Instance.StartCoroutine(Effects.Lerp(TimeMaster.rewindTime / 2, new Action<float>((p) =>
             {
                 if (p == 1f) HudManager.Instance.FullScreen.enabled = false;
@@ -360,26 +364,7 @@ namespace TheOtherRoles
             bool isShieldedAndShow = Medic.shielded == PlayerControl.LocalPlayer && Medic.showAttemptToShielded;
             bool isMedicAndShow = Medic.medic == PlayerControl.LocalPlayer && Medic.showAttemptToMedic;
 
-            if ((isShieldedAndShow || isMedicAndShow) && HudManager.Instance?.FullScreen != null)
-            {
-                HudManager.Instance.FullScreen.enabled = true;
-                HudManager.Instance.StartCoroutine(Effects.Lerp(0.5f, new Action<float>((p) =>
-                {
-                    var renderer = HudManager.Instance.FullScreen;
-                    Color c = Palette.ImpostorRed;
-                    if (p < 0.5)
-                    {
-                        if (renderer != null)
-                            renderer.color = new Color(c.r, c.g, c.b, Mathf.Clamp01(p * 2 * 0.75f));
-                    }
-                    else
-                    {
-                        if (renderer != null)
-                            renderer.color = new Color(c.r, c.g, c.b, Mathf.Clamp01((1 - p) * 2 * 0.75f));
-                    }
-                    if (p == 1f && renderer != null) renderer.enabled = false;
-                })));
-            }
+            if (isShieldedAndShow || isMedicAndShow) Helpers.showFlash(Palette.ImpostorRed, duration: 0.5f);
         }
 
         public static void shifterShift(byte targetId)
@@ -541,7 +526,7 @@ namespace TheOtherRoles
             return;
         }
 
-        public static void erasePlayerRoles(byte playerId, bool ignoreLovers = false)
+        public static void erasePlayerRoles(byte playerId, bool roleChange = false)
         {
             PlayerControl player = Helpers.playerById(playerId);
             if (player == null) return;
@@ -551,12 +536,7 @@ namespace TheOtherRoles
                 player.clearAllTasks();
 
             player.eraseAllRoles();
-            player.eraseAllModifiers();
-
-            if (!ignoreLovers && player.isLovers())
-            { // The whole Lover couple is being erased
-                Lovers.eraseCouple(player);
-            }
+            player.eraseAllModifiers(roleChange);
         }
 
         public static void setFutureErased(byte playerId)
@@ -844,6 +824,38 @@ namespace TheOtherRoles
             erasePlayerRoles(player.PlayerId, true);
             player.setRole(RoleType.Immoralist);
             player.clearAllTasks();
+        }
+
+        public static void akujoSetHonmei(byte akujoId, byte targetId)
+        {
+            Akujo akujo = Akujo.getRole(Helpers.playerById(akujoId));
+            PlayerControl target = Helpers.playerById(targetId);
+
+            if (akujo != null)
+            {
+                akujo.setHonmei(target);
+            }
+        }
+
+        public static void akujoSetKeep(byte akujoId, byte targetId)
+        {
+            Akujo akujo = Akujo.getRole(Helpers.playerById(akujoId));
+            PlayerControl target = Helpers.playerById(targetId);
+
+            if (akujo != null)
+            {
+                akujo.setKeep(target);
+            }
+        }
+
+        public static void akujoSuicide(byte akujoId)
+        {
+            Akujo akujo = Akujo.getRole(Helpers.playerById(akujoId));
+            if (akujo != null)
+            {
+                akujo.player.MurderPlayer(akujo.player);
+                finalStatuses[akujo.player.PlayerId] = FinalStatus.Loneliness;
+            }
         }
 
         public static void GMKill(byte targetId)
@@ -1276,6 +1288,15 @@ namespace TheOtherRoles
                         break;
                     case (byte)CustomRPC.FoxCreatesImmoralist:
                         RPCProcedure.foxCreatesImmoralist(reader.ReadByte());
+                        break;
+                    case (byte)CustomRPC.AkujoSetHonmei:
+                        RPCProcedure.akujoSetHonmei(reader.ReadByte(), reader.ReadByte());
+                        break;
+                    case (byte)CustomRPC.AkujoSetKeep:
+                        RPCProcedure.akujoSetKeep(reader.ReadByte(), reader.ReadByte());
+                        break;
+                    case (byte)CustomRPC.AkujoSuicide:
+                        RPCProcedure.akujoSuicide(reader.ReadByte());
                         break;
                 }
             }

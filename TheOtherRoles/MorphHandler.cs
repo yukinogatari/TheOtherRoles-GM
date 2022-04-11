@@ -1,4 +1,5 @@
 ﻿using HarmonyLib;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.ResourceManagement.AsyncOperations;
@@ -21,18 +22,29 @@ namespace TheOtherRoles
             pc.RawSetHat(outfit.HatId, outfit.ColorId);
             pc.RawSetVisor(outfit.VisorId);
             pc.RawSetColor(outfit.ColorId);
-            Helpers.setSkinWithAnim(pc.MyPhysics, outfit.SkinId);
+            pc.RawSetPet(outfit.PetId, outfit.ColorId);
+            Helpers.setSkinWithAnim(pc.MyPhysics, outfit.SkinId, outfit.ColorId);
 
-            // idk how to handle pets right now, so just not doing it
-            // TODO: FIX PETS
-/*            if (!pc.Data.IsDead)
+            if (pc.CurrentPet != null)
             {
-                pc.CurrentPet.Data = HatManager.Instance.GetPetById(outfit.PetId);
-                pc.CurrentPet.transform.position = pc.transform.position;
-                pc.CurrentPet.Source = pc;
-                pc.CurrentPet.Visible = visible;
-                PlayerControl.SetPlayerMaterialColors(outfit.ColorId, pc.CurrentPet.rend);
-            }*/
+                pc.CurrentPet.enabled = false;
+                pc.CurrentPet.Visible = false;
+                UnityEngine.GameObject.Destroy(pc.CurrentPet);
+            }
+
+            HatManager.Instance.StartCoroutine(
+                HatManager.Instance.GetPetById(outfit.PetId).CoLoadViewData(new Action<PetBehaviour>((data) =>
+                {
+                    if (!pc.Data.IsDead)
+                    {
+                        pc.CurrentPet = UnityEngine.GameObject.Instantiate(data);
+                        pc.CurrentPet.transform.position = pc.transform.position;
+                        pc.CurrentPet.Source = pc;
+                        pc.CurrentPet.Visible = visible;
+                        PlayerControl.SetPlayerMaterialColors(outfit.ColorId, pc.CurrentPet.rend);
+                    }
+                }))
+            );
         }
 
         public static void resetMorph(this PlayerControl pc)

@@ -26,32 +26,35 @@ namespace TheOtherRoles.Modules {
 
     [HarmonyPatch]
     public class CustomHats { 
-        public static Material hatShader;
+        public static Material altHatShader;
 
         public static Dictionary<string, HatExtension> CustomHatRegistry = new Dictionary<string, HatExtension>();
         public static HatExtension TestExt = null;
 
-        public class HatExtension {
-            public string author { get; set;}
-            public string package { get; set;}
-            public string condition { get; set;}
-            public Sprite FlipImage { get; set;}
-            public Sprite BackFlipImage { get; set;}
+        public class HatExtension
+        {
+            public string author { get; set; }
+            public string package { get; set; }
+            public string condition { get; set; }
+            public bool adaptive { get; set; }
+            public Sprite FlipImage { get; set; }
+            public Sprite BackFlipImage { get; set; }
         }
 
-        public class CustomHat { 
-            public string author { get; set;}
-            public string package { get; set;}
-            public string condition { get; set;}
-            public string name { get; set;}
-            public string resource { get; set;}
-            public string flipresource { get; set;}
-            public string backflipresource { get; set;}
-            public string backresource { get; set;}
-            public string climbresource { get; set;}
-            public bool bounce { get; set;}
-            public bool adaptive { get; set;}
-            public bool behind { get; set;}
+        public class CustomHat
+        {
+            public string author { get; set; }
+            public string package { get; set; }
+            public string condition { get; set; }
+            public string name { get; set; }
+            public string resource { get; set; }
+            public string flipresource { get; set; }
+            public string backflipresource { get; set; }
+            public string backresource { get; set; }
+            public string climbresource { get; set; }
+            public bool bounce { get; set; }
+            public bool adaptive { get; set; }
+            public bool behind { get; set; }
         }
 
         private static List<CustomHat> createCustomHatDetails(string[] hats, bool fromDisk = false) {
@@ -78,13 +81,13 @@ namespace TheOtherRoles.Modules {
                 else if (options.Contains("flip"))
                     flips.Add(p[0], hats[i]);
                 else {
-                    CustomHat custom = new CustomHat { resource = hats[i] };
-                    custom.name = p[0].Replace('-', ' ');
-                    custom.bounce = options.Contains("bounce");
-                    custom.adaptive = options.Contains("adaptive");
-                    custom.behind = options.Contains("behind");
+                    CustomHat ch = new CustomHat { resource = hats[i] };
+                    ch.name = p[0].Replace('-', ' ');
+                    ch.bounce = options.Contains("bounce");
+                    ch.adaptive = options.Contains("adaptive");
+                    ch.behind = options.Contains("behind");
                     
-                    fronts.Add(p[0], custom);
+                    fronts.Add(p[0], ch);
                 }
             }
 
@@ -126,15 +129,13 @@ namespace TheOtherRoles.Modules {
             return sprite;
         }
 
-        private static HatData CreateHatBehaviour(CustomHat ch, bool fromDisk = false, bool testOnly = false) {
-            if (hatShader == null && DestroyableSingleton<HatManager>.InstanceExists) {
-                foreach (HatData h in DestroyableSingleton<HatManager>.Instance.allHats) {
-                    if (h.hatViewData?.viewData?.AltShader != null) {
-                        Helpers.log($"took alt shader from {h.ProdId}");
-                        hatShader = h.hatViewData.viewData.AltShader;
-                        break;
-                    }
-                }
+        private static HatData CreateHatBehaviour(CustomHat ch, bool fromDisk = false, bool testOnly = false)
+        {
+            if (altHatShader == null)
+            {
+                Material tmpShader = new Material("PlayerMaterial");
+                tmpShader.shader = Shader.Find("Unlit/PlayerShader");
+                altHatShader = tmpShader;
             }
 
             HatData hat = new HatData();
@@ -158,14 +159,15 @@ namespace TheOtherRoles.Modules {
             hat.ChipOffset = new Vector2(0f, 0.2f);
             hat.Free = true;
             hat.NotInStore = true;
-            
-            if (ch.adaptive && hatShader != null)
-                hat.hatViewData.viewData.AltShader = hatShader;
+
+            if (ch.adaptive && altHatShader != null)
+                hat.hatViewData.viewData.AltShader = altHatShader;
 
             HatExtension extend = new HatExtension();
             extend.author = ch.author != null ? ch.author : "Unknown";
             extend.package = ch.package != null ? ch.package : "Misc.";
             extend.condition = ch.condition != null ? ch.condition : "none";
+            extend.adaptive = ch.adaptive;
 
             if (testOnly) {
                 TestExt = extend;
@@ -275,6 +277,10 @@ namespace TheOtherRoles.Modules {
             public static TMPro.TMP_Text textTemplate;
 
             public static float createHatPackage(List<System.Tuple<HatData, HatExtension>> hats, string packageName, float YStart, HatsTab __instance) {
+                bool isDefaultPackage = innerslothPackageName == packageName;
+                if (!isDefaultPackage)
+                    hats = hats.OrderBy(x => x.Item1.ProductId).ToList();
+
                 float offset = YStart;
 
                 if (textTemplate != null) {
@@ -339,17 +345,17 @@ namespace TheOtherRoles.Modules {
 
                 textTemplate = PlayerCustomizationMenu.Instance.itemName;
 
-                foreach (HatData hatBehaviour in unlockedHats) {
-                    HatExtension ext = hatBehaviour.getHatExtension();
+                foreach (HatData hatData in unlockedHats) {
+                    HatExtension ext = hatData.getHatExtension();
 
                     if (ext != null) {
                         if (!packages.ContainsKey(ext.package)) 
                             packages[ext.package] = new List<System.Tuple<HatData, HatExtension>>();
-                        packages[ext.package].Add(new System.Tuple<HatData, HatExtension>(hatBehaviour, ext));
+                        packages[ext.package].Add(new System.Tuple<HatData, HatExtension>(hatData, ext));
                     } else {
                         if (!packages.ContainsKey(innerslothPackageName)) 
                             packages[innerslothPackageName] = new List<System.Tuple<HatData, HatExtension>>();
-                        packages[innerslothPackageName].Add(new System.Tuple<HatData, HatExtension>(hatBehaviour, null));
+                        packages[innerslothPackageName].Add(new System.Tuple<HatData, HatExtension>(hatData, null));
                     }
                 }
 
@@ -395,6 +401,7 @@ namespace TheOtherRoles.Modules {
                 }
             }
         }
+
     }
 
     public class CustomHatLoader {
@@ -551,8 +558,9 @@ namespace TheOtherRoles.Modules {
             public string reshashc { get; set;}
             public string reshashf { get; set;}
             public string reshashbf { get; set;}
-        }   
+        }
     }
+
     public static class CustomHatExtensions {
         public static CustomHats.HatExtension getHatExtension(this HatData hat) {
             CustomHats.HatExtension ret = null;
@@ -567,7 +575,7 @@ namespace TheOtherRoles.Modules {
     [HarmonyPatch(typeof(PoolablePlayer), nameof(PoolablePlayer.UpdateFromPlayerOutfit))]
     public static class PoolablePlayerPatch
     {
-        public static void Postfix(PoolablePlayer __instance)
+        public static void Postfix(PoolablePlayer __instance, GameData.PlayerOutfit outfit)
         {
             if (__instance.VisorSlot?.transform == null || __instance.HatSlot?.transform == null) return;
 
