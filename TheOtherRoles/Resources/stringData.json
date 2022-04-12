@@ -2304,6 +2304,40 @@
         "11": "\u30fb\u4f1a\u8b70\u4e2d\u3001\u5168\u54e1\u306e\u6295\u7968\u5148\u304c\u898b\u3048\u308b",
         "13": "\u7aa5\u89c6\u8005\u53ef\u4ee5\u770b\u5230\u4f1a\u8bae\u4e2d\u6240\u6709\u4eba\u7684\u6295\u7968\u60c5\u51b5\u3002"
     },
+    "sprinter": {
+        "0": "Sprinter",
+        "11": "\u30b9\u30d7\u30ea\u30f3\u30bf\u30fc",
+        "13": "\u98de\u6bdb\u817f"
+    },
+    "sprinterIntroDesc": {
+        "0": "Run from the Impostors",
+        "11": "\u8d70\u3063\u3066\u30a4\u30f3\u30dd\u30b9\u30bf\u30fc\u304b\u3089\u9003\u3052\u3088\u3046",
+        "13": "\u53ea\u8981\u4e0d\u505c\u4e0b\u6765\uff0c\u9053\u8def\u5c31\u4f1a\u4e0d\u65ad\u5ef6\u4f38"
+    },
+    "sprinterShortDesc": {
+        "0": "Run from the Impostors",
+        "11": "\u8d70\u3063\u3066\u30a4\u30f3\u30dd\u30b9\u30bf\u30fc\u304b\u3089\u9003\u3052\u3088\u3046",
+        "13": "\u4ece\u5185\u9b3c\u8eab\u8fb9\u6e9c\u8d70"
+    },
+    "sprinterFullDesc": {
+        "0": "A Crewmate who can run at super high speeds.",
+        "11": "\u30fb\u80fd\u529b\u3092\u4f7f\u3046\u3068\u79fb\u52d5\u901f\u5ea6\u304c\u4e0a\u304c\u308b"
+    },
+    "sprinterCooldown": {
+        "0": "Sprint Cooldown",
+        "11": "\u30b9\u30d7\u30ea\u30f3\u30c8\u30af\u30fc\u30eb\u30c0\u30a6\u30f3",
+        "13": "\u98de\u6bdb\u817f\u51b2\u523a\u51b7\u5374"
+    },
+    "sprinterDuration": {
+        "0": "Sprint Duration",
+        "11": "\u30b9\u30d7\u30ea\u30f3\u30c8\u6301\u7d9a\u6642\u9593",
+        "13": "\u98de\u6bdb\u817f\u51b2\u523a\u6301\u7eed\u65f6\u95f4"
+    },
+    "sprinterSpeedBonus": {
+        "0": "Sprint Speed Bonus",
+        "11": "\u30b9\u30d7\u30ea\u30f3\u30c8\u4e2d\u79fb\u52d5\u901f\u5ea6",
+        "13": "\u6bdb\u817f\u51b2\u523a\u6301\u7eed\u65f6\u95f4\u5185\u79fb\u52a8\u901f\u5ea6\u589e\u5e45"
+    },
     "husk": {
         "0": "Husk",
         "11": "\u306a\u308c\u306e\u679c\u3066",
@@ -2393,6 +2427,10 @@
         "0": "Refund Votes On Death",
         "11": "\u6295\u7968\u5148\u304c\u6b7b\u4ea1\u3057\u305f\u3089\u3001\u6295\u7968\u6a29\u3092\u8fd4\u3059",
         "13": "\u7ed9\u5728\u4f1a\u8bae\u4e2d\u6b7b\u4ea1\u73a9\u5bb6\u6295\u7968\u7684\u73a9\u5bb6\u53ef\u4ee5\u6536\u56de\u6295\u7968"
+    },
+    "enabledHorseMode": {
+        "0": "Horse Around",
+        "11": "\u30a6\u30de\u30f3\u30b0\u30a2\u30b9"
     },
     "restrictDevices": {
         "0": "Restrict Special Devices",
@@ -3655,6 +3693,16 @@
         "11": "\u80cc\u5fb3\u8005",
         "13": "\u8bf1\u60d1"
     },
+    "SprinterText": {
+        "0": "Sprint",
+        "11": "\u30b9\u30d7\u30ea\u30f3\u30c8",
+        "13": "\u51b2\u523a"
+    },
+    "SprinterStopText": {
+        "0": "Rest",
+        "11": "\u4f11\u3080",
+        "13": "\u505c\u4e0b"
+    },
     "colorSalmon": {
         "0": "Salmon",
         "11": "\u30b5\u30fc\u30e2\u30f3",
@@ -3770,90 +3818,72 @@
         "11": "GM\u30a8\u30c7\u30a3\u30b7\u30e7\u30f3\u9650\u5b9a",
         "13": "GM\u7248\u9650\u5b9a"
     },
-    "sprinter": {
-        "0": "Sprinter",
-        "11": "\u30b9\u30d7\u30ea\u30f3\u30bf\u30fc"
-    },
-    "sprinterIntroDesc": {
-        "0": "Run from the Impostors",
-        "11": "\u8d70\u3063\u3066\u30a4\u30f3\u30dd\u30b9\u30bf\u30fc\u304b\u3089\u9003\u3052\u3088\u3046"
-    },
-    "sprinterShortDesc": {
-        "0": "Run from the Impostors",
-        "11": "\u8d70\u3063\u3066\u30a4\u30f3\u30dd\u30b9\u30bf\u30fc\u304b\u3089\u9003\u3052\u3088\u3046"
-    },
-    "sprinterCooldown": {
-        "0": "Sprint Cooldown",
-        "11": "\u30b9\u30d7\u30ea\u30f3\u30c8\u30af\u30fc\u30eb\u30c0\u30a6\u30f3"
-    },
-    "sprinterDuration": {
-        "0": "Sprint Duration",
-        "11": "\u30b9\u30d7\u30ea\u30f3\u30c8\u6301\u7d9a\u6642\u9593"
-    },
-    "sprinterSpeedBonus": {
-        "0": "Sprint Speed Bonus",
-        "11": "\u30b9\u30d7\u30ea\u30f3\u30c8\u4e2d\u79fb\u52d5\u901f\u5ea6"
-    },
-    "SprinterText": {
-        "0": "Sprint",
-        "11": "\u30b9\u30d7\u30ea\u30f3\u30c8"
-    },
-    "SprinterStopText": {
-        "0": "Rest",
-        "11": "\u4f11\u3080"
-    },
     "akujo": {
         "0": "Akujo",
-        "11": "\u60aa\u5973"
+        "11": "\u60aa\u5973",
+        "13": "\u9b45\u9b54"
     },
     "akujoIntroDesc": {
-        "11": "\u30af\u30eb\u30fc\u3092\u8a91\u304b\u3057\u3066\u6700\u5f8c\u307e\u3067\u751f\u304d\u6b8b\u308d\u3046"
+        "11": "\u30af\u30eb\u30fc\u3092\u8a91\u304b\u3057\u3066\u6700\u5f8c\u307e\u3067\u751f\u304d\u6b8b\u308d\u3046",
+        "13": "\u5438\u53d6\u5176\u4ed6\u73a9\u5bb6\u7684\u7cbe\u6c14\u6d3b\u5230\u6700\u540e"
     },
     "akujoShortDesc": {
-        "11": "\u30af\u30eb\u30fc\u3092\u8a91\u304b\u3057\u3066\u6700\u5f8c\u307e\u3067\u751f\u304d\u6b8b\u308d\u3046"
+        "11": "\u30af\u30eb\u30fc\u3092\u8a91\u304b\u3057\u3066\u6700\u5f8c\u307e\u3067\u751f\u304d\u6b8b\u308d\u3046",
+        "13": "\u5438\u53d6\u5176\u4ed6\u73a9\u5bb6\u7684\u7cbe\u6c14\u6d3b\u5230\u6700\u540e"
     },
     "akujoTimeLimit": {
         "0": "Time Limit",
-        "11": "\u30d1\u30fc\u30c8\u30ca\u30fc\u9078\u3073\u306e\u6642\u9593\u5236\u9650"
+        "11": "\u30d1\u30fc\u30c8\u30ca\u30fc\u9078\u3073\u306e\u6642\u9593\u5236\u9650",
+        "13": "\u9b45\u9b54\u5438\u53d6\u7cbe\u6c14\u7684\u65f6\u95f4\u9650\u5236"
     },
     "akujoKnowsRoles": {
         "0": "Knows Partners' Roles",
-        "11": "\u30d1\u30fc\u30c8\u30ca\u30fc\u306e\u30ed\u30fc\u30eb\u304c\u898b\u3048\u308b"
+        "11": "\u30d1\u30fc\u30c8\u30ca\u30fc\u306e\u30ed\u30fc\u30eb\u304c\u898b\u3048\u308b",
+        "13": "\u9b45\u9b54\u77e5\u9053\u4f34\u4fa3\u7684\u804c\u4e1a"
     },
     "akujoNumKeeps": {
         "0": "Max Keeps",
-        "11": "\u30ad\u30fc\u30d7\u306e\u6700\u5927\u4eba\u6570"
+        "11": "\u30ad\u30fc\u30d7\u306e\u6700\u5927\u4eba\u6570",
+        "13": "\u9b45\u9b54\u6700\u5927\u53ef\u9b45\u60d1\u4eba\u6570"
     },
     "akujoHonmei": {
         "0": "Honmei",
-        "11": "\u672c\u547d"
+        "11": "\u672c\u547d",
+        "13": "\u771f\u7231"
     },
     "akujoKeep": {
         "0": "Keep",
-        "11": "\u30ad\u30fc\u30d7"
+        "11": "\u30ad\u30fc\u30d7",
+        "13": "\u9b45\u60d1"
     },
     "akujoKeepsLeft": {
         "0": "Keeps Left: {0}",
-        "11": "\u6b8b\u308a {0}\u4eba"
+        "11": "\u6b8b\u308a {0}\u4eba",
+        "13": "\u5269\u4f59\u9b45\u60d1\u6570 {0}"
     },
     "AkujoHonmeiText": {
         "0": "Honmei",
-        "11": "\u672c\u547d\u306b\u3059\u308b"
+        "11": "\u672c\u547d\u306b\u3059\u308b",
+        "13": "\u771f\u7231"
     },
     "AkujoKeepText": {
         "0": "Keep",
-        "11": "\u30ad\u30fc\u30d7\u306b\u3059\u308b"
+        "11": "\u30ad\u30fc\u30d7\u306b\u3059\u308b",
+        "13": "\u9b45\u60d1"
     },
     "akujoWin": {
         "0": "Akujo Wins",
-        "11": "\u60aa\u5973\u52dd\u5229"
+        "11": "\u60aa\u5973\u52dd\u5229",
+        "13": "\u574f\u5973\u4eba\uff01"
     },
     "akujoWinExtra": {
         "0": "Akujo {0} Win",
-        "11": "\u60aa\u5973{0}\u52dd\u5229"
+        "11": "\u60aa\u5973{0}\u52dd\u5229",
+        "13": "\u9b45\u9b54{0}\u80dc\u5229"
     },
     "roleSummaryLoneliness": {
         "0": "Alone",
-        "11": "\u5b64\u72ec\u6b7b"
+        "11": "\u5b64\u72ec\u6b7b",
+        "13": "\u67af\u7aed"
     }
 }

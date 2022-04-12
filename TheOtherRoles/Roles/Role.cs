@@ -593,6 +593,8 @@ namespace TheOtherRoles
 
         public static string modifyNameText(this PlayerControl player, string nameText)
         {
+            if (player == null || player.Data.Disconnected) return nameText;
+
             foreach (var role in Role.allRoles)
             {
                 if (role.player == player)

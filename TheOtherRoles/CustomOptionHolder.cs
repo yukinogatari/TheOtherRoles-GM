@@ -397,7 +397,7 @@ namespace TheOtherRoles {
             janitorCanRepair = CustomOption.Create(16, "janitorCanRepair", false, mafiaSpawnRate);
             janitorCanVent = CustomOption.Create(17, "janitorCanVent", false, mafiaSpawnRate);
 
-            morphlingSpawnRate = new CustomRoleOption(20, "morphling", Morphling.color, 1, roleEnabled: true);
+            morphlingSpawnRate = new CustomRoleOption(20, "morphling", Morphling.color, 1);
             morphlingCooldown = CustomOption.Create(21, "morphlingCooldown", 30f, 2.5f, 60f, 2.5f, morphlingSpawnRate, format: "unitSeconds");
             morphlingDuration = CustomOption.Create(22, "morphlingDuration", 10f, 1f, 20f, 0.5f, morphlingSpawnRate, format: "unitSeconds");
 
@@ -692,7 +692,7 @@ namespace TheOtherRoles {
             refundVotesOnDeath = CustomOption.Create(551, "refundVotesOnDeath", true, specialOptions);
             allowParallelMedBayScans = CustomOption.Create(540, "parallelMedbayScans", false, specialOptions);
             hideSettings = CustomOption.Create(520, "hideSettings", false, specialOptions);
-            enabledHorseMode = CustomOption.Create(552, "ウマングアス", false, specialOptions);
+            enabledHorseMode = CustomOption.Create(552, "enabledHorseMode", false, specialOptions);
 
             restrictDevices = CustomOption.Create(510, "restrictDevices", new string[] { "optionOff", "restrictPerTurn", "restrictPerGame" }, specialOptions);
             restrictAdmin = CustomOption.Create(501, "disableAdmin", 30f, 0f, 600f, 5f, restrictDevices, format: "unitSeconds");

@@ -69,13 +69,7 @@ namespace TheOtherRoles
     {
         public static List<T> players = new List<T>();
         public static ModifierType ModType;
-
-        public static class persistRoleChange
-        {
-            public static bool sidekick = false;
-            public static bool immoralist = false;
-            public static bool shifter = false;
-        }
+        public static List<RoleType> persistRoleChange = new List<RoleType>();
 
         public void Init(PlayerControl player)
         {
@@ -139,11 +133,17 @@ namespace TheOtherRoles
             return mod;
         }
 
-        public static void eraseModifier(PlayerControl player)
+        public static void eraseModifier(PlayerControl player, RoleType newRole = RoleType.NoRole)
         {
-            players.DoIf(x => x.player == player, x => x.ResetModifier());
-            players.RemoveAll(x => x.player == player && x.modId == ModType);
-            allModifiers.RemoveAll(x => x.player == player && x.modId == ModType);
+            List<T> toRemove = new List<T>();
+
+            foreach (var p in players)
+            {
+                if (p.player == player && p.modId == ModType && !persistRoleChange.Contains(newRole))
+                    toRemove.Add(p);
+            }
+            players.RemoveAll(x => toRemove.Contains(x));
+            allModifiers.RemoveAll(x => toRemove.Contains(x));
         }
 
         public static void swapModifier(PlayerControl p1, PlayerControl p2)
@@ -183,7 +183,7 @@ namespace TheOtherRoles
             }
         }
 
-        public static void eraseModifier(this PlayerControl player, ModifierType mod)
+        public static void eraseModifier(this PlayerControl player, ModifierType mod, RoleType newRole = RoleType.NoRole)
         {
             if (hasModifier(player, mod))
             {
@@ -191,7 +191,7 @@ namespace TheOtherRoles
                 {
                     if (mod == t.Key)
                     {
-                        t.Value.GetMethod("eraseModifier", BindingFlags.Public | BindingFlags.Static)?.Invoke(null, new object[] { player });
+                        t.Value.GetMethod("eraseModifier", BindingFlags.Public | BindingFlags.Static)?.Invoke(null, new object[] { player, newRole });
                         return;
                     }
                 }
@@ -199,15 +199,15 @@ namespace TheOtherRoles
             }
         }
 
-        public static void eraseAllModifiers(this PlayerControl player, bool roleChange = false)
+        public static void eraseAllModifiers(this PlayerControl player, RoleType newRole = RoleType.NoRole)
         {
             foreach (var t in ModifierData.allModTypes)
             {
-                t.Value.GetMethod("eraseModifier", BindingFlags.Public | BindingFlags.Static)?.Invoke(null, new object[] { player, roleChange });
+                t.Value.GetMethod("eraseModifier", BindingFlags.Public | BindingFlags.Static)?.Invoke(null, new object[] { player, newRole });
             }
 
             // The whole Lover couple is being erased
-            if (!roleChange && player.isLovers())
+            if (newRole == RoleType.NoRole && player.isLovers())
             {
                 Lovers.eraseCouple(player);
             }

@@ -296,6 +296,7 @@ namespace TheOtherRoles.Patches {
 
                     else if (PlayerControl.LocalPlayer == akujo.honmei?.player || akujo.keeps.Any(x => PlayerControl.LocalPlayer == x?.player))
                     {
+                        PlayerControl.LocalPlayer.nameText.text += suffix;
                         if (!Helpers.hidePlayerName(akujo.player))
                             akujo.player.nameText.text += suffix;
 

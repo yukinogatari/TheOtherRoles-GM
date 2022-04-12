@@ -371,6 +371,20 @@ namespace TheOtherRoles {
                  player.hasModifier(ModifierType.AkujoKeep));
         }
 
+        public static bool isAkujoPartners(this PlayerControl player, PlayerControl partner)
+        {
+            foreach (var akujo in Akujo.players)
+            {
+                if ((akujo.player == player && akujo.isPartner(partner)) ||
+                    (akujo.player == partner && akujo.isPartner(player)))
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
         public static PlayerControl getPartner(this PlayerControl player)
         {
             return Lovers.getPartner(player);

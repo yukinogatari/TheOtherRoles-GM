@@ -261,6 +261,21 @@ namespace TheOtherRoles
             keeps.Add(keep);
         }
 
+        public static bool isPartner(PlayerControl player, PlayerControl partner)
+        {
+            Akujo akujo = getRole(player);
+            if (akujo != null)
+            {
+                return akujo.isPartner(partner);
+            }
+            return false;
+        }
+
+        public bool isPartner(PlayerControl partner)
+        {
+            return honmei?.player == partner || keeps.Any(x => x.player == partner);
+        }
+
         public static Color getAvailableColor()
         {
             var availableColors = new List<Color>(iconColors);
@@ -301,9 +316,12 @@ namespace TheOtherRoles
         public AkujoHonmei()
         {
             ModType = modId = ModifierType.AkujoHonmei;
-            persistRoleChange.sidekick = true;
-            persistRoleChange.immoralist = true;
-            persistRoleChange.shifter = true;
+
+            persistRoleChange = new List<RoleType>() {
+                RoleType.Sidekick,
+                RoleType.Immoralist,
+                RoleType.Shifter
+            };
         }
 
         public override void OnMeetingStart() { }
@@ -356,9 +374,12 @@ namespace TheOtherRoles
         public AkujoKeep()
         {
             ModType = modId = ModifierType.AkujoKeep;
-            persistRoleChange.sidekick = true;
-            persistRoleChange.immoralist = true;
-            persistRoleChange.shifter = true;
+
+            persistRoleChange = new List<RoleType>() {
+                RoleType.Sidekick,
+                RoleType.Immoralist,
+                RoleType.Shifter
+            };
         }
 
         public override void OnMeetingStart() { }
@@ -368,11 +389,6 @@ namespace TheOtherRoles
         public override void OnDeath(PlayerControl killer = null) { }
 
         public override void HandleDisconnect(PlayerControl player, DisconnectReasons reason) { }
-
-        public override void ResetModifier()
-        {
-            base.ResetModifier();
-        }
 
         public override string modifyNameText(string nameText)
         {

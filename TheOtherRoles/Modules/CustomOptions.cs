@@ -629,6 +629,15 @@ namespace TheOtherRoles
             }
             mapNameTransform.GetComponent<KeyValueOption>().Values = options;
             mapNameTransform.gameObject.active = true;
+
+            foreach (Transform i in __instance.AllItems.ToList())
+            {
+                float num = -0.5f;
+                if (i.name.Equals("MapName", StringComparison.OrdinalIgnoreCase)) num = -0.25f;
+                if (i.name.Equals("NumImpostors", StringComparison.OrdinalIgnoreCase) || i.name.Equals("ResetToDefault", StringComparison.OrdinalIgnoreCase)) num = 0f;
+                i.position += new Vector3(0, num, 0);
+            }
+            __instance.Scroller.ContentYBounds.max += 0.5F;
         }
     }
 

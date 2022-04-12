@@ -504,7 +504,7 @@ namespace TheOtherRoles.Patches
             {
                 if (p == null) continue;
 
-                bool isAkujo = PlayerControl.LocalPlayer.isRole(RoleType.Akujo) && (p.hasModifier(ModifierType.AkujoHonmei) || p.hasModifier(ModifierType.AkujoKeep));
+                bool isAkujo = Akujo.isPartner(PlayerControl.LocalPlayer, p);
 
                 bool canSeeInfo =
                     canSeeEverything || isAkujo ||

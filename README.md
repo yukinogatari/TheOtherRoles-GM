@@ -60,6 +60,7 @@ The [Role Assignment](#role-assignment) sections explains how the roles are bein
 # Releases
 | Among Us - Version | Mod Version | Link |
 |----------|-------------|-----------------|
+| 2022.3.29s | v3.5.5.1 GM | [Download](https://github.com/yukinogatari/TheOtherRoles-GM/releases/download/v3.5.5.1/TheOtherRoles-GM.v3.5.5.1.zip)
 | 2022.3.29s | v3.5.5 GM | [Download](https://github.com/yukinogatari/TheOtherRoles-GM/releases/download/v3.5.5/TheOtherRoles-GM.v3.5.5.zip)
 | 2022.2.24s | v3.5.4 GM | [Download](https://github.com/yukinogatari/TheOtherRoles-GM/releases/download/v3.5.4/TheOtherRoles-GM.v3.5.4.zip)
 | 2022.2.24s | v3.5.3 GM | [Download](https://github.com/yukinogatari/TheOtherRoles-GM/releases/download/v3.5.3/TheOtherRoles-GM.v3.5.3.zip)

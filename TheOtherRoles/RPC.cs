@@ -503,7 +503,7 @@ namespace TheOtherRoles
                 Jackal.fakeSidekick = player;
             }else {
                 DestroyableSingleton<RoleManager>.Instance.SetRole(player, RoleTypes.Crewmate);
-                erasePlayerRoles(player.PlayerId, true);
+                erasePlayerRoles(player.PlayerId, RoleType.Sidekick);
                 Sidekick.sidekick = player;
                 if (player.PlayerId == PlayerControl.LocalPlayer.PlayerId) PlayerControl.LocalPlayer.moveable = true; 
                 if(Fox.exists && !Fox.isFoxAlive())
@@ -526,7 +526,7 @@ namespace TheOtherRoles
             return;
         }
 
-        public static void erasePlayerRoles(byte playerId, bool roleChange = false)
+        public static void erasePlayerRoles(byte playerId, RoleType newRole = RoleType.NoRole)
         {
             PlayerControl player = Helpers.playerById(playerId);
             if (player == null) return;
@@ -536,7 +536,7 @@ namespace TheOtherRoles
                 player.clearAllTasks();
 
             player.eraseAllRoles();
-            player.eraseAllModifiers(roleChange);
+            player.eraseAllModifiers(newRole);
         }
 
         public static void setFutureErased(byte playerId)
@@ -821,7 +821,7 @@ namespace TheOtherRoles
         {
             PlayerControl player = Helpers.playerById(targetId);
             DestroyableSingleton<RoleManager>.Instance.SetRole(player, RoleTypes.Crewmate);
-            erasePlayerRoles(player.PlayerId, true);
+            erasePlayerRoles(player.PlayerId, RoleType.Immoralist);
             player.setRole(RoleType.Immoralist);
             player.clearAllTasks();
         }
