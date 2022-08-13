@@ -350,6 +350,7 @@ namespace TheOtherRoles {
         public static CustomOption akujoTimeLimit;
         public static CustomOption akujoKnowsRoles;
         public static CustomOption akujoNumKeeps;
+        public static CustomOption akujoSheriffKillsHonmei;
 
         public static CustomOption enabledHorseMode;
 
@@ -565,10 +566,11 @@ namespace TheOtherRoles {
             watcherSpawnRate = new CustomDualRoleOption(1040, "watcher", Watcher.color, RoleType.Watcher, 15);
 
 
-            akujoSpawnRate = new CustomRoleOption(1060, "akujo", Akujo.color, 7, roleEnabled: false);
+            akujoSpawnRate = new CustomRoleOption(1060, "akujo", Akujo.color, 7, roleEnabled: true);
             akujoTimeLimit = CustomOption.Create(1061, "akujoTimeLimit", 300f, 30f, 1200f, 30f, akujoSpawnRate, format: "unitSeconds");
             akujoKnowsRoles = CustomOption.Create(1062, "akujoKnowsRoles", false, akujoSpawnRate);
             akujoNumKeeps = CustomOption.Create(1063, "akujoNumKeeps", 1f, 1f, 15f, 1f, akujoSpawnRate, format: "unitPlayers");
+            akujoSheriffKillsHonmei = CustomOption.Create(1064, "akujoSheriffKillsHonmei", true, akujoSpawnRate);
 
 
             foxSpawnRate = new CustomRoleOption(910, "fox", Fox.color, 1);

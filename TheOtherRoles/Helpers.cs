@@ -323,7 +323,6 @@ namespace TheOtherRoles {
                     player.isRole(RoleType.Lawyer) ||
                     player.isRole(RoleType.Pursuer) ||
                     player.isRole(RoleType.Akujo) ||
-                    player.hasModifier(ModifierType.AkujoHonmei) ||
                     (player.isRole(RoleType.Shifter) && Shifter.isNeutral)));
         }
 
@@ -340,8 +339,7 @@ namespace TheOtherRoles {
         public static bool hasFakeTasks(this PlayerControl player) {
             return (player.isNeutral() && !player.neutralHasTasks()) ||
                    (player.hasModifier(ModifierType.Madmate) && !Madmate.hasTasks) ||
-                   (player.isLovers() && Lovers.separateTeam && !Lovers.tasksCount) ||
-                   (player.hasModifier(ModifierType.AkujoHonmei) && !player.isImpostor() && !player.neutralHasTasks());
+                   (player.isLovers() && Lovers.separateTeam && !Lovers.tasksCount);
         }
 
         public static bool neutralHasTasks(this PlayerControl player)

@@ -262,10 +262,7 @@ namespace TheOtherRoles.Patches {
             }
 
             // Akujo
-            if (PlayerControl.LocalPlayer.isAlive() &&
-                (PlayerControl.LocalPlayer.isRole(RoleType.Akujo) ||
-                 PlayerControl.LocalPlayer.hasModifier(ModifierType.AkujoHonmei) ||
-                 PlayerControl.LocalPlayer.hasModifier(ModifierType.AkujoKeep)))
+            if (PlayerControl.LocalPlayer.isAlive() && PlayerControl.LocalPlayer.isAkujoLover())
             {
                 foreach (var akujo in Akujo.players)
                 {
