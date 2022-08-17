@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System.Linq;
 using UnhollowerBaseLib;
 using static TheOtherRoles.TheOtherRoles;
+using static TheOtherRoles.TheOtherRolesGM;
+using static TheOtherRoles.GameHistory;
 using TheOtherRoles.Objects;
 using static TheOtherRoles.MapOptions;
 using System.Collections;
@@ -13,7 +15,7 @@ using UnityEngine;
 using System.Reflection;
 
 namespace TheOtherRoles.Patches {
-    [HarmonyPatch(typeof(ExileController), "Begin")]
+    [HarmonyPatch(typeof(ExileController), nameof(ExileController.Begin))]
     class ExileControllerBeginPatch {
         public static void Prefix(ExileController __instance, [HarmonyArgument(0)]ref GameData.PlayerInfo exiled, [HarmonyArgument(1)]bool tie) {
             // Medic shield
@@ -51,6 +53,24 @@ namespace TheOtherRoles.Patches {
                 JackInTheBox.convertToVents();
             }
 
+            // Witch execute casted spells
+            if (Witch.witch != null && Witch.futureSpelled != null && AmongUsClient.Instance.AmHost) {
+                bool exiledIsWitch = exiled != null && exiled.PlayerId == Witch.witch.PlayerId;
+                bool witchDiesWithExiledLover = exiled != null && Lovers.bothDie && exiled.Object.isLovers() && exiled.Object.getPartner() == Witch.witch;
+
+                if ((witchDiesWithExiledLover || exiledIsWitch) && Witch.witchVoteSavesTargets) Witch.futureSpelled = new List<PlayerControl>();
+                foreach (PlayerControl target in Witch.futureSpelled) {
+                    if (target != null && !target.Data.IsDead && Helpers.checkMuderAttempt(Witch.witch, target, true) == MurderAttemptResult.PerformKill)
+                    {
+                        MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.WitchSpellCast, Hazel.SendOption.Reliable, -1);
+                        writer.Write(target.PlayerId);
+                        AmongUsClient.Instance.FinishRpcImmediately(writer);
+                        RPCProcedure.witchSpellCast(target.PlayerId);
+                    }
+                }
+            }
+            Witch.futureSpelled = new List<PlayerControl>();
+
             // SecurityGuard vents and cameras
             var allCameras = ShipStatus.Instance.AllCameras.ToList();
             MapOptions.camerasToAdd.ForEach(camera => {
@@ -70,6 +90,10 @@ namespace TheOtherRoles.Patches {
                 vent.name = "SealedVent_" + vent.name;
             }
             MapOptions.ventsToSeal = new List<Vent>();
+
+            // 1 = reset per turn
+            if (MapOptions.restrictDevices == 1)
+                MapOptions.resetDeviceTimes();
         }
     }
 
@@ -92,39 +116,55 @@ namespace TheOtherRoles.Patches {
 
         static void WrapUpPostfix(GameData.PlayerInfo exiled) {
             // Mini exile lose condition
-            if (exiled != null && Mini.mini != null && Mini.mini.PlayerId == exiled.PlayerId && !Mini.isGrownUp() && !Mini.mini.Data.IsImpostor) {
+            if (exiled != null && Mini.mini != null && Mini.mini.PlayerId == exiled.PlayerId && !Mini.isGrownUp() && !Mini.mini.Data.Role.IsImpostor) {
                 Mini.triggerMiniLose = true;
             }
+
             // Jester win condition
             else if (exiled != null && Jester.jester != null && Jester.jester.PlayerId == exiled.PlayerId) {
                 Jester.triggerJesterWin = true;
-            } 
+            }
+        }
+    }
 
+    [HarmonyPatch(typeof(ExileController), nameof(ExileController.ReEnableGameplay))]
+    class ExileControllerReEnableGameplayPatch
+    {
+        public static void Postfix(ExileController __instance)
+        {
             // Reset custom button timers where necessary
             CustomButton.MeetingEndedUpdate();
 
+            // Custom role post-meeting functions
+            TheOtherRolesGM.OnMeetingEnd();
+
             // Mini set adapted cooldown
-            if (Mini.mini != null && PlayerControl.LocalPlayer == Mini.mini && Mini.mini.Data.IsImpostor) {
+            if (Mini.mini != null && PlayerControl.LocalPlayer == Mini.mini && Mini.mini.Data.Role.IsImpostor)
+            {
                 var multiplier = Mini.isGrownUp() ? 0.66f : 2f;
                 Mini.mini.SetKillTimer(PlayerControl.GameOptions.KillCooldown * multiplier);
             }
 
             // Seer spawn souls
-            if (Seer.deadBodyPositions != null && Seer.seer != null && PlayerControl.LocalPlayer == Seer.seer && (Seer.mode == 0 || Seer.mode == 2)) {
-                foreach (Vector3 pos in Seer.deadBodyPositions) {
+            if (Seer.deadBodyPositions != null && Seer.seer != null && PlayerControl.LocalPlayer == Seer.seer && (Seer.mode == 0 || Seer.mode == 2))
+            {
+                foreach (Vector3 pos in Seer.deadBodyPositions)
+                {
                     GameObject soul = new GameObject();
                     soul.transform.position = pos;
                     soul.layer = 5;
                     var rend = soul.AddComponent<SpriteRenderer>();
                     rend.sprite = Seer.getSoulSprite();
-                    
-                    if(Seer.limitSoulDuration) {
+
+                    if (Seer.limitSoulDuration)
+                    {
                         HudManager.Instance.StartCoroutine(Effects.Lerp(Seer.soulDuration, new Action<float>((p) => {
-                            if (rend != null) {
+                            if (rend != null)
+                            {
                                 var tmp = rend.color;
                                 tmp.a = Mathf.Clamp01(1 - p);
                                 rend.color = tmp;
-                            }    
+                            }
                             if (p == 1f && rend != null && rend.gameObject != null) UnityEngine.Object.Destroy(rend.gameObject);
                         })));
                     }
@@ -132,25 +172,43 @@ namespace TheOtherRoles.Patches {
                 Seer.deadBodyPositions = new List<Vector3>();
             }
 
+            // Tracker reset deadBodyPositions
+            Tracker.deadBodyPositions = new List<Vector3>();
+
             // Arsonist deactivate dead poolable players
-            if (Arsonist.arsonist != null && Arsonist.arsonist == PlayerControl.LocalPlayer) {
-                int visibleCounter = 0;
-                Vector3 bottomLeft = new Vector3(-HudManager.Instance.UseButton.transform.localPosition.x, HudManager.Instance.UseButton.transform.localPosition.y, HudManager.Instance.UseButton.transform.localPosition.z);
-                bottomLeft += new Vector3(-0.25f, -0.25f, 0);
-                foreach (PlayerControl p in PlayerControl.AllPlayerControls) {
-                    if (!MapOptions.playerIcons.ContainsKey(p.PlayerId)) continue;
-                    if (p.Data.IsDead || p.Data.Disconnected) {
-                        MapOptions.playerIcons[p.PlayerId].gameObject.SetActive(false);
-                    } else {
-                        MapOptions.playerIcons[p.PlayerId].transform.localPosition = bottomLeft + Vector3.right * visibleCounter * 0.35f;
-                        visibleCounter++;
-                    }
-                }
-            }
+            Arsonist.updateIcons();
 
             // Force Bounty Hunter Bounty Update
             if (BountyHunter.bountyHunter != null && BountyHunter.bountyHunter == PlayerControl.LocalPlayer)
                 BountyHunter.bountyUpdateTimer = 0f;
+
+            // Medium spawn souls
+            if (Medium.medium != null && PlayerControl.LocalPlayer == Medium.medium)
+            {
+                if (Medium.souls != null)
+                {
+                    foreach (SpriteRenderer sr in Medium.souls) UnityEngine.Object.Destroy(sr.gameObject);
+                    Medium.souls = new List<SpriteRenderer>();
+                }
+
+                if (Medium.featureDeadBodies != null)
+                {
+                    foreach ((DeadPlayer db, Vector3 ps) in Medium.featureDeadBodies)
+                    {
+                        GameObject s = new GameObject();
+                        s.transform.position = ps;
+                        s.layer = 5;
+                        var rend = s.AddComponent<SpriteRenderer>();
+                        rend.sprite = Medium.getSoulSprite();
+                        Medium.souls.Add(rend);
+                    }
+                    Medium.deadBodies = Medium.featureDeadBodies;
+                    Medium.featureDeadBodies = new List<Tuple<DeadPlayer, Vector3>>();
+                }
+            }
+
+            if (Lawyer.lawyer != null && PlayerControl.LocalPlayer == Lawyer.lawyer && !Lawyer.lawyer.Data.IsDead)
+                Lawyer.meetings++;
         }
     }
 

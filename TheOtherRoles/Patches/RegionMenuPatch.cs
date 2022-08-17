@@ -36,16 +36,28 @@ namespace TheOtherRoles.Patches {
         private static TextBoxTMP ipField;
         private static TextBoxTMP portField;
 
-        public static void Postfix(RegionMenu __instance)
-        {
+        public static void Postfix(RegionMenu __instance) {
             var template = DestroyableSingleton<JoinGameButton>.Instance;
+            var joinGameButtons = GameObject.FindObjectsOfType<JoinGameButton>();
+            foreach (var t in joinGameButtons)
+            {  // The correct button has a background, the other 2 dont
+                if (t.GameIdText != null && t.GameIdText.Background != null)
+                {
+                    template = t;
+                    break;
+                }
+            }
+
+            if (template == null || template.GameIdText == null) return;
 
             if (ipField == null || ipField.gameObject == null) {
                 ipField = UnityEngine.Object.Instantiate(template.GameIdText, __instance.transform);
                 ipField.gameObject.name = "IpTextBox";
-                UnityEngine.Object.DestroyImmediate(ipField.transform.FindChild("arrowEnter").gameObject);
+                var arrow = ipField.transform.FindChild("arrowEnter");
+                if (arrow == null || arrow.gameObject == null) return;
+                UnityEngine.Object.DestroyImmediate(arrow.gameObject);
 
-                ipField.transform.localPosition = new Vector3(0, -1f, -100f);
+                ipField.transform.localPosition = new Vector3(0.225f, -1f, -100f);
                 ipField.characterLimit = 30;
                 ipField.AllowSymbols = true;
                 ipField.ForceUppercase = false;
@@ -70,12 +82,15 @@ namespace TheOtherRoles.Patches {
                     __instance.ChooseOption(ServerManager.DefaultRegions[ServerManager.DefaultRegions.Length - 1]);
                 }
             }
+
             if (portField == null || portField.gameObject == null) {
                 portField = UnityEngine.Object.Instantiate(template.GameIdText, __instance.transform);
                 portField.gameObject.name = "PortTextBox";
-                UnityEngine.Object.DestroyImmediate(portField.transform.FindChild("arrowEnter").gameObject);
+                var arrow = portField.transform.FindChild("arrowEnter");
+                if (arrow == null || arrow.gameObject == null) return;
+                UnityEngine.Object.DestroyImmediate(arrow.gameObject);
 
-                portField.transform.localPosition = new Vector3(0, -1.75f, -100f);
+                portField.transform.localPosition = new Vector3(0.225f, -1.75f, -100f);
                 portField.characterLimit = 5;
                 portField.SetText(TheOtherRolesPlugin.Port.Value.ToString());
                 __instance.StartCoroutine(Effects.Lerp(0.1f, new Action<float>((p) => {

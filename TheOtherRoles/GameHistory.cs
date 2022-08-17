@@ -3,6 +3,7 @@ using System.Collections;
 using System;
 using UnityEngine;
 using static TheOtherRoles.TheOtherRoles;
+using TheOtherRoles.Patches;
 
 namespace TheOtherRoles {
     public class DeadPlayer
@@ -23,10 +24,12 @@ namespace TheOtherRoles {
     static class GameHistory {
         public static List<Tuple<Vector3, bool>> localPlayerPositions = new List<Tuple<Vector3, bool>>();
         public static List<DeadPlayer> deadPlayers = new List<DeadPlayer>();
+        public static Dictionary<int, FinalStatus> finalStatuses = new Dictionary<int, FinalStatus>();
 
         public static void clearGameHistory() {
             localPlayerPositions = new List<Tuple<Vector3, bool>>();
             deadPlayers = new List<DeadPlayer>();
+            finalStatuses = new Dictionary<int, FinalStatus>();
         }
     }
 }

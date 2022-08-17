@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections;
 using UnityEngine;
 using System.Linq;
+using static TheOtherRoles.TheOtherRoles;
 
 namespace TheOtherRoles.Objects {
 
