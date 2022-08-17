@@ -2338,6 +2338,58 @@
         "11": "\u30b9\u30d7\u30ea\u30f3\u30c8\u4e2d\u79fb\u52d5\u901f\u5ea6",
         "13": "\u6bdb\u817f\u51b2\u523a\u6301\u7eed\u65f6\u95f4\u5185\u79fb\u52a8\u901f\u5ea6\u589e\u5e45"
     },
+    "akujo": {
+        "0": "Akujo",
+        "11": "\u60aa\u5973",
+        "13": "\u9b45\u9b54"
+    },
+    "akujoIntroDesc": {
+        "0": "Use your wiles to manipulate the crew into protecting you",
+        "11": "\u30af\u30eb\u30fc\u3092\u8a91\u304b\u3057\u3066\u6700\u5f8c\u307e\u3067\u751f\u304d\u6b8b\u308d\u3046",
+        "13": "\u5438\u53d6\u5176\u4ed6\u73a9\u5bb6\u7684\u7cbe\u6c14\u6d3b\u5230\u6700\u540e"
+    },
+    "akujoShortDesc": {
+        "0": "Use your wiles to manipulate the crew into protecting you",
+        "11": "\u30af\u30eb\u30fc\u3092\u8a91\u304b\u3057\u3066\u6700\u5f8c\u307e\u3067\u751f\u304d\u6b8b\u308d\u3046",
+        "13": "\u5438\u53d6\u5176\u4ed6\u73a9\u5bb6\u7684\u7cbe\u6c14\u6d3b\u5230\u6700\u540e"
+    },
+    "akujoFullDesc": {
+        "0": "A Neutral role with the ability to select multiple partners to act as their Lover.\nThey can assign one player as their True Love, and multiple as Backups.\nIf the Akujo dies, their True Love dies with them, and vice versa.",
+        "11": "\u30fb\u4ed6\u306e\u4eba\u306b\u672c\u547d(1\u4eba)\u3068\u30ad\u30fc\u30d7(\u8907\u6570\u4eba)\u3092\u4ed8\u4e0e\u3067\u304d\u308b\n\u30fb\u672c\u547d\u306b\u9078\u3070\u308c\u305f\u4eba\u306f\u60aa\u5973\u304c\u6b7b\u3093\u3060\u5834\u5408\u3001\u540c\u6642\u306b\u6b7b\u3093\u3067\u3057\u307e\u3046\n\u30fb\u30ad\u30fc\u30d7\u306b\u9078\u3070\u308c\u305f\u4eba\u306f\u904a\u3070\u308c\u3066\u3044\u308b\u3060\u3051\u3067\u3059\n\u3000\u604b\u4eba\u304c\u3044\u308b\u3088\u3046\u306b\u898b\u3048\u3066\u5b9f\u306f\u72ec\u308a\u8eab\u3067\u3059\n\u30fb\u5c1a\u3001\u9078\u3070\u308c\u305f\u5074\u306f\u81ea\u5206\u304c\u672c\u547d\u306a\u306e\u304b\u30ad\u30fc\u30d7\u306a\u306e\u304b\u5206\u304b\u3089\u306a\u3044\n\u30fb\u5236\u9650\u6642\u9593\u5185\u306b\u672c\u547d\u3068\u30ad\u30fc\u30d7\u3092\u9078\u3070\u306a\u304b\u3063\u305f\u3089\u3001\u60aa\u5973\u306f\u5b64\u72ec\u6b7b\u3057\u3066\u3057\u307e\u3046\n\uff08\u4f1a\u8b70\u4e2d\u3082\u6642\u9593\u306f\u9032\u3080\u306e\u3067\u3054\u6ce8\u610f\u304f\u3060\u3055\u3044\uff09\n\u30fb\u60aa\u5973\u306f\u672c\u547d\u3068\u30ad\u30fc\u30d7\u306b\u9078\u3093\u3060\u30d7\u30ec\u30a4\u30e4\u30fc\u5168\u54e1\u306e\u5f79\u8077\u304c\u308f\u304b\u308b\n\u30fb\u52dd\u5229\u6761\u4ef6\u306f\u30e9\u30d0\u30fc\u30ba\u3068\u4e00\u7dd2"
+    },
+    "akujoTimeLimit": {
+        "0": "Time Limit",
+        "11": "\u30d1\u30fc\u30c8\u30ca\u30fc\u9078\u3073\u306e\u6642\u9593\u5236\u9650",
+        "13": "\u9b45\u9b54\u5438\u53d6\u7cbe\u6c14\u7684\u65f6\u95f4\u9650\u5236"
+    },
+    "akujoKnowsRoles": {
+        "0": "Knows Partners' Roles",
+        "11": "\u30d1\u30fc\u30c8\u30ca\u30fc\u306e\u30ed\u30fc\u30eb\u304c\u898b\u3048\u308b",
+        "13": "\u9b45\u9b54\u77e5\u9053\u4f34\u4fa3\u7684\u804c\u4e1a"
+    },
+    "akujoNumKeeps": {
+        "0": "Max Backups",
+        "11": "\u30ad\u30fc\u30d7\u306e\u6700\u5927\u4eba\u6570",
+        "13": "\u9b45\u9b54\u6700\u5927\u53ef\u9b45\u60d1\u4eba\u6570"
+    },
+    "akujoSheriffKillsHonmei": {
+        "0": "Sheriff Kills True Love"
+    },
+    "akujoHonmei": {
+        "0": "True Love",
+        "11": "\u672c\u547d",
+        "13": "\u771f\u7231"
+    },
+    "akujoKeep": {
+        "0": "Backup",
+        "11": "\u30ad\u30fc\u30d7",
+        "13": "\u9b45\u60d1"
+    },
+    "akujoKeepsLeft": {
+        "0": "Backups Left: {0}",
+        "11": "\u6b8b\u308a {0}\u4eba",
+        "13": "\u5269\u4f59\u9b45\u60d1\u6570 {0}"
+    },
     "husk": {
         "0": "Husk",
         "11": "\u306a\u308c\u306e\u679c\u3066",
@@ -2697,6 +2749,11 @@
         "11": "\u5996\u72d0\u52dd\u5229",
         "13": "\u72d0\u5996\u56e2\u961f\u80dc\u5229"
     },
+    "akujoWin": {
+        "0": "Akujo Wins",
+        "11": "\u60aa\u5973\u52dd\u5229",
+        "13": "\u574f\u5973\u4eba\uff01"
+    },
     "everyoneDied": {
         "0": "Everyone Died",
         "11": "\u8ab0\u3082\u3044\u306a\u304f\u306a\u3063\u305f",
@@ -2756,6 +2813,11 @@
         "0": "Fox {0} Win",
         "11": "\u5996\u72d0{0}\u52dd\u5229",
         "13": "\u72d0\u5996 {0} \u80dc\u5229"
+    },
+    "akujoWinExtra": {
+        "0": "Akujo {0} Win",
+        "11": "\u60aa\u5973{0}\u52dd\u5229",
+        "13": "\u9b45\u9b54{0}\u80dc\u5229"
     },
     "opportunistExtra": {
         "0": "& <color=#00FF00FF>Opportunist</color>",
@@ -2841,6 +2903,11 @@
         "0": "Divined",
         "11": "\u546a\u6bba",
         "13": "\u5360\u535c"
+    },
+    "roleSummaryLoneliness": {
+        "0": "Alone",
+        "11": "\u5b64\u72ec\u6b7b",
+        "13": "\u67af\u7aed"
     },
     "roleSummaryDisconnected": {
         "0": "DC'd",
@@ -3703,6 +3770,16 @@
         "11": "\u4f11\u3080",
         "13": "\u505c\u4e0b"
     },
+    "AkujoHonmeiText": {
+        "0": "True Love",
+        "11": "\u672c\u547d\u306b\u3059\u308b",
+        "13": "\u771f\u7231"
+    },
+    "AkujoKeepText": {
+        "0": "Backup",
+        "11": "\u30ad\u30fc\u30d7\u306b\u3059\u308b",
+        "13": "\u9b45\u60d1"
+    },
     "colorSalmon": {
         "0": "Salmon",
         "11": "\u30b5\u30fc\u30e2\u30f3",
@@ -3817,73 +3894,5 @@
         "0": "GM Edition Exclusive",
         "11": "GM\u30a8\u30c7\u30a3\u30b7\u30e7\u30f3\u9650\u5b9a",
         "13": "GM\u7248\u9650\u5b9a"
-    },
-    "akujo": {
-        "0": "Akujo",
-        "11": "\u60aa\u5973",
-        "13": "\u9b45\u9b54"
-    },
-    "akujoIntroDesc": {
-        "11": "\u30af\u30eb\u30fc\u3092\u8a91\u304b\u3057\u3066\u6700\u5f8c\u307e\u3067\u751f\u304d\u6b8b\u308d\u3046",
-        "13": "\u5438\u53d6\u5176\u4ed6\u73a9\u5bb6\u7684\u7cbe\u6c14\u6d3b\u5230\u6700\u540e"
-    },
-    "akujoShortDesc": {
-        "11": "\u30af\u30eb\u30fc\u3092\u8a91\u304b\u3057\u3066\u6700\u5f8c\u307e\u3067\u751f\u304d\u6b8b\u308d\u3046",
-        "13": "\u5438\u53d6\u5176\u4ed6\u73a9\u5bb6\u7684\u7cbe\u6c14\u6d3b\u5230\u6700\u540e"
-    },
-    "akujoTimeLimit": {
-        "0": "Time Limit",
-        "11": "\u30d1\u30fc\u30c8\u30ca\u30fc\u9078\u3073\u306e\u6642\u9593\u5236\u9650",
-        "13": "\u9b45\u9b54\u5438\u53d6\u7cbe\u6c14\u7684\u65f6\u95f4\u9650\u5236"
-    },
-    "akujoKnowsRoles": {
-        "0": "Knows Partners' Roles",
-        "11": "\u30d1\u30fc\u30c8\u30ca\u30fc\u306e\u30ed\u30fc\u30eb\u304c\u898b\u3048\u308b",
-        "13": "\u9b45\u9b54\u77e5\u9053\u4f34\u4fa3\u7684\u804c\u4e1a"
-    },
-    "akujoNumKeeps": {
-        "0": "Max Keeps",
-        "11": "\u30ad\u30fc\u30d7\u306e\u6700\u5927\u4eba\u6570",
-        "13": "\u9b45\u9b54\u6700\u5927\u53ef\u9b45\u60d1\u4eba\u6570"
-    },
-    "akujoHonmei": {
-        "0": "Honmei",
-        "11": "\u672c\u547d",
-        "13": "\u771f\u7231"
-    },
-    "akujoKeep": {
-        "0": "Keep",
-        "11": "\u30ad\u30fc\u30d7",
-        "13": "\u9b45\u60d1"
-    },
-    "akujoKeepsLeft": {
-        "0": "Keeps Left: {0}",
-        "11": "\u6b8b\u308a {0}\u4eba",
-        "13": "\u5269\u4f59\u9b45\u60d1\u6570 {0}"
-    },
-    "AkujoHonmeiText": {
-        "0": "Honmei",
-        "11": "\u672c\u547d\u306b\u3059\u308b",
-        "13": "\u771f\u7231"
-    },
-    "AkujoKeepText": {
-        "0": "Keep",
-        "11": "\u30ad\u30fc\u30d7\u306b\u3059\u308b",
-        "13": "\u9b45\u60d1"
-    },
-    "akujoWin": {
-        "0": "Akujo Wins",
-        "11": "\u60aa\u5973\u52dd\u5229",
-        "13": "\u574f\u5973\u4eba\uff01"
-    },
-    "akujoWinExtra": {
-        "0": "Akujo {0} Win",
-        "11": "\u60aa\u5973{0}\u52dd\u5229",
-        "13": "\u9b45\u9b54{0}\u80dc\u5229"
-    },
-    "roleSummaryLoneliness": {
-        "0": "Alone",
-        "11": "\u5b64\u72ec\u6b7b",
-        "13": "\u67af\u7aed"
     }
 }

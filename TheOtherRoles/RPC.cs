@@ -855,6 +855,11 @@ namespace TheOtherRoles
             {
                 akujo.player.MurderPlayer(akujo.player);
                 finalStatuses[akujo.player.PlayerId] = FinalStatus.Loneliness;
+
+                if (MeetingHud.Instance != null && Constants.ShouldPlaySfx())
+                {
+                    SoundManager.Instance.PlaySound(akujo.player.KillSfx, false, 0.8f);
+                }
             }
         }
 
@@ -911,7 +916,7 @@ namespace TheOtherRoles
             {
                 foreach (PlayerVoteArea pva in MeetingHud.Instance.playerStates)
                 {
-                    if (pva.TargetPlayerId == targetId)
+                    if (pva.TargetPlayerId == targetId && pva.AmDead != dead)
                     {
                         pva.SetDead(pva.DidReport, dead);
                         pva.Overlay.gameObject.SetActive(dead);
