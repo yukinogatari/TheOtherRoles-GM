@@ -24,7 +24,8 @@ namespace TheOtherRoles.Patches
         VultureWin = 15,
         LawyerSoloWin = 16,
         PlagueDoctorWin = 17,
-        FoxWin = 18
+        FoxWin = 18,
+        AkujoWin = 19,
     }
 
     enum WinCondition
@@ -43,7 +44,10 @@ namespace TheOtherRoles.Patches
         AdditionalLawyerStolenWin,
         AdditionalAlivePursuerWin,
         PlagueDoctorWin,
-        FoxWin
+        FoxWin,
+        AkujoWin,
+
+        EveryoneDied,
     }
 
     enum FinalStatus
@@ -56,6 +60,10 @@ namespace TheOtherRoles.Patches
         Dead,
         Suicide,
         Misfire,
+        Revenge,
+        Diseased,
+        Divined,
+        Loneliness,
         GMExecuted,
         Disconnected
     }
@@ -105,41 +113,41 @@ namespace TheOtherRoles.Patches
 
             AdditionalTempData.gameOverReason = endGameResult.GameOverReason;
             if ((int)endGameResult.GameOverReason >= 10) endGameResult.GameOverReason = GameOverReason.ImpostorByKill;
-
         }
 
         public static void Postfix(AmongUsClient __instance, [HarmonyArgument(0)] ref EndGameResult endGameResult)
         {
             var gameOverReason = AdditionalTempData.gameOverReason;
-            // 狐の勝利条件を満たしたか確認する
-            Boolean isFoxAlive = Fox.isFoxAlive();
 
-            Boolean isFoxCompletedTasks = Fox.isFoxCompletedTasks(); // 生存中の狐が1匹でもタスクを全て終えていること
-            if(isFoxAlive && isFoxCompletedTasks){
+            // 狐の勝利条件を満たしたか確認する
+            bool isFoxAlive = Fox.isFoxAlive();
+            bool isFoxCompletedTasks = Fox.isFoxCompletedTasks(); // 生存中の狐が1匹でもタスクを全て終えていること
+            if (isFoxAlive && isFoxCompletedTasks) {
                 // タスク勝利の場合はオプションの設定次第
-                if(gameOverReason == GameOverReason.HumansByTask && !Fox.crewWinsByTasks)
+                if (gameOverReason == GameOverReason.HumansByTask && !Fox.crewWinsByTasks)
                 {
                     gameOverReason = (GameOverReason)CustomGameOverReason.FoxWin;
                 }
+
                 // 第三陣営の勝利以外の場合に狐が生存していたら狐の勝ち
-                else if(gameOverReason != (GameOverReason)CustomGameOverReason.PlagueDoctorWin &&
-                gameOverReason != (GameOverReason)CustomGameOverReason.ArsonistWin &&
-                gameOverReason != (GameOverReason)CustomGameOverReason.JesterWin &&
-                gameOverReason != (GameOverReason)CustomGameOverReason.VultureWin &&
-                gameOverReason != (GameOverReason)GameOverReason.HumansByTask)
+                else if (gameOverReason != (GameOverReason)CustomGameOverReason.PlagueDoctorWin &&
+                    gameOverReason != (GameOverReason)CustomGameOverReason.ArsonistWin &&
+                    gameOverReason != (GameOverReason)CustomGameOverReason.JesterWin &&
+                    gameOverReason != (GameOverReason)CustomGameOverReason.VultureWin &&
+                    gameOverReason != (GameOverReason)CustomGameOverReason.AkujoWin &&
+                    gameOverReason != (GameOverReason)GameOverReason.HumansByTask)
                 {
                     gameOverReason = (GameOverReason)CustomGameOverReason.FoxWin;
                 }
             }
             AdditionalTempData.clear();
 
-
             //foreach (var pc in PlayerControl.AllPlayerControls)
-            var hideRoles = new RoleId[] { RoleId.Lovers };
+            var excludeRoles = new RoleType[] { RoleType.Lovers };
             foreach (var p in GameData.Instance.AllPlayers)
             {
                 //var p = pc.Data;
-                var roles = RoleInfo.getRoleInfoForPlayer(p.Object, hideRoles);
+                var roles = RoleInfo.getRoleInfoForPlayer(p.Object, excludeRoles, includeHidden: true);
                 var (tasksCompleted, tasksTotal) = TasksHandler.taskInfo(p);
                 var finalStatus = finalStatuses[p.PlayerId] =
                     p.Disconnected == true ? FinalStatus.Disconnected :
@@ -147,16 +155,20 @@ namespace TheOtherRoles.Patches
                     p.IsDead == true ? FinalStatus.Dead :
                     gameOverReason == GameOverReason.ImpostorBySabotage && !p.Role.IsImpostor ? FinalStatus.Sabotage :
                     FinalStatus.Alive;
+                var suffix = p.Object.modifyNameText("");
+
+
+                if (gameOverReason == GameOverReason.HumansByTask && p.Object.isCrew()) tasksCompleted = tasksTotal;
 
                 AdditionalTempData.playerRoles.Add(new AdditionalTempData.PlayerRoleInfo()
                 {
                     PlayerName = p.PlayerName,
                     PlayerId = p.PlayerId,
-                    NameSuffix = Lovers.getIcon(p.Object),
+                    NameSuffix = suffix,
                     Roles = roles,
-                    RoleString = RoleInfo.GetRolesString(p.Object, true, hideRoles),
+                    RoleString = RoleInfo.GetRolesString(p.Object, true, excludeRoles, true),
                     TasksTotal = tasksTotal,
-                    TasksCompleted = gameOverReason == GameOverReason.HumansByTask ? tasksTotal : tasksCompleted,
+                    TasksCompleted = tasksCompleted,
                     Status = finalStatus,
                 });
             }
@@ -164,6 +176,7 @@ namespace TheOtherRoles.Patches
             AdditionalTempData.isGM = CustomOptionHolder.gmEnabled.getBool() && PlayerControl.LocalPlayer.isGM();
             AdditionalTempData.plagueDoctorInfected = PlagueDoctor.infected;
             AdditionalTempData.plagueDoctorProgress = PlagueDoctor.progress;
+
 
             // Remove Jester, Arsonist, Vulture, Jackal, former Jackals and Sidekick from winners (if they win, they'll be readded)
             List<PlayerControl> notWinners = new List<PlayerControl>();
@@ -181,6 +194,8 @@ namespace TheOtherRoles.Patches
             notWinners.AddRange(PlagueDoctor.allPlayers);
             notWinners.AddRange(Fox.allPlayers);
             notWinners.AddRange(Immoralist.allPlayers);
+            notWinners.AddRange(Akujo.allPlayers);
+            notWinners.AddRange(AkujoHonmei.allPlayers);
 
             // Neutral shifter can't win
             if (Shifter.shifter != null && Shifter.isNeutral) notWinners.Add(Shifter.shifter);
@@ -215,7 +230,8 @@ namespace TheOtherRoles.Patches
             bool lawyerSoloWin = Lawyer.lawyer != null && gameOverReason == (GameOverReason)CustomGameOverReason.LawyerSoloWin;
             bool plagueDoctorWin = PlagueDoctor.exists && gameOverReason == (GameOverReason)CustomGameOverReason.PlagueDoctorWin;
             bool foxWin = Fox.exists && gameOverReason == (GameOverReason)CustomGameOverReason.FoxWin;
-
+            bool everyoneDead = AdditionalTempData.playerRoles.All(x => x.Status != FinalStatus.Alive);
+            bool akujoWin = Akujo.numAlive > 0 && gameOverReason != GameOverReason.HumansByTask;
 
             // Mini lose
             if (miniLose)
@@ -245,6 +261,23 @@ namespace TheOtherRoles.Patches
                 AdditionalTempData.winCondition = WinCondition.ArsonistWin;
             }
 
+            else if (plagueDoctorWin)
+            {
+                foreach (var pd in PlagueDoctor.players)
+                {
+                    TempData.winners = new Il2CppSystem.Collections.Generic.List<WinningPlayerData>();
+                    WinningPlayerData wpd = new WinningPlayerData(pd.player.Data);
+                    TempData.winners.Add(wpd);
+                    AdditionalTempData.winCondition = WinCondition.PlagueDoctorWin;
+                }
+            }
+
+            else if (everyoneDead)
+            {
+                TempData.winners = new Il2CppSystem.Collections.Generic.List<WinningPlayerData>();
+                AdditionalTempData.winCondition = WinCondition.EveryoneDied;
+            }
+
             // Vulture win
             else if (vultureWin)
             {
@@ -252,6 +285,21 @@ namespace TheOtherRoles.Patches
                 WinningPlayerData wpd = new WinningPlayerData(Vulture.vulture.Data);
                 TempData.winners.Add(wpd);
                 AdditionalTempData.winCondition = WinCondition.VultureWin;
+            }
+
+            // Akujo win conditions
+            else if (akujoWin)
+            {
+                AdditionalTempData.winCondition = WinCondition.AkujoWin;
+                TempData.winners = new Il2CppSystem.Collections.Generic.List<WinningPlayerData>();
+                foreach (var akujo in Akujo.players)
+                {
+                    if (akujo.player.isAlive() && akujo.honmei?.player != null && akujo.honmei.player.isAlive())
+                    {
+                        TempData.winners.Add(new WinningPlayerData(akujo.player.Data));
+                        TempData.winners.Add(new WinningPlayerData(akujo.honmei.player.Data));
+                    }
+                }
             }
 
             // Lovers win conditions
@@ -310,17 +358,6 @@ namespace TheOtherRoles.Patches
                 WinningPlayerData wpd = new WinningPlayerData(Lawyer.lawyer.Data);
                 TempData.winners.Add(wpd);
                 AdditionalTempData.winCondition = WinCondition.LawyerSoloWin;
-            }
-
-            else if (plagueDoctorWin)
-            {
-                foreach (var pd in PlagueDoctor.players)
-                {
-                    TempData.winners = new Il2CppSystem.Collections.Generic.List<WinningPlayerData>();
-                    WinningPlayerData wpd = new WinningPlayerData(pd.player.Data);
-                    TempData.winners.Add(wpd);
-                    AdditionalTempData.winCondition = WinCondition.PlagueDoctorWin;
-                }
             }
             else if (foxWin)
             {
@@ -456,7 +493,7 @@ namespace TheOtherRoles.Patches
                         poolablePlayer.UpdateFromPlayerOutfit(winningPlayerData2, winningPlayerData2.IsDead);
                         if (winningPlayerData2.IsDead)
                         {
-                            poolablePlayer.Body.sprite = __instance.GhostSprite;
+                            poolablePlayer.CurrentBodySprite.BodySprite.sprite = poolablePlayer.CurrentBodySprite.GhostSprite;
                             poolablePlayer.SetDeadFlipX(i % 2 == 0);
                         }
                         else
@@ -473,7 +510,7 @@ namespace TheOtherRoles.Patches
                         foreach (var data in AdditionalTempData.playerRoles)
                         {
                             if (data.PlayerName != winningPlayerData2.PlayerName) continue;
-                            poolablePlayer.NameText.text += data.NameSuffix + $"\n<size=80%>{string.Join("\n", data.Roles.Select(x => Helpers.cs(x.color, x.name)))}</size>";
+                            poolablePlayer.NameText.text += data.NameSuffix + $"\n<size=80%>{data.RoleString}</size>";
                         }
                     }
 
@@ -540,11 +577,23 @@ namespace TheOtherRoles.Patches
                         textRenderer.color = Lovers.color;
                         __instance.BackgroundBar.material.SetColor("_Color", Lovers.color);
                     }
+                    else if (AdditionalTempData.winCondition == WinCondition.AkujoWin)
+                    {
+                        bonusText = "akujoWin";
+                        textRenderer.color = Akujo.color;
+                        __instance.BackgroundBar.material.SetColor("_Color", Akujo.color);
+                    }
                     else if (AdditionalTempData.winCondition == WinCondition.JackalWin)
                     {
                         bonusText = "jackalWin";
                         textRenderer.color = Jackal.color;
                         __instance.BackgroundBar.material.SetColor("_Color", Jackal.color);
+                    }
+                    else if (AdditionalTempData.winCondition == WinCondition.EveryoneDied)
+                    {
+                        bonusText = "everyoneDied";
+                        textRenderer.color = Palette.DisabledGrey;
+                        __instance.BackgroundBar.material.SetColor("_Color", Palette.DisabledGrey);
                     }
                     else if (AdditionalTempData.winCondition == WinCondition.MiniLose)
                     {
@@ -617,8 +666,8 @@ namespace TheOtherRoles.Patches
                         {
                             RoleInfo roleX = x.Roles.FirstOrDefault();
                             RoleInfo roleY = y.Roles.FirstOrDefault();
-                            RoleId idX = roleX == null ? RoleId.NoRole : roleX.roleId;
-                            RoleId idY = roleY == null ? RoleId.NoRole : roleY.roleId;
+                            RoleType idX = roleX == null ? RoleType.NoRole : roleX.roleType;
+                            RoleType idY = roleY == null ? RoleType.NoRole : roleY.roleType;
 
                             if (x.Status == y.Status)
                             {
@@ -632,19 +681,20 @@ namespace TheOtherRoles.Patches
 
                         });
 
+                        bool plagueExists = AdditionalTempData.playerRoles.Any(x => x.Roles.Contains(RoleInfo.plagueDoctor));
                         foreach (var data in AdditionalTempData.playerRoles)
                         {
                             var taskInfo = data.TasksTotal > 0 ? $"<color=#FAD934FF>{data.TasksCompleted}/{data.TasksTotal}</color>" : "";
                             string aliveDead = ModTranslation.getString("roleSummary" + data.Status.ToString(), def: "-");
                             string result = $"{data.PlayerName + data.NameSuffix}<pos=18.5%>{taskInfo}<pos=25%>{aliveDead}<pos=34%>{data.RoleString}";
-                            if (RoleInfo.plagueDoctor.enabled && data.Status == FinalStatus.Alive)
+                            if (plagueExists && !data.Roles.Contains(RoleInfo.plagueDoctor))
                             {
                                 result += "<pos=52.5%>";
                                 if (AdditionalTempData.plagueDoctorInfected.ContainsKey(data.PlayerId))
                                 {
                                     result += Helpers.cs(Color.red, ModTranslation.getString("plagueDoctorInfectedText"));
                                 }
-                                else if (!data.Roles.Contains(RoleInfo.plagueDoctor))
+                                else
                                 {
                                     float progress = AdditionalTempData.plagueDoctorProgress.ContainsKey(data.PlayerId) ? AdditionalTempData.plagueDoctorProgress[data.PlayerId] : 0f;
                                     result += PlagueDoctor.getProgressString(progress);
@@ -676,7 +726,7 @@ namespace TheOtherRoles.Patches
                 {
                     if (!GameData.Instance) return false;
                     if (DestroyableSingleton<TutorialManager>.InstanceExists) return true; // InstanceExists | Don't check Custom Criteria when in Tutorial
-                    if (HudManager.Instance.isIntroDisplayed) return false;
+                    if (HudManager.Instance.IsIntroDisplayed) return false;
 
                     var statistics = new PlayerStatistics(__instance);
                     if (CheckAndEndGameForMiniLose(__instance)) return false;
@@ -688,6 +738,7 @@ namespace TheOtherRoles.Patches
                     if (CheckAndEndGameForSabotageWin(__instance)) return false;
                     if (CheckAndEndGameForTaskWin(__instance)) return false;
                     if (CheckAndEndGameForLoverWin(__instance, statistics)) return false;
+                    if (CheckAndEndGameForAkujoWin(__instance, statistics)) return false;
                     if (CheckAndEndGameForJackalWin(__instance, statistics)) return false;
                     if (CheckAndEndGameForImpostorWin(__instance, statistics)) return false;
                     if (CheckAndEndGameForCrewmateWin(__instance, statistics)) return false;
@@ -698,8 +749,7 @@ namespace TheOtherRoles.Patches
                 {
                     if (Mini.triggerMiniLose)
                     {
-                        __instance.enabled = false;
-                        ShipStatus.RpcEndGame((GameOverReason)CustomGameOverReason.MiniLose, false);
+                        UncheckedEndGame(CustomGameOverReason.MiniLose);
                         return true;
                     }
                     return false;
@@ -709,8 +759,7 @@ namespace TheOtherRoles.Patches
                 {
                     if (Jester.triggerJesterWin)
                     {
-                        __instance.enabled = false;
-                        ShipStatus.RpcEndGame((GameOverReason)CustomGameOverReason.JesterWin, false);
+                        UncheckedEndGame(CustomGameOverReason.JesterWin);
                         return true;
                     }
                     return false;
@@ -720,8 +769,7 @@ namespace TheOtherRoles.Patches
                 {
                     if (Arsonist.triggerArsonistWin)
                     {
-                        __instance.enabled = false;
-                        ShipStatus.RpcEndGame((GameOverReason)CustomGameOverReason.ArsonistWin, false);
+                        UncheckedEndGame(CustomGameOverReason.ArsonistWin);
                         return true;
                     }
                     return false;
@@ -731,8 +779,7 @@ namespace TheOtherRoles.Patches
                 {
                     if (Vulture.triggerVultureWin)
                     {
-                        __instance.enabled = false;
-                        ShipStatus.RpcEndGame((GameOverReason)CustomGameOverReason.VultureWin, false);
+                        UncheckedEndGame(CustomGameOverReason.VultureWin);
                         return true;
                     }
                     return false;
@@ -742,8 +789,7 @@ namespace TheOtherRoles.Patches
                 {
                     if (Lawyer.triggerLawyerWin)
                     {
-                        __instance.enabled = false;
-                        ShipStatus.RpcEndGame((GameOverReason)CustomGameOverReason.LawyerSoloWin, false);
+                        UncheckedEndGame(CustomGameOverReason.LawyerSoloWin);
                         return true;
                     }
                     return false;
@@ -753,8 +799,7 @@ namespace TheOtherRoles.Patches
                 {
                     if (PlagueDoctor.triggerPlagueDoctorWin)
                     {
-                        __instance.enabled = false;
-                        ShipStatus.RpcEndGame((GameOverReason)CustomGameOverReason.PlagueDoctorWin, false);
+                        UncheckedEndGame(CustomGameOverReason.PlagueDoctorWin);
                         return true;
                     }
                     return false;
@@ -796,33 +841,36 @@ namespace TheOtherRoles.Patches
                 {
                     if (GameData.Instance.TotalTasks > 0 && GameData.Instance.TotalTasks <= GameData.Instance.CompletedTasks)
                     {
-                        __instance.enabled = false;
-                        ShipStatus.RpcEndGame(GameOverReason.HumansByTask, false);
+                        UncheckedEndGame(GameOverReason.HumansByTask);
                         return true;
                     }
 
-                    // 狐生存かつタスク完了時に生存中のクルーがタスクを全て終わらせたら勝ち
-                    // 死んだプレイヤーが意図的にタスクを終了させないのを防止するため
-                    bool isFoxAlive = Fox.isFoxAlive();
-                    bool isFoxCompletedtasks= Fox.isFoxCompletedTasks();
-                    int numDeadPlayerUncompletedTasks = 0;
-                    foreach(var player in PlayerControl.AllPlayerControls){
-                        foreach(var task in player.Data.Tasks){
-                            if(player.Data.IsDead && Helpers.isCrew(player) && !player.isRole(RoleId.Madmate))
+                    if (Fox.exists && !Fox.crewWinsByTasks)
+                    {
+                        // 狐生存かつタスク完了時に生存中のクルーがタスクを全て終わらせたら勝ち
+                        // 死んだプレイヤーが意図的にタスクを終了させないのを防止するため
+                        bool isFoxAlive = Fox.isFoxAlive();
+                        bool isFoxCompletedtasks = Fox.isFoxCompletedTasks();
+                        int numDeadPlayerUncompletedTasks = 0;
+                        foreach (var player in PlayerControl.AllPlayerControls)
+                        {
+                            foreach (var task in player.Data.Tasks)
                             {
-                                if(!task.Complete)
+                                if (player.Data.IsDead && player.isCrew())
                                 {
-                                    numDeadPlayerUncompletedTasks++;
+                                    if (!task.Complete)
+                                    {
+                                        numDeadPlayerUncompletedTasks++;
+                                    }
                                 }
                             }
                         }
-                    }
 
-                    if (isFoxCompletedtasks && isFoxAlive && GameData.Instance.TotalTasks > 0 && GameData.Instance.TotalTasks <= GameData.Instance.CompletedTasks + numDeadPlayerUncompletedTasks)
-                    {
-                        __instance.enabled = false;
-                        ShipStatus.RpcEndGame(GameOverReason.HumansByTask, false);
-                        return true;
+                        if (isFoxCompletedtasks && isFoxAlive && GameData.Instance.TotalTasks > 0 && GameData.Instance.TotalTasks <= GameData.Instance.CompletedTasks + numDeadPlayerUncompletedTasks)
+                        {
+                            UncheckedEndGame(GameOverReason.HumansByTask);
+                            return true;
+                        }
                     }
 
                     return false;
@@ -832,8 +880,18 @@ namespace TheOtherRoles.Patches
                 {
                     if (statistics.CouplesAlive == 1 && statistics.TotalAlive <= 3)
                     {
-                        __instance.enabled = false;
-                        ShipStatus.RpcEndGame((GameOverReason)CustomGameOverReason.LoversWin, false);
+                        UncheckedEndGame(CustomGameOverReason.LoversWin);
+                        return true;
+                    }
+                    return false;
+                }
+
+                private static bool CheckAndEndGameForAkujoWin(ShipStatus __instance, PlayerStatistics statistics)
+                {
+                    // if we have a majority, akujo wins, same as lovers
+                    if (Akujo.numAlive == 1 && statistics.TotalAlive <= 3)
+                    {
+                        UncheckedEndGame(CustomGameOverReason.AkujoWin);
                         return true;
                     }
                     return false;
@@ -841,19 +899,12 @@ namespace TheOtherRoles.Patches
 
                 private static bool CheckAndEndGameForJackalWin(ShipStatus __instance, PlayerStatistics statistics)
                 {
-                    int numFoxAlive = 0;
-                    foreach(var fox in Fox.allPlayers)
+                    if (statistics.TeamJackalAlive >= statistics.TotalAlive - statistics.TeamJackalAlive - statistics.FoxAlive &&
+                        statistics.TeamImpostorsAlive == 0 && 
+                        (statistics.TeamJackalLovers == 0 || statistics.TeamJackalLovers >= statistics.CouplesAlive * 2)
+                       )
                     {
-                        if(fox.isAlive())
-                        {
-                            numFoxAlive += 1;
-                        }
-
-                    }
-                    if (statistics.TeamJackalAlive >= statistics.TotalAlive - statistics.TeamJackalAlive - numFoxAlive && statistics.TeamImpostorsAlive == 0 && statistics.TeamJackalLovers >= statistics.CouplesAlive * 2)
-                    {
-                        __instance.enabled = false;
-                        ShipStatus.RpcEndGame((GameOverReason)CustomGameOverReason.TeamJackalWin, false);
+                        UncheckedEndGame(CustomGameOverReason.TeamJackalWin);
                         return true;
                     }
                     return false;
@@ -861,18 +912,11 @@ namespace TheOtherRoles.Patches
 
                 private static bool CheckAndEndGameForImpostorWin(ShipStatus __instance, PlayerStatistics statistics)
                 {
-                    int numFoxAlive = 0;
-                    foreach(var fox in Fox.allPlayers)
+                    if (statistics.TeamImpostorsAlive >= statistics.TotalAlive - statistics.TeamImpostorsAlive - statistics.FoxAlive &&
+                        statistics.TeamJackalAlive == 0 &&
+                        (statistics.TeamImpostorLovers == 0 || statistics.TeamImpostorLovers >= statistics.CouplesAlive * 2)
+                       )
                     {
-                        if(fox.isAlive())
-                        {
-                            numFoxAlive += 1;
-                        }
-
-                    }
-                    if (statistics.TeamImpostorsAlive >= statistics.TotalAlive - statistics.TeamImpostorsAlive - numFoxAlive && statistics.TeamJackalAlive == 0 && statistics.TeamImpostorLovers >= statistics.CouplesAlive * 2)
-                    {
-                        __instance.enabled = false;
                         GameOverReason endReason;
                         switch (TempData.LastDeathReason)
                         {
@@ -886,7 +930,7 @@ namespace TheOtherRoles.Patches
                                 endReason = GameOverReason.ImpostorByVote;
                                 break;
                         }
-                        ShipStatus.RpcEndGame(endReason, false);
+                        UncheckedEndGame(endReason);
                         return true;
                     }
                     return false;
@@ -896,8 +940,7 @@ namespace TheOtherRoles.Patches
                 {
                     if (statistics.TeamCrew > 0 && statistics.TeamImpostorsAlive == 0 && statistics.TeamJackalAlive == 0)
                     {
-                        __instance.enabled = false;
-                        ShipStatus.RpcEndGame(GameOverReason.HumansByVote, false);
+                        UncheckedEndGame(GameOverReason.HumansByVote);
                         return true;
                     }
                     return false;
@@ -905,11 +948,19 @@ namespace TheOtherRoles.Patches
 
                 private static void EndGameForSabotage(ShipStatus __instance)
                 {
-                    __instance.enabled = false;
-                    ShipStatus.RpcEndGame(GameOverReason.ImpostorBySabotage, false);
+                    UncheckedEndGame(GameOverReason.ImpostorBySabotage);
                     return;
                 }
 
+                private static void UncheckedEndGame(GameOverReason reason)
+                {
+                    ShipStatus.RpcEndGame(reason, false);
+                }
+
+                private static void UncheckedEndGame(CustomGameOverReason reason)
+                {
+                    UncheckedEndGame((GameOverReason)reason);
+                }
             }
 
             internal class PlayerStatistics
@@ -923,6 +974,7 @@ namespace TheOtherRoles.Patches
                 public int TotalAlive { get; set; }
                 public int TeamImpostorLovers { get; set; }
                 public int TeamJackalLovers { get; set; }
+                public int FoxAlive { get; set; }
 
                 public PlayerStatistics(ShipStatus __instance)
                 {
@@ -1006,6 +1058,7 @@ namespace TheOtherRoles.Patches
                     CouplesAlive = numCouplesAlive;
                     TeamImpostorLovers = impLovers;
                     TeamJackalLovers = jackalLovers;
+                    FoxAlive = Fox.livingPlayers.Count;
                 }
             }
         }

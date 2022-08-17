@@ -29,7 +29,7 @@ namespace TheOtherRoles.Patches {
                 MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.UseCameraTime, Hazel.SendOption.Reliable, -1);
                 writer.Write(cameraTimer);
                 AmongUsClient.Instance.FinishRpcImmediately(writer);
-                RPCProcedure.UseCameraTime(cameraTimer);
+                RPCProcedure.useCameraTime(cameraTimer);
             }
             cameraTimer = 0f;
         }

@@ -12,6 +12,7 @@ namespace TheOtherRoles{
         public static bool noVoteIsSelfVote = false;
         public static bool hidePlayerNames = false;
         public static bool hideSettings = false;
+        public static bool hideOutOfSightNametags = false;
 
         public static bool randomizeColors = false;
         public static bool allowDupeNames = false;
@@ -31,6 +32,8 @@ namespace TheOtherRoles{
         public static bool showRoleSummary = true;
         public static bool hideNameplates = false;
         public static bool allowParallelMedBayScans = false;
+        public static bool showLighterDarker = false;
+        public static bool hideTaskArrows = false;
 
         // Updating values
         public static int meetingsCount = 0;
@@ -49,6 +52,8 @@ namespace TheOtherRoles{
             noVoteIsSelfVote = CustomOptionHolder.noVoteIsSelfVote.getBool();
             hidePlayerNames = CustomOptionHolder.hidePlayerNames.getBool();
 
+            hideOutOfSightNametags = CustomOptionHolder.hideOutOfSightNametags.getBool();
+
             hideSettings = CustomOptionHolder.hideSettings.getBool();
 
             randomizeColors = CustomOptionHolder.uselessOptions.getBool() && CustomOptionHolder.playerColorRandom.getBool();
@@ -61,11 +66,14 @@ namespace TheOtherRoles{
             disableVents = CustomOptionHolder.disableVents.getBool();
 
             allowParallelMedBayScans = CustomOptionHolder.allowParallelMedBayScans.getBool();
+
             ghostsSeeRoles = TheOtherRolesPlugin.GhostsSeeRoles.Value;
             ghostsSeeTasks = TheOtherRolesPlugin.GhostsSeeTasks.Value;
             ghostsSeeVotes = TheOtherRolesPlugin.GhostsSeeVotes.Value;
             showRoleSummary = TheOtherRolesPlugin.ShowRoleSummary.Value;
             hideNameplates = TheOtherRolesPlugin.HideNameplates.Value;
+            showLighterDarker = TheOtherRolesPlugin.ShowLighterDarker.Value;
+            hideTaskArrows = TheOtherRolesPlugin.HideTaskArrows.Value;
         }
 
         public static void resetDeviceTimes()
@@ -123,4 +131,4 @@ namespace TheOtherRoles{
             }
         }
     }
-} 
+}

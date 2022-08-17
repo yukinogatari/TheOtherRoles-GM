@@ -34,7 +34,7 @@ namespace TheOtherRoles
         {
             get
             {
-                return this.getBool();
+                return Helpers.RolesEnabled && this.getBool();
             }
         }
 
@@ -45,6 +45,11 @@ namespace TheOtherRoles
         }
 
         public CustomOption(int id, string name, System.Object[] selections, System.Object defaultValue, CustomOption parent, bool isHeader, bool isHidden, string format)
+        {
+            Init(id, name, selections, defaultValue, parent, isHeader, isHidden, format);
+        }
+
+        public void Init(int id, string name, System.Object[] selections, System.Object defaultValue, CustomOption parent, bool isHeader, bool isHidden, string format)
         {
             this.id = id;
             this.name = name;
@@ -67,6 +72,11 @@ namespace TheOtherRoles
             {
                 entry = TheOtherRolesPlugin.Instance.Config.Bind($"Preset{preset}", id.ToString(), defaultSelection);
                 selection = Mathf.Clamp(entry.Value, 0, selections.Length - 1);
+
+                if (options.Any(x => x.id == id))
+                {
+                    TheOtherRolesPlugin.Instance.Log.LogWarning($"CustomOption id {id} is used in multiple places.");
+                }
             }
             options.Add(this);
         }
@@ -175,15 +185,25 @@ namespace TheOtherRoles
         }
     }
 
+
     public class CustomRoleOption : CustomOption
     {
         public CustomOption countOption = null;
+        public bool roleEnabled = true;
+
+        public override bool enabled
+        {
+            get
+            {
+                return Helpers.RolesEnabled && roleEnabled && selection > 0;
+            }
+        }
 
         public int rate
         {
             get
             {
-                return getSelection();
+                return enabled ? selection : 0;
             }
         }
 
@@ -191,6 +211,9 @@ namespace TheOtherRoles
         {
             get
             {
+                if (!enabled)
+                    return 0;
+
                 if (countOption != null)
                     return Mathf.RoundToInt(countOption.getFloat());
 
@@ -206,11 +229,103 @@ namespace TheOtherRoles
             }
         }
 
-        public CustomRoleOption(int id, string name, Color color, int max = 15) :
+        public CustomRoleOption(int id, string name, Color color, int max = 15, bool roleEnabled = true) :
             base(id, Helpers.cs(color, name), CustomOptionHolder.rates, "", null, true, false, "")
         {
+            this.roleEnabled = roleEnabled;
+
+            if (max <= 0 || !roleEnabled)
+            {
+                isHidden = true;
+                this.roleEnabled = false;
+            }
+
             if (max > 1)
-                countOption = CustomOption.Create(id + 10000, "roleNumAssigned", 1f, 1f, 15f, 1f, this, format: "unitPlayers");
+                countOption = Create(id + 10000, "roleNumAssigned", 1f, 1f, 15f, 1f, this, false, isHidden, "unitPlayers");
+        }
+    }
+
+    public class CustomDualRoleOption : CustomRoleOption
+    {
+        public static List<CustomDualRoleOption> dualRoles = new List<CustomDualRoleOption>();
+        public CustomOption roleImpChance = null;
+        public CustomOption roleAssignEqually = null;
+        public RoleType roleType;
+
+        public int impChance { get { return roleImpChance.getSelection(); } }
+        
+        public bool assignEqually { get { return roleAssignEqually.getSelection() == 0; } }
+
+        public CustomDualRoleOption(int id, string name, Color color, RoleType roleType, int max = 15, bool roleEnabled = true) : base(id, name, color, max, roleEnabled)
+        {
+            roleAssignEqually = new CustomOption(id + 15001, "roleAssignEqually", new string[] { "optionOn", "optionOff" }, "optionOff", this, false, isHidden, "");
+            roleImpChance = Create(id + 15000, "roleImpChance", CustomOptionHolder.rates, roleAssignEqually, false, isHidden);
+
+            this.roleType = roleType;
+            dualRoles.Add(this);
+        }
+    }
+
+    public class CustomTasksOption : CustomOption
+    {
+        public CustomOption commonTasksOption = null;
+        public CustomOption longTasksOption = null;
+        public CustomOption shortTasksOption = null;
+
+        public int commonTasks { get { return Mathf.RoundToInt(commonTasksOption.getSelection()); } }
+        public int longTasks { get { return Mathf.RoundToInt(longTasksOption.getSelection()); } }
+        public int shortTasks { get { return Mathf.RoundToInt(shortTasksOption.getSelection()); } }
+
+        public List<byte> generateTasks()
+        {
+            return Helpers.generateTasks(commonTasks, shortTasks, longTasks);
+        }
+
+        public CustomTasksOption(int id, int commonDef, int longDef, int shortDef, CustomOption parent = null)
+        {
+            commonTasksOption = Create(id + 20000, "numCommonTasks", commonDef, 0f, 4f, 1f, parent);
+            longTasksOption = Create(id + 20001, "numLongTasks", longDef, 0f, 15f, 1f, parent);
+            shortTasksOption = Create(id + 20002, "numShortTasks", shortDef, 0f, 23f, 1f, parent);
+        }
+    }
+
+    public class CustomRoleSelectionOption : CustomOption
+    {
+        public List<RoleType> roleTypes;
+
+        public RoleType role
+        {
+            get
+            {
+                return roleTypes[selection];
+            }
+        }
+
+        public CustomRoleSelectionOption(int id, string name, List<RoleType> roleTypes = null, CustomOption parent = null)
+        {
+            if (roleTypes == null)
+            {
+                roleTypes = Enum.GetValues(typeof(RoleType)).Cast<RoleType>().ToList();
+            }
+
+            this.roleTypes = roleTypes;
+            var strings = new string[] { "optionOff" };
+
+            Init(id, name, strings, 0, parent, false, false, "");
+        }
+
+        public override void updateSelection(int newSelection)
+        {
+            if (roleTypes.Count > 0)
+            {
+                selections = roleTypes.Select(
+                    x =>
+                        x == RoleType.NoRole ? "optionOff" :
+                        RoleInfo.allRoleInfos.First(y => y.roleType == x).nameColored
+                    ).ToArray();
+            }
+
+            base.updateSelection(newSelection);
         }
     }
 
@@ -498,18 +613,31 @@ namespace TheOtherRoles
         public static void Postfix(GameSettingMenu __instance)
         {
             // Setup mapNameTransform
-            var mapNameTransform = __instance.AllItems.FirstOrDefault(x => x.gameObject.activeSelf && x.name.Equals("MapName", StringComparison.OrdinalIgnoreCase));
+            var mapNameTransform = __instance.AllItems.FirstOrDefault(x => x.name.Equals("MapName", StringComparison.OrdinalIgnoreCase));
             if (mapNameTransform == null) return;
 
             var options = new Il2CppSystem.Collections.Generic.List<Il2CppSystem.Collections.Generic.KeyValuePair<string, int>>();
             for (int i = 0; i < Constants.MapNames.Length; i++)
             {
+                // Dleks was removed from the game, so remove it from our selections.
+                if (i == (int)MapNames.Dleks) continue;
+
                 var kvp = new Il2CppSystem.Collections.Generic.KeyValuePair<string, int>();
                 kvp.key = Constants.MapNames[i];
                 kvp.value = i;
                 options.Add(kvp);
             }
             mapNameTransform.GetComponent<KeyValueOption>().Values = options;
+            mapNameTransform.gameObject.active = true;
+
+            foreach (Transform i in __instance.AllItems.ToList())
+            {
+                float num = -0.5f;
+                if (i.name.Equals("MapName", StringComparison.OrdinalIgnoreCase)) num = -0.25f;
+                if (i.name.Equals("NumImpostors", StringComparison.OrdinalIgnoreCase) || i.name.Equals("ResetToDefault", StringComparison.OrdinalIgnoreCase)) num = 0f;
+                i.position += new Vector3(0, num, 0);
+            }
+            __instance.Scroller.ContentYBounds.max += 0.5F;
         }
     }
 
@@ -544,6 +672,19 @@ namespace TheOtherRoles
             }
         }
     }
+    [HarmonyPatch(typeof(Constants), nameof(Constants.ShouldHorseAround))]
+    class ConstantsShouldHorseAroundPatch
+    {
+        public static bool Prefix(ref bool __result)
+        {
+            if (Helpers.GameStarted && CustomOptionHolder.enabledHorseMode.getBool())
+            {
+                __result = true;
+                return false;
+            }
+            return true;
+        }
+    }
 
     [HarmonyPatch(typeof(FreeWeekendShower), nameof(FreeWeekendShower.Start))]
     class FreeWeekendShowerPatch
@@ -575,7 +716,11 @@ namespace TheOtherRoles
 
         public static string optionsToString(CustomOption option, bool skipFirst = false)
         {
-            if (option == null) return "";
+            if (option == null)
+            {
+                Helpers.log("no option?");
+                return "";
+            }
 
             List<string> options = new List<string>();
             if (!option.isHidden && !skipFirst) options.Add(optionToString(option));
@@ -752,16 +897,6 @@ namespace TheOtherRoles
         public static void Prefix(HudManager __instance)
         {
             if (__instance.GameSettings != null) __instance.GameSettings.fontSize = 1.2f;
-        }
-    }
-
-    [HarmonyPatch(typeof(CreateOptionsPicker), nameof(CreateOptionsPicker.Start))]
-    public class CreateOptionsPickerPatch
-    {
-        public static void Postfix(CreateOptionsPicker __instance)
-        {
-            int numImpostors = Math.Clamp(__instance.GetTargetOptions().NumImpostors, 1, 3);
-            __instance.SetImpostorButtons(numImpostors);
         }
     }
 }

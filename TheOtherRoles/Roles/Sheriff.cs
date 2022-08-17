@@ -23,13 +23,14 @@ namespace TheOtherRoles
         public static bool misfireKillsTarget { get { return CustomOptionHolder.sheriffMisfireKillsTarget.getBool(); } }
         public static bool spyCanDieToSheriff { get { return CustomOptionHolder.spyCanDieToSheriff.getBool(); } }
         public static bool madmateCanDieToSheriff { get { return CustomOptionHolder.madmateCanDieToSheriff.getBool(); } }
+        public static bool honmeiCanDieToSheriff { get { return CustomOptionHolder.akujoSheriffKillsHonmei.getBool(); } }
 
         public int numShots = 2;
         public PlayerControl currentTarget;
 
         public Sheriff()
         {
-            RoleType = roleId = RoleId.Sheriff;
+            RoleType = roleId = RoleType.Sheriff;
             numShots = maxShots;
         }
 
@@ -65,19 +66,24 @@ namespace TheOtherRoles
                     if (murderAttemptResult == MurderAttemptResult.PerformKill)
                     {
                         bool misfire = false;
-                        byte targetId = local.currentTarget.PlayerId; ;
+                        byte targetId = local.currentTarget.PlayerId;
                         if ((local.currentTarget.Data.Role.IsImpostor && (local.currentTarget != Mini.mini || Mini.isGrownUp())) ||
                             (Sheriff.spyCanDieToSheriff && Spy.spy == local.currentTarget) ||
-                            (Sheriff.madmateCanDieToSheriff && local.currentTarget.isRole(RoleId.Madmate)) ||
+                            (Sheriff.madmateCanDieToSheriff && local.currentTarget.hasModifier(ModifierType.Madmate)) ||
                             (Sheriff.canKillNeutrals && local.currentTarget.isNeutral()) ||
+                            (Sheriff.honmeiCanDieToSheriff && local.currentTarget.hasModifier(ModifierType.AkujoHonmei)) ||
                             (Jackal.jackal == local.currentTarget || Sidekick.sidekick == local.currentTarget))
                         {
-                            //targetId = Sheriff.currentTarget.PlayerId;
                             misfire = false;
                         }
                         else
                         {
-                            //targetId = PlayerControl.LocalPlayer.PlayerId;
+                            misfire = true;
+                        }
+
+                        // Mad sheriff always misfires.
+                        if (local.player.hasModifier(ModifierType.Madmate))
+                        {
                             misfire = true;
                         }
                         MessageWriter killWriter = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.SheriffKill, Hazel.SendOption.Reliable, -1);
@@ -91,7 +97,7 @@ namespace TheOtherRoles
                     sheriffKillButton.Timer = sheriffKillButton.MaxTimer;
                     local.currentTarget = null;
                 },
-                () => { return PlayerControl.LocalPlayer.isRole(RoleId.Sheriff) && local.numShots > 0 && PlayerControl.LocalPlayer.isAlive(); },
+                () => { return PlayerControl.LocalPlayer.isRole(RoleType.Sheriff) && local.numShots > 0 && !PlayerControl.LocalPlayer.Data.IsDead; },
                 () =>
                 {
                     if (sheriffNumShotsText != null)

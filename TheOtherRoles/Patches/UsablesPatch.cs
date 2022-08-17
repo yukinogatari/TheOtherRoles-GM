@@ -21,12 +21,12 @@ namespace TheOtherRoles.Patches
             bool isReactor = task.TaskType == TaskTypes.StopCharles || task.TaskType == TaskTypes.ResetSeismic || task.TaskType == TaskTypes.ResetReactor;
             bool isO2 = task.TaskType == TaskTypes.RestoreOxy;
 
-            if (pc.isRole(RoleId.Swapper) && (isLights || isComms))
+            if (pc.isRole(RoleType.Swapper) && (isLights || isComms))
             {
                 return true;
             }
 
-            if (pc.isRole(RoleId.Madmate) && (isLights || (isComms && !Madmate.canFixComm)))
+            if (pc.hasModifier(ModifierType.Madmate) && (isLights || (isComms && !Madmate.canFixComm)))
             {
                 return true;
             }
@@ -36,13 +36,23 @@ namespace TheOtherRoles.Patches
                 return true;
             }
 
-            if (pc.isRole(RoleId.Fox) && (isLights || isComms || isReactor || isO2))
+            if (pc.isRole(RoleType.Mafioso) && !Mafioso.canRepair && (isLights || isComms))
             {
-                if(isLights|| isComms)
+                return true;
+            }
+
+            if (pc.isRole(RoleType.Janitor) && !Janitor.canRepair && (isLights || isComms))
+            {
+                return true;
+            }
+
+            if (pc.isRole(RoleType.Fox) && (isLights || isComms || isReactor || isO2))
+            {
+                if (isLights|| isComms)
                 {
                     return true;
                 }
-                else if((isO2 || isReactor) && !Fox.canFixReactorAndO2)
+                else if ((isO2 || isReactor) && !Fox.canFixReactorAndO2)
                 {
                     return true;
                 }
@@ -168,7 +178,7 @@ namespace TheOtherRoles.Patches
                 bool canUse;
                 bool couldUse;
                 __instance.CanUse(PlayerControl.LocalPlayer.Data, out canUse, out couldUse);
-                bool canMoveInVents = PlayerControl.LocalPlayer != Spy.spy && !PlayerControl.LocalPlayer.isRole(RoleId.Madmate);
+                bool canMoveInVents = PlayerControl.LocalPlayer != Spy.spy && !PlayerControl.LocalPlayer.hasModifier(ModifierType.Madmate);
                 if (!canUse) return false; // No need to execute the native method as using is disallowed anyways
 
                 bool isEnter = !PlayerControl.LocalPlayer.inVent;
@@ -248,7 +258,7 @@ namespace TheOtherRoles.Patches
                 if (__instance.isActiveAndEnabled && __instance.currentTarget && !__instance.isCoolingDown && PlayerControl.LocalPlayer.isAlive() && PlayerControl.LocalPlayer.CanMove)
                 {
                     bool showAnimation = true;
-                    if (PlayerControl.LocalPlayer.isRole(RoleId.Ninja) && Ninja.isStealthed(PlayerControl.LocalPlayer))
+                    if (PlayerControl.LocalPlayer.isRole(RoleType.Ninja) && Ninja.isStealthed(PlayerControl.LocalPlayer))
                     {
                         showAnimation = false;
                     }
@@ -280,8 +290,8 @@ namespace TheOtherRoles.Patches
             static void Postfix()
             {
                 // Mafia disable sabotage button for Janitor and sometimes for Mafioso
-                bool blockSabotageJanitor = (Janitor.janitor != null && Janitor.janitor == PlayerControl.LocalPlayer);
-                bool blockSabotageMafioso = (Mafioso.mafioso != null && Mafioso.mafioso == PlayerControl.LocalPlayer && Godfather.godfather != null && !Godfather.godfather.Data.IsDead);
+                bool blockSabotageJanitor = (PlayerControl.LocalPlayer.isRole(RoleType.Janitor) && !Janitor.canSabotage);
+                bool blockSabotageMafioso = (PlayerControl.LocalPlayer.isRole(RoleType.Mafioso) && !Mafioso.canSabotage);
                 if (blockSabotageJanitor || blockSabotageMafioso)
                 {
                     HudManager.Instance.SabotageButton.SetDisabled();
@@ -341,10 +351,10 @@ namespace TheOtherRoles.Patches
                 }
 
                 // Deactivate emergency button for FortuneTeller
-                if (PlayerControl.LocalPlayer.isRole(RoleId.FortuneTeller) && FortuneTeller.isCompletedNumTasks(PlayerControl.LocalPlayer))
+                if (PlayerControl.LocalPlayer.isRole(RoleType.FortuneTeller) && FortuneTeller.isCompletedNumTasks(PlayerControl.LocalPlayer))
                 {
                     roleCanCallEmergency = false;
-                    statusText = ModTranslation.getString("占い師は会議ボタンを押せない");
+                    statusText = ModTranslation.getString("fortuneTellerMeetingButton");
                 }
 
                 // Deactivate emergency button for Swapper

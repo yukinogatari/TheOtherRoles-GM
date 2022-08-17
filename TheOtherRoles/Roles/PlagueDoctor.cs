@@ -44,7 +44,7 @@ namespace TheOtherRoles
 
         public PlagueDoctor()
         {
-            RoleType = roleId = RoleId.PlagueDoctor;
+            RoleType = roleId = RoleType.PlagueDoctor;
 
             numInfections = maxInfectable;
             meetingFlag = false;
@@ -246,7 +246,7 @@ namespace TheOtherRoles
                     plagueDoctorButton.Timer = plagueDoctorButton.MaxTimer;
                     local.currentTarget = null;
                 },
-                () => {/*ボタンが有効になる条件*/ return PlayerControl.LocalPlayer.isRole(RoleId.PlagueDoctor) && local.numInfections > 0 && !PlayerControl.LocalPlayer.isDead(); },
+                () => {/*ボタンが有効になる条件*/ return PlayerControl.LocalPlayer.isRole(RoleType.PlagueDoctor) && local.numInfections > 0 && !PlayerControl.LocalPlayer.isDead(); },
                 () => {/*ボタンが使える条件*/
                     if (numInfectionsText != null)
                     {

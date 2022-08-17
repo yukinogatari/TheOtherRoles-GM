@@ -10,13 +10,13 @@ using static TheOtherRoles.GameHistory;
 namespace TheOtherRoles
 {
     [HarmonyPatch]
-    public class Template : RoleBase<Template>
+    public class Watcher : RoleBase<Watcher>
     {
-        public static Color color = Palette.CrewmateBlue;
+        public static Color color = Palette.Purple;
 
-        public Template()
+        public Watcher()
         {
-            RoleType = roleId = RoleType.NoRole;
+            RoleType = roleId = RoleType.Watcher;
         }
 
         public override void OnMeetingStart() { }
@@ -29,9 +29,9 @@ namespace TheOtherRoles
         public static void MakeButtons(HudManager hm) { }
         public static void SetButtonCooldowns() { }
 
-        public static void Clear()
+        public static void clearAndReload()
         {
-            players = new List<Template>();
+            players = new List<Watcher>();
         }
     }
 }

@@ -16,6 +16,8 @@ namespace TheOtherRoles
         public static int defaultLanguage = (int)SupportedLangs.English;
         public static Dictionary<string, Dictionary<int, string>> stringData;
 
+        private const string blankText = "[BLANK]";
+
         public ModTranslation() { 
 
         }
@@ -50,8 +52,8 @@ namespace TheOtherRoles
 
                         if (text != null && text.Length > 0)
                         {
-                            //TheOtherRolesPlugin.Instance.Log.LogInfo($"key: {stringName} {key} {text}");
-                            strings[j] = text;
+                            if (text == blankText) strings[j] = "";
+                            else strings[j] = text;
                         }
                     }
 

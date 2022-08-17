@@ -25,7 +25,7 @@ namespace TheOtherRoles
 
         public Lighter()
         {
-            RoleType = roleId = RoleId.Lighter;
+            RoleType = roleId = RoleType.Lighter;
             lightActive = false;
         }
 
@@ -54,7 +54,7 @@ namespace TheOtherRoles
                 {
                     local.lightActive = true;
                 },
-                () => { return PlayerControl.LocalPlayer.isRole(RoleId.Lighter) && PlayerControl.LocalPlayer.isAlive(); },
+                () => { return PlayerControl.LocalPlayer.isRole(RoleType.Lighter) && !PlayerControl.LocalPlayer.Data.IsDead; },
                 () => { return PlayerControl.LocalPlayer.CanMove; },
                 () =>
                 {

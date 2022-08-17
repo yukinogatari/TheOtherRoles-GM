@@ -11,7 +11,7 @@ namespace TheOtherRoles
 
         public Opportunist()
         {
-            RoleType = roleId = RoleId.Opportunist;
+            RoleType = roleId = RoleType.Opportunist;
         }
 
         public static void Clear()

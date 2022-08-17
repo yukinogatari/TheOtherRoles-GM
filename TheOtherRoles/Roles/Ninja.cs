@@ -30,7 +30,7 @@ namespace TheOtherRoles
 
         public Ninja()
         {
-            RoleType = roleId = RoleId.Ninja;
+            RoleType = roleId = RoleType.Ninja;
             penalized = false;
             stealthed = false;
             stealthedAt = DateTime.UtcNow;
@@ -149,7 +149,7 @@ namespace TheOtherRoles
                     AmongUsClient.Instance.FinishRpcImmediately(writer);
                     RPCProcedure.ninjaStealth(PlayerControl.LocalPlayer.PlayerId, true);
                 },
-                () => { return PlayerControl.LocalPlayer.isRole(RoleId.Ninja) && PlayerControl.LocalPlayer.isAlive(); },
+                () => { return PlayerControl.LocalPlayer.isRole(RoleType.Ninja) && !PlayerControl.LocalPlayer.Data.IsDead; },
                 () => {
                     if (ninjaButton.isEffectActive)
                     {
@@ -237,19 +237,19 @@ namespace TheOtherRoles
                 if (isRole(__instance.myPlayer))
                 {
                     var ninja = __instance.myPlayer;
-                    if (ninja == null) return;
+                    if (ninja == null || ninja.isDead()) return;
 
                     bool canSee = 
                         PlayerControl.LocalPlayer.isImpostor() ||
                         PlayerControl.LocalPlayer.isDead() ||
-                        (Lighter.canSeeNinja && PlayerControl.LocalPlayer.isRole(RoleId.Lighter) && Lighter.isLightActive(PlayerControl.LocalPlayer));
+                        (Lighter.canSeeNinja && PlayerControl.LocalPlayer.isRole(RoleType.Lighter) && Lighter.isLightActive(PlayerControl.LocalPlayer));
 
                     var opacity = canSee ? 0.1f : 0.0f;
 
                     if (isStealthed(ninja))
                     {
                         opacity = Math.Max(opacity, 1.0f - stealthFade(ninja));
-                        ninja.myRend.material.SetFloat("_Outline", 0f);
+                        ninja.MyRend.material.SetFloat("_Outline", 0f);
                     }
                     else
                     {

@@ -59,18 +59,32 @@ namespace TheOtherRoles.Modules {
         }
     }
 
+    [HarmonyPatch(typeof(AnnouncementPopUp), nameof(AnnouncementPopUp.UpdateAnnounceText))]
+    public static class Announcement {
+        public static bool Prefix(AnnouncementPopUp __instance) {       
+            var text = __instance.AnnounceTextMeshPro;
+            text.text = ModUpdater.announcement;
+            return false;
+        }
+    }
+
     public class ModUpdater { 
         public static bool running = false;
         public static bool hasUpdate = false;
         public static string updateURI = null;
         private static Task updateTask = null;
+        public static string announcement = "";
         public static GenericPopup InfoPopup;
 
         public static void LaunchUpdater() {
             if (running) return;
             running = true;
             checkForUpdate().GetAwaiter().GetResult();
-            clearOldVersions();   
+            clearOldVersions();
+            if (hasUpdate || TheOtherRolesPlugin.ShowPopUpVersion.Value != TheOtherRolesPlugin.VersionString) {
+                DestroyableSingleton<MainMenuManager>.Instance.Announcement.gameObject.SetActive(true);
+                TheOtherRolesPlugin.ShowPopUpVersion.Value = TheOtherRolesPlugin.VersionString;
+            }
         }
 
         public static void ExecuteUpdate() {
@@ -115,11 +129,16 @@ namespace TheOtherRoles.Modules {
                 if (tagname == null) {
                     return false; // Something went wrong
                 }
+
+                string changeLog = data["body"]?.ToString();
+                if (changeLog != null) announcement = changeLog;
                 // check version
                 System.Version ver = System.Version.Parse(tagname.Replace("v", ""));
                 int diff = TheOtherRolesPlugin.Version.CompareTo(ver);
                 if (diff < 0) { // Update required
                     hasUpdate = true;
+                    announcement = string.Format(ModTranslation.getString("announcementUpdate"), ver, announcement);
+
                     JToken assets = data["assets"];
                     if (!assets.HasValues)
                         return false;
@@ -134,7 +153,9 @@ namespace TheOtherRoles.Modules {
                             }
                         }
                     }
-                }  
+                }  else {
+                    announcement = string.Format(ModTranslation.getString("announcementChangelog"), ver, announcement);
+                }
             } catch (System.Exception ex) {
                 TheOtherRolesPlugin.Instance.Log.LogError(ex.ToString());
                 System.Console.WriteLine(ex);

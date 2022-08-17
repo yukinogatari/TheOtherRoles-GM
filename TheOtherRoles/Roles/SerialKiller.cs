@@ -25,7 +25,7 @@ namespace TheOtherRoles
 
         public SerialKiller()
         {
-            RoleType = roleId = RoleId.SerialKiller;
+            RoleType = roleId = RoleType.SerialKiller;
             isCountDown = false;
         }
 
@@ -60,7 +60,7 @@ namespace TheOtherRoles
         public static Sprite getButtonSprite()
         {
             if (buttonSprite) return buttonSprite;
-            buttonSprite = Helpers.loadSpriteFromResources("TheOtherRoles.Resources.SerialKillerButton.png", 115f);
+            buttonSprite = Helpers.loadSpriteFromResources("TheOtherRoles.Resources.SuicideButton.png", 115f);
             return buttonSprite;
         }
 
@@ -69,7 +69,7 @@ namespace TheOtherRoles
             // SerialKiller Suicide Countdown
             serialKillerButton = new CustomButton(
                 () => { },
-                () => { return PlayerControl.LocalPlayer.isRole(RoleId.SerialKiller) && PlayerControl.LocalPlayer.isAlive() && local.isCountDown; },
+                () => { return PlayerControl.LocalPlayer.isRole(RoleType.SerialKiller) && PlayerControl.LocalPlayer.isAlive() && local.isCountDown; },
                 () => { return true; },
                 () => { },
                 SerialKiller.getButtonSprite(),
