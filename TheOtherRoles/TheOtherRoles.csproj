@@ -1,29 +1,37 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
         <TargetFramework>netstandard2.1</TargetFramework>
-        <Version>2.8.1</Version>
-        <Description>TheOtherRoles</Description>
+        <Version>2022.4.15</Version>
+        <Description>TheOtherRoles: GM Edition</Description>
         <Authors>Eisbison</Authors>
     </PropertyGroup>
 
     <PropertyGroup>
         <DefineConstants>$(DefineConstants);STEAM</DefineConstants>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+        <ApplicationIcon />
+        <Win32Resource />
+        <AssemblyName>TheOtherRolesGM</AssemblyName>
     </PropertyGroup>
 
     <ItemGroup>
         <EmbeddedResource Include="Resources\CustomHats\*.png" />
-        <EmbeddedResource Include="Resources\*.png" />
+		<EmbeddedResource Include="Resources\*.png" />
+		<EmbeddedResource Include="Resources\*.json" />
         <EmbeddedResource Include="Resources\TricksterAnimation\*.png" />
     </ItemGroup>
 
     <ItemGroup>
-        <Reference Include="$(AmongUs)/BepInEx/core/*.dll"/>
-        <Reference Include="$(AmongUs)/BepInEx/unhollowed/*.dll"/>
+        <Reference Include="$(AmongUs)/BepInEx/core/*.dll" />
+        <Reference Include="$(AmongUs)/BepInEx/unhollowed/*.dll" />
     </ItemGroup>
 
     <Target Name="CopyCustomContent" AfterTargets="AfterBuild">
         <Message Text="Second occurrence" />
-        <Copy SourceFiles="$(ProjectDir)\bin\$(Configuration)\netstandard2.1\TheOtherRoles.dll" DestinationFolder="$(AmongUsLatest)/BepInEx/plugins/" />
+        <Copy SourceFiles="$(ProjectDir)\bin\$(Configuration)\netstandard2.1\TheOtherRolesGM.dll" DestinationFolder="$(AmongUsLatest)/BepInEx/plugins/" />
+    </Target>
+
+    <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
+      <Exec Command="py &quot;$(SolutionDir)stringsToJson.py&quot;" />
     </Target>
 </Project>

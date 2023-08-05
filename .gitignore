@@ -1,2 +1,10 @@
 .vs
 .vscode/tasks.json
+TheOtherRoles/bin/
+TheOtherRoles/libs/
+TheOtherRoles/obj/
+~$*
+*.diff
+TODO
+.DS_Store
+Strings-Dev.xlsx
